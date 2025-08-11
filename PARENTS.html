@@ -639,70 +639,6 @@
         }
     </style>
 </head>
-    <style>
-  .btn-retour {
-    padding: 8px 16px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .btn-retour:hover {
-    background-color: #e0e0e0;
-  }
-</style>
-
-<button class="btn-retour" onclick="history.back()">← Retour</button>
-    <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bouton Actualiser</title>
-    <style>
-        .refresh-button {
-            position: fixed;
-            bottom: 90px;  /* Positionné au-dessus du bouton WhatsApp */
-            right: 20px;
-            background-color: #4285f4;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            text-align: center;
-            font-size: 24px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-        
-        .refresh-button:hover {
-            background-color: #3367d6;
-            transform: rotate(360deg);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        
-        .refresh-icon {
-            width: 24px;
-            height: 24px;
-            fill: white;
-        }
-    </style>
-<body>
-    
-    <!-- Bouton Actualiser -->
-    <button onclick="window.location.reload()" class="refresh-button" aria-label="Actualiser la page">
-        <svg class="refresh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-        </svg>
-    </button>
-</body>
-    </head>
-</head>
 <body>
     <div class="container">
         <div class="header">
@@ -892,8 +828,8 @@
     <script>
         // Données des élèves et évaluations
         const studentData = {
-            "jean KOLA": {
-                name: "Jean KOLA",
+            "jean dupont": {
+                name: "Jean DUPONT",
                 class: "3ème",
                 evaluations: [
                     {
@@ -964,9 +900,23 @@
                     }
                 ]
             },
-           
+            "koffi mensah": {
+                name: "Koffi MENSAH",
+                class: "Terminale D",
+                evaluations: [
+                    {
+                        id: 6,
+                        title: "Génétique mendélienne",
+                        subject: "Sciences de la Vie et de la Terre (SVT)",
+                        teacher: "Dr. Amouzou",
+                        date: "2024-11-13",
+                        type: "Contrôle écrit",
+                        grade: 19,
+                        maxGrade: 20,
+                        appreciation: "excellent",
+                        comments: "Parfaite maîtrise des lois de Mendel et de leur application."
                     }
-                
+                ]
             }
         };
 
@@ -974,14 +924,21 @@
         let parentAccounts = [
             {
                 id: 1,
-                name: "Absebie KOLA",
-                email: "jeanskodoc22@gmail.com",
-                phone: "+22892871605",
-                password: "KOLA1",
-                studentName: "Jean KOLA",
+                name: "Paul DUPONT",
+                email: "paul.dupont@example.com",
+                phone: "+22890123456",
+                password: "parent123",
+                studentName: "Jean DUPONT",
                 studentClass: "3eme"
             },
-           
+            {
+                id: 2,
+                name: "Awa KOUASSI",
+                email: "awa.kouassi@example.com",
+                phone: "+22890234567",
+                password: "parent456",
+                studentName: "Marie KOUASSI",
+                studentClass: "premiere-c"
             }
         ];
 
