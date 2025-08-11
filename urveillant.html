@@ -786,15 +786,15 @@
                                 <option value="5eme">5ème</option>
                                 <option value="4eme">4ème</option>
                                 <option value="3eme">3ème</option>
-                                <option value="seconde-a">Seconde A</option>
-                                <option value="seconde-c">Seconde C</option>
-                                <option value="premiere-a1">Première A1</option>
-                                <option value="premiere-a2">Première A2</option>
-                                <option value="premiere-c">Première C</option>
+                                <option value="seconde-l">Seconde L</option>
+                                <option value="seconde-c4">Seconde C4</option>
+                                <option value="premiere-a4">Première A4</option>
+                                <option value="premiere-a5">Première A5</option>
+                                <option value="premiere-c4">Première C4</option>
                                 <option value="premiere-d">Première D</option>
-                                <option value="terminale-a1">Terminale A1</option>
-                                <option value="terminale-a2">Terminale A2</option>
-                                <option value="terminale-c">Terminale C</option>
+                                <option value="terminale-a4">Terminale A4</option>
+                                <option value="terminale-a5">Terminale A5</option>
+                                <option value="terminale-c4">Terminale C4</option>
                                 <option value="terminale-d">Terminale D</option>
                             </select>
                         </div>
@@ -945,15 +945,15 @@
                             <option value="5eme">5ème</option>
                             <option value="4eme">4ème</option>
                             <option value="3eme">3ème</option>
-                            <option value="seconde-a">Seconde A</option>
-                            <option value="seconde-c">Seconde C</option>
-                            <option value="premiere-a1">Première A1</option>
-                            <option value="premiere-a2">Première A2</option>
-                            <option value="premiere-c">Première C</option>
+                            <option value="seconde-l">Seconde L</option>
+                            <option value="seconde-cd">Seconde CD</option>
+                            <option value="premiere-a4">Première A4</option>
+                            <option value="premiere-a5">Première A5</option>
+                            <option value="premiere-c4">Première C4</option>
                             <option value="premiere-d">Première D</option>
-                            <option value="terminale-a1">Terminale A1</option>
-                            <option value="terminale-a2">Terminale A2</option>
-                            <option value="terminale-c">Terminale C</option>
+                            <option value="terminale-a4">Terminale A4</option>
+                            <option value="terminale-a5">Terminale A5</option>
+                            <option value="terminale-c4">Terminale C4</option>
                             <option value="terminale-d">Terminale D</option>
                         </select>
                     </div>
@@ -1003,29 +1003,28 @@
             "5eme": ["Alice Johnson", "Bob Smith", "Charlie Brown"],
             "4eme": ["David Wilson", "Eva Green", "Frank Ocean"],
             "3eme": ["Grace Kelly", "Henry Ford", "Irene Adler"],
-            "seconde-a": ["Jack Sparrow", "Karen Smith", "Liam Neeson"],
-            "seconde-c": ["Mona Lisa", "Nicolas Cage", "Olivia Pope"],
-            "premiere-a1": ["Paul Walker", "Queen Latifah", "Robert Downey"],
-            "premiere-a2": ["Steve Jobs", "Taylor Swift", "Uma Thurman"],
-            "premiere-c": ["Vin Diesel", "Will Smith", "Xavier Dupont"],
+            "seconde-l": ["Jack Sparrow", "Karen Smith", "Liam Neeson"],
+            "seconde-cd": ["Mona Lisa", "Nicolas Cage", "Olivia Pope"],
+            "premiere-a4": ["Paul Walker", "Queen Latifah", "Robert Downey"],
+            "premiere-a5": ["Steve Jobs", "Taylor Swift", "Uma Thurman"],
+            "premiere-c4": ["Vin Diesel", "Will Smith", "Xavier Dupont"],
             "premiere-d": ["Yves Saint", "Zoe Saldana", "Adam Levine"],
-            "terminale-a1": ["Bruce Wayne", "Clark Kent", "Diana Prince"],
-            "terminale-a2": ["Edward Cullen", "Frodo Baggins", "Gandalf Grey"],
-            "terminale-c": ["Harry Potter", "Iron Man", "James Bond"],
+            "terminale-a4": ["Bruce Wayne", "Clark Kent", "Diana Prince"],
+            "terminale-a5": ["Edward Cullen", "Frodo Baggins", "Gandalf Grey"],
+            "terminale-c4": ["Harry Potter", "Iron Man", "James Bond"],
             "terminale-d": ["Katniss Everdeen", "Luke Skywalker", "Mario Bros"]
         };
 
         // Données des contacts parents
         const parentContacts = {
-            "Jean Dupont": { name: "Paul Dupont", phone: "+22890123456", email: "paul.dupont@example.com" },
-            "Marie Kouassi": { name: "Awa Kouassi", phone: "+22890234567", email: "awa.kouassi@example.com" },
-            "Koffi Mensah": { name: "Kodjo Mensah", phone: "+22890345678", email: "kodjo.mensah@example.com" }
+            "Absebie KOLA": { name: "Absebie KOLA", phone: "+22892871605", email: "jeanskodoc22@egmail.com" },
+           
         };
 
         // Base de données des surveillants (simulée)
         let supervisors = [
-            { id: 1, name: "M. Togbe", email: "togbe@lycee.tg", phone: "+22890123456", username: "surveillant1", password: "surv123" },
-            { id: 2, name: "Mme Adjo", email: "adjo@lycee.tg", phone: "+22890234567", username: "surveillant2", password: "surv456" }
+            { id: 1, name: "M. KOLA", email: "jeanskodoc22@gmail.com", phone: "+22892871605", username: "KOLA", password: "KOLA1" },
+
         ];
 
         // Base de données des enregistrements
@@ -1039,44 +1038,10 @@
                 reason: "Absence non justifiée",
                 justified: false
             },
-            {
-                id: 2,
-                type: "retard",
-                date: "2024-11-14",
-                student: "Marie Kouassi",
-                class: "6eme",
-                reason: "Problème de transport",
-                time: "08:15",
-                justified: true
-            },
-            {
-                id: 3,
-                type: "evaluation",
-                date: "2024-11-13",
-                student: "Koffi Mensah",
-                class: "6eme",
-                reason: "Contrôle de mathématiques",
-                justified: false
-            },
-            {
-                id: 4,
-                type: "maladie",
-                date: "2024-11-12",
-                student: "Alice Johnson",
-                class: "5eme",
-                reason: "Fièvre",
-                justified: true
-            },
-            {
-                id: 5,
-                type: "contact",
-                date: "2024-11-11",
-                student: "Bob Smith",
-                class: "5eme",
-                reason: "Problème de comportement",
-                contactDetails: "Parent informé, promet d'intervenir",
-                justified: true
-            }
+           
+           
+           
+           
         ];
 
         // Fonction pour envoyer les données par WhatsApp
