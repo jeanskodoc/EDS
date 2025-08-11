@@ -748,69 +748,6 @@
         }
     </style>
 </head>
-    <style>
-  .btn-retour {
-    padding: 8px 16px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .btn-retour:hover {
-    background-color: #e0e0e0;
-  }
-</style>
-
-<button class="btn-retour" onclick="history.back()">← Retour</button>
-    <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bouton Actualiser</title>
-    <style>
-        .refresh-button {
-            position: fixed;
-            bottom: 90px;  /* Positionné au-dessus du bouton WhatsApp */
-            right: 20px;
-            background-color: #4285f4;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            text-align: center;
-            font-size: 24px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-        
-        .refresh-button:hover {
-            background-color: #3367d6;
-            transform: rotate(360deg);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        
-        .refresh-icon {
-            width: 24px;
-            height: 24px;
-            fill: white;
-        }
-    </style>
-</head>
-<body>
-    
-    <!-- Bouton Actualiser -->
-    <button onclick="window.location.reload()" class="refresh-button" aria-label="Actualiser la page">
-        <svg class="refresh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-        </svg>
-    </button>
-</body>
 <body>
     <!-- Conteneur d'authentification -->
     <div id="authContainer" class="auth-container">
@@ -932,15 +869,15 @@
                                 <option value="5ème">5ème</option>
                                 <option value="4ème">4ème</option>
                                 <option value="3ème">3ème</option>
-                                <option value="Seconde L">Seconde L</option>
-                                <option value="Seconde CD">Seconde CD</option>
-                                <option value="Première A4">Première A4</option>
-                                <option value="Première A5">Première A5</option>
-                                <option value="Première C4">Première C4</option>
+                                <option value="Seconde A">Seconde A</option>
+                                <option value="Seconde C">Seconde C</option>
+                                <option value="Première A1">Première A1</option>
+                                <option value="Première A2">Première A2</option>
+                                <option value="Première C">Première C</option>
                                 <option value="Première D">Première D</option>
-                                <option value="Terminale A4">Terminale A4</option>
-                                <option value="Terminale A5">Terminale A5</option>
-                                <option value="Terminale C4">Terminale C4</option>
+                                <option value="Terminale A1">Terminale A1</option>
+                                <option value="Terminale A2">Terminale A2</option>
+                                <option value="Terminale C">Terminale C</option>
                                 <option value="Terminale D">Terminale D</option>
                             </select>
                         </div>
@@ -995,15 +932,15 @@
                                 <option value="5ème">5ème</option>
                                 <option value="4ème">4ème</option>
                                 <option value="3ème">3ème</option>
-                                <option value="Seconde L">Seconde L</option>
-                                <option value="Seconde CD">Seconde CD</option>
-                                <option value="Première A4">Première A4</option>
-                                <option value="Première A5">Première A5</option>
-                                <option value="Première C4">Première C4</option>
+                                <option value="Seconde A">Seconde A</option>
+                                <option value="Seconde C">Seconde C</option>
+                                <option value="Première A1">Première A1</option>
+                                <option value="Première A2">Première A2</option>
+                                <option value="Première C">Première C</option>
                                 <option value="Première D">Première D</option>
-                                <option value="Terminale A4">Terminale A4</option>
-                                <option value="Terminale A5">Terminale A5</option>
-                                <option value="Terminale C4">Terminale C4</option>
+                                <option value="Terminale A1">Terminale A1</option>
+                                <option value="Terminale A2">Terminale A2</option>
+                                <option value="Terminale C">Terminale C</option>
                                 <option value="Terminale D">Terminale D</option>
                             </select>
                         </div>
@@ -1048,8 +985,6 @@
                                 <option value="svt">SVT</option>
                                 <option value="histoire-geographie">Histoire-Géographie</option>
                                 <option value="anglais">Anglais</option>
-                                 <option value="allemand">ALLEMAND</option>
-                                 <option value="espagnol">Espagnol</option>
                                 <option value="philosophie">Philosophie</option>
                             </select>
                         </div>
@@ -1090,9 +1025,6 @@
                             <option value="svt">SVT</option>
                             <option value="histoire-geographie">Histoire-Géographie</option>
                             <option value="anglais">Anglais</option>
-                             <option value="allemand">ALLEMAND</option>
-                                 <option value="espagnol">Espagnol</option>
-                            <option value="philosophie">Philosophie</option>
                         </select>
                     </div>
                     <div class="filter-group">
@@ -1102,8 +1034,6 @@
                             <option value="term1">1er Trimestre</option>
                             <option value="term2">2e Trimestre</option>
                             <option value="term3">3e Trimestre</option>
-                             <option value="sem1">1er Semestre</option>
-                            <option value="sem2">2em Semestre</option>
                         </select>
                     </div>
                 </div>
@@ -1226,12 +1156,12 @@
         // Configuration des cycles et classes
         const cycleConfig = {
             college: ['6ème', '5ème', '4ème', '3ème'],
-            lycee: ['Seconde L', 'Seconde CD', 'Première A4', 'Première A5', 'Première C4', 'Première D', 'Terminale A4', 'Terminale A5', 'Terminale C4', 'Terminale D']
+            lycee: ['Seconde A', 'Seconde C', 'Première A1', 'Première A2', 'Première C', 'Première D', 'Terminale A1', 'Terminale A2', 'Terminale C', 'Terminale D']
         };
 
         // Données des administrateurs (en production, utiliser une base de données)
         let adminAccounts = [
-            { email: "jeanskodoc@gmail.com", password: "KOLA1", name: "Administrateur Principal" }
+            { email: "admin@lycee-niamtougou.tg", password: "Admin123", name: "Administrateur Principal" }
         ];
 
         // Données simulées des élèves (étendues avec les nouvelles informations)
@@ -1358,7 +1288,7 @@
                     {
                         date: "2024-10-10",
                         type: "Soutien scolaire",
-                        teacher: "M.KOLA",
+                        teacher: "Mme Togo",
                         comment: "Séances de soutien hebdomadaires"
                     }
                 ]
@@ -1615,8 +1545,6 @@
                 "histoire-geographie": "Histoire-Géo",
                 "anglais": "Anglais",
                 "philosophie": "Philosophie"
-                "allemand": "Allemand",
-                "espagnol": "Espagnol"
             };
             return subjects[subjectCode] || subjectCode;
         }
