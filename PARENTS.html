@@ -751,7 +751,123 @@
                 </button>
             </div>
         </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chargement de données locales</title>
+    <style>
+        .load-button {
+            position: fixed;
+            bottom: 160px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .load-button:hover {
+            background-color: #45a049;
+            transform: scale(1.1);
+        }
+        
+        .load-icon {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+        
+        #data-display {
+            margin: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        
+        .loading {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <h1>Chargement de données locales</h1>
+    <div id="data-display">
+        Les données apparaîtront ici...
+    </div>
 
+    <!-- Bouton de chargement -->
+    <button id="loadDataBtn" class="load-button" aria-label="Charger les données">
+        <svg id="loadIcon" class="load-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
+        </svg>
+    </button>
+
+    <script>
+        document.getElementById('loadDataBtn').addEventListener('click', function() {
+            const icon = document.getElementById('loadIcon');
+            const display = document.getElementById('data-display');
+            
+            // Afficher l'animation de chargement
+            icon.classList.add('loading');
+            display.textContent = "Chargement en cours...";
+            
+            // Simuler un chargement depuis une base locale
+            setTimeout(() => {
+                // Ici vous remplaceriez par un vrai appel à votre base de données
+                // Par exemple avec IndexedDB ou une API locale
+                fetch('http://localhost:3000/api/data') // Remplacez par votre endpoint
+                    .then(response => response.json())
+                    .then(data => {
+                        display.innerHTML = formatData(data);
+                        icon.classList.remove('loading');
+                    })
+                    .catch(error => {
+                        display.innerHTML = `Erreur: ${error.message}`;
+                        icon.classList.remove('loading');
+                        console.error("Erreur de chargement:", error);
+                        
+                        // Simulation de données si l'API n'est pas disponible
+                        const localData = [
+                            {id: 1, nom: "Exemple 1", valeur: 42},
+                            {id: 2, nom: "Exemple 2", valeur: 87}
+                        ];
+                        display.innerHTML = formatData(localData);
+                        icon.classList.remove('loading');
+                    });
+            }, 500);
+        });
+        
+        function formatData(data) {
+            if (!data) return "Aucune donnée disponible";
+            
+            if (Array.isArray(data)) {
+                return `<h3>Données chargées (${data.length} éléments):</h3><ul>${
+                    data.map(item => 
+                        `<li><strong>${item.nom || 'Item'}:</strong> ${item.valeur || 'N/A'}</li>`
+                    ).join('')
+                }</ul>`;
+            }
+            
+            return `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+        }
+    </script>
+</body>
         <!-- Section principale après connexion -->
         <div id="main-content" class="auth-section hidden">
             <button class="logout-btn" onclick="logout()">🚪 Déconnexion</button>
