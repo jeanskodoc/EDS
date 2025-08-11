@@ -751,59 +751,6 @@
                 </button>
             </div>
         </div>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chargement de données locales</title>
-    <style>
-        .load-button {
-            position: fixed;
-            bottom: 160px;
-            right: 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            font-size: 24px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-        
-        .load-button:hover {
-            background-color: #45a049;
-            transform: scale(1.1);
-        }
-        
-        .load-icon {
-            width: 24px;
-            height: 24px;
-            fill: white;
-        }
-        
-        #data-display {
-            margin: 20px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-        
-        .loading {
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
 
         <!-- Section principale après connexion -->
         <div id="main-content" class="auth-section hidden">
@@ -882,7 +829,7 @@
     <script>
         // Données des élèves et évaluations
         const studentData = {
-            "jean KOLA": {
+            "Jean KOLA": {
                 name: "Jean KOLA",
                 class: "3ème",
                 evaluations: [
