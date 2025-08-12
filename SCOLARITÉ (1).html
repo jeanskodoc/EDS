@@ -9,10 +9,124 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        /* Styles pour la page de connexion */
+        .login-page {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            text-align: center;
+        }
+
+        .login-header {
+            margin-bottom: 30px;
+        }
+
+        .school-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .school-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .school-subtitle {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-footer {
+            margin-top: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            margin-top: 10px;
+            font-weight: 600;
+            display: none;
+        }
+
+        /* Styles pour l'application principale */
+        .app-container {
+            display: none; /* Caché par défaut */
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
@@ -35,6 +149,9 @@
             text-align: center;
             position: relative;
             overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .header::before {
@@ -51,69 +168,38 @@
             position: relative;
             z-index: 2;
             margin-bottom: 20px;
+            text-align: center;
         }
 
-        .school-logo {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #fff, #f0f8ff);
-            border-radius: 50%;
+        .user-info {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 15px;
+            border-radius: 50px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            position: relative;
-            overflow: hidden;
+            gap: 10px;
+            backdrop-filter: blur(5px);
         }
 
-        .school-logo-text {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #4facfe;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: relative;
-            z-index: 2;
+        .user-info i {
+            font-size: 1.2rem;
         }
 
-        .school-name {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            position: relative;
-            z-index: 2;
+        .logout-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
-        .school-subtitle {
-            font-size: 1rem;
-            opacity: 0.9;
-            font-weight: 300;
-            position: relative;
-            z-index: 2;
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            position: relative;
-            z-index: 2;
-        }
-
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            position: relative;
-            z-index: 2;
+        .logout-btn:hover {
+            text-decoration: underline;
         }
 
         .dashboard-content {
@@ -145,61 +231,11 @@
             border-radius: 2px;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #555;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e1e8ed;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: white;
-        }
-
-        .form-group textarea {
-            min-height: 100px;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #4facfe;
-            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
-        }
-
         .form-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-bottom: 15px;
-        }
-
-        .btn {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            color: white;
         }
 
         .btn-secondary {
@@ -211,10 +247,10 @@
             background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
             color: white;
         }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
         }
 
         .form-actions {
@@ -261,30 +297,6 @@
             font-weight: bold;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                margin: 10px;
-                border-radius: 15px;
-            }
-
-            .header {
-                padding: 25px 20px;
-            }
-
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .dashboard-content {
-                padding: 25px 20px;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
         /* Modal pour confirmation */
         .modal {
             display: none;
@@ -319,45 +331,164 @@
         .close-modal:hover {
             color: #333;
         }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+            
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header {
+                padding: 25px 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .dashboard-content {
+                padding: 25px 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="school-info">
-                <div class="school-logo">
-                    <div class="school-logo-text">LN</div>
-                </div>
+    <!-- Page de connexion -->
+    <div class="login-page" id="loginPage">
+        <div class="login-container">
+            <div class="login-header">
+                <div class="school-logo">LN</div>
                 <div class="school-name">Lycée Niamtougou</div>
                 <div class="school-subtitle">République Togolaise</div>
             </div>
-            <h1>📝 Gestion des Inscriptions</h1>
-            <p>Enregistrement et suivi des élèves</p>
-        </div>
 
-        <div class="dashboard-content">
-            <!-- Section Formulaire d'inscription -->
-            <div class="section">
-                <h2 class="section-title">📋 Formulaire d'inscription</h2>
-                
-                <form id="registrationForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="studentId">Matricule:</label>
-                            <input type="text" id="studentId" placeholder="Ex: 6A01" required>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Nom d'utilisateur</label>
+                    <input type="text" id="username" placeholder="Entrez votre nom d'utilisateur" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" placeholder="Entrez votre mot de passe" required>
+                </div>
+
+                <div class="error-message" id="errorMessage">
+                    Identifiants incorrects. Veuillez réessayer.
+                </div>
+
+                <button type="submit" class="btn btn-primary">Se connecter</button>
+            </form>
+
+            <div class="login-footer">
+                Système de gestion des inscriptions - Version 1.0
+            </div>
+        </div>
+    </div>
+
+    <!-- Application principale (cachée par défaut) -->
+    <div class="app-container" id="appContainer">
+        <div class="container">
+            <div class="header">
+                <div></div> <!-- Empty div for spacing -->
+                <div class="school-info">
+                    <div class="school-name">Lycée Niamtougou</div>
+                    <div class="school-subtitle">Gestion des Inscriptions</div>
+                </div>
+                <div class="user-info" id="userInfo">
+                    <!-- Rempli dynamiquement -->
+                </div>
+            </div>
+
+            <div class="dashboard-content">
+                <!-- Section Formulaire d'inscription -->
+                <div class="section">
+                    <h2 class="section-title">📋 Formulaire d'inscription</h2>
+                    
+                    <form id="registrationForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="studentId">Matricule:</label>
+                                <input type="text" id="studentId" placeholder="Ex: 6A01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="studentName">Nom complet:</label>
+                                <input type="text" id="studentName" placeholder="Nom et prénom" required>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="studentName">Nom complet:</label>
-                            <input type="text" id="studentName" placeholder="Nom et prénom" required>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="studentClass">Classe:</label>
+                                <select id="studentClass" required>
+                                    <option value="">Sélectionner une classe</option>
+                                    <optgroup label="Collège">
+                                        <option value="6eme">6ème</option>
+                                        <option value="5eme">5ème</option>
+                                        <option value="4eme">4ème</option>
+                                        <option value="3eme">3ème</option>
+                                    </optgroup>
+                                    <optgroup label="Lycée">
+                                        <option value="2nde">Seconde</option>
+                                        <option value="1ere">Première</option>
+                                        <option value="terminale">Terminale</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="registrationDate">Date d'inscription:</label>
+                                <input type="date" id="registrationDate" required>
+                            </div>
                         </div>
-                    </div>
+                        
+                        <div class="form-group">
+                            <label for="studentAddress">Adresse:</label>
+                            <input type="text" id="studentAddress" placeholder="Adresse complète">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="studentPhone">Téléphone:</label>
+                                <input type="tel" id="studentPhone" placeholder="Numéro de téléphone">
+                            </div>
+                            <div class="form-group">
+                                <label for="studentParent">Responsable:</label>
+                                <input type="text" id="studentParent" placeholder="Nom du parent/tuteur">
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-whatsapp" onclick="sendViaWhatsApp()">
+                                <i class="fab fa-whatsapp"></i> Envoyer via WhatsApp
+                            </button>
+                            <button type="reset" class="btn btn-danger">Annuler</button>
+                            <button type="submit" class="btn btn-primary">Enregistrer l'élève</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Section Liste des élèves -->
+                <div class="section">
+                    <h2 class="section-title">👥 Liste des élèves inscrits</h2>
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="studentClass">Classe:</label>
-                            <select id="studentClass" required>
-                                <option value="">Sélectionner une classe</option>
+                            <label for="filterClass">Filtrer par classe:</label>
+                            <select id="filterClass" onchange="filterStudents()">
+                                <option value="">Toutes les classes</option>
                                 <optgroup label="Collège">
                                     <option value="6eme">6ème</option>
                                     <option value="5eme">5ème</option>
@@ -372,79 +503,29 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="registrationDate">Date d'inscription:</label>
-                            <input type="date" id="registrationDate" required>
+                            <label for="searchName">Rechercher par nom:</label>
+                            <input type="text" id="searchName" placeholder="Entrez un nom" oninput="filterStudents()">
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="studentAddress">Adresse:</label>
-                        <input type="text" id="studentAddress" placeholder="Adresse complète">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Matricule</th>
+                                    <th>Nom</th>
+                                    <th>Classe</th>
+                                    <th>Date inscription</th>
+                                    <th>Responsable</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsTable">
+                                <!-- Les élèves seront insérés ici -->
+                            </tbody>
+                        </table>
                     </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="studentPhone">Téléphone:</label>
-                            <input type="tel" id="studentPhone" placeholder="Numéro de téléphone">
-                        </div>
-                        <div class="form-group">
-                            <label for="studentParent">Responsable:</label>
-                            <input type="text" id="studentParent" placeholder="Nom du parent/tuteur">
-                        </div>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="reset" class="btn btn-danger">Annuler</button>
-                        <button type="submit" class="btn btn-primary">Enregistrer l'élève</button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Section Liste des élèves -->
-            <div class="section">
-                <h2 class="section-title">👥 Liste des élèves inscrits</h2>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="filterClass">Filtrer par classe:</label>
-                        <select id="filterClass" onchange="filterStudents()">
-                            <option value="">Toutes les classes</option>
-                            <optgroup label="Collège">
-                                <option value="6eme">6ème</option>
-                                <option value="5eme">5ème</option>
-                                <option value="4eme">4ème</option>
-                                <option value="3eme">3ème</option>
-                            </optgroup>
-                            <optgroup label="Lycée">
-                                <option value="2nde">Seconde</option>
-                                <option value="1ere">Première</option>
-                                <option value="terminale">Terminale</option>
-                            </optgroup>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="searchName">Rechercher par nom:</label>
-                        <input type="text" id="searchName" placeholder="Entrez un nom" oninput="filterStudents()">
-                    </div>
-                </div>
-                
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Matricule</th>
-                                <th>Nom</th>
-                                <th>Classe</th>
-                                <th>Date inscription</th>
-                                <th>Responsable</th>
-                                <th>Statut</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="studentsTable">
-                            <!-- Les élèves seront insérés ici -->
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
@@ -464,25 +545,87 @@
     </div>
 
     <script>
-        // Clé pour le stockage local
+        // Comptes autorisés
+        const authorizedUsers = [
+            { username: "admin", password: "admin123", role: "admin" },
+            { username: "secretariat", password: "secret123", role: "user" }
+        ];
+
+        // Constantes
         const STORAGE_KEY = 'lycee_niamtougou_eleves';
+        const WHATSAPP_NUMBER = '92871605';
 
-        // Charger les élèves depuis le localStorage
-        function loadStudents() {
-            const studentsJSON = localStorage.getItem(STORAGE_KEY);
-            return studentsJSON ? JSON.parse(studentsJSON) : [];
-        }
+        // Variables globales
+        let students = [];
 
-        // Sauvegarder les élèves dans le localStorage
-        function saveStudents(students) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(students));
-        }
-
-        // Initialiser les données
-        let students = loadStudents();
-
-        // Initialisation
+        // Gestion de l'authentification
         document.addEventListener('DOMContentLoaded', function() {
+            // Vérifier si l'utilisateur est déjà connecté
+            const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+            
+            if (currentUser && currentUser.loggedIn) {
+                // Afficher l'application
+                showApplication(currentUser);
+                // Initialiser l'application
+                initializeApplication();
+            } else {
+                // Afficher la page de connexion
+                document.getElementById('loginPage').style.display = 'flex';
+                document.getElementById('appContainer').style.display = 'none';
+                
+                // Gestion du formulaire de connexion
+                document.getElementById('loginForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const username = document.getElementById('username').value.trim();
+                    const password = document.getElementById('password').value;
+                    const errorMessage = document.getElementById('errorMessage');
+
+                    // Vérifier les identifiants
+                    const user = authorizedUsers.find(u => u.username === username && u.password === password);
+                    
+                    if (user) {
+                        // Stocker les informations de l'utilisateur
+                        sessionStorage.setItem('currentUser', JSON.stringify({
+                            username: user.username,
+                            role: user.role,
+                            loggedIn: true,
+                            loginTime: new Date().toISOString()
+                        }));
+
+                        // Afficher l'application
+                        showApplication(user);
+                        // Initialiser l'application
+                        initializeApplication();
+                    } else {
+                        errorMessage.style.display = 'block';
+                        document.getElementById('password').value = '';
+                    }
+                });
+            }
+        });
+
+        // Afficher l'application après authentification
+        function showApplication(user) {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('appContainer').style.display = 'block';
+            
+            // Mettre à jour les infos utilisateur
+            const userInfo = document.getElementById('userInfo');
+            userInfo.innerHTML = `
+                <i class="fas fa-user-circle"></i>
+                <span>${user.username}</span>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </button>
+            `;
+        }
+
+        // Initialiser l'application
+        function initializeApplication() {
+            // Charger les élèves depuis le localStorage
+            students = loadStudents();
+            
             // Remplir la date du jour par défaut
             document.getElementById('registrationDate').value = new Date().toISOString().split('T')[0];
             
@@ -494,7 +637,24 @@
                 e.preventDefault();
                 registerStudent();
             });
-        });
+        }
+
+        // Fonction de déconnexion
+        function logout() {
+            sessionStorage.removeItem('currentUser');
+            location.reload();
+        }
+
+        // Charger les élèves depuis le localStorage
+        function loadStudents() {
+            const studentsJSON = localStorage.getItem(STORAGE_KEY);
+            return studentsJSON ? JSON.parse(studentsJSON) : [];
+        }
+
+        // Sauvegarder les élèves dans le localStorage
+        function saveStudents(students) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(students));
+        }
 
         // Enregistrer un nouvel élève
         function registerStudent() {
@@ -568,11 +728,11 @@
                     <td>${student.parent || '-'}</td>
                     <td><span class="status-${student.status}">${student.status === 'active' ? 'Actif' : 'Inactif'}</span></td>
                     <td>
-                        <button class="btn btn-info btn-sm" onclick="editStudent('${student.id}')">
-                            <i class="fas fa-edit"></i>
+                        <button class="btn btn-secondary btn-sm" onclick="editStudent('${student.id}')">
+                            <i class="fas fa-edit"></i> Modifier
                         </button>
                         <button class="btn btn-danger btn-sm" onclick="confirmDelete('${student.id}')">
-                            <i class="fas fa-trash"></i>
+                            <i class="fas fa-trash"></i> Supprimer
                         </button>
                     </td>
                 `;
@@ -615,7 +775,7 @@
             closeModal();
         }
 
-        // Modifier un élève (à implémenter)
+        // Modifier un élève
         function editStudent(studentId) {
             const student = students.find(s => s.id === studentId);
             if (!student) return;
@@ -631,6 +791,44 @@
 
             // Faire défiler jusqu'au formulaire
             document.getElementById('registrationForm').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Envoyer les données via WhatsApp
+        function sendViaWhatsApp() {
+            // Récupérer les valeurs du formulaire
+            const studentId = document.getElementById('studentId').value.trim();
+            const studentName = document.getElementById('studentName').value.trim();
+            const studentClass = document.getElementById('studentClass').value;
+            const registrationDate = document.getElementById('registrationDate').value;
+            const studentAddress = document.getElementById('studentAddress').value.trim();
+            const studentPhone = document.getElementById('studentPhone').value.trim();
+            const studentParent = document.getElementById('studentParent').value.trim();
+
+            // Vérifier les champs obligatoires
+            if (!studentId || !studentName || !studentClass || !registrationDate) {
+                showModal('Erreur', 'Veuillez remplir tous les champs obligatoires avant d\'envoyer');
+                return;
+            }
+
+            // Créer le message
+            let message = `*Nouvelle inscription - Lycée Niamtougou*\n\n`;
+            message += `*Matricule:* ${studentId}\n`;
+            message += `*Nom complet:* ${studentName}\n`;
+            message += `*Classe:* ${studentClass}\n`;
+            message += `*Date d'inscription:* ${formatDate(registrationDate)}\n`;
+            
+            if (studentAddress) message += `*Adresse:* ${studentAddress}\n`;
+            if (studentPhone) message += `*Téléphone:* ${studentPhone}\n`;
+            if (studentParent) message += `*Responsable:* ${studentParent}\n`;
+
+            // Encoder le message pour l'URL
+            const encodedMessage = encodeURIComponent(message);
+            
+            // Créer le lien WhatsApp
+            const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+            
+            // Ouvrir dans un nouvel onglet
+            window.open(whatsappUrl, '_blank');
         }
 
         // Afficher le modal
