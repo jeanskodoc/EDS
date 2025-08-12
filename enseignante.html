@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html lang="fr">
 <head>
     <style>
   .btn-retour {
@@ -415,7 +416,7 @@
             color: white;
             padding: 15px 20px;
             display: grid;
-            grid-template-columns: 1fr 100px 150px 80px;
+            grid-template-columns: 1fr 100px 150px 150px 80px;
             gap: 15px;
             font-weight: 600;
             align-items: center;
@@ -424,7 +425,7 @@
         .student-row {
             padding: 15px 20px;
             display: grid;
-            grid-template-columns: 1fr 100px 150px 80px;
+            grid-template-columns: 1fr 100px 150px 150px 80px;
             gap: 15px;
             align-items: center;
             border-bottom: 1px solid #f0f0f0;
@@ -450,6 +451,20 @@
         }
 
         .grade-input:focus {
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .comment-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .comment-input:focus {
             border-color: #4facfe;
             box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
         }
@@ -780,7 +795,7 @@
                 display: block !important;
             }
 
-            .student-row input, .student-row select {
+            .student-row input, .student-row select, .student-row textarea {
                 width: 100%;
                 margin-bottom: 10px;
             }
@@ -1076,6 +1091,7 @@
                                     <div>Nom et Prénom de l'élève</div>
                                     <div>Note obtenue</div>
                                     <div>Appréciation</div>
+                                    <div>Commentaire</div>
                                     <div class="no-print">Action</div>
                                 </div>
                                 <div id="students-list">
@@ -1415,6 +1431,9 @@
                             <option value="mediocre">Médiocre</option>
                         </select>
                     </div>
+                    <div>
+                        <textarea class="comment-input" placeholder="Commentaire sur l'élève..."></textarea>
+                    </div>
                     <div class="no-print">
                         <button type="button" class="remove-btn" onclick="removeStudent('${studentId}')">Supprimer</button>
                     </div>
@@ -1453,6 +1472,9 @@
                         <option value="insuffisant">Insuffisant</option>
                         <option value="mediocre">Médiocre</option>
                     </select>
+                </div>
+                <div>
+                    <textarea class="comment-input" placeholder="Commentaire sur l'élève..."></textarea>
                 </div>
                 <div class="no-print">
                     <button type="button" class="remove-btn" onclick="removeStudent('${studentId}')">Supprimer</button>
@@ -1645,8 +1667,10 @@
                 const name = row.querySelector('.student-name').value || `Élève ${index+1}`;
                 const grade = row.querySelector('.grade-input').value || '-';
                 const appreciation = row.querySelector('.appreciation').value || 'Non évalué';
+                const comment = row.querySelector('.comment-input').value || 'Aucun commentaire';
                 
                 message += `➡ ${name}: ${grade}/${maxGrade} (${getAppreciationText(appreciation)})\n`;
+                message += `   Commentaire: ${comment}\n\n`;
             });
             
             // Ajouter les statistiques
@@ -1759,7 +1783,8 @@
                 evaluationData.students.push({
                     name: row.querySelector('.student-name').value,
                     grade: row.querySelector('.grade-input').value,
-                    appreciation: row.querySelector('.appreciation').value
+                    appreciation: row.querySelector('.appreciation').value,
+                    comment: row.querySelector('.comment-input').value
                 });
             });
             
