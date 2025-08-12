@@ -1,0 +1,1824 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Notes - Lycée Niamtougou</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="white" opacity="0.1"/><circle cx="80" cy="40" r="1.5" fill="white" opacity="0.1"/><circle cx="60" cy="80" r="1" fill="white" opacity="0.1"/><circle cx="40" cy="60" r="1.2" fill="white" opacity="0.1"/></svg>');
+        }
+
+        .school-info {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 20px;
+        }
+
+        .school-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #fff, #f0f8ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .school-logo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(79, 172, 254, 0.1), transparent);
+            animation: rotate 8s linear infinite;
+        }
+
+        .school-logo-text {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #4facfe;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 2;
+        }
+
+        .school-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .school-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 300;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+        }
+
+        .dashboard-content {
+            padding: 40px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 25px;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f8f9ff;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Style pour les onglets */
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: #f1f1f1;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .tab.active {
+            background: #4facfe;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Style pour les bulletins */
+        .bulletin {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .bulletin-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        .bulletin-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .bulletin-subtitle {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .student-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .student-info-item {
+            margin-bottom: 10px;
+        }
+
+        .student-info-label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .notes-table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .notes-table th {
+            background: #4facfe;
+            color: white;
+        }
+
+        .notes-table td, .notes-table th {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .notes-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .summary {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .summary-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .top-students, .weak-students {
+            margin-top: 20px;
+        }
+
+        .top-students h3, .weak-students h3 {
+            color: #333;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .top-students table, .weak-students table {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .top-students th {
+            background: #43e97b;
+        }
+
+        .weak-students th {
+            background: #ff6b6b;
+        }
+
+        /* Bouton d'impression */
+        .print-btn {
+            background: #4facfe;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .print-btn:hover {
+            background: #3a9ae8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header {
+                padding: 25px 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .dashboard-content {
+                padding: 25px 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .student-info {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .bulletin-container, .bulletin-container * {
+                visibility: visible;
+            }
+            .bulletin-container {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+    
+    <!-- Lien vers Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="school-info">
+                <div class="school-logo">
+                    <div class="school-logo-text">LN</div>
+                </div>
+                <div class="school-name">Lycée Niamtougou</div>
+                <div class="school-subtitle">République Togolaise</div>
+            </div>
+            <h1>📊 Gestion des Notes</h1>
+            <p>Saisie des évaluations, compositions et génération des bulletins</p>
+        </div>
+
+        <div class="dashboard-content">
+            <!-- Section Gestion des Matières -->
+            <div class="section">
+                <h2 class="section-title">📚 Gestion des Matières</h2>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="openTab(event, 'manageSubjectsTab')">Gérer les matières</div>
+                    <div class="tab" onclick="openTab(event, 'assignSubjectsTab')">Attribuer aux élèves</div>
+                </div>
+                
+                <!-- Onglet Gérer les matières -->
+                <div id="manageSubjectsTab" class="tab-content active">
+                    <form id="subjectForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cycleSelect">Cycle:</label>
+                                <select id="cycleSelect" required>
+                                    <option value="">Sélectionner un cycle</option>
+                                    <option value="cycle1">Cycle 1 (6ème, 5ème)</option>
+                                    <option value="cycle2">Cycle 2 (4ème, 3ème)</option>
+                                    <option value="cycle3">Cycle 3 (2nde, 1ère, Terminale)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="newSubjectName">Nouvelle matière:</label>
+                                <input type="text" id="newSubjectName" placeholder="Nom de la matière" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subjectCoeff">Coefficient:</label>
+                            <input type="number" id="subjectCoeff" min="1" max="10" value="2" required>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-danger" onclick="resetSubjectForm()">Annuler</button>
+                            <button type="submit" class="btn btn-primary">Ajouter la matière</button>
+                        </div>
+                    </form>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Cycle</th>
+                                    <th>Matières</th>
+                                    <th>Coefficient</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="subjectsTable">
+                                <!-- Les matières seront affichées ici -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Onglet Attribuer aux élèves -->
+                <div id="assignSubjectsTab" class="tab-content">
+                    <form id="assignSubjectForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="assignClass">Classe:</label>
+                                <select id="assignClass" required onchange="updateAssignStudents()">
+                                    <option value="">Sélectionner une classe</option>
+                                    <option value="6eme">6ème</option>
+                                    <option value="5eme">5ème</option>
+                                    <option value="4eme">4ème</option>
+                                    <option value="3eme">3ème</option>
+                                    <option value="2nde">Seconde</option>
+                                    <option value="1ere">Première</option>
+                                    <option value="terminale">Terminale</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="assignStudent">Élève:</label>
+                                <select id="assignStudent" required disabled>
+                                    <option value="">Sélectionner un élève</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Matières disponibles:</label>
+                            <div id="availableSubjects" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 10px;">
+                                <!-- Les matières seront ajoutées dynamiquement -->
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-danger" onclick="resetAssignForm()">Annuler</button>
+                            <button type="submit" class="btn btn-primary">Enregistrer les matières</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Section Saisie des Notes -->
+            <div class="section">
+                <h2 class="section-title">📝 Saisie des Notes</h2>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="openTab(event, 'evalTab')">Évaluations</div>
+                    <div class="tab" onclick="openTab(event, 'compTab')">Compositions</div>
+                </div>
+                
+                <!-- Onglet Évaluations -->
+                <div id="evalTab" class="tab-content active">
+                    <form id="evalForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="evalClass">Classe:</label>
+                                <select id="evalClass" required onchange="updateEvalSubjects()">
+                                    <option value="">Sélectionner une classe</option>
+                                    <option value="6eme">6ème</option>
+                                    <option value="5eme">5ème</option>
+                                    <option value="4eme">4ème</option>
+                                    <option value="3eme">3ème</option>
+                                    <option value="2nde">Seconde</option>
+                                    <option value="1ere">Première</option>
+                                    <option value="terminale">Terminale</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="evalSubject">Matière:</label>
+                                <select id="evalSubject" required>
+                                    <option value="">Sélectionner une matière</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="evalType">Type d'évaluation:</label>
+                                <select id="evalType" required>
+                                    <option value="">Sélectionner un type</option>
+                                    <option value="devoir">Devoir</option>
+                                    <option value="interro">Interrogation</option>
+                                    <option value="projet">Projet</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="evalDate">Date:</label>
+                                <input type="date" id="evalDate" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="evalCoeff">Coefficient:</label>
+                            <input type="number" id="evalCoeff" min="1" max="10" value="1" required>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Matricule</th>
+                                        <th>Nom</th>
+                                        <th>Note (/20)</th>
+                                        <th>Appréciation</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="evalStudentsTable">
+                                    <!-- Les élèves seront insérés ici après sélection de la classe -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="reset" class="btn btn-danger">Annuler</button>
+                            <button type="submit" class="btn btn-primary">Enregistrer les notes</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Onglet Compositions -->
+                <div id="compTab" class="tab-content">
+                    <form id="compForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="compClass">Classe:</label>
+                                <select id="compClass" required onchange="updateCompSubjects()">
+                                    <option value="">Sélectionner une classe</option>
+                                    <option value="6eme">6ème</option>
+                                    <option value="5eme">5ème</option>
+                                    <option value="4eme">4ème</option>
+                                    <option value="3eme">3ème</option>
+                                    <option value="2nde">Seconde</option>
+                                    <option value="1ere">Première</option>
+                                    <option value="terminale">Terminale</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="compSubject">Matière:</label>
+                                <select id="compSubject" required>
+                                    <option value="">Sélectionner une matière</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="compTrimestre">Trimestre:</label>
+                                <select id="compTrimestre" required>
+                                    <option value="1">1er Trimestre</option>
+                                    <option value="2">2ème Trimestre</option>
+                                    <option value="3">3ème Trimestre</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="compDate">Date:</label>
+                                <input type="date" id="compDate" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="compCoeff">Coefficient:</label>
+                            <input type="number" id="compCoeff" min="1" max="10" value="2" required>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Matricule</th>
+                                        <th>Nom</th>
+                                        <th>Note (/20)</th>
+                                        <th>Appréciation</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="compStudentsTable">
+                                    <!-- Les élèves seront insérés ici après sélection de la classe -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="reset" class="btn btn-danger">Annuler</button>
+                            <button type="submit" class="btn btn-primary">Enregistrer les notes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Section Bulletins et Statistiques -->
+            <div class="section">
+                <h2 class="section-title">📊 Bulletins et Statistiques</h2>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="openTab(event, 'bulletinTab')">Bulletins</div>
+                    <div class="tab" onclick="openTab(event, 'statsTab')">Statistiques</div>
+                </div>
+                
+                <!-- Onglet Bulletins -->
+                <div id="bulletinTab" class="tab-content active">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bulletinClass">Classe:</label>
+                            <select id="bulletinClass" onchange="updateBulletinStudents()">
+                                <option value="">Sélectionner une classe</option>
+                                <option value="6eme">6ème</option>
+                                <option value="5eme">5ème</option>
+                                <option value="4eme">4ème</option>
+                                <option value="3eme">3ème</option>
+                                <option value="2nde">Seconde</option>
+                                <option value="1ere">Première</option>
+                                <option value="terminale">Terminale</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="bulletinStudent">Élève:</label>
+                            <select id="bulletinStudent" disabled>
+                                <option value="">Sélectionner un élève</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="bulletinTrimestre">Trimestre:</label>
+                            <select id="bulletinTrimestre">
+                                <option value="1">1er Trimestre</option>
+                                <option value="2">2ème Trimestre</option>
+                                <option value="3">3ème Trimestre</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="generateBulletin()">Générer le bulletin</button>
+                    
+                    <div id="bulletinContainer" class="bulletin-container" style="margin-top: 20px; display: none;">
+                        <button class="print-btn no-print" onclick="window.print()">
+                            <i class="fas fa-print"></i> Imprimer le bulletin
+                        </button>
+                        
+                        <div class="bulletin" id="studentBulletin">
+                            <!-- Le bulletin sera généré ici -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Onglet Statistiques -->
+                <div id="statsTab" class="tab-content">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="statsClass">Classe:</label>
+                            <select id="statsClass" onchange="updateStatsSubjects()">
+                                <option value="">Sélectionner une classe</option>
+                                <option value="6eme">6ème</option>
+                                <option value="5eme">5ème</option>
+                                <option value="4eme">4ème</option>
+                                <option value="3eme">3ème</option>
+                                <option value="2nde">Seconde</option>
+                                <option value="1ere">Première</option>
+                                <option value="terminale">Terminale</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="statsSubject">Matière:</label>
+                            <select id="statsSubject" disabled>
+                                <option value="">Sélectionner une matière</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="statsTrimestre">Trimestre:</label>
+                            <select id="statsTrimestre">
+                                <option value="1">1er Trimestre</option>
+                                <option value="2">2ème Trimestre</option>
+                                <option value="3">3ème Trimestre</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="generateStats()">Générer les statistiques</button>
+                    
+                    <div id="statsContainer" style="margin-top: 20px; display: none;">
+                        <button class="print-btn no-print" onclick="printStats()">
+                            <i class="fas fa-print"></i> Imprimer les statistiques
+                        </button>
+                        
+                        <div class="bulletin">
+                            <div class="bulletin-header">
+                                <h2 class="bulletin-title" id="statsTitle">Statistiques de la classe</h2>
+                                <div class="bulletin-subtitle" id="statsSubtitle"></div>
+                            </div>
+                            
+                            <div class="top-students">
+                                <h3>🏆 5 premiers de la classe</h3>
+                                <table id="topStudentsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Rang</th>
+                                            <th>Matricule</th>
+                                            <th>Nom</th>
+                                            <th>Moyenne</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="weak-students">
+                                <h3>⚠️ Élèves en difficulté</h3>
+                                <table id="weakStudentsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Matricule</th>
+                                            <th>Nom</th>
+                                            <th>Moyenne</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Données stockées
+        const studentsData = [
+            { id: '6A01', name: 'Koffi Adjo', class: '6eme', subjects: ['Mathématiques', 'Français', 'Anglais', 'SVT', 'Histoire-Géo'] },
+            { id: '6A02', name: 'Ama Mensah', class: '6eme', subjects: ['Mathématiques', 'Français', 'Anglais', 'SVT', 'Histoire-Géo'] },
+            { id: '6A03', name: 'Yao Komlan', class: '6eme', subjects: ['Mathématiques', 'Français', 'Anglais', 'SVT', 'Histoire-Géo'] },
+            { id: '5A01', name: 'Esi Johnson', class: '5eme', subjects: ['Mathématiques', 'Français', 'Anglais', 'SVT', 'Histoire-Géo'] },
+            { id: '5A02', name: 'Kwame Akoto', class: '5eme', subjects: ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie', 'Histoire-Géo'] },
+            { id: '4A01', name: 'Afia Nkrumah', class: '4eme', subjects: ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie', 'Histoire-Géo'] },
+            { id: '4A02', name: 'Kofi Boateng', class: '4eme', subjects: ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie', 'Histoire-Géo'] },
+            { id: '3A01', name: 'Yaw Oppong', class: '3eme', subjects: ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie', 'Histoire-Géo'] },
+            { id: '3A02', name: 'Akosua Mensah', class: '3eme', subjects: ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie', 'Histoire-Géo'] },
+            { id: '2A01', name: 'Kwabena Osei', class: '2nde', subjects: ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie', 'SVT'] },
+            { id: '2A02', name: 'Adwoa Safo', class: '2nde', subjects: ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie', 'SVT'] },
+            { id: '1A01', name: 'Ama Ampofo', class: '1ere', subjects: ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie', 'SVT'] },
+            { id: '1A02', name: 'Kofi Agyeman', class: '1ere', subjects: ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie', 'SVT'] },
+            { id: 'TA01', name: 'Esi Owusu', class: 'terminale', subjects: ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie', 'SVT'] },
+            { id: 'TA02', name: 'Kwame Ansah', class: 'terminale', subjects: ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie', 'SVT'] }
+        ];
+
+        // Structure modifiée pour les matières par cycle
+        const cyclesData = {
+            'cycle1': { // 6ème et 5ème
+                'Mathématiques': 4,
+                'Français': 4,
+                'Anglais': 3,
+                'SVT': 2,
+                'Histoire-Géo': 2,
+                'Physique-Chimie': 2
+            },
+            'cycle2': { // 4ème et 3ème
+                'Mathématiques': 4,
+                'Français': 4,
+                'Anglais': 3,
+                'SVT': 2,
+                'Histoire-Géo': 2,
+                'Physique-Chimie': 3
+            },
+            'cycle3': { // 2nde, 1ère et Terminale
+                'Mathématiques': 4,
+                'Français': 4,
+                'Anglais': 3,
+                'SVT': 2,
+                'Physique-Chimie': 3,
+                'Philosophie': 2
+            }
+        };
+
+        // Mappage des classes aux cycles
+        const classToCycle = {
+            '6eme': 'cycle1',
+            '5eme': 'cycle1',
+            '4eme': 'cycle2',
+            '3eme': 'cycle2',
+            '2nde': 'cycle3',
+            '1ere': 'cycle3',
+            'terminale': 'cycle3'
+        };
+
+        // Fonction pour obtenir les matières d'une classe
+        function getSubjectsForClass(classLevel) {
+            const cycle = classToCycle[classLevel];
+            return cycle ? Object.keys(cyclesData[cycle]) : [];
+        }
+
+        // Fonction pour obtenir le coefficient d'une matière pour une classe
+        function getCoefficientForSubject(classLevel, subject) {
+            const cycle = classToCycle[classLevel];
+            return cycle ? (cyclesData[cycle][subject] || 1) : 1;
+        }
+
+        let evaluationsData = [];
+        let compositionsData = [];
+
+        // Fonction pour changer d'onglet
+        function openTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Mettre à jour les matières disponibles pour les évaluations
+        function updateEvalSubjects() {
+            const classSelect = document.getElementById('evalClass');
+            const subjectSelect = document.getElementById('evalSubject');
+            
+            subjectSelect.innerHTML = '<option value="">Sélectionner une matière</option>';
+            
+            if (!classSelect.value) return;
+            
+            const subjects = getSubjectsForClass(classSelect.value);
+            subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject;
+                option.textContent = subject;
+                subjectSelect.appendChild(option);
+            });
+            
+            // Mettre à jour la table des élèves
+            updateEvalStudentsTable();
+        }
+
+        // Mettre à jour la table des élèves pour les évaluations
+        function updateEvalStudentsTable() {
+            const classSelect = document.getElementById('evalClass');
+            const tbody = document.getElementById('evalStudentsTable');
+            tbody.innerHTML = '';
+            
+            if (!classSelect.value) return;
+            
+            const students = studentsData.filter(s => s.class === classSelect.value);
+            if (students.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Aucun élève dans cette classe</td></tr>';
+                return;
+            }
+            
+            students.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.id}</td>
+                    <td>${student.name}</td>
+                    <td><input type="number" min="0" max="20" step="0.5" class="student-note" data-student="${student.id}"></td>
+                    <td>
+                        <select class="student-appreciation" data-student="${student.id}">
+                            <option value="">-</option>
+                            <option value="excellent">Excellent</option>
+                            <option value="tres-bien">Très bien</option>
+                            <option value="bien">Bien</option>
+                            <option value="satisfaisant">Satisfaisant</option>
+                            <option value="a-ameliorer">À améliorer</option>
+                            <option value="insuffisant">Insuffisant</option>
+                        </select>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Mettre à jour les matières disponibles pour les compositions
+        function updateCompSubjects() {
+            const classSelect = document.getElementById('compClass');
+            const subjectSelect = document.getElementById('compSubject');
+            
+            subjectSelect.innerHTML = '<option value="">Sélectionner une matière</option>';
+            
+            if (!classSelect.value) return;
+            
+            const subjects = getSubjectsForClass(classSelect.value);
+            subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject;
+                option.textContent = subject;
+                subjectSelect.appendChild(option);
+            });
+            
+            // Mettre à jour la table des élèves
+            updateCompStudentsTable();
+        }
+
+        // Mettre à jour la table des élèves pour les compositions
+        function updateCompStudentsTable() {
+            const classSelect = document.getElementById('compClass');
+            const tbody = document.getElementById('compStudentsTable');
+            tbody.innerHTML = '';
+            
+            if (!classSelect.value) return;
+            
+            const students = studentsData.filter(s => s.class === classSelect.value);
+            if (students.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Aucun élève dans cette classe</td></tr>';
+                return;
+            }
+            
+            students.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.id}</td>
+                    <td>${student.name}</td>
+                    <td><input type="number" min="0" max="20" step="0.5" class="student-note" data-student="${student.id}"></td>
+                    <td>
+                        <select class="student-appreciation" data-student="${student.id}">
+                            <option value="">-</option>
+                            <option value="excellent">Excellent</option>
+                            <option value="tres-bien">Très bien</option>
+                            <option value="bien">Bien</option>
+                            <option value="satisfaisant">Satisfaisant</option>
+                            <option value="a-ameliorer">À améliorer</option>
+                            <option value="insuffisant">Insuffisant</option>
+                        </select>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Enregistrer les évaluations
+        document.getElementById('evalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const classValue = document.getElementById('evalClass').value;
+            const subjectValue = document.getElementById('evalSubject').value;
+            const typeValue = document.getElementById('evalType').value;
+            const dateValue = document.getElementById('evalDate').value;
+            const coeffValue = parseInt(document.getElementById('evalCoeff').value);
+            
+            const notes = [];
+            const noteInputs = document.querySelectorAll('#evalStudentsTable .student-note');
+            
+            noteInputs.forEach(input => {
+                const studentId = input.getAttribute('data-student');
+                const noteValue = parseFloat(input.value);
+                const appreciationSelect = document.querySelector(`#evalStudentsTable select[data-student="${studentId}"]`);
+                const appreciationValue = appreciationSelect.value;
+                
+                if (!isNaN(noteValue)) {
+                    notes.push({
+                        studentId,
+                        note: noteValue,
+                        appreciation: appreciationValue
+                    });
+                }
+            });
+            
+            if (notes.length === 0) {
+                alert('Aucune note valide à enregistrer!');
+                return;
+            }
+            
+            const newEvaluation = {
+                id: Date.now(),
+                class: classValue,
+                subject: subjectValue,
+                type: typeValue,
+                date: dateValue,
+                coefficient: coeffValue,
+                notes: notes
+            };
+            
+            evaluationsData.push(newEvaluation);
+            alert('Évaluation enregistrée avec succès!');
+            this.reset();
+        });
+
+        // Enregistrer les compositions
+        document.getElementById('compForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const classValue = document.getElementById('compClass').value;
+            const subjectValue = document.getElementById('compSubject').value;
+            const trimestreValue = document.getElementById('compTrimestre').value;
+            const dateValue = document.getElementById('compDate').value;
+            const coeffValue = parseInt(document.getElementById('compCoeff').value);
+            
+            const notes = [];
+            const noteInputs = document.querySelectorAll('#compStudentsTable .student-note');
+            
+            noteInputs.forEach(input => {
+                const studentId = input.getAttribute('data-student');
+                const noteValue = parseFloat(input.value);
+                const appreciationSelect = document.querySelector(`#compStudentsTable select[data-student="${studentId}"]`);
+                const appreciationValue = appreciationSelect.value;
+                
+                if (!isNaN(noteValue)) {
+                    notes.push({
+                        studentId,
+                        note: noteValue,
+                        appreciation: appreciationValue
+                    });
+                }
+            });
+            
+            if (notes.length === 0) {
+                alert('Aucune note valide à enregistrer!');
+                return;
+            }
+            
+            const newComposition = {
+                id: Date.now(),
+                class: classValue,
+                subject: subjectValue,
+                trimestre: trimestreValue,
+                date: dateValue,
+                coefficient: coeffValue,
+                notes: notes
+            };
+            
+            compositionsData.push(newComposition);
+            alert('Composition enregistrée avec succès!');
+            this.reset();
+        });
+
+        // Mettre à jour la liste des élèves pour le bulletin
+        function updateBulletinStudents() {
+            const classSelect = document.getElementById('bulletinClass');
+            const studentSelect = document.getElementById('bulletinStudent');
+            
+            studentSelect.innerHTML = '<option value="">Sélectionner un élève</option>';
+            
+            if (!classSelect.value) {
+                studentSelect.disabled = true;
+                return;
+            }
+            
+            const students = studentsData.filter(s => s.class === classSelect.value);
+            if (students.length === 0) {
+                studentSelect.disabled = true;
+                return;
+            }
+            
+            students.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.id;
+                option.textContent = `${student.name} (${student.id})`;
+                studentSelect.appendChild(option);
+            });
+            
+            studentSelect.disabled = false;
+        }
+
+        // Mettre à jour les matières pour les statistiques
+        function updateStatsSubjects() {
+            const classSelect = document.getElementById('statsClass');
+            const subjectSelect = document.getElementById('statsSubject');
+            
+            subjectSelect.innerHTML = '<option value="">Sélectionner une matière</option>';
+            
+            if (!classSelect.value) {
+                subjectSelect.disabled = true;
+                return;
+            }
+            
+            const subjects = getSubjectsForClass(classSelect.value);
+            subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject;
+                option.textContent = subject;
+                subjectSelect.appendChild(option);
+            });
+            
+            subjectSelect.disabled = false;
+        }
+
+        // Générer le bulletin d'un élève
+        function generateBulletin() {
+            const studentId = document.getElementById('bulletinStudent').value;
+            const trimestre = document.getElementById('bulletinTrimestre').value;
+            
+            if (!studentId) {
+                alert('Veuillez sélectionner un élève');
+                return;
+            }
+            
+            const student = studentsData.find(s => s.id === studentId);
+            if (!student) {
+                alert('Élève non trouvé');
+                return;
+            }
+            
+            // Récupérer toutes les notes de l'élève pour le trimestre
+            const studentEvaluations = evaluationsData.filter(eval => 
+                eval.class === student.class && 
+                eval.notes.some(note => note.studentId === studentId)
+            );
+            
+            const studentCompositions = compositionsData.filter(comp => 
+                comp.class === student.class && 
+                comp.trimestre === trimestre &&
+                comp.notes.some(note => note.studentId === studentId)
+            );
+            
+            // Calculer les moyennes par matière
+            const matieres = {};
+            
+            // Ajouter les évaluations
+            studentEvaluations.forEach(eval => {
+                if (!matieres[eval.subject]) {
+                    matieres[eval.subject] = {
+                        notes: [],
+                        coefficients: [],
+                        appreciations: []
+                    };
+                }
+                
+                const noteObj = eval.notes.find(n => n.studentId === studentId);
+                if (noteObj) {
+                    matieres[eval.subject].notes.push(noteObj.note);
+                    matieres[eval.subject].coefficients.push(eval.coefficient);
+                    if (noteObj.appreciation) {
+                        matieres[eval.subject].appreciations.push(noteObj.appreciation);
+                    }
+                }
+            });
+            
+            // Ajouter les compositions
+            studentCompositions.forEach(comp => {
+                if (!matieres[comp.subject]) {
+                    matieres[comp.subject] = {
+                        notes: [],
+                        coefficients: [],
+                        appreciations: []
+                    };
+                }
+                
+                const noteObj = comp.notes.find(n => n.studentId === studentId);
+                if (noteObj) {
+                    matieres[comp.subject].notes.push(noteObj.note);
+                    matieres[comp.subject].coefficients.push(comp.coefficient);
+                    if (noteObj.appreciation) {
+                        matieres[comp.subject].appreciations.push(noteObj.appreciation);
+                    }
+                }
+            });
+            
+            // Calculer les moyennes
+            const moyennes = {};
+            let totalCoeff = 0;
+            let totalPoints = 0;
+            
+            for (const matiere in matieres) {
+                const coeff = getCoefficientForSubject(student.class, matiere);
+                let sum = 0;
+                let sumCoeff = 0;
+                
+                for (let i = 0; i < matieres[matiere].notes.length; i++) {
+                    sum += matieres[matiere].notes[i] * matieres[matiere].coefficients[i];
+                    sumCoeff += matieres[matiere].coefficients[i];
+                }
+                
+                const moyenne = sumCoeff > 0 ? (sum / sumCoeff) : 0;
+                moyennes[matiere] = {
+                    moyenne: moyenne.toFixed(2),
+                    coefficient: coeff,
+                    appreciations: matieres[matiere].appreciations
+                };
+                
+                totalPoints += moyenne * coeff;
+                totalCoeff += coeff;
+            }
+            
+            const moyenneGenerale = totalCoeff > 0 ? (totalPoints / totalCoeff).toFixed(2) : 0;
+            
+            // Générer le bulletin
+            const bulletinContainer = document.getElementById('bulletinContainer');
+            const bulletin = document.getElementById('studentBulletin');
+            
+            bulletin.innerHTML = `
+                <div class="bulletin-header">
+                    <h2 class="bulletin-title">BULLETIN SCOLAIRE</h2>
+                    <div class="bulletin-subtitle">${getTrimestreName(trimestre)} - Année Scolaire ${new Date().getFullYear()}-${new Date().getFullYear()+1}</div>
+                </div>
+                
+                <div class="student-info">
+                    <div class="student-info-item">
+                        <span class="student-info-label">Nom:</span>
+                        <span>${student.name}</span>
+                    </div>
+                    <div class="student-info-item">
+                        <span class="student-info-label">Matricule:</span>
+                        <span>${student.id}</span>
+                    </div>
+                    <div class="student-info-item">
+                        <span class="student-info-label">Classe:</span>
+                        <span>${student.class}</span>
+                    </div>
+                </div>
+                
+                <table class="notes-table">
+                    <thead>
+                        <tr>
+                            <th>Matières</th>
+                            <th>Coeff.</th>
+                            <th>Moyenne</th>
+                            <th>Appréciations</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${Object.entries(moyennes).map(([matiere, data]) => `
+                            <tr>
+                                <td>${matiere}</td>
+                                <td>${data.coefficient}</td>
+                                <td>${data.moyenne}</td>
+                                <td>${data.appreciations.join(', ')}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+                
+                <div class="summary">
+                    <div class="summary-title">MOYENNE GÉNÉRALE: ${moyenneGenerale}/20</div>
+                    <div>Rang: ${calculateRank(studentId, student.class, trimestre)}</div>
+                </div>
+            `;
+            
+            bulletinContainer.style.display = 'block';
+        }
+
+        // Calculer le rang d'un élève
+        function calculateRank(studentId, classLevel, trimestre) {
+            const classStudents = studentsData.filter(s => s.class === classLevel);
+            if (classStudents.length === 0) return 'N/A';
+            
+            const studentAverages = [];
+            
+            classStudents.forEach(student => {
+                // Calculer la moyenne générale pour chaque élève
+                const matieres = {};
+                
+                // Évaluations
+                evaluationsData.filter(eval => eval.class === classLevel).forEach(eval => {
+                    const noteObj = eval.notes.find(n => n.studentId === student.id);
+                    if (noteObj) {
+                        if (!matieres[eval.subject]) {
+                            matieres[eval.subject] = {
+                                notes: [],
+                                coefficients: []
+                            };
+                        }
+                        matieres[eval.subject].notes.push(noteObj.note);
+                        matieres[eval.subject].coefficients.push(eval.coefficient);
+                    }
+                });
+                
+                // Compositions pour le trimestre
+                compositionsData.filter(comp => 
+                    comp.class === classLevel && 
+                    comp.trimestre === trimestre
+                ).forEach(comp => {
+                    const noteObj = comp.notes.find(n => n.studentId === student.id);
+                    if (noteObj) {
+                        if (!matieres[comp.subject]) {
+                            matieres[comp.subject] = {
+                                notes: [],
+                                coefficients: []
+                            };
+                        }
+                        matieres[comp.subject].notes.push(noteObj.note);
+                        matieres[comp.subject].coefficients.push(comp.coefficient);
+                    }
+                });
+                
+                // Calculer la moyenne générale
+                let totalCoeff = 0;
+                let totalPoints = 0;
+                
+                for (const matiere in matieres) {
+                    const coeff = getCoefficientForSubject(classLevel, matiere);
+                    let sum = 0;
+                    let sumCoeff = 0;
+                    
+                    for (let i = 0; i < matieres[matiere].notes.length; i++) {
+                        sum += matieres[matiere].notes[i] * matieres[matiere].coefficients[i];
+                        sumCoeff += matieres[matiere].coefficients[i];
+                    }
+                    
+                    const moyenne = sumCoeff > 0 ? (sum / sumCoeff) : 0;
+                    totalPoints += moyenne * coeff;
+                    totalCoeff += coeff;
+                }
+                
+                const moyenneGenerale = totalCoeff > 0 ? (totalPoints / totalCoeff) : 0;
+                
+                studentAverages.push({
+                    studentId: student.id,
+                    moyenne: moyenneGenerale
+                });
+            });
+            
+            // Trier par moyenne décroissante
+            studentAverages.sort((a, b) => b.moyenne - a.moyenne);
+            
+            // Trouver le rang de l'élève
+            const rank = studentAverages.findIndex(s => s.studentId === studentId) + 1;
+            
+            return rank > 0 ? `${rank}${getRankSuffix(rank)}/${classStudents.length}` : 'N/A';
+        }
+
+        // Obtenir le suffixe du rang (1er, 2ème, etc.)
+        function getRankSuffix(rank) {
+            if (rank === 1) return 'er';
+            return 'ème';
+        }
+
+        // Obtenir le nom du trimestre
+        function getTrimestreName(trimestre) {
+            const names = {
+                '1': '1er Trimestre',
+                '2': '2ème Trimestre',
+                '3': '3ème Trimestre'
+            };
+            return names[trimestre] || trimestre;
+        }
+
+        // Générer les statistiques de la classe
+        function generateStats() {
+            const classLevel = document.getElementById('statsClass').value;
+            const subject = document.getElementById('statsSubject').value;
+            const trimestre = document.getElementById('statsTrimestre').value;
+            
+            if (!classLevel) {
+                alert('Veuillez sélectionner une classe');
+                return;
+            }
+            
+            const classStudents = studentsData.filter(s => s.class === classLevel);
+            if (classStudents.length === 0) {
+                alert('Aucun élève dans cette classe');
+                return;
+            }
+            
+            // Calculer les moyennes
+            const studentAverages = [];
+            
+            classStudents.forEach(student => {
+                let moyenne;
+                
+                if (subject) {
+                    // Moyenne pour une matière spécifique
+                    const matiereData = {
+                        notes: [],
+                        coefficients: []
+                    };
+                    
+                    // Évaluations pour cette matière
+                    evaluationsData.filter(eval => 
+                        eval.class === classLevel && 
+                        eval.subject === subject
+                    ).forEach(eval => {
+                        const noteObj = eval.notes.find(n => n.studentId === student.id);
+                        if (noteObj) {
+                            matiereData.notes.push(noteObj.note);
+                            matiereData.coefficients.push(eval.coefficient);
+                        }
+                    });
+                    
+                    // Composition pour cette matière et ce trimestre
+                    compositionsData.filter(comp => 
+                        comp.class === classLevel && 
+                        comp.subject === subject && 
+                        comp.trimestre === trimestre
+                    ).forEach(comp => {
+                        const noteObj = comp.notes.find(n => n.studentId === student.id);
+                        if (noteObj) {
+                            matiereData.notes.push(noteObj.note);
+                            matiereData.coefficients.push(comp.coefficient);
+                        }
+                    });
+                    
+                    // Calculer la moyenne
+                    let sum = 0;
+                    let sumCoeff = 0;
+                    
+                    for (let i = 0; i < matiereData.notes.length; i++) {
+                        sum += matiereData.notes[i] * matiereData.coefficients[i];
+                        sumCoeff += matiereData.coefficients[i];
+                    }
+                    
+                    moyenne = sumCoeff > 0 ? (sum / sumCoeff) : 0;
+                } else {
+                    // Moyenne générale
+                    const matieres = {};
+                    
+                    // Évaluations
+                    evaluationsData.filter(eval => eval.class === classLevel).forEach(eval => {
+                        const noteObj = eval.notes.find(n => n.studentId === student.id);
+                        if (noteObj) {
+                            if (!matieres[eval.subject]) {
+                                matieres[eval.subject] = {
+                                    notes: [],
+                                    coefficients: []
+                                };
+                            }
+                            matieres[eval.subject].notes.push(noteObj.note);
+                            matieres[eval.subject].coefficients.push(eval.coefficient);
+                        }
+                    });
+                    
+                    // Compositions pour le trimestre
+                    compositionsData.filter(comp => 
+                        comp.class === classLevel && 
+                        comp.trimestre === trimestre
+                    ).forEach(comp => {
+                        const noteObj = comp.notes.find(n => n.studentId === student.id);
+                        if (noteObj) {
+                            if (!matieres[comp.subject]) {
+                                matieres[comp.subject] = {
+                                    notes: [],
+                                    coefficients: []
+                                };
+                            }
+                            matieres[comp.subject].notes.push(noteObj.note);
+                            matieres[comp.subject].coefficients.push(comp.coefficient);
+                        }
+                    });
+                    
+                    // Calculer la moyenne générale
+                    let totalCoeff = 0;
+                    let totalPoints = 0;
+                    
+                    for (const matiere in matieres) {
+                        const coeff = getCoefficientForSubject(classLevel, matiere);
+                        let sum = 0;
+                        let sumCoeff = 0;
+                        
+                        for (let i = 0; i < matieres[matiere].notes.length; i++) {
+                            sum += matieres[matiere].notes[i] * matieres[matiere].coefficients[i];
+                            sumCoeff += matieres[matiere].coefficients[i];
+                        }
+                        
+                        const moyenneMatiere = sumCoeff > 0 ? (sum / sumCoeff) : 0;
+                        totalPoints += moyenneMatiere * coeff;
+                        totalCoeff += coeff;
+                    }
+                    
+                    moyenne = totalCoeff > 0 ? (totalPoints / totalCoeff) : 0;
+                }
+                
+                studentAverages.push({
+                    studentId: student.id,
+                    name: student.name,
+                    moyenne: moyenne
+                });
+            });
+            
+            // Trier par moyenne décroissante
+            studentAverages.sort((a, b) => b.moyenne - a.moyenne);
+            
+            // Mettre à jour le titre
+            const statsTitle = document.getElementById('statsTitle');
+            const statsSubtitle = document.getElementById('statsSubtitle');
+            
+            if (subject) {
+                statsTitle.textContent = `STATISTIQUES - ${subject}`;
+                statsSubtitle.textContent = `${classLevel} - ${getTrimestreName(trimestre)} - Année Scolaire ${new Date().getFullYear()}-${new Date().getFullYear()+1}`;
+            } else {
+                statsTitle.textContent = `STATISTIQUES - MOYENNE GÉNÉRALE`;
+                statsSubtitle.textContent = `${classLevel} - ${getTrimestreName(trimestre)} - Année Scolaire ${new Date().getFullYear()}-${new Date().getFullYear()+1}`;
+            }
+            
+            // Mettre à jour les 5 premiers
+            const topStudentsTable = document.getElementById('topStudentsTable').querySelector('tbody');
+            topStudentsTable.innerHTML = '';
+            
+            const top5 = studentAverages.slice(0, 5);
+            top5.forEach((student, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}${getRankSuffix(index + 1)}</td>
+                    <td>${student.studentId}</td>
+                    <td>${student.name}</td>
+                    <td>${student.moyenne.toFixed(2)}</td>
+                `;
+                topStudentsTable.appendChild(row);
+            });
+            
+            // Mettre à jour les élèves en difficulté (moyenne < 10)
+            const weakStudentsTable = document.getElementById('weakStudentsTable').querySelector('tbody');
+            weakStudentsTable.innerHTML = '';
+            
+            const weakStudents = studentAverages.filter(s => s.moyenne < 10);
+            weakStudents.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.studentId}</td>
+                    <td>${student.name}</td>
+                    <td>${student.moyenne.toFixed(2)}</td>
+                `;
+                weakStudentsTable.appendChild(row);
+            });
+            
+            // Afficher le conteneur
+            document.getElementById('statsContainer').style.display = 'block';
+        }
+
+        // Imprimer les statistiques
+        function printStats() {
+            const printContent = document.getElementById('statsContainer').innerHTML;
+            const originalContent = document.body.innerHTML;
+            
+            document.body.innerHTML = printContent;
+            window.print();
+            document.body.innerHTML = originalContent;
+            
+            // Re-attacher les événements
+            updateBulletinStudents();
+            updateStatsSubjects();
+        }
+
+        // Gestion des matières par cycle
+        function loadSubjectsTable() {
+            const tbody = document.getElementById('subjectsTable');
+            tbody.innerHTML = '';
+            
+            for (const cycle in cyclesData) {
+                const cycleName = getCycleName(cycle);
+                const subjects = cyclesData[cycle];
+                
+                for (const subject in subjects) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${cycleName}</td>
+                        <td>${subject}</td>
+                        <td>${subjects[subject]}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="deleteSubject('${cycle}', '${subject}')">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                }
+            }
+        }
+        
+        function getCycleName(cycle) {
+            const names = {
+                'cycle1': 'Cycle 1 (6ème, 5ème)',
+                'cycle2': 'Cycle 2 (4ème, 3ème)',
+                'cycle3': 'Cycle 3 (2nde, 1ère, Terminale)'
+            };
+            return names[cycle] || cycle;
+        }
+        
+        function deleteSubject(cycle, subject) {
+            if (confirm(`Voulez-vous vraiment supprimer la matière "${subject}" du ${getCycleName(cycle)} ?`)) {
+                delete cyclesData[cycle][subject];
+                loadSubjectsTable();
+                alert('Matière supprimée avec succès!');
+            }
+        }
+        
+        document.getElementById('subjectForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const cycle = document.getElementById('cycleSelect').value;
+            const subjectName = document.getElementById('newSubjectName').value.trim();
+            const coeff = parseInt(document.getElementById('subjectCoeff').value);
+            
+            if (!cycle || !subjectName) {
+                alert('Veuillez remplir tous les champs');
+                return;
+            }
+            
+            if (cyclesData[cycle][subjectName]) {
+                alert('Cette matière existe déjà pour ce cycle');
+                return;
+            }
+            
+            cyclesData[cycle][subjectName] = coeff;
+            loadSubjectsTable();
+            alert('Matière ajoutée avec succès!');
+            this.reset();
+        });
+        
+        function resetSubjectForm() {
+            document.getElementById('subjectForm').reset();
+        }
+        
+        // Gestion de l'attribution des matières aux élèves
+        function updateAssignStudents() {
+            const classSelect = document.getElementById('assignClass');
+            const studentSelect = document.getElementById('assignStudent');
+            
+            studentSelect.innerHTML = '<option value="">Sélectionner un élève</option>';
+            
+            if (!classSelect.value) {
+                studentSelect.disabled = true;
+                return;
+            }
+            
+            const students = studentsData.filter(s => s.class === classSelect.value);
+            if (students.length === 0) {
+                studentSelect.disabled = true;
+                return;
+            }
+            
+            students.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.id;
+                option.textContent = `${student.name} (${student.id})`;
+                studentSelect.appendChild(option);
+            });
+            
+            studentSelect.disabled = false;
+        }
+        
+        document.getElementById('assignStudent').addEventListener('change', function() {
+            const studentId = this.value;
+            if (!studentId) return;
+            
+            const student = studentsData.find(s => s.id === studentId);
+            if (!student) return;
+            
+            const cycle = classToCycle[student.class];
+            const subjects = cyclesData[cycle] || {};
+            
+            const container = document.getElementById('availableSubjects');
+            container.innerHTML = '';
+            
+            for (const subject in subjects) {
+                const isAssigned = student.subjects.includes(subject);
+                
+                const div = document.createElement('div');
+                div.className = 'subject-checkbox';
+                div.innerHTML = `
+                    <label>
+                        <input type="checkbox" value="${subject}" ${isAssigned ? 'checked' : ''}>
+                        ${subject} (coeff. ${subjects[subject]})
+                    </label>
+                `;
+                container.appendChild(div);
+            }
+        });
+        
+        document.getElementById('assignSubjectForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const studentId = document.getElementById('assignStudent').value;
+            if (!studentId) {
+                alert('Veuillez sélectionner un élève');
+                return;
+            }
+            
+            const checkboxes = document.querySelectorAll('#availableSubjects input[type="checkbox"]:checked');
+            const selectedSubjects = Array.from(checkboxes).map(cb => cb.value);
+            
+            const student = studentsData.find(s => s.id === studentId);
+            if (student) {
+                student.subjects = selectedSubjects;
+                alert('Matières attribuées avec succès!');
+            }
+        });
+        
+        function resetAssignForm() {
+            document.getElementById('assignSubjectForm').reset();
+            document.getElementById('availableSubjects').innerHTML = '';
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Remplir les dates par défaut
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('evalDate').value = today;
+            document.getElementById('compDate').value = today;
+            
+            // Charger la table des matières
+            loadSubjectsTable();
+        });
+    </script>
+</body>
+</html>
