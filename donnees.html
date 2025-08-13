@@ -2,2072 +2,1623 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, minimum-scale=1.0, maximum-scale=3.0">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="theme-color" content="#667eea">
-    <title>Tableau de Bord des Compétences - Administration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Notes Scolaires</title>
     <style>
-        * {
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            background-color: #f5f5f5;
         }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="white" opacity="0.1"/><circle cx="80" cy="40" r="1.5" fill="white" opacity="0.1"/><circle cx="60" cy="80" r="1" fill="white" opacity="0.1"/><circle cx="40" cy="60" r="1.2" fill="white" opacity="0.1"/></svg>');
-        }
-
-        .school-info {
-            position: relative;
-            z-index: 2;
-            margin-bottom: 20px;
-        }
-
-        .school-logo {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #fff, #f0f8ff);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .school-logo::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(79, 172, 254, 0.1), transparent);
-            animation: rotate 8s linear infinite;
-        }
-
-        .school-logo-text {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #4facfe;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: relative;
-            z-index: 2;
-        }
-
-        .school-name {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            position: relative;
-            z-index: 2;
-        }
-
-        .school-subtitle {
-            font-size: 1rem;
-            opacity: 0.9;
-            font-weight: 300;
-            position: relative;
-            z-index: 2;
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            position: relative;
-            z-index: 2;
-        }
-
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            position: relative;
-            z-index: 2;
-        }
-
-        .logout-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 8px 15px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .dashboard-content {
-            padding: 40px;
-        }
-
-        .filters-section {
-            background: #f8f9ff;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            border-left: 5px solid #4facfe;
-        }
-
-        .filters-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .filter-group label {
-            font-weight: 600;
-            color: #555;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
-        }
-
-        .filter-group select,
-        .filter-group input {
-            padding: 12px 16px;
-            border: 2px solid #e1e8ed;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
             background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-
-        .filter-group select:focus,
-        .filter-group input:focus {
-            outline: none;
-            border-color: #4facfe;
-            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
-        }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .competency-overview, .struggling-students, .teachers-section {
+        .auth-container {
+            max-width: 400px;
+            margin: 50px auto;
             background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-
-        .section-title {
-            font-size: 1.5rem;
+        h1, h2, h3 {
             color: #333;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
-
-        .section-title::before {
-            content: '';
-            width: 4px;
-            height: 25px;
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            border-radius: 2px;
-        }
-
-        .competency-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .competency-item {
-            background: linear-gradient(135deg, #ffecd2, #fcb69f);
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        .competency-item:hover {
-            transform: translateY(-2px);
-        }
-
-        .competency-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #8b4513;
-        }
-
-        .competency-label {
-            font-size: 0.9rem;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .student-list, .teacher-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .student-card, .teacher-card {
-            background: #f8f9ff;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-left: 4px solid #ff6b6b;
-            transition: all 0.3s ease;
-        }
-
-        .teacher-card {
-            border-left-color: #4facfe;
-        }
-
-        .student-card:hover, .teacher-card:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .student-name, .teacher-name {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 8px;
-        }
-
-        .student-details, .teacher-details {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 10px;
-        }
-
-        .difficulty-subjects, .teacher-subjects {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-        }
-
-        .subject-tag {
-            background: #ff6b6b;
-            color: white;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .teacher-tag {
-            background: #4facfe;
-        }
-
-        .evolution-chart {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        .section {
             margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
-
-        .chart-container {
-            width: 100%;
-            height: 300px;
-            background: #f8f9ff;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            font-style: italic;
-        }
-
-        .detailed-view {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        .class-table {
+        table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin: 20px 0;
         }
-
-        .class-table th,
-        .class-table td {
-            padding: 12px;
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
             text-align: left;
-            border-bottom: 1px solid #e1e8ed;
         }
-
-        .class-table th {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            font-weight: 600;
+        th {
+            background-color: #f2f2f2;
         }
-
-        .class-table tr:hover {
-            background: #f8f9ff;
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
         }
-
-        .competency-badge {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .excellent { background: #43e97b; color: white; }
-        .good { background: #4facfe; color: white; }
-        .average { background: #ffd93d; color: #333; }
-        .poor { background: #ff6b6b; color: white; }
-
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .btn {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            color: white;
-        }
-
-        .btn-secondary {
-            background: linear-gradient(135deg, #43e97b, #38f9d7);
-            color: white;
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
-            color: white;
-        }
-
-        .btn-info {
-            background: linear-gradient(135deg, #a18cd1, #fbc2eb);
-            color: white;
-        }
-
-        .btn-pdf {
-            background: linear-gradient(135deg, #ff5e62, #ff9966);
-            color: white;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-content {
-            background-color: white;
-            margin: 5% auto;
-            padding: 30px;
-            border-radius: 15px;
-            width: 80%;
-            max-width: 800px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close:hover {
-            color: #000;
-        }
-
-        .student-detail-grid, .teacher-detail-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .student-info-card, .teacher-info-card {
-            background: #f8f9ff;
-            border-radius: 10px;
-            padding: 20px;
+        form {
             margin-bottom: 20px;
         }
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e1e8ed;
+        input, select {
+            padding: 8px;
+            margin: 5px 0;
+            width: 100%;
+            box-sizing: border-box;
         }
-
-        .info-label {
-            font-weight: 600;
-            color: #555;
-        }
-
-        .info-value {
-            color: #333;
-        }
-
-        .subject-performance {
-            margin-top: 20px;
-        }
-
-        .subject-card {
-            background: white;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .subject-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-
-        .subject-name {
-            font-weight: 600;
-            color: #333;
-        }
-
-        .grades-list {
-            display: flex;
-            gap: 10px;
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
             margin-top: 10px;
         }
-
-        .grade-item {
-            background: #e8f4f8;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.9rem;
+        button:hover {
+            background-color: #45a049;
         }
-
-        .intervention-form, .teacher-form {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #e1e8ed;
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            border-radius: 5px 5px 0 0;
         }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #555;
-        }
-
-        .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #e1e8ed;
-            border-radius: 8px;
-            min-height: 100px;
-        }
-
-        /* Nouveaux styles pour l'authentification et la gestion des élèves */
-        .auth-container {
-            max-width: 500px;
-            margin: 50px auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            text-align: center;
-        }
-
-        .auth-title {
-            font-size: 2rem;
-            margin-bottom: 30px;
-            color: #333;
-        }
-
-        .auth-form .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .auth-form label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #555;
-        }
-
-        .auth-form input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e1e8ed;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .auth-form input:focus {
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
             outline: none;
-            border-color: #4facfe;
-            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            color: black;
         }
-
-        .auth-switch {
-            margin-top: 20px;
-            color: #666;
+        .tab button:hover {
+            background-color: #ddd;
         }
-
-        .auth-switch a {
-            color: #4facfe;
-            text-decoration: none;
-            font-weight: 600;
+        .tab button.active {
+            background-color: #4CAF50;
+            color: white;
         }
-
-        .student-form-section, .teacher-form-section {
-            background: #f8f9ff;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
+        .tabcontent {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
         }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 15px;
+        .error {
+            color: red;
+            font-size: 0.9em;
         }
-
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-            margin-top: 20px;
+        .user-info {
+            float: right;
+            margin: 10px;
+            font-weight: bold;
         }
-
+        .logout-btn {
+            background-color: #f44336;
+            margin-left: 10px;
+        }
         .hidden {
             display: none;
         }
-
-        /* Style pour le bouton WhatsApp */
-        .whatsapp-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background-color: #25D366;
-            color: white;
-            border-radius: 50px;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            z-index: 999;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .role-admin {
+            background-color: #e7f3fe;
         }
-
-        .whatsapp-btn:hover {
-            background-color: #128C7E;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .whatsapp-btn svg {
-            width: 24px;
-            height: 24px;
-            fill: white;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                margin: 10px;
-                border-radius: 15px;
-            }
-
-            .header {
-                padding: 25px 20px;
-            }
-
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .dashboard-content {
-                padding: 25px 20px;
-            }
-
-            .filters-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-
-            .competency-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            .modal-content {
-                width: 95%;
-                margin: 10% auto;
-                padding: 20px;
-            }
-
-            .class-table {
-                font-size: 0.9rem;
-            }
-
-            .class-table th,
-            .class-table td {
-                padding: 8px;
-            }
-
-            .student-detail-grid,
-            .teacher-detail-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .whatsapp-btn {
-                bottom: 20px;
-                right: 20px;
-                padding: 12px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .competency-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .class-table {
-                font-size: 0.8rem;
-            }
-
-            .class-table th,
-            .class-table td {
-                padding: 6px;
-            }
-
-            .whatsapp-btn {
-                bottom: 15px;
-                right: 15px;
-                padding: 10px;
-            }
+        .role-teacher {
+            background-color: #fff8e1;
         }
     </style>
 </head>
 <body>
-    <!-- Conteneur d'authentification -->
-    <div id="authContainer" class="auth-container">
-        <h2 class="auth-title">Connexion Administrateur</h2>
-        <form id="loginForm" class="auth-form">
-            <div class="form-group">
-                <label for="loginEmail">Email:</label>
-                <input type="email" id="loginEmail" required>
+    <div id="auth-section" class="auth-container">
+        <h1>Connexion</h1>
+        <form id="login-form">
+            <div>
+                <label for="login-email">Email:</label>
+                <input type="email" id="login-email" required>
             </div>
-            <div class="form-group">
-                <label for="loginPassword">Mot de passe:</label>
-                <input type="password" id="loginPassword" required>
+            <div>
+                <label for="login-password">Mot de passe:</label>
+                <input type="password" id="login-password" required>
             </div>
-            <button type="submit" class="btn btn-primary">Se connecter</button>
-            <div class="auth-switch">
-                Pas de compte? <a href="#" onclick="showRegisterForm()">Créer un compte admin</a>
-            </div>
+            <button type="submit">Se connecter</button>
+            <button type="button" onclick="showRegisterForm()">Créer un compte</button>
+            <p id="login-error" class="error"></p>
         </form>
 
-        <form id="registerForm" class="auth-form hidden">
-            <h2 class="auth-title">Créer un compte Admin</h2>
-            <div class="form-group">
-                <label for="regName">Nom complet:</label>
-                <input type="text" id="regName" required>
+        <form id="register-form" class="hidden">
+            <h1>Création de compte</h1>
+            <div>
+                <label for="register-nom">Nom:</label>
+                <input type="text" id="register-nom" required>
             </div>
-            <div class="form-group">
-                <label for="regEmail">Email:</label>
-                <input type="email" id="regEmail" required>
+            <div>
+                <label for="register-prenom">Prénom:</label>
+                <input type="text" id="register-prenom" required>
             </div>
-            <div class="form-group">
-                <label for="regPassword">Mot de passe:</label>
-                <input type="password" id="regPassword" required>
+            <div>
+                <label for="register-email">Email:</label>
+                <input type="email" id="register-email" required>
             </div>
-            <div class="form-group">
-                <label for="regConfirmPassword">Confirmer le mot de passe:</label>
-                <input type="password" id="regConfirmPassword" required>
+            <div>
+                <label for="register-password">Mot de passe:</label>
+                <input type="password" id="register-password" required>
             </div>
-            <button type="submit" class="btn btn-primary">S'inscrire</button>
-            <div class="auth-switch">
-                Déjà un compte? <a href="#" onclick="showLoginForm()">Se connecter</a>
+            <div>
+                <label for="register-role">Rôle:</label>
+                <select id="register-role" required>
+                    <option value="teacher">Enseignant</option>
+                    <option value="admin">Administrateur</option>
+                </select>
             </div>
+            <button type="submit">Créer le compte</button>
+            <button type="button" onclick="showLoginForm()">Retour à la connexion</button>
+            <p id="register-error" class="error"></p>
         </form>
     </div>
 
-    <!-- Conteneur principal (masqué jusqu'à authentification) -->
-    <div id="mainContainer" class="container hidden">
-        <div class="header">
-            <!-- Bouton de déconnexion ajouté ici -->
-            <button class="logout-btn" onclick="logout()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
-                    <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
-                </svg>
-                Déconnexion
-            </button>
-            
-            <div class="school-info">
-                <div class="school-logo">
-                    <div class="school-logo-text">LN</div>
-                </div>
-                <div class="school-name">Lycée Niamtougou</div>
-                <div class="school-subtitle">République Togolaise</div>
-            </div>
-            <h1>📊 Tableau de Bord des Compétences</h1>
-            <p>Suivi des performances et identification des élèves en difficulté</p>
+    <div id="app-section" class="container hidden">
+        <div class="user-info">
+            <span id="current-user"></span>
+            <button class="logout-btn" onclick="logout()">Déconnexion</button>
+        </div>
+        
+        <h1>Système de Gestion des Notes Scolaires</h1>
+        
+        <div class="tab">
+            <button class="tablinks active" onclick="openTab(event, 'Enseignants')">Enseignants</button>
+            <button class="tablinks" onclick="openTab(event, 'Matieres')">Matières</button>
+            <button class="tablinks" onclick="openTab(event, 'Classes')">Classes</button>
+            <button class="tablinks" onclick="openTab(event, 'Attributions')">Attributions</button>
+            <button class="tablinks" onclick="openTab(event, 'Eleves')">Élèves</button>
+            <button class="tablinks" onclick="openTab(event, 'Notes')">Saisie des Notes</button>
+            <button class="tablinks" onclick="openTab(event, 'Consultation')">Consultation</button>
+            <button class="tablinks" onclick="openTab(event, 'Comptes')">Comptes</button>
         </div>
 
-        <div class="dashboard-content">
-            <!-- Nouvelle section pour l'enregistrement des élèves -->
-            <div class="student-form-section">
-                <h2 class="section-title">📝 Enregistrement des Élèves</h2>
-                <form id="studentForm">
-                    <div class="form-row">
-                        <div class="filter-group">
-                            <label for="studentLastName">Nom de famille:</label>
-                            <input type="text" id="studentLastName" required>
-                        </div>
-                        <div class="filter-group">
-                            <label for="studentFirstName">Prénom(s):</label>
-                            <input type="text" id="studentFirstName" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="filter-group">
-                            <label for="studentBirthDate">Date de naissance:</label>
-                            <input type="date" id="studentBirthDate" required>
-                        </div>
-                        <div class="filter-group">
-                            <label for="studentBirthPlace">Lieu de naissance:</label>
-                            <input type="text" id="studentBirthPlace" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="filter-group">
-                            <label for="studentStatus">Statut:</label>
-                            <select id="studentStatus" required>
-                                <option value="new">Nouvel élève</option>
-                                <option value="repeat">Redoublant</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label for="studentPreviousSchool">Établissement précédent:</label>
-                            <input type="text" id="studentPreviousSchool">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="filter-group">
-                            <label for="studentLastActiveYear">Dernière année active:</label>
-                            <input type="text" id="studentLastActiveYear" placeholder="Ex: 2022-2023">
-                        </div>
-                        <div class="filter-group">
-                            <label for="studentClass">Classe:</label>
-                            <select id="studentClass" required>
-                                <option value="">Sélectionner une classe</option>
-                                <option value="6ème">6ème</option>
-                                <option value="5ème">5ème</option>
-                                <option value="4ème">4ème</option>
-                                <option value="3ème">3ème</option>
-                                <option value="Seconde A">Seconde A</option>
-                                <option value="Seconde C">Seconde C</option>
-                                <option value="Première A1">Première A1</option>
-                                <option value="Première A2">Première A2</option>
-                                <option value="Première C">Première C</option>
-                                <option value="Première D">Première D</option>
-                                <option value="Terminale A1">Terminale A1</option>
-                                <option value="Terminale A2">Terminale A2</option>
-                                <option value="Terminale C">Terminale C</option>
-                                <option value="Terminale D">Terminale D</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <h3 style="margin: 20px 0 10px; color: #555;">Informations des parents/tuteurs</h3>
-                    
-                    <div class="form-row">
-                        <div class="filter-group">
-                            <label for="parentName">Nom complet:</label>
-                            <input type="text" id="parentName" required>
-                        </div>
-                        <div class="filter-group">
-                            <label for="parentContact">Contact:</label>
-                            <input type="tel" id="parentContact" required>
-                        </div>
-                    </div>
-
-                    <div class="filter-group">
-                        <label for="parentAddress">Adresse:</label>
-                        <input type="text" id="parentAddress" required>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="reset" class="btn btn-danger">Annuler</button>
-                        <button type="submit" class="btn btn-secondary">Enregistrer l'élève</button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Nouvelle section pour l'enregistrement des titulaires -->
-            <div class="teacher-form-section">
-                <h2 class="section-title">👨‍🏫 Enregistrement des Titulaires</h2>
-                <form id="teacherForm">
-                    <div class="form-row">
-                        <div class="filter-group">
-                            <label for="teacherLastName">Nom de famille:</label>
-                            <input type="text" id="teacherLastName" required>
-                        </div>
-                        <div class="filter-group">
-                            <label for="teacherFirstName">Prénom(s):</label>
-                            <input type="text" id="teacherFirstName" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="filter-group">
-                            <label for="teacherClass">Classe attribuée:</label>
-                            <select id="teacherClass" required>
-                                <option value="">Sélectionner une classe</option>
-                                <option value="6ème">6ème</option>
-                                <option value="5ème">5ème</option>
-                                <option value="4ème">4ème</option>
-                                <option value="3ème">3ème</option>
-                                <option value="Seconde A">Seconde A</option>
-                                <option value="Seconde C">Seconde C</option>
-                                <option value="Première A1">Première A1</option>
-                                <option value="Première A2">Première A2</option>
-                                <option value="Première C">Première C</option>
-                                <option value="Première D">Première D</option>
-                                <option value="Terminale A1">Terminale A1</option>
-                                <option value="Terminale A2">Terminale A2</option>
-                                <option value="Terminale C">Terminale C</option>
-                                <option value="Terminale D">Terminale D</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label for="teacherExperience">Années d'expérience:</label>
-                            <input type="number" id="teacherExperience" min="0" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="filter-group">
-                            <label for="teacherContact">Contact:</label>
-                            <input type="tel" id="teacherContact" required>
-                        </div>
-                        <div class="filter-group">
-                            <label for="teacherAddress">Adresse:</label>
-                            <input type="text" id="teacherAddress" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="filter-group">
-                            <label for="teacherMainSubject">Matière dominante:</label>
-                            <select id="teacherMainSubject" required>
-                                <option value="">Sélectionner une matière</option>
-                                <option value="francais">Français</option>
-                                <option value="mathematiques">Mathématiques</option>
-                                <option value="sciences-physiques">Sciences Physiques</option>
-                                <option value="svt">SVT</option>
-                                <option value="histoire-geographie">Histoire-Géographie</option>
-                                <option value="anglais">Anglais</option>
-                                <option value="philosophie">Philosophie</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label for="teacherSecondarySubject">Matière secondaire:</label>
-                            <select id="teacherSecondarySubject">
-                                <option value="">Aucune matière secondaire</option>
-                                <option value="francais">Français</option>
-                                <option value="mathematiques">Mathématiques</option>
-                                <option value="sciences-physiques">Sciences Physiques</option>
-                                <option value="svt">SVT</option>
-                                <option value="histoire-geographie">Histoire-Géographie</option>
-                                <option value="anglais">Anglais</option>
-                                <option value="philosophie">Philosophie</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="reset" class="btn btn-danger">Annuler</button>
-                        <button type="submit" class="btn btn-info">Enregistrer le titulaire</button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Filtres -->
-            <div class="filters-section">
-                <h2 class="section-title">🔍 Filtres de recherche</h2>
-                <div class="filters-grid">
-                    <div class="filter-group">
-                        <label for="cycle-filter">Cycle :</label>
-                        <select id="cycle-filter" onchange="updateClassFilter()">
-                            <option value="">Tous les cycles</option>
-                            <option value="college">Collège</option>
-                            <option value="lycee">Lycée</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="class-filter">Classe :</label>
-                        <select id="class-filter" onchange="updateData()">
-                            <option value="">Toutes les classes</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="subject-filter">Matière :</label>
-                        <select id="subject-filter" onchange="updateData()">
-                            <option value="">Toutes les matières</option>
-                            <option value="francais">Français</option>
-                            <option value="mathematiques">Mathématiques</option>
-                            <option value="sciences-physiques">Sciences Physiques</option>
-                            <option value="svt">SVT</option>
-                            <option value="histoire-geographie">Histoire-Géographie</option>
-                            <option value="anglais">Anglais</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="period-filter">Période :</label>
-                        <select id="period-filter" onchange="updateData()">
-                            <option value="current">Trimestre actuel</option>
-                            <option value="term1">1er Trimestre</option>
-                            <option value="term2">2e Trimestre</option>
-                            <option value="term3">3e Trimestre</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Vue d'ensemble, élèves en difficulté et titulaires -->
-            <div class="dashboard-grid">
-                <!-- Aperçu des compétences -->
-                <div class="competency-overview">
-                    <h2 class="section-title">📈 Aperçu des Compétences</h2>
-                    <div class="competency-grid">
-                        <div class="competency-item">
-                            <div class="competency-value" id="total-students-count">145</div>
-                            <div class="competency-label">Élèves au total</div>
-                        </div>
-                        <div class="competency-item">
-                            <div class="competency-value" id="excellent-count">23</div>
-                            <div class="competency-label">Excellents</div>
-                        </div>
-                        <div class="competency-item">
-                            <div class="competency-value" id="good-count">67</div>
-                            <div class="competency-label">Bons</div>
-                        </div>
-                        <div class="competency-item">
-                            <div class="competency-value" id="average-count">38</div>
-                            <div class="competency-label">Moyens</div>
-                        </div>
-                        <div class="competency-item">
-                            <div class="competency-value" id="struggling-count">17</div>
-                            <div class="competency-label">En difficulté</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Élèves en difficulté et titulaires -->
+        <!-- Section Enseignants -->
+        <div id="Enseignants" class="tabcontent" style="display: block;">
+            <h2>Gestion des Enseignants</h2>
+            <form id="formEnseignant">
+                <input type="hidden" id="enseignantId">
                 <div>
-                    <!-- Élèves en difficulté -->
-                    <div class="struggling-students" style="margin-bottom: 30px;">
-                        <h2 class="section-title">🚨 Élèves en Difficulté</h2>
-                        <div class="student-list" id="struggling-students-list">
-                            <!-- Les élèves en difficulté seront affichés ici -->
-                        </div>
-                    </div>
-
-                    <!-- Titulaires par classe -->
-                    <div class="teachers-section">
-                        <h2 class="section-title">👨‍🏫 Titulaires par Classe</h2>
-                        <div class="teacher-list" id="teachers-list">
-                            <!-- Les titulaires seront affichés ici -->
-                        </div>
-                    </div>
+                    <label for="enseignantNom">Nom:</label>
+                    <input type="text" id="enseignantNom" required>
                 </div>
+                <div>
+                    <label for="enseignantPrenom">Prénom:</label>
+                    <input type="text" id="enseignantPrenom" required>
+                </div>
+                <div>
+                    <label for="enseignantEmail">Email:</label>
+                    <input type="email" id="enseignantEmail" required>
+                </div>
+                <button type="submit">Enregistrer</button>
+                <button type="button" onclick="resetEnseignantForm()">Annuler</button>
+            </form>
+            
+            <h3>Liste des Enseignants</h3>
+            <table id="tableEnseignants">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Les données seront ajoutées dynamiquement -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section Matières -->
+        <div id="Matieres" class="tabcontent">
+            <h2>Gestion des Matières</h2>
+            <form id="formMatiere">
+                <input type="hidden" id="matiereId">
+                <div>
+                    <label for="nomMatiere">Nom de la matière:</label>
+                    <input type="text" id="nomMatiere" required>
+                </div>
+                <button type="submit">Enregistrer</button>
+                <button type="button" onclick="resetMatiereForm()">Annuler</button>
+            </form>
+            
+            <h3>Liste des Matières</h3>
+            <table id="tableMatieres">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Les données seront ajoutées dynamiquement -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section Classes -->
+        <div id="Classes" class="tabcontent">
+            <h2>Gestion des Classes</h2>
+            <form id="formClasse">
+                <input type="hidden" id="classeId">
+                <div>
+                    <label for="nomClasse">Nom de la classe:</label>
+                    <input type="text" id="nomClasse" required>
+                </div>
+                <div>
+                    <label for="niveauClasse">Niveau:</label>
+                    <input type="text" id="niveauClasse" required>
+                </div>
+                <button type="submit">Enregistrer</button>
+                <button type="button" onclick="resetClasseForm()">Annuler</button>
+            </form>
+            
+            <h3>Liste des Classes</h3>
+            <table id="tableClasses">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Niveau</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Les données seront ajoutées dynamiquement -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section Attributions -->
+        <div id="Attributions" class="tabcontent">
+            <h2>Attribution des Matières aux Enseignants par Classe</h2>
+            <form id="formAttribution">
+                <input type="hidden" id="attributionId">
+                <div>
+                    <label for="attributionEnseignant">Enseignant:</label>
+                    <select id="attributionEnseignant" required>
+                        <option value="">Sélectionner un enseignant</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="attributionMatiere">Matière:</label>
+                    <select id="attributionMatiere" required>
+                        <option value="">Sélectionner une matière</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="attributionClasse">Classe:</label>
+                    <select id="attributionClasse" required>
+                        <option value="">Sélectionner une classe</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="anneeScolaire">Année scolaire:</label>
+                    <input type="text" id="anneeScolaire" placeholder="Ex: 2023-2024" required>
+                </div>
+                <button type="submit">Enregistrer</button>
+                <button type="button" onclick="resetAttributionForm()">Annuler</button>
+            </form>
+            
+            <h3>Liste des Attributions</h3>
+            <table id="tableAttributions">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Enseignant</th>
+                        <th>Matière</th>
+                        <th>Classe</th>
+                        <th>Année</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Les données seront ajoutées dynamiquement -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section Élèves -->
+        <div id="Eleves" class="tabcontent">
+            <h2>Gestion des Élèves</h2>
+            <form id="formEleve">
+                <input type="hidden" id="eleveId">
+                <div>
+                    <label for="eleveNom">Nom:</label>
+                    <input type="text" id="eleveNom" required>
+                </div>
+                <div>
+                    <label for="elevePrenom">Prénom:</label>
+                    <input type="text" id="elevePrenom" required>
+                </div>
+                <div>
+                    <label for="eleveClasse">Classe:</label>
+                    <select id="eleveClasse" required>
+                        <option value="">Sélectionner une classe</option>
+                    </select>
+                </div>
+                <button type="submit">Enregistrer</button>
+                <button type="button" onclick="resetEleveForm()">Annuler</button>
+            </form>
+            
+            <h3>Liste des Élèves</h3>
+            <table id="tableEleves">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Classe</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Les données seront ajoutées dynamiquement -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section Saisie des Notes -->
+        <div id="Notes" class="tabcontent">
+            <h2>Saisie des Notes</h2>
+            <form id="formNote">
+                <input type="hidden" id="noteId">
+                <div>
+                    <label for="noteEnseignant">Enseignant:</label>
+                    <select id="noteEnseignant" required onchange="chargerMatieresClasses()">
+                        <option value="">Sélectionner un enseignant</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="noteMatiere">Matière:</label>
+                    <select id="noteMatiere" required>
+                        <option value="">Sélectionner une matière</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="noteClasse">Classe:</label>
+                    <select id="noteClasse" required onchange="chargerEleves()">
+                        <option value="">Sélectionner une classe</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="noteEleve">Élève:</label>
+                    <select id="noteEleve" required>
+                        <option value="">Sélectionner un élève</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="noteValeur">Note (sur 20):</label>
+                    <input type="number" id="noteValeur" min="0" max="20" step="0.01" required>
+                </div>
+                <div>
+                    <label for="noteType">Type d'évaluation:</label>
+                    <select id="noteType" required>
+                        <option value="DS">Devoir Surveillé</option>
+                        <option value="CC">Contrôle Continu</option>
+                        <option value="Examen">Examen</option>
+                        <option value="Projet">Projet</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="noteDate">Date:</label>
+                    <input type="date" id="noteDate" required>
+                </div>
+                <div>
+                    <label for="noteCoefficient">Coefficient:</label>
+                    <input type="number" id="noteCoefficient" min="1" value="1" required>
+                </div>
+                <div>
+                    <label for="noteCommentaire">Commentaire:</label>
+                    <input type="text" id="noteCommentaire">
+                </div>
+                <button type="submit">Enregistrer</button>
+                <button type="button" onclick="resetNoteForm()">Annuler</button>
+            </form>
+            
+            <h3>Notes enregistrées</h3>
+            <table id="tableNotes">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Élève</th>
+                        <th>Matière</th>
+                        <th>Classe</th>
+                        <th>Note</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Les données seront ajoutées dynamiquement -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section Consultation -->
+        <div id="Consultation" class="tabcontent">
+            <h2>Consultation des Notes</h2>
+            <div>
+                <label for="consultationClasse">Classe:</label>
+                <select id="consultationClasse" onchange="chargerMatieresConsultation()">
+                    <option value="">Toutes les classes</option>
+                </select>
             </div>
-
-            <!-- Graphique d'évolution -->
-            <div class="evolution-chart">
-                <h2 class="section-title">📊 Évolution des Performances</h2>
-                <div class="chart-container">
-                    <p>Graphique d'évolution des notes par trimestre<br>
-                    (Intégration avec une bibliothèque de graphiques recommandée)</p>
-                </div>
+            <div>
+                <label for="consultationMatiere">Matière:</label>
+                <select id="consultationMatiere">
+                    <option value="">Toutes les matières</option>
+                </select>
             </div>
-
-            <!-- Vue détaillée par classe -->
-            <div class="detailed-view">
-                <h2 class="section-title">📋 Vue Détaillée par Classe</h2>
-                <div class="action-buttons">
-                    <button class="btn btn-pdf" onclick="generatePDF()">🖨️ Imprimer en PDF</button>
-                    <button class="btn btn-secondary" onclick="showDetailedReport()">📊 Rapport détaillé</button>
-                </div>
-                <table class="class-table" id="students-table">
-                    <thead>
-                        <tr>
-                            <th>Élève</th>
-                            <th>Classe</th>
-                            <th>Moyenne Générale</th>
-                            <th>Matières en difficulté</th>
-                            <th>Évolution</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="students-table-body">
-                        <!-- Les données des élèves seront insérées ici -->
-                    </tbody>
-                </table>
+            <div>
+                <label for="consultationEnseignant">Enseignant:</label>
+                <select id="consultationEnseignant">
+                    <option value="">Tous les enseignants</option>
+                </select>
+            </div>
+            <button onclick="filtrerNotes()">Filtrer</button>
+            
+            <h3>Résultats</h3>
+            <div id="resultatsConsultation">
+                <p>Sélectionnez des critères de filtrage pour afficher les résultats.</p>
             </div>
         </div>
-    </div>
 
-    <!-- Modal pour les détails d'un élève -->
-    <div id="studentModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2 id="modal-student-name">Détails de l'élève</h2>
-            <div id="modal-content-body">
-                <!-- Le contenu détaillé sera inséré ici -->
-            </div>
+        <!-- Section Comptes -->
+        <div id="Comptes" class="tabcontent">
+            <h2>Gestion des Comptes</h2>
+            <form id="formCompte">
+                <input type="hidden" id="compteId">
+                <div>
+                    <label for="compteNom">Nom:</label>
+                    <input type="text" id="compteNom" required>
+                </div>
+                <div>
+                    <label for="comptePrenom">Prénom:</label>
+                    <input type="text" id="comptePrenom" required>
+                </div>
+                <div>
+                    <label for="compteEmail">Email:</label>
+                    <input type="email" id="compteEmail" required>
+                </div>
+                <div>
+                    <label for="comptePassword">Mot de passe:</label>
+                    <input type="password" id="comptePassword" placeholder="Laisser vide pour ne pas changer">
+                </div>
+                <div>
+                    <label for="compteRole">Rôle:</label>
+                    <select id="compteRole" required>
+                        <option value="teacher">Enseignant</option>
+                        <option value="admin">Administrateur</option>
+                    </select>
+                </div>
+                <button type="submit">Enregistrer</button>
+                <button type="button" onclick="resetCompteForm()">Annuler</button>
+            </form>
+            
+            <h3>Liste des Comptes</h3>
+            <table id="tableComptes">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Email</th>
+                        <th>Rôle</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Les données seront ajoutées dynamiquement -->
+                </tbody>
+            </table>
         </div>
-    </div>
-
-    <!-- Modal pour les détails d'un titulaire -->
-    <div id="teacherModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeTeacherModal()">&times;</span>
-            <h2 id="modal-teacher-name">Détails du titulaire</h2>
-            <div id="modal-teacher-content-body">
-                <!-- Le contenu détaillé sera inséré ici -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Bouton WhatsApp -->
-    <div class="whatsapp-btn" onclick="sendDataViaWhatsApp()">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-6.29 3.617c-.545 0-1.08-.152-1.543-.441l-1.74 1.004.455-1.696c-.402-.696-.627-1.5-.627-2.334 0-2.577 2.098-4.673 4.675-4.673s4.676 2.097 4.676 4.674-2.1 4.672-4.677 4.672m8.649-12.643c-.372-.907-1.084-1.628-1.992-2.014-.914-.388-1.916-.388-2.83 0l-.244.103c-.366.155-.715.345-1.047.565-.309.202-.608.423-.895.663-.715.6-1.318 1.3-1.77 2.096-.45.796-.747 1.662-.872 2.555-.034.243-.052.487-.052.732 0 .754.146 1.507.438 2.21l-1.39 5.18 5.317-1.443c.652.338 1.37.51 2.096.51.243 0 .486-.017.728-.05.894-.124 1.76-.42 2.557-.87.797-.45 1.498-1.052 2.098-1.766.24-.287.46-.586.663-.896.22-.332.41-.68.566-1.047l.102-.244c.39-.914.39-1.916 0-2.83"/>
-        </svg>
     </div>
 
     <script>
-        // Configuration des cycles et classes
-        const cycleConfig = {
-            college: ['6ème', '5ème', '4ème', '3ème'],
-            lycee: ['Seconde A', 'Seconde C', 'Première A1', 'Première A2', 'Première C', 'Première D', 'Terminale A1', 'Terminale A2', 'Terminale C', 'Terminale D']
-        };
-
-        // Données des administrateurs (en production, utiliser une base de données)
-        let adminAccounts = [
-            { email: "admin@lycee-niamtougou.tg", password: "Admin123", name: "Administrateur Principal" }
-        ];
-
-        // Données simulées des élèves (étendues avec les nouvelles informations)
-        let studentsData = [
-            {
-                id: 1,
-                lastName: "AKOUETE",
-                firstName: "Jean-Baptiste",
-                birthDate: "2005-03-15",
-                birthPlace: "Niamtougou",
-                status: "new",
-                previousSchool: "Collège Niamtougou",
-                lastActiveYear: "2022-2023",
-                class: "Terminale A1",
-                cycle: "lycee",
-                parentName: "AKOUETE Koffi",
-                parentContact: "+228 90 12 34 56",
-                parentAddress: "Quartier Centre, Niamtougou",
-                averageGrade: 8.5,
-                subjects: {
-                    francais: [7, 8, 9],
-                    mathematiques: [6, 7, 8],
-                    "histoire-geographie": [9, 8, 10],
-                    anglais: [8, 9, 7],
-                    philosophie: [7, 8, 9]
-                },
-                strugglingSubjects: ["mathematiques"],
-                evolution: "stable",
-                interventions: [
-                    {
-                        date: "2024-10-15",
-                        type: "Soutien personnalisé",
-                        teacher: "M. Koffi",
-                        comment: "Plan de travail individualisé en mathématiques"
-                    }
-                ]
-            },
-            {
-                id: 2,
-                lastName: "BAWA",
-                firstName: "Marie-Claire",
-                birthDate: "2008-07-22",
-                birthPlace: "Kara",
-                status: "new",
-                previousSchool: "Collège Kara",
-                lastActiveYear: "2022-2023",
-                class: "3ème",
-                cycle: "college",
-                parentName: "BAWA Tchala",
-                parentContact: "+228 91 23 45 67",
-                parentAddress: "Quartier Administratif, Kara",
-                averageGrade: 15.2,
-                subjects: {
-                    francais: [15, 16, 15],
-                    mathematiques: [14, 15, 16],
-                    svt: [16, 15, 17],
-                    anglais: [15, 14, 16]
-                },
-                strugglingSubjects: [],
-                evolution: "amélioration"
-            },
-            {
-                id: 3,
-                lastName: "DOSSOU",
-                firstName: "Emmanuel",
-                birthDate: "2006-11-05",
-                birthPlace: "Niamtougou",
-                status: "repeat",
-                previousSchool: "Lycée Niamtougou",
-                lastActiveYear: "2021-2022",
-                class: "Première C",
-                cycle: "lycee",
-                parentName: "DOSSOU Yao",
-                parentContact: "+228 92 34 56 78",
-                parentAddress: "Quartier Marché, Niamtougou",
-                averageGrade: 7.8,
-                subjects: {
-                    mathematiques: [6, 7, 8],
-                    "sciences-physiques": [7, 6, 8],
-                    svt: [8, 9, 7],
-                    francais: [8, 7, 9]
-                },
-                strugglingSubjects: ["mathematiques", "sciences-physiques"],
-                evolution: "légère amélioration",
-                interventions: [
-                    {
-                        date: "2024-11-02",
-                        type: "Groupe de travail",
-                        teacher: "Mme Adjo",
-                        comment: "Participation à un groupe de travail en sciences"
-                    }
-                ]
-            },
-            {
-                id: 4,
-                lastName: "KOFFI",
-                firstName: "Esperance",
-                birthDate: "2009-02-18",
-                birthPlace: "Sokodé",
-                status: "new",
-                previousSchool: "École Primaire Sokodé",
-                lastActiveYear: "2022-2023",
-                class: "5ème",
-                cycle: "college",
-                parentName: "KOFFI Abra",
-                parentContact: "+228 93 45 67 89",
-                parentAddress: "Quartier Centre, Sokodé",
-                averageGrade: 6.2,
-                subjects: {
-                    francais: [5, 6, 7],
-                    mathematiques: [4, 5, 6],
-                    anglais: [7, 6, 8],
-                    svt: [6, 7, 5]
-                },
-                strugglingSubjects: ["francais", "mathematiques"],
-                evolution: "stagnation",
-                interventions: [
-                    {
-                        date: "2024-09-20",
-                        type: "Entretien avec les parents",
-                        teacher: "M. Agbeko",
-                        comment: "Discussion sur les difficultés en français et mathématiques"
-                    },
-                    {
-                        date: "2024-10-10",
-                        type: "Soutien scolaire",
-                        teacher: "Mme Togo",
-                        comment: "Séances de soutien hebdomadaires"
-                    }
-                ]
-            },
-            {
-                id: 5,
-                lastName: "MENSAH",
-                firstName: "Patrick",
-                birthDate: "2005-09-30",
-                birthPlace: "Lomé",
-                status: "new",
-                previousSchool: "Lycée Tokoin",
-                lastActiveYear: "2022-2023",
-                class: "Terminale D",
-                cycle: "lycee",
-                parentName: "MENSAH Komi",
-                parentContact: "+228 90 98 76 54",
-                parentAddress: "Quartier Nyékonakpoè, Lomé",
-                averageGrade: 17.3,
-                subjects: {
-                    mathematiques: [18, 17, 19],
-                    "sciences-physiques": [17, 18, 16],
-                    svt: [16, 17, 18],
-                    francais: [16, 17, 16]
-                },
-                strugglingSubjects: [],
-                evolution: "excellente"
-            }
-        ];
-
-        // Données des titulaires
-        let teachersData = [
-            {
-                id: 1,
-                lastName: "AGBEKO",
-                firstName: "Kodjo",
-                class: "Terminale A1",
-                experience: 12,
-                contact: "+228 90 11 22 33",
-                address: "Quartier Administratif, Niamtougou",
-                mainSubject: "mathematiques",
-                secondarySubject: "sciences-physiques"
-            },
-            {
-                id: 2,
-                lastName: "ADJO",
-                firstName: "Afi",
-                class: "Première C",
-                experience: 8,
-                contact: "+228 91 44 55 66",
-                address: "Quartier Centre, Niamtougou",
-                mainSubject: "sciences-physiques",
-                secondarySubject: "svt"
-            },
-            {
-                id: 3,
-                lastName: "TOGO",
-                firstName: "Séna",
-                class: "5ème",
-                experience: 5,
-                contact: "+228 92 77 88 99",
-                address: "Quartier Marché, Niamtougou",
-                mainSubject: "francais",
-                secondarySubject: "histoire-geographie"
-            },
-            {
-                id: 4,
-                lastName: "KOFI",
-                firstName: "Yawo",
-                class: "3ème",
-                experience: 15,
-                contact: "+228 93 00 11 22",
-                address: "Quartier Lycée, Niamtougou",
-                mainSubject: "anglais",
-                secondarySubject: ""
-            }
-        ];
-
-        // Fonction pour envoyer les données via WhatsApp
-        function sendDataViaWhatsApp() {
-            const phoneNumber = "22892871605";
+        // Données simulées (en production, on utiliserait une base de données)
+        let enseignants = [];
+        let matieres = [];
+        let classes = [];
+        let attributions = [];
+        let eleves = [];
+        let notes = [];
+        let comptes = [];
+        let currentUser = null;
+        
+        // Initialisation des données de test
+        function initTestData() {
+            // Comptes initiaux
+            comptes = [
+                {id: 1, nom: "Admin", prenom: "System", email: "admin@ecole.fr", password: "admin123", role: "admin"},
+                {id: 2, nom: "Dupont", prenom: "Jean", email: "j.dupont@ecole.fr", password: "dupont123", role: "teacher"},
+                {id: 3, nom: "Martin", prenom: "Sophie", email: "s.martin@ecole.fr", password: "martin123", role: "teacher"}
+            ];
             
-            // Préparer le message avec les données
-            let message = "📊 Rapport des données enregistrées :\n\n";
+            enseignants = [
+                {id: 1, nom: "Dupont", prenom: "Jean", email: "j.dupont@ecole.fr"},
+                {id: 2, nom: "Martin", prenom: "Sophie", email: "s.martin@ecole.fr"}
+            ];
             
-            // Ajouter les statistiques des élèves
-            message += "📈 Statistiques des élèves :\n";
-            message += `- Total: ${document.getElementById('total-students-count').textContent}\n`;
-            message += `- Excellents: ${document.getElementById('excellent-count').textContent}\n`;
-            message += `- Bons: ${document.getElementById('good-count').textContent}\n`;
-            message += `- Moyens: ${document.getElementById('average-count').textContent}\n`;
-            message += `- En difficulté: ${document.getElementById('struggling-count').textContent}\n\n`;
+            matieres = [
+                {id: 1, nom: "Mathématiques"},
+                {id: 2, nom: "Français"},
+                {id: 3, nom: "Histoire-Géographie"}
+            ];
             
-            // Ajouter la liste des élèves en difficulté
-            const strugglingStudents = studentsData.filter(student => student.averageGrade < 10 || student.strugglingSubjects.length > 0);
-            if (strugglingStudents.length > 0) {
-                message += "🚨 Élèves en difficulté :\n";
-                strugglingStudents.forEach(student => {
-                    message += `- ${student.name} (${student.class}): ${student.averageGrade.toFixed(1)}/20\n`;
-                    if (student.strugglingSubjects.length > 0) {
-                        message += `  Matières: ${student.strugglingSubjects.map(getSubjectName).join(', ')}\n`;
-                    }
-                });
-                message += "\n";
-            }
+            classes = [
+                {id: 1, nom: "6ème A", niveau: "6ème"},
+                {id: 2, nom: "5ème B", niveau: "5ème"}
+            ];
             
-            // Ajouter la liste des titulaires
-            if (teachersData.length > 0) {
-                message += "👨‍🏫 Titulaires :\n";
-                teachersData.forEach(teacher => {
-                    message += `- ${teacher.name} (${teacher.class}): ${getSubjectName(teacher.mainSubject)}`;
-                    if (teacher.secondarySubject) {
-                        message += `, ${getSubjectName(teacher.secondarySubject)}`;
-                    }
-                    message += `\n`;
-                });
-            }
+            attributions = [
+                {id: 1, id_enseignant: 1, id_matiere: 1, id_classe: 1, annee: "2023-2024"},
+                {id: 2, id_enseignant: 2, id_matiere: 2, id_classe: 1, annee: "2023-2024"},
+                {id: 3, id_enseignant: 1, id_matiere: 1, id_classe: 2, annee: "2023-2024"}
+            ];
             
-            // Encoder le message pour l'URL
-            const encodedMessage = encodeURIComponent(message);
+            eleves = [
+                {id: 1, nom: "Durand", prenom: "Pierre", id_classe: 1},
+                {id: 2, nom: "Leroy", prenom: "Marie", id_classe: 1},
+                {id: 3, nom: "Moreau", prenom: "Luc", id_classe: 2}
+            ];
             
-            // Ouvrir le lien WhatsApp
-            window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
+            notes = [
+                {id: 1, id_enseignement: 1, id_eleve: 1, note: 15, type: "DS", date: "2023-10-15", coefficient: 2, commentaire: "Très bien"},
+                {id: 2, id_enseignement: 1, id_eleve: 2, note: 12, type: "DS", date: "2023-10-15", coefficient: 2, commentaire: "Bien"},
+                {id: 3, id_enseignement: 3, id_eleve: 3, note: 18, type: "CC", date: "2023-10-10", coefficient: 1, commentaire: "Excellent"}
+            ];
         }
-
-        // Fonction de déconnexion
-        function logout() {
-            if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-                localStorage.removeItem('adminAuthenticated');
-                document.getElementById('mainContainer').classList.add('hidden');
-                document.getElementById('authContainer').classList.remove('hidden');
-                // Réinitialiser le formulaire de connexion
-                document.getElementById('loginForm').reset();
-                showLoginForm();
+        
+        // Fonction pour ouvrir les onglets
+        function openTab(evt, tabName) {
+            // Vérifier les permissions
+            if (currentUser.role !== 'admin') {
+                if (tabName === 'Comptes' || tabName === 'Enseignants' || tabName === 'Matieres' || tabName === 'Classes' || tabName === 'Attributions') {
+                    alert("Accès réservé aux administrateurs");
+                    return;
+                }
+                
+                // Pour les enseignants, limiter l'accès à certaines fonctionnalités
+                if (currentUser.role === 'teacher') {
+                    if (tabName === 'Notes' || tabName === 'Consultation') {
+                        // Autoriser
+                    } else {
+                        alert("Accès non autorisé");
+                        return;
+                    }
+                }
             }
+            
+            let i, tabcontent, tablinks;
+            
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
         }
-
-        // Gestion de l'authentification
+        
+        // Fonctions d'authentification
         function showLoginForm() {
-            document.getElementById('loginForm').classList.remove('hidden');
-            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById("login-form").classList.remove("hidden");
+            document.getElementById("register-form").classList.add("hidden");
+            document.getElementById("login-error").textContent = "";
+            document.getElementById("register-error").textContent = "";
         }
-
+        
         function showRegisterForm() {
-            document.getElementById('loginForm').classList.add('hidden');
-            document.getElementById('registerForm').classList.remove('hidden');
+            document.getElementById("login-form").classList.add("hidden");
+            document.getElementById("register-form").classList.remove("hidden");
+            document.getElementById("login-error").textContent = "";
+            document.getElementById("register-error").textContent = "";
         }
-
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        
+        document.getElementById("login-form").addEventListener("submit", function(e) {
             e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
             
-            const admin = adminAccounts.find(acc => acc.email === email && acc.password === password);
+            const email = document.getElementById("login-email").value;
+            const password = document.getElementById("login-password").value;
             
-            if (admin) {
-                // Authentification réussie
-                document.getElementById('authContainer').classList.add('hidden');
-                document.getElementById('mainContainer').classList.remove('hidden');
-                localStorage.setItem('adminAuthenticated', 'true');
-                updateData();
+            const compte = comptes.find(c => c.email === email && c.password === password);
+            
+            if (compte) {
+                currentUser = compte;
+                document.getElementById("auth-section").classList.add("hidden");
+                document.getElementById("app-section").classList.remove("hidden");
+                document.getElementById("current-user").textContent = `${compte.prenom} ${compte.nom} (${compte.role === 'admin' ? 'Administrateur' : 'Enseignant'})`;
+                
+                // Appliquer le style en fonction du rôle
+                document.body.className = `role-${compte.role}`;
+                
+                // Initialiser l'interface
+                updateAllTables();
+                fillSelectOptions();
+                
+                // Définir la date d'aujourd'hui par défaut pour les notes
+                document.getElementById("noteDate").valueAsDate = new Date();
+                
+                // Si c'est un enseignant, ouvrir directement l'onglet Notes
+                if (compte.role === 'teacher') {
+                    document.querySelector('.tabcontent[style*="display: block"]').style.display = 'none';
+                    document.querySelector('.tablinks.active').classList.remove('active');
+                    
+                    document.getElementById("Notes").style.display = 'block';
+                    document.querySelector('.tablinks:nth-child(6)').classList.add('active');
+                }
             } else {
-                alert('Email ou mot de passe incorrect');
+                document.getElementById("login-error").textContent = "Email ou mot de passe incorrect";
             }
         });
-
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
+        
+        document.getElementById("register-form").addEventListener("submit", function(e) {
             e.preventDefault();
-            const name = document.getElementById('regName').value;
-            const email = document.getElementById('regEmail').value;
-            const password = document.getElementById('regPassword').value;
-            const confirmPassword = document.getElementById('regConfirmPassword').value;
             
-            if (password !== confirmPassword) {
-                alert('Les mots de passe ne correspondent pas');
+            const nom = document.getElementById("register-nom").value;
+            const prenom = document.getElementById("register-prenom").value;
+            const email = document.getElementById("register-email").value;
+            const password = document.getElementById("register-password").value;
+            const role = document.getElementById("register-role").value;
+            
+            // Vérifier si l'email existe déjà
+            if (comptes.some(c => c.email === email)) {
+                document.getElementById("register-error").textContent = "Cet email est déjà utilisé";
                 return;
             }
             
-            if (adminAccounts.some(acc => acc.email === email)) {
-                alert('Un compte avec cet email existe déjà');
-                return;
+            // Créer le compte
+            const newId = comptes.length > 0 ? Math.max(...comptes.map(c => c.id)) + 1 : 1;
+            comptes.push({
+                id: newId,
+                nom,
+                prenom,
+                email,
+                password,
+                role
+            });
+            
+            // Si c'est un enseignant, créer aussi un profil enseignant
+            if (role === 'teacher') {
+                const ensId = enseignants.length > 0 ? Math.max(...enseignants.map(e => e.id)) + 1 : 1;
+                enseignants.push({
+                    id: ensId,
+                    nom,
+                    prenom,
+                    email
+                });
             }
             
-            adminAccounts.push({ email, password, name });
-            alert('Compte créé avec succès! Vous pouvez maintenant vous connecter.');
+            // Afficher un message de succès et revenir au formulaire de connexion
+            alert("Compte créé avec succès ! Vous pouvez maintenant vous connecter.");
             showLoginForm();
+            document.getElementById("login-email").value = email;
+            document.getElementById("login-password").value = "";
         });
-
-        // Gestion de l'enregistrement des élèves
-        document.getElementById('studentForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const newStudent = {
-                id: studentsData.length > 0 ? Math.max(...studentsData.map(s => s.id)) + 1 : 1,
-                lastName: document.getElementById('studentLastName').value,
-                firstName: document.getElementById('studentFirstName').value,
-                birthDate: document.getElementById('studentBirthDate').value,
-                birthPlace: document.getElementById('studentBirthPlace').value,
-                status: document.getElementById('studentStatus').value,
-                previousSchool: document.getElementById('studentPreviousSchool').value,
-                lastActiveYear: document.getElementById('studentLastActiveYear').value,
-                class: document.getElementById('studentClass').value,
-                cycle: document.getElementById('studentClass').value.includes('ème') ? 'college' : 'lycee',
-                parentName: document.getElementById('parentName').value,
-                parentContact: document.getElementById('parentContact').value,
-                parentAddress: document.getElementById('parentAddress').value,
-                name: document.getElementById('studentLastName').value + ' ' + document.getElementById('studentFirstName').value,
-                averageGrade: 0, // Initialisé à 0, sera mis à jour plus tard
-                subjects: {},
-                strugglingSubjects: [],
-                evolution: "new"
-            };
-            
-            studentsData.push(newStudent);
-            alert('Élève enregistré avec succès!');
-            this.reset();
-            
-            // Mettre à jour l'affichage
-            updateData();
-        });
-
-        // Gestion de l'enregistrement des titulaires
-        document.getElementById('teacherForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const newTeacher = {
-                id: teachersData.length > 0 ? Math.max(...teachersData.map(t => t.id)) + 1 : 1,
-                lastName: document.getElementById('teacherLastName').value,
-                firstName: document.getElementById('teacherFirstName').value,
-                class: document.getElementById('teacherClass').value,
-                experience: parseInt(document.getElementById('teacherExperience').value),
-                contact: document.getElementById('teacherContact').value,
-                address: document.getElementById('teacherAddress').value,
-                mainSubject: document.getElementById('teacherMainSubject').value,
-                secondarySubject: document.getElementById('teacherSecondarySubject').value,
-                name: document.getElementById('teacherLastName').value + ' ' + document.getElementById('teacherFirstName').value
-            };
-            
-            teachersData.push(newTeacher);
-            alert('Titulaire enregistré avec succès!');
-            this.reset();
-            
-            // Mettre à jour l'affichage
-            updateTeachersList();
-        });
-
-        // Obtenir le nom complet de la matière
-        function getSubjectName(subjectCode) {
-            const subjects = {
-                "francais": "Français",
-                "mathematiques": "Mathématiques",
-                "sciences-physiques": "Sciences Physiques",
-                "svt": "SVT",
-                "histoire-geographie": "Histoire-Géo",
-                "anglais": "Anglais",
-                "philosophie": "Philosophie"
-            };
-            return subjects[subjectCode] || subjectCode;
+        
+        function logout() {
+            currentUser = null;
+            document.getElementById("app-section").classList.add("hidden");
+            document.getElementById("auth-section").classList.remove("hidden");
+            document.body.className = "";
+            showLoginForm();
         }
-
-        // Filtrer les données selon les critères sélectionnés
-        function getFilteredData() {
-            const cycle = document.getElementById('cycle-filter').value;
-            const classFilter = document.getElementById('class-filter').value;
-            const subject = document.getElementById('subject-filter').value;
-            
-            return studentsData.filter(student => {
-                if (cycle && student.cycle !== cycle) return false;
-                if (classFilter && student.class.toLowerCase().replace(/\s+/g, '-') !== classFilter) return false;
-                if (subject && !student.subjects[subject]) return false;
-                return true;
-            });
-        }
-
-        // Mettre à jour toutes les données du tableau de bord
-        function updateData() {
-            const filteredData = getFilteredData();
-            updateStatistics(filteredData);
-            updateStrugglingStudents(filteredData);
-            updateStudentsTable(filteredData);
-            updateTeachersList();
-        }
-
-        // Mettre à jour les statistiques
-        function updateStatistics(data) {
-            const total = data.length;
-            let excellent = 0, good = 0, average = 0, struggling = 0;
-            
-            data.forEach(student => {
-                if (student.averageGrade >= 16) excellent++;
-                else if (student.averageGrade >= 12) good++;
-                else if (student.averageGrade >= 10) average++;
-                else struggling++;
+        
+        // Fonctions pour remplir les select options
+        function fillSelectOptions() {
+            // Enseignants
+            const selectEnseignants = document.querySelectorAll("select[id$='Enseignant']");
+            selectEnseignants.forEach(select => {
+                select.innerHTML = '<option value="">Sélectionner un enseignant</option>';
+                enseignants.forEach(ens => {
+                    select.innerHTML += `<option value="${ens.id}">${ens.nom} ${ens.prenom}</option>`;
+                });
             });
             
-            document.getElementById('total-students-count').textContent = total;
-            document.getElementById('excellent-count').textContent = excellent;
-            document.getElementById('good-count').textContent = good;
-            document.getElementById('average-count').textContent = average;
-            document.getElementById('struggling-count').textContent = struggling;
-        }
-
-        // Mettre à jour la liste des élèves en difficulté
-        function updateStrugglingStudents(data) {
-            const strugglingList = document.getElementById('struggling-students-list');
-            const strugglingStudents = data.filter(student => student.averageGrade < 10 || student.strugglingSubjects.length > 0);
-            
-            strugglingList.innerHTML = '';
-            
-            strugglingStudents.forEach(student => {
-                const card = document.createElement('div');
-                card.className = 'student-card';
-                card.innerHTML = `
-                    <div class="student-name">${student.name}</div>
-                    <div class="student-details">
-                        ${student.class} - Moyenne: ${student.averageGrade}/20
-                    </div>
-                    <div class="difficulty-subjects">
-                        ${student.strugglingSubjects.map(subject => 
-                            `<span class="subject-tag">${getSubjectName(subject)}</span>`
-                        ).join('')}
-                    </div>
-                `;
-                card.onclick = () => showStudentDetails(student);
-                strugglingList.appendChild(card);
+            // Matières
+            const selectMatieres = document.querySelectorAll("select[id$='Matiere']");
+            selectMatieres.forEach(select => {
+                select.innerHTML = '<option value="">Sélectionner une matière</option>';
+                matieres.forEach(mat => {
+                    select.innerHTML += `<option value="${mat.id}">${mat.nom}</option>`;
+                });
             });
             
-            if (strugglingStudents.length === 0) {
-                strugglingList.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">Aucun élève en difficulté selon les critères actuels</p>';
-            }
+            // Classes
+            const selectClasses = document.querySelectorAll("select[id$='Classe']");
+            selectClasses.forEach(select => {
+                select.innerHTML = '<option value="">Sélectionner une classe</option>';
+                classes.forEach(cl => {
+                    select.innerHTML += `<option value="${cl.id}">${cl.nom} (${cl.niveau})</option>`;
+                });
+            });
+            
+            // Pour la consultation
+            document.getElementById("consultationClasse").innerHTML = '<option value="">Toutes les classes</option>';
+            classes.forEach(cl => {
+                document.getElementById("consultationClasse").innerHTML += `<option value="${cl.id}">${cl.nom} (${cl.niveau})</option>`;
+            });
+            
+            document.getElementById("consultationEnseignant").innerHTML = '<option value="">Tous les enseignants</option>';
+            enseignants.forEach(ens => {
+                document.getElementById("consultationEnseignant").innerHTML += `<option value="${ens.id}">${ens.nom} ${ens.prenom}</option>`;
+            });
         }
-
-        // Mettre à jour la liste des titulaires
-        function updateTeachersList() {
-            const teachersList = document.getElementById('teachers-list');
-            const classFilter = document.getElementById('class-filter').value;
+        
+        // Fonction pour charger les matières et classes d'un enseignant
+        function chargerMatieresClasses() {
+            const enseignantId = document.getElementById("noteEnseignant").value;
+            const matiereSelect = document.getElementById("noteMatiere");
+            const classeSelect = document.getElementById("noteClasse");
             
-            let filteredTeachers = teachersData;
-            if (classFilter) {
-                filteredTeachers = teachersData.filter(teacher => 
-                    teacher.class.toLowerCase().replace(/\s+/g, '-') === classFilter
-                );
-            }
+            matiereSelect.innerHTML = '<option value="">Sélectionner une matière</option>';
+            classeSelect.innerHTML = '<option value="">Sélectionner une classe</option>';
             
-            teachersList.innerHTML = '';
+            if (!enseignantId) return;
             
-            if (filteredTeachers.length === 0) {
-                teachersList.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">Aucun titulaire trouvé pour les critères actuels</p>';
+            // Filtrer les attributions pour cet enseignant
+            const attribs = attributions.filter(a => a.id_enseignant == enseignantId);
+            
+            // Remplir les matières
+            const matieresEnseignant = [];
+            attribs.forEach(att => {
+                const matiere = matieres.find(m => m.id == att.id_matiere);
+                if (matiere && !matieresEnseignant.some(m => m.id == matiere.id)) {
+                    matieresEnseignant.push(matiere);
+                }
+            });
+            
+            matieresEnseignant.forEach(mat => {
+                matiereSelect.innerHTML += `<option value="${mat.id}">${mat.nom}</option>`;
+            });
+            
+            // Remplir les classes
+            const classesEnseignant = [];
+            attribs.forEach(att => {
+                const classe = classes.find(c => c.id == att.id_classe);
+                if (classe && !classesEnseignant.some(c => c.id == classe.id)) {
+                    classesEnseignant.push(classe);
+                }
+            });
+            
+            classesEnseignant.forEach(cl => {
+                classeSelect.innerHTML += `<option value="${cl.id}">${cl.nom} (${cl.niveau})</option>`;
+            });
+        }
+        
+        // Fonction pour charger les élèves d'une classe
+        function chargerEleves() {
+            const classeId = document.getElementById("noteClasse").value;
+            const eleveSelect = document.getElementById("noteEleve");
+            
+            eleveSelect.innerHTML = '<option value="">Sélectionner un élève</option>';
+            
+            if (!classeId) return;
+            
+            const elevesClasse = eleves.filter(e => e.id_classe == classeId);
+            elevesClasse.forEach(el => {
+                eleveSelect.innerHTML += `<option value="${el.id}">${el.nom} ${el.prenom}</option>`;
+            });
+        }
+        
+        // Fonction pour charger les matières dans la consultation
+        function chargerMatieresConsultation() {
+            const classeId = document.getElementById("consultationClasse").value;
+            const matiereSelect = document.getElementById("consultationMatiere");
+            
+            matiereSelect.innerHTML = '<option value="">Toutes les matières</option>';
+            
+            if (!classeId) {
+                // Si aucune classe sélectionnée, montrer toutes les matières
+                matieres.forEach(mat => {
+                    matiereSelect.innerHTML += `<option value="${mat.id}">${mat.nom}</option>`;
+                });
                 return;
             }
             
-            filteredTeachers.forEach(teacher => {
-                const card = document.createElement('div');
-                card.className = 'teacher-card';
-                card.innerHTML = `
-                    <div class="teacher-name">${teacher.name}</div>
-                    <div class="teacher-details">
-                        ${teacher.class} - ${teacher.experience} ans d'expérience
-                    </div>
-                    <div class="teacher-subjects">
-                        <span class="subject-tag teacher-tag">${getSubjectName(teacher.mainSubject)} (Dominante)</span>
-                        ${teacher.secondarySubject ? 
-                            `<span class="subject-tag teacher-tag">${getSubjectName(teacher.secondarySubject)} (Secondaire)</span>` : 
-                            ''}
-                    </div>
-                `;
-                card.onclick = () => showTeacherDetails(teacher);
-                teachersList.appendChild(card);
+            // Filtrer les matières enseignées dans cette classe
+            const matieresClasse = [];
+            attributions.forEach(att => {
+                if (att.id_classe == classeId) {
+                    const matiere = matieres.find(m => m.id == att.id_matiere);
+                    if (matiere && !matieresClasse.some(m => m.id == matiere.id)) {
+                        matieresClasse.push(matiere);
+                    }
+                }
+            });
+            
+            matieresClasse.forEach(mat => {
+                matiereSelect.innerHTML += `<option value="${mat.id}">${mat.nom}</option>`;
             });
         }
-
-        // Mettre à jour le tableau des élèves
-        function updateStudentsTable(data) {
-            const tbody = document.getElementById('students-table-body');
+        
+        // Fonction pour filtrer les notes dans la consultation
+        function filtrerNotes() {
+            const classeId = document.getElementById("consultationClasse").value;
+            const matiereId = document.getElementById("consultationMatiere").value;
+            const enseignantId = document.getElementById("consultationEnseignant").value;
+            
+            let notesFiltrees = [...notes];
+            
+            // Si c'est un enseignant, ne montrer que ses propres notes
+            if (currentUser.role === 'teacher') {
+                const enseignant = enseignants.find(e => e.email === currentUser.email);
+                if (enseignant) {
+                    const enseignements = attributions.filter(a => a.id_enseignant == enseignant.id).map(a => a.id);
+                    notesFiltrees = notesFiltrees.filter(n => enseignements.includes(n.id_enseignement));
+                }
+            }
+            
+            // Filtrer par classe (via les élèves)
+            if (classeId) {
+                const elevesClasse = eleves.filter(e => e.id_classe == classeId).map(e => e.id);
+                notesFiltrees = notesFiltrees.filter(n => elevesClasse.includes(n.id_eleve));
+            }
+            
+            // Filtrer par matière (via les enseignements)
+            if (matiereId) {
+                const enseignements = attributions.filter(a => a.id_matiere == matiereId).map(a => a.id);
+                notesFiltrees = notesFiltrees.filter(n => enseignements.includes(n.id_enseignement));
+            }
+            
+            // Filtrer par enseignant (via les enseignements)
+            if (enseignantId) {
+                const enseignements = attributions.filter(a => a.id_enseignant == enseignantId).map(a => a.id);
+                notesFiltrees = notesFiltrees.filter(n => enseignements.includes(n.id_enseignement));
+            }
+            
+            // Afficher les résultats
+            afficherResultatsConsultation(notesFiltrees);
+        }
+        
+        // Fonction pour afficher les résultats de la consultation
+        function afficherResultatsConsultation(notesFiltrees) {
+            const resultatsDiv = document.getElementById("resultatsConsultation");
+            
+            if (notesFiltrees.length === 0) {
+                resultatsDiv.innerHTML = "<p>Aucun résultat trouvé avec ces critères de filtrage.</p>";
+                return;
+            }
+            
+            let html = '<table><thead><tr><th>Élève</th><th>Matière</th><th>Classe</th><th>Note</th><th>Type</th><th>Date</th></tr></thead><tbody>';
+            
+            notesFiltrees.forEach(note => {
+                const enseignement = attributions.find(a => a.id === note.id_enseignement);
+                const matiere = matieres.find(m => m.id === enseignement.id_matiere);
+                const classe = classes.find(c => c.id === enseignement.id_classe);
+                const eleve = eleves.find(e => e.id === note.id_eleve);
+                const enseignant = enseignants.find(e => e.id === enseignement.id_enseignant);
+                
+                html += `<tr>
+                    <td>${eleve.nom} ${eleve.prenom}</td>
+                    <td>${matiere.nom} (${enseignant.nom})</td>
+                    <td>${classe.nom}</td>
+                    <td>${note.note}/20</td>
+                    <td>${note.type}</td>
+                    <td>${note.date}</td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            resultatsDiv.innerHTML = html;
+        }
+        
+        // Fonctions pour mettre à jour les tables
+        function updateAllTables() {
+            updateTableEnseignants();
+            updateTableMatieres();
+            updateTableClasses();
+            updateTableAttributions();
+            updateTableEleves();
+            updateTableNotes();
+            updateTableComptes();
+        }
+        
+        function updateTableEnseignants() {
+            const tbody = document.querySelector("#tableEnseignants tbody");
             tbody.innerHTML = '';
             
-            data.forEach(student => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${student.name}</td>
-                    <td>${student.class}</td>
-                    <td>
-                        <span class="competency-badge ${getGradeClass(student.averageGrade)}">
-                            ${student.averageGrade.toFixed(1)}/20
-                        </span>
-                    </td>
-                    <td>
-                        ${student.strugglingSubjects.map(subject => 
-                            `<span class="subject-tag">${getSubjectName(subject)}</span>`
-                        ).join(' ')}
-                        ${student.strugglingSubjects.length === 0 ? '<span style="color: #43e97b;">Aucune</span>' : ''}
-                    </td>
-                    <td>${getEvolutionIcon(student.evolution)} ${student.evolution}</td>
-                    <td>
-                        <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;" 
-                                onclick="showStudentDetails(${JSON.stringify(student).replace(/"/g, '&quot;')})">
-                            Détails
-                        </button>
-                    </td>
+            enseignants.forEach(ens => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${ens.id}</td>
+                        <td>${ens.nom}</td>
+                        <td>${ens.prenom}</td>
+                        <td>${ens.email}</td>
+                        <td>
+                            <button onclick="editEnseignant(${ens.id})">Modifier</button>
+                            <button onclick="deleteEnseignant(${ens.id})">Supprimer</button>
+                        </td>
+                    </tr>
                 `;
-                tbody.appendChild(row);
             });
         }
-
-        // Obtenir la classe CSS selon la note
-        function getGradeClass(grade) {
-            if (grade >= 16) return 'excellent';
-            if (grade >= 12) return 'good';
-            if (grade >= 10) return 'average';
-            return 'poor';
-        }
-
-        // Obtenir l'icône d'évolution
-        function getEvolutionIcon(evolution) {
-            const icons = {
-                'excellente': '🚀',
-                'amélioration': '📈',
-                'légère amélioration': '📊',
-                'stable': '➡️',
-                'stagnation': '😐',
-                'dégradation': '📉'
-            };
-            return icons[evolution] || '';
-        }
-
-        // Afficher les détails d'un élève dans une modal
-        function showStudentDetails(student) {
-            const modal = document.getElementById('studentModal');
-            const modalTitle = document.getElementById('modal-student-name');
-            const modalBody = document.getElementById('modal-content-body');
+        
+        function updateTableMatieres() {
+            const tbody = document.querySelector("#tableMatieres tbody");
+            tbody.innerHTML = '';
             
-            modalTitle.textContent = `${student.name} - ${student.class}`;
-            
-            let interventionsHTML = '';
-            if (student.interventions && student.interventions.length > 0) {
-                interventionsHTML = `
-                    <div class="student-info-card">
-                        <h3>Interventions passées</h3>
-                        ${student.interventions.map(interv => `
-                            <div class="info-row">
-                                <span class="info-label">${formatDate(interv.date)} - ${interv.type}</span>
-                                <span class="info-value">${interv.teacher}</span>
-                            </div>
-                            <div style="margin-top: 5px; font-size: 0.9rem;">${interv.comment}</div>
-                        `).join('<hr style="margin: 10px 0;">')}
-                    </div>
+            matieres.forEach(mat => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${mat.id}</td>
+                        <td>${mat.nom}</td>
+                        <td>
+                            <button onclick="editMatiere(${mat.id})">Modifier</button>
+                            <button onclick="deleteMatiere(${mat.id})">Supprimer</button>
+                        </td>
+                    </tr>
                 `;
+            });
+        }
+        
+        function updateTableClasses() {
+            const tbody = document.querySelector("#tableClasses tbody");
+            tbody.innerHTML = '';
+            
+            classes.forEach(cl => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${cl.id}</td>
+                        <td>${cl.nom}</td>
+                        <td>${cl.niveau}</td>
+                        <td>
+                            <button onclick="editClasse(${cl.id})">Modifier</button>
+                            <button onclick="deleteClasse(${cl.id})">Supprimer</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+        
+        function updateTableAttributions() {
+            const tbody = document.querySelector("#tableAttributions tbody");
+            tbody.innerHTML = '';
+            
+            attributions.forEach(att => {
+                const enseignant = enseignants.find(e => e.id === att.id_enseignant);
+                const matiere = matieres.find(m => m.id === att.id_matiere);
+                const classe = classes.find(c => c.id === att.id_classe);
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${att.id}</td>
+                        <td>${enseignant.nom} ${enseignant.prenom}</td>
+                        <td>${matiere.nom}</td>
+                        <td>${classe.nom}</td>
+                        <td>${att.annee}</td>
+                        <td>
+                            <button onclick="editAttribution(${att.id})">Modifier</button>
+                            <button onclick="deleteAttribution(${att.id})">Supprimer</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+        
+        function updateTableEleves() {
+            const tbody = document.querySelector("#tableEleves tbody");
+            tbody.innerHTML = '';
+            
+            eleves.forEach(el => {
+                const classe = classes.find(c => c.id === el.id_classe);
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${el.id}</td>
+                        <td>${el.nom}</td>
+                        <td>${el.prenom}</td>
+                        <td>${classe.nom}</td>
+                        <td>
+                            <button onclick="editEleve(${el.id})">Modifier</button>
+                            <button onclick="deleteEleve(${el.id})">Supprimer</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+        
+        function updateTableNotes() {
+            const tbody = document.querySelector("#tableNotes tbody");
+            tbody.innerHTML = '';
+            
+            notes.forEach(note => {
+                const enseignement = attributions.find(a => a.id === note.id_enseignement);
+                const matiere = matieres.find(m => m.id === enseignement.id_matiere);
+                const classe = classes.find(c => c.id === enseignement.id_classe);
+                const eleve = eleves.find(e => e.id === note.id_eleve);
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${note.id}</td>
+                        <td>${eleve.nom} ${eleve.prenom}</td>
+                        <td>${matiere.nom}</td>
+                        <td>${classe.nom}</td>
+                        <td>${note.note}/20</td>
+                        <td>${note.type}</td>
+                        <td>${note.date}</td>
+                        <td>
+                            <button onclick="editNote(${note.id})">Modifier</button>
+                            <button onclick="deleteNote(${note.id})">Supprimer</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+        
+        function updateTableComptes() {
+            const tbody = document.querySelector("#tableComptes tbody");
+            tbody.innerHTML = '';
+            
+            comptes.forEach(compte => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${compte.id}</td>
+                        <td>${compte.nom}</td>
+                        <td>${compte.prenom}</td>
+                        <td>${compte.email}</td>
+                        <td>${compte.role === 'admin' ? 'Administrateur' : 'Enseignant'}</td>
+                        <td>
+                            <button onclick="editCompte(${compte.id})">Modifier</button>
+                            <button onclick="deleteCompte(${compte.id})">Supprimer</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+        
+        // Fonctions CRUD pour les enseignants
+        document.getElementById("formEnseignant").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById("enseignantId").value;
+            const nom = document.getElementById("enseignantNom").value;
+            const prenom = document.getElementById("enseignantPrenom").value;
+            const email = document.getElementById("enseignantEmail").value;
+            
+            if (id) {
+                // Modification
+                const index = enseignants.findIndex(e => e.id == id);
+                enseignants[index] = {id: parseInt(id), nom, prenom, email};
+            } else {
+                // Ajout
+                const newId = enseignants.length > 0 ? Math.max(...enseignants.map(e => e.id)) + 1 : 1;
+                enseignants.push({id: newId, nom, prenom, email});
             }
             
-            modalBody.innerHTML = `
-                <div class="student-detail-grid">
-                    <div class="student-info-card">
-                        <h3>Informations générales</h3>
-                        <div class="info-row">
-                            <span class="info-label">Nom complet</span>
-                            <span class="info-value">${student.lastName} ${student.firstName}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Date de naissance</span>
-                            <span class="info-value">${formatDate(student.birthDate)} (${student.birthPlace})</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Statut</span>
-                            <span class="info-value">${student.status === 'new' ? 'Nouvel élève' : 'Redoublant'}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Établissement précédent</span>
-                            <span class="info-value">${student.previousSchool || 'Non spécifié'}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Dernière année active</span>
-                            <span class="info-value">${student.lastActiveYear || 'Non spécifié'}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Classe</span>
-                            <span class="info-value">${student.class}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Moyenne générale</span>
-                            <span class="info-value ${getGradeClass(student.averageGrade)}">
-                                ${student.averageGrade.toFixed(1)}/20
-                            </span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Évolution</span>
-                            <span class="info-value">${getEvolutionIcon(student.evolution)} ${student.evolution}</span>
-                        </div>
-                    </div>
-                    
-                    <div class="student-info-card">
-                        <h3>Informations des parents/tuteurs</h3>
-                        <div class="info-row">
-                            <span class="info-label">Nom complet</span>
-                            <span class="info-value">${student.parentName}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Contact</span>
-                            <span class="info-value">${student.parentContact}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Adresse</span>
-                            <span class="info-value">${student.parentAddress}</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="student-info-card">
-                    <h3>Statistiques par matière</h3>
-                    <div class="subject-performance">
-                        ${Object.entries(student.subjects).map(([subject, grades]) => `
-                            <div class="subject-card">
-                                <div class="subject-header">
-                                    <span class="subject-name">${getSubjectName(subject)}</span>
-                                    <span class="competency-badge ${getGradeClass(average(grades))}">
-                                        ${average(grades).toFixed(1)}/20
-                                    </span>
-                                </div>
-                                <div class="grades-list">
-                                    ${grades.map(grade => `
-                                        <span class="grade-item ${getGradeClass(grade)}">${grade}</span>
-                                    `).join('')}
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-                
-                ${interventionsHTML}
-                
-                <div class="intervention-form">
-                    <h3>Planifier une intervention</h3>
-                    <div class="form-group">
-                        <label for="intervention-type">Type d'intervention :</label>
-                        <select id="intervention-type" class="filter-group">
-                            <option value="soutien">Soutien personnalisé</option>
-                            <option value="groupe">Groupe de travail</option>
-                            <option value="entretien">Entretien avec les parents</option>
-                            <option value="autre">Autre</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="intervention-comment">Commentaire :</label>
-                        <textarea id="intervention-comment" placeholder="Décrivez l'intervention prévue..."></textarea>
-                    </div>
-                    <button class="btn btn-primary" onclick="addIntervention(${student.id})">Enregistrer</button>
-                </div>
-            `;
+            updateTableEnseignants();
+            fillSelectOptions();
+            resetEnseignantForm();
+        });
+        
+        function editEnseignant(id) {
+            const ens = enseignants.find(e => e.id === id);
+            document.getElementById("enseignantId").value = ens.id;
+            document.getElementById("enseignantNom").value = ens.nom;
+            document.getElementById("enseignantPrenom").value = ens.prenom;
+            document.getElementById("enseignantEmail").value = ens.email;
             
-            modal.style.display = 'block';
+            // Ouvrir l'onglet enseignants
+            document.querySelector('.tablinks.active').classList.remove('active');
+            document.querySelector('.tabcontent[style*="display: block"]').style.display = 'none';
+            
+            document.querySelector('.tablinks:first-child').classList.add('active');
+            document.getElementById("Enseignants").style.display = 'block';
         }
-
-        // Afficher les détails d'un titulaire dans une modal
-        function showTeacherDetails(teacher) {
-            const modal = document.getElementById('teacherModal');
-            const modalTitle = document.getElementById('modal-teacher-name');
-            const modalBody = document.getElementById('modal-teacher-content-body');
-            
-            modalTitle.textContent = `${teacher.name} - ${teacher.class}`;
-            
-            modalBody.innerHTML = `
-                <div class="teacher-detail-grid">
-                    <div class="teacher-info-card">
-                        <h3>Informations personnelles</h3>
-                        <div class="info-row">
-                            <span class="info-label">Nom complet</span>
-                            <span class="info-value">${teacher.lastName} ${teacher.firstName}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Classe attribuée</span>
-                            <span class="info-value">${teacher.class}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Expérience</span>
-                            <span class="info-value">${teacher.experience} ans</span>
-                        </div>
-                    </div>
-                    
-                    <div class="teacher-info-card">
-                        <h3>Coordonnées</h3>
-                        <div class="info-row">
-                            <span class="info-label">Contact</span>
-                            <span class="info-value">${teacher.contact}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Adresse</span>
-                            <span class="info-value">${teacher.address}</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="teacher-info-card">
-                    <h3>Matières enseignées</h3>
-                    <div class="info-row">
-                        <span class="info-label">Matière dominante</span>
-                        <span class="info-value">${getSubjectName(teacher.mainSubject)}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Matière secondaire</span>
-                        <span class="info-value">${teacher.secondarySubject ? getSubjectName(teacher.secondarySubject) : 'Aucune'}</span>
-                    </div>
-                </div>
-                
-                <div class="teacher-info-card">
-                    <h3>Liste des élèves</h3>
-                    <div class="student-list" style="max-height: 200px;">
-                        ${studentsData.filter(s => s.class === teacher.class).map(student => `
-                            <div class="student-card" style="padding: 10px; margin-bottom: 10px;">
-                                <div class="student-name">${student.name}</div>
-                                <div class="student-details">
-                                    Moyenne: ${student.averageGrade.toFixed(1)}/20
-                                </div>
-                            </div>
-                        `).join('')}
-                        ${studentsData.filter(s => s.class === teacher.class).length === 0 ? 
-                            '<p style="text-align: center; color: #666; font-style: italic;">Aucun élève dans cette classe</p>' : ''}
-                    </div>
-                </div>
-                
-                <div class="teacher-form">
-                    <h3>Modifier les informations</h3>
-                    <div class="form-group">
-                        <label for="edit-teacher-experience">Années d'expérience:</label>
-                        <input type="number" id="edit-teacher-experience" value="${teacher.experience}" min="0">
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-teacher-contact">Contact:</label>
-                        <input type="tel" id="edit-teacher-contact" value="${teacher.contact}">
-                    </div>
-                    <div class="form-actions">
-                        <button class="btn btn-danger" onclick="deleteTeacher(${teacher.id})">Supprimer</button>
-                        <button class="btn btn-primary" onclick="updateTeacher(${teacher.id})">Mettre à jour</button>
-                    </div>
-                </div>
-            `;
-            
-            modal.style.display = 'block';
-        }
-
-        // Mettre à jour les informations d'un titulaire
-        function updateTeacher(teacherId) {
-            const experience = document.getElementById('edit-teacher-experience').value;
-            const contact = document.getElementById('edit-teacher-contact').value;
-            
-            const teacherIndex = teachersData.findIndex(t => t.id === teacherId);
-            if (teacherIndex !== -1) {
-                teachersData[teacherIndex].experience = parseInt(experience);
-                teachersData[teacherIndex].contact = contact;
-                
-                alert('Informations mises à jour avec succès!');
-                updateTeachersList();
-                closeTeacherModal();
+        
+        function deleteEnseignant(id) {
+            if (confirm("Voulez-vous vraiment supprimer cet enseignant ?")) {
+                enseignants = enseignants.filter(e => e.id !== id);
+                // Supprimer aussi les attributions liées
+                attributions = attributions.filter(a => a.id_enseignant !== id);
+                updateTableEnseignants();
+                updateTableAttributions();
+                fillSelectOptions();
             }
         }
-
-        // Supprimer un titulaire
-        function deleteTeacher(teacherId) {
-            if (confirm('Êtes-vous sûr de vouloir supprimer ce titulaire ?')) {
-                teachersData = teachersData.filter(t => t.id !== teacherId);
-                alert('Titulaire supprimé avec succès!');
-                updateTeachersList();
-                closeTeacherModal();
-            }
+        
+        function resetEnseignantForm() {
+            document.getElementById("formEnseignant").reset();
+            document.getElementById("enseignantId").value = '';
         }
-
-        // Fermer la modal des détails d'un titulaire
-        function closeTeacherModal() {
-            document.getElementById('teacherModal').style.display = 'none';
-        }
-
-        // Calculer la moyenne d'un tableau de notes
-        function average(grades) {
-            return grades.reduce((a, b) => a + b, 0) / grades.length;
-        }
-
-        // Fermer la modal
-        function closeModal() {
-            document.getElementById('studentModal').style.display = 'none';
-        }
-
-        // Formater une date
-        function formatDate(dateString) {
-            if (!dateString) return '';
-            const options = { day: 'numeric', month: 'long', year: 'numeric' };
-            return new Date(dateString).toLocaleDateString('fr-FR', options);
-        }
-
-        // Ajouter une intervention pour un élève
-        function addIntervention(studentId) {
-            const typeSelect = document.getElementById('intervention-type');
-            const comment = document.getElementById('intervention-comment').value;
+        
+        // Fonctions CRUD pour les matières
+        document.getElementById("formMatiere").addEventListener("submit", function(e) {
+            e.preventDefault();
             
-            if (!comment) {
-                alert('Veuillez ajouter un commentaire');
-                return;
+            const id = document.getElementById("matiereId").value;
+            const nom = document.getElementById("nomMatiere").value;
+            
+            if (id) {
+                // Modification
+                const index = matieres.findIndex(m => m.id == id);
+                matieres[index] = {id: parseInt(id), nom};
+            } else {
+                // Ajout
+                const newId = matieres.length > 0 ? Math.max(...matieres.map(m => m.id)) + 1 : 1;
+                matieres.push({id: newId, nom});
             }
             
-            const student = studentsData.find(s => s.id === studentId);
-            if (!student) return;
+            updateTableMatieres();
+            fillSelectOptions();
+            resetMatiereForm();
+        });
+        
+        function editMatiere(id) {
+            const mat = matieres.find(m => m.id === id);
+            document.getElementById("matiereId").value = mat.id;
+            document.getElementById("nomMatiere").value = mat.nom;
             
-            if (!student.interventions) {
-                student.interventions = [];
+            // Ouvrir l'onglet matières
+            document.querySelector('.tablinks.active').classList.remove('active');
+            document.querySelector('.tabcontent[style*="display: block"]').style.display = 'none';
+            
+            document.querySelector('.tablinks:nth-child(2)').classList.add('active');
+            document.getElementById("Matieres").style.display = 'block';
+        }
+        
+        function deleteMatiere(id) {
+            if (confirm("Voulez-vous vraiment supprimer cette matière ?")) {
+                matieres = matieres.filter(m => m.id !== id);
+                // Supprimer aussi les attributions liées
+                attributions = attributions.filter(a => a.id_matiere !== id);
+                updateTableMatieres();
+                updateTableAttributions();
+                fillSelectOptions();
+            }
+        }
+        
+        function resetMatiereForm() {
+            document.getElementById("formMatiere").reset();
+            document.getElementById("matiereId").value = '';
+        }
+        
+        // Fonctions CRUD pour les classes
+        document.getElementById("formClasse").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById("classeId").value;
+            const nom = document.getElementById("nomClasse").value;
+            const niveau = document.getElementById("niveauClasse").value;
+            
+            if (id) {
+                // Modification
+                const index = classes.findIndex(c => c.id == id);
+                classes[index] = {id: parseInt(id), nom, niveau};
+            } else {
+                // Ajout
+                const newId = classes.length > 0 ? Math.max(...classes.map(c => c.id)) + 1 : 1;
+                classes.push({id: newId, nom, niveau});
             }
             
-            const newIntervention = {
-                date: new Date().toISOString().split('T')[0],
-                type: typeSelect.options[typeSelect.selectedIndex].text,
-                teacher: "Admin", // En réalité, on utiliserait le nom de l'utilisateur connecté
-                comment: comment
-            };
+            updateTableClasses();
+            fillSelectOptions();
+            resetClasseForm();
+        });
+        
+        function editClasse(id) {
+            const cl = classes.find(c => c.id === id);
+            document.getElementById("classeId").value = cl.id;
+            document.getElementById("nomClasse").value = cl.nom;
+            document.getElementById("niveauClasse").value = cl.niveau;
             
-            student.interventions.push(newIntervention);
+            // Ouvrir l'onglet classes
+            document.querySelector('.tablinks.active').classList.remove('active');
+            document.querySelector('.tabcontent[style*="display: block"]').style.display = 'none';
             
-            // Mettre à jour l'affichage
-            showStudentDetails(student);
-            
-            // Réinitialiser le formulaire
-            document.getElementById('intervention-comment').value = '';
-            
-            // Mettre à jour la liste des élèves en difficulté
-            updateData();
+            document.querySelector('.tablinks:nth-child(3)').classList.add('active');
+            document.getElementById("Classes").style.display = 'block';
         }
-
-        // Mettre à jour le filtre des classes selon le cycle
-        function updateClassFilter() {
-            const cycle = document.getElementById('cycle-filter').value;
-            const classSelect = document.getElementById('class-filter');
+        
+        function deleteClasse(id) {
+            if (confirm("Voulez-vous vraiment supprimer cette classe ?")) {
+                classes = classes.filter(c => c.id !== id);
+                // Supprimer aussi les attributions et élèves liés
+                attributions = attributions.filter(a => a.id_classe !== id);
+                eleves = eleves.filter(e => e.id_classe !== id);
+                updateTableClasses();
+                updateTableAttributions();
+                updateTableEleves();
+                fillSelectOptions();
+            }
+        }
+        
+        function resetClasseForm() {
+            document.getElementById("formClasse").reset();
+            document.getElementById("classeId").value = '';
+        }
+        
+        // Fonctions CRUD pour les attributions
+        document.getElementById("formAttribution").addEventListener("submit", function(e) {
+            e.preventDefault();
             
-            classSelect.innerHTML = '<option value="">Toutes les classes</option>';
+            const id = document.getElementById("attributionId").value;
+            const id_enseignant = document.getElementById("attributionEnseignant").value;
+            const id_matiere = document.getElementById("attributionMatiere").value;
+            const id_classe = document.getElementById("attributionClasse").value;
+            const annee = document.getElementById("anneeScolaire").value;
             
-            if (cycle && cycleConfig[cycle]) {
-                cycleConfig[cycle].forEach(className => {
-                    const option = document.createElement('option');
-                    option.value = className.toLowerCase().replace(/\s+/g, '-');
-                    option.textContent = className;
-                    classSelect.appendChild(option);
+            if (id) {
+                // Modification
+                const index = attributions.findIndex(a => a.id == id);
+                attributions[index] = {
+                    id: parseInt(id), 
+                    id_enseignant: parseInt(id_enseignant), 
+                    id_matiere: parseInt(id_matiere), 
+                    id_classe: parseInt(id_classe), 
+                    annee
+                };
+            } else {
+                // Ajout
+                const newId = attributions.length > 0 ? Math.max(...attributions.map(a => a.id)) + 1 : 1;
+                attributions.push({
+                    id: newId, 
+                    id_enseignant: parseInt(id_enseignant), 
+                    id_matiere: parseInt(id_matiere), 
+                    id_classe: parseInt(id_classe), 
+                    annee
                 });
             }
             
-            updateData();
+            updateTableAttributions();
+            resetAttributionForm();
+        });
+        
+        function editAttribution(id) {
+            const att = attributions.find(a => a.id === id);
+            document.getElementById("attributionId").value = att.id;
+            document.getElementById("attributionEnseignant").value = att.id_enseignant;
+            document.getElementById("attributionMatiere").value = att.id_matiere;
+            document.getElementById("attributionClasse").value = att.id_classe;
+            document.getElementById("anneeScolaire").value = att.annee;
+            
+            // Ouvrir l'onglet attributions
+            document.querySelector('.tablinks.active').classList.remove('active');
+            document.querySelector('.tabcontent[style*="display: block"]').style.display = 'none';
+            
+            document.querySelector('.tablinks:nth-child(4)').classList.add('active');
+            document.getElementById("Attributions").style.display = 'block';
         }
-
-        // Générer un PDF
-        function generatePDF() {
-            const filteredData = getFilteredData();
-            alert(`Génération d'un PDF pour ${filteredData.length} élèves`);
-            // En réalité, on utiliserait une bibliothèque comme jsPDF ou html2pdf.js
-            // Exemple avec html2pdf.js:
-            // const element = document.getElementById('students-table');
-            // html2pdf().from(element).save('rapport-eleves.pdf');
+        
+        function deleteAttribution(id) {
+            if (confirm("Voulez-vous vraiment supprimer cette attribution ?")) {
+                attributions = attributions.filter(a => a.id !== id);
+                // Supprimer aussi les notes liées
+                notes = notes.filter(n => n.id_enseignement !== id);
+                updateTableAttributions();
+                updateTableNotes();
+            }
         }
-
-        // Générer un rapport détaillé
-        function showDetailedReport() {
-            const filteredData = getFilteredData();
-            alert(`Génération d'un rapport détaillé pour ${filteredData.length} élèves`);
-            // En réalité, on ouvrirait une nouvelle fenêtre avec le rapport
+        
+        function resetAttributionForm() {
+            document.getElementById("formAttribution").reset();
+            document.getElementById("attributionId").value = '';
         }
-
-        // Initialisation
-        document.addEventListener('DOMContentLoaded', function() {
-            if (localStorage.getItem('adminAuthenticated') === 'true') {
-                document.getElementById('authContainer').classList.add('hidden');
-                document.getElementById('mainContainer').classList.remove('hidden');
-                updateData();
+        
+        // Fonctions CRUD pour les élèves
+        document.getElementById("formEleve").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById("eleveId").value;
+            const nom = document.getElementById("eleveNom").value;
+            const prenom = document.getElementById("elevePrenom").value;
+            const id_classe = document.getElementById("eleveClasse").value;
+            
+            if (id) {
+                // Modification
+                const index = eleves.findIndex(el => el.id == id);
+                eleves[index] = {id: parseInt(id), nom, prenom, id_classe: parseInt(id_classe)};
+            } else {
+                // Ajout
+                const newId = eleves.length > 0 ? Math.max(...eleves.map(el => el.id)) + 1 : 1;
+                eleves.push({id: newId, nom, prenom, id_classe: parseInt(id_classe)});
             }
             
-            // Fermer les modals si on clique en dehors
-            window.onclick = function(event) {
-                const studentModal = document.getElementById('studentModal');
-                const teacherModal = document.getElementById('teacherModal');
+            updateTableEleves();
+            resetEleveForm();
+        });
+        
+        function editEleve(id) {
+            const el = eleves.find(e => e.id === id);
+            document.getElementById("eleveId").value = el.id;
+            document.getElementById("eleveNom").value = el.nom;
+            document.getElementById("elevePrenom").value = el.prenom;
+            document.getElementById("eleveClasse").value = el.id_classe;
+            
+            // Ouvrir l'onglet élèves
+            document.querySelector('.tablinks.active').classList.remove('active');
+            document.querySelector('.tabcontent[style*="display: block"]').style.display = 'none';
+            
+            document.querySelector('.tablinks:nth-child(5)').classList.add('active');
+            document.getElementById("Eleves").style.display = 'block';
+        }
+        
+        function deleteEleve(id) {
+            if (confirm("Voulez-vous vraiment supprimer cet élève ?")) {
+                eleves = eleves.filter(e => e.id !== id);
+                // Supprimer aussi les notes liées
+                notes = notes.filter(n => n.id_eleve !== id);
+                updateTableEleves();
+                updateTableNotes();
+            }
+        }
+        
+        function resetEleveForm() {
+            document.getElementById("formEleve").reset();
+            document.getElementById("eleveId").value = '';
+        }
+        
+        // Fonctions CRUD pour les notes
+        document.getElementById("formNote").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById("noteId").value;
+            const id_enseignant = document.getElementById("noteEnseignant").value;
+            const id_matiere = document.getElementById("noteMatiere").value;
+            const id_classe = document.getElementById("noteClasse").value;
+            const id_eleve = document.getElementById("noteEleve").value;
+            const note = document.getElementById("noteValeur").value;
+            const type = document.getElementById("noteType").value;
+            const date = document.getElementById("noteDate").value;
+            const coefficient = document.getElementById("noteCoefficient").value;
+            const commentaire = document.getElementById("noteCommentaire").value;
+            
+            // Trouver l'enseignement correspondant
+            const enseignement = attributions.find(a => 
+                a.id_enseignant == id_enseignant && 
+                a.id_matiere == id_matiere && 
+                a.id_classe == id_classe
+            );
+            
+            if (!enseignement) {
+                alert("Cette combinaison enseignant/matière/classe n'existe pas !");
+                return;
+            }
+            
+            if (id) {
+                // Modification
+                const index = notes.findIndex(n => n.id == id);
+                notes[index] = {
+                    id: parseInt(id), 
+                    id_enseignement: enseignement.id, 
+                    id_eleve: parseInt(id_eleve), 
+                    note: parseFloat(note), 
+                    type, 
+                    date, 
+                    coefficient: parseInt(coefficient), 
+                    commentaire
+                };
+            } else {
+                // Ajout
+                const newId = notes.length > 0 ? Math.max(...notes.map(n => n.id)) + 1 : 1;
+                notes.push({
+                    id: newId, 
+                    id_enseignement: enseignement.id, 
+                    id_eleve: parseInt(id_eleve), 
+                    note: parseFloat(note), 
+                    type, 
+                    date, 
+                    coefficient: parseInt(coefficient), 
+                    commentaire
+                });
+            }
+            
+            updateTableNotes();
+            resetNoteForm();
+        });
+        
+        function editNote(id) {
+            const note = notes.find(n => n.id === id);
+            const enseignement = attributions.find(a => a.id === note.id_enseignement);
+            const eleve = eleves.find(e => e.id === note.id_eleve);
+            
+            document.getElementById("noteId").value = note.id;
+            document.getElementById("noteEnseignant").value = enseignement.id_enseignant;
+            chargerMatieresClasses(); // Pour remplir les matières et classes
+            document.getElementById("noteMatiere").value = enseignement.id_matiere;
+            document.getElementById("noteClasse").value = enseignement.id_classe;
+            chargerEleves(); // Pour remplir les élèves
+            document.getElementById("noteEleve").value = note.id_eleve;
+            document.getElementById("noteValeur").value = note.note;
+            document.getElementById("noteType").value = note.type;
+            document.getElementById("noteDate").value = note.date;
+            document.getElementById("noteCoefficient").value = note.coefficient;
+            document.getElementById("noteCommentaire").value = note.commentaire;
+            
+            // Ouvrir l'onglet notes
+            document.querySelector('.tablinks.active').classList.remove('active');
+            document.querySelector('.tabcontent[style*="display: block"]').style.display = 'none';
+            
+            document.querySelector('.tablinks:nth-child(6)').classList.add('active');
+            document.getElementById("Notes").style.display = 'block';
+        }
+        
+        function deleteNote(id) {
+            if (confirm("Voulez-vous vraiment supprimer cette note ?")) {
+                notes = notes.filter(n => n.id !== id);
+                updateTableNotes();
+            }
+        }
+        
+        function resetNoteForm() {
+            document.getElementById("formNote").reset();
+            document.getElementById("noteId").value = '';
+            document.getElementById("noteEleve").innerHTML = '<option value="">Sélectionner un élève</option>';
+        }
+        
+        // Fonctions CRUD pour les comptes
+        document.getElementById("formCompte").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById("compteId").value;
+            const nom = document.getElementById("compteNom").value;
+            const prenom = document.getElementById("comptePrenom").value;
+            const email = document.getElementById("compteEmail").value;
+            const password = document.getElementById("comptePassword").value;
+            const role = document.getElementById("compteRole").value;
+            
+            if (id) {
+                // Modification
+                const index = comptes.findIndex(c => c.id == id);
+                const updatedCompte = {
+                    id: parseInt(id),
+                    nom,
+                    prenom,
+                    email,
+                    role,
+                    password: password ? password : comptes[index].password // Garder l'ancien mot de passe si non modifié
+                };
                 
-                if (event.target === studentModal) {
-                    closeModal();
+                comptes[index] = updatedCompte;
+                
+                // Si c'est un enseignant, mettre à jour aussi le profil enseignant
+                if (role === 'teacher') {
+                    const enseignantIndex = enseignants.findIndex(e => e.email === comptes[index].email);
+                    if (enseignantIndex !== -1) {
+                        enseignants[enseignantIndex] = {
+                            id: enseignants[enseignantIndex].id,
+                            nom,
+                            prenom,
+                            email
+                        };
+                    } else {
+                        // Créer un nouveau profil enseignant si nécessaire
+                        const ensId = enseignants.length > 0 ? Math.max(...enseignants.map(e => e.id)) + 1 : 1;
+                        enseignants.push({
+                            id: ensId,
+                            nom,
+                            prenom,
+                            email
+                        });
+                    }
                 }
-                if (event.target === teacherModal) {
-                    closeTeacherModal();
+            } else {
+                // Ajout
+                // Vérifier si l'email existe déjà
+                if (comptes.some(c => c.email === email)) {
+                    alert("Cet email est déjà utilisé");
+                    return;
+                }
+                
+                const newId = comptes.length > 0 ? Math.max(...comptes.map(c => c.id)) + 1 : 1;
+                comptes.push({
+                    id: newId,
+                    nom,
+                    prenom,
+                    email,
+                    password,
+                    role
+                });
+                
+                // Si c'est un enseignant, créer aussi un profil enseignant
+                if (role === 'teacher') {
+                    const ensId = enseignants.length > 0 ? Math.max(...enseignants.map(e => e.id)) + 1 : 1;
+                    enseignants.push({
+                        id: ensId,
+                        nom,
+                        prenom,
+                        email
+                    });
                 }
             }
+            
+            updateTableComptes();
+            updateTableEnseignants();
+            fillSelectOptions();
+            resetCompteForm();
         });
+        
+        function editCompte(id) {
+            const compte = comptes.find(c => c.id === id);
+            document.getElementById("compteId").value = compte.id;
+            document.getElementById("compteNom").value = compte.nom;
+            document.getElementById("comptePrenom").value = compte.prenom;
+            document.getElementById("compteEmail").value = compte.email;
+            document.getElementById("compteRole").value = compte.role;
+            document.getElementById("comptePassword").value = '';
+            
+            // Ouvrir l'onglet comptes
+            document.querySelector('.tablinks.active').classList.remove('active');
+            document.querySelector('.tabcontent[style*="display: block"]').style.display = 'none';
+            
+            document.querySelector('.tablinks:nth-child(8)').classList.add('active');
+            document.getElementById("Comptes").style.display = 'block';
+        }
+        
+        function deleteCompte(id) {
+            if (confirm("Voulez-vous vraiment supprimer ce compte ?")) {
+                const compte = comptes.find(c => c.id === id);
+                
+                // Ne pas permettre de supprimer son propre compte
+                if (currentUser && currentUser.id === id) {
+                    alert("Vous ne pouvez pas supprimer votre propre compte !");
+                    return;
+                }
+                
+                comptes = comptes.filter(c => c.id !== id);
+                
+                // Si c'est un enseignant, supprimer aussi le profil enseignant
+                if (compte.role === 'teacher') {
+                    enseignants = enseignants.filter(e => e.email !== compte.email);
+                    // Supprimer aussi les attributions liées
+                    const enseignant = enseignants.find(e => e.email === compte.email);
+                    if (enseignant) {
+                        attributions = attributions.filter(a => a.id_enseignant !== enseignant.id);
+                    }
+                }
+                
+                updateTableComptes();
+                updateTableEnseignants();
+                updateTableAttributions();
+                fillSelectOptions();
+            }
+        }
+        
+        function resetCompteForm() {
+            document.getElementById("formCompte").reset();
+            document.getElementById("compteId").value = '';
+        }
+        
+        // Initialisation
+        window.onload = function() {
+            initTestData();
+            showLoginForm();
+            
+            // Cacher l'interface principale au démarrage
+            document.getElementById("app-section").classList.add("hidden");
+        };
     </script>
 </body>
 </html>
