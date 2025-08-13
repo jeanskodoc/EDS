@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiche de Préparation de Cours</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            border-left: 4px solid #3498db;
+            padding-left: 10px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #2980b9;
+            margin-top: 20px;
+        }
+        .header-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"], input[type="date"], textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        .activity {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 3px solid #3498db;
+        }
+        .example {
+            background-color: #e8f4fc;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .exercise {
+            background-color: #e8f8e8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .solution {
+            background-color: #fef9e7;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .toggle-solution {
+            background-color: #f39c12;
+        }
+        .toggle-solution:hover {
+            background-color: #e67e22;
+        }
+        .save-btn {
+            background-color: #27ae60;
+        }
+        .save-btn:hover {
+            background-color: #219653;
+        }
+        .print-btn {
+            background-color: #7f8c8d;
+        }
+        .print-btn:hover {
+            background-color: #95a5a6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fiche de Préparation de Cours</h1>
+        
+        <div class="header-info">
+            <div>
+                <div class="form-group">
+                    <label for="teacherLastName">Nom de l'enseignant:</label>
+                    <input type="text" id="teacherLastName" required>
+                </div>
+                <div class="form-group">
+                    <label for="teacherFirstName">Prénom de l'enseignant:</label>
+                    <input type="text" id="teacherFirstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="school">Établissement:</label>
+                    <input type="text" id="school" required>
+                </div>
+            </div>
+            <div>
+                <div class="form-group">
+                    <label for="class">Classe:</label>
+                    <select id="class" required>
+                        <option value="">-- Sélectionnez --</option>
+                        <option value="6eme">6ème</option>
+                        <option value="5eme">5ème</option>
+                        <option value="4eme">4ème</option>
+                        <option value="3eme">3ème</option>
+                        <option value="2nde">Seconde</option>
+                        <option value="1ere">Première</option>
+                        <option value="terminale">Terminale</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="discipline">Discipline:</label>
+                    <input type="text" id="discipline" required>
+                </div>
+                <div class="form-group">
+                    <label for="totalStudents">Effectif total:</label>
+                    <input type="number" id="totalStudents" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="girls">Nombre de filles:</label>
+                    <input type="number" id="girls" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="boys">Nombre de garçons:</label>
+                    <input type="number" id="boys" min="0" required>
+                </div>
+            </div>
+        </div>
+
+        <h2>Prérequis</h2>
+        <div class="form-group">
+            <label for="prerequisites">Connaissances et compétences préalables requises:</label>
+            <textarea id="prerequisites" placeholder="Listez les prérequis nécessaires pour ce cours..."></textarea>
+        </div>
+
+        <h2>Situation Problème</h2>
+        <div class="form-group">
+            <label for="problemStatement">Énoncé de la situation problème:</label>
+            <textarea id="problemStatement" placeholder="Décrivez la situation problème qui servira de point de départ..."></textarea>
+        </div>
+
+        <h2>Solution de la Situation Problème</h2>
+        <div class="form-group">
+            <label for="problemSolution">Solution proposée:</label>
+            <textarea id="problemSolution" placeholder="Expliquez la solution à la situation problème..."></textarea>
+        </div>
+
+        <h2>Activités d'Apprentissage</h2>
+        <div id="activities">
+            <div class="activity">
+                <div class="form-group">
+                    <label>Activité 1:</label>
+                    <textarea placeholder="Décrivez la première activité..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Solution:</label>
+                    <textarea placeholder="Solution de l'activité..."></textarea>
+                </div>
+            </div>
+        </div>
+        <button onclick="addActivity()">Ajouter une activité</button>
+
+        <h2>Définitions, Propriétés et Théorèmes</h2>
+        <div class="form-group">
+            <label for="definitions">Éléments théoriques à retenir:</label>
+            <textarea id="definitions" placeholder="Listez et expliquez les définitions, propriétés ou théorèmes abordés..."></textarea>
+        </div>
+
+        <h2>Exemples</h2>
+        <div id="examples">
+            <div class="example">
+                <div class="form-group">
+                    <label>Exemple 1:</label>
+                    <textarea placeholder="Donnez un exemple illustratif..."></textarea>
+                </div>
+            </div>
+        </div>
+        <button onclick="addExample()">Ajouter un exemple</button>
+
+        <h2>Exercices d'Application</h2>
+        <div id="exercises">
+            <div class="exercise">
+                <div class="form-group">
+                    <label>Exercice 1:</label>
+                    <textarea placeholder="Énoncé de l'exercice..."></textarea>
+                </div>
+                <div class="solution">
+                    <div class="form-group">
+                        <label>Solution:</label>
+                        <textarea placeholder="Solution de l'exercice..."></textarea>
+                    </div>
+                </div>
+                <button class="toggle-solution" onclick="toggleSolution(this)">Afficher/Masquer la solution</button>
+            </div>
+        </div>
+        <button onclick="addExercise()">Ajouter un exercice</button>
+
+        <h2>Récapitulatif</h2>
+        <div class="form-group">
+            <label for="summary">Synthèse de la leçon:</label>
+            <textarea id="summary" placeholder="Faites un résumé des points clés de la leçon..."></textarea>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="save-btn" onclick="saveCourse()">Enregistrer le cours</button>
+            <button class="print-btn" onclick="window.print()">Imprimer la fiche</button>
+        </div>
+    </div>
+
+    <script>
+        // Ajouter une nouvelle activité
+        function addActivity() {
+            const activitiesDiv = document.getElementById('activities');
+            const activityCount = activitiesDiv.children.length + 1;
+            
+            const newActivity = document.createElement('div');
+            newActivity.className = 'activity';
+            newActivity.innerHTML = `
+                <div class="form-group">
+                    <label>Activité ${activityCount}:</label>
+                    <textarea placeholder="Décrivez l'activité..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Solution:</label>
+                    <textarea placeholder="Solution de l'activité..."></textarea>
+                </div>
+            `;
+            
+            activitiesDiv.appendChild(newActivity);
+        }
+
+        // Ajouter un nouvel exemple
+        function addExample() {
+            const examplesDiv = document.getElementById('examples');
+            const exampleCount = examplesDiv.children.length + 1;
+            
+            const newExample = document.createElement('div');
+            newExample.className = 'example';
+            newExample.innerHTML = `
+                <div class="form-group">
+                    <label>Exemple ${exampleCount}:</label>
+                    <textarea placeholder="Donnez un exemple illustratif..."></textarea>
+                </div>
+            `;
+            
+            examplesDiv.appendChild(newExample);
+        }
+
+        // Ajouter un nouvel exercice
+        function addExercise() {
+            const exercisesDiv = document.getElementById('exercises');
+            const exerciseCount = exercisesDiv.children.length + 1;
+            
+            const newExercise = document.createElement('div');
+            newExercise.className = 'exercise';
+            newExercise.innerHTML = `
+                <div class="form-group">
+                    <label>Exercice ${exerciseCount}:</label>
+                    <textarea placeholder="Énoncé de l'exercice..."></textarea>
+                </div>
+                <div class="solution">
+                    <div class="form-group">
+                        <label>Solution:</label>
+                        <textarea placeholder="Solution de l'exercice..."></textarea>
+                    </div>
+                </div>
+                <button class="toggle-solution" onclick="toggleSolution(this)">Afficher/Masquer la solution</button>
+            `;
+            
+            exercisesDiv.appendChild(newExercise);
+        }
+
+        // Basculer l'affichage de la solution
+        function toggleSolution(button) {
+            const solutionDiv = button.previousElementSibling;
+            if (solutionDiv.style.display === 'block') {
+                solutionDiv.style.display = 'none';
+                button.textContent = 'Afficher la solution';
+            } else {
+                solutionDiv.style.display = 'block';
+                button.textContent = 'Masquer la solution';
+            }
+        }
+
+        // Enregistrer le cours (à adapter selon les besoins)
+        function saveCourse() {
+            // Récupérer toutes les données du formulaire
+            const courseData = {
+                teacher: {
+                    lastName: document.getElementById('teacherLastName').value,
+                    firstName: document.getElementById('teacherFirstName').value
+                },
+                school: document.getElementById('school').value,
+                class: document.getElementById('class').value,
+                discipline: document.getElementById('discipline').value,
+                students: {
+                    total: document.getElementById('totalStudents').value,
+                    girls: document.getElementById('girls').value,
+                    boys: document.getElementById('boys').value
+                },
+                prerequisites: document.getElementById('prerequisites').value,
+                problemStatement: document.getElementById('problemStatement').value,
+                problemSolution: document.getElementById('problemSolution').value,
+                activities: [],
+                definitions: document.getElementById('definitions').value,
+                examples: [],
+                exercises: [],
+                summary: document.getElementById('summary').value,
+                date: new Date().toISOString()
+            };
+
+            // Récupérer les activités
+            const activities = document.getElementById('activities').children;
+            for (let i = 0; i < activities.length; i++) {
+                const activity = activities[i];
+                const description = activity.querySelector('textarea:nth-of-type(1)').value;
+                const solution = activity.querySelector('textarea:nth-of-type(2)').value;
+                
+                courseData.activities.push({
+                    number: i + 1,
+                    description: description,
+                    solution: solution
+                });
+            }
+
+            // Récupérer les exemples
+            const examples = document.getElementById('examples').children;
+            for (let i = 0; i < examples.length; i++) {
+                const example = examples[i];
+                const content = example.querySelector('textarea').value;
+                
+                courseData.examples.push({
+                    number: i + 1,
+                    content: content
+                });
+            }
+
+            // Récupérer les exercices
+            const exercises = document.getElementById('exercises').children;
+            for (let i = 0; i < exercises.length; i++) {
+                const exercise = exercises[i];
+                const statement = exercise.querySelector('textarea:nth-of-type(1)').value;
+                const solution = exercise.querySelector('textarea:nth-of-type(2)').value;
+                
+                courseData.exercises.push({
+                    number: i + 1,
+                    statement: statement,
+                    solution: solution
+                });
+            }
+
+            // Ici vous pourriez envoyer les données à un serveur ou les stocker localement
+            console.log('Données du cours:', courseData);
+            alert('Cours enregistré avec succès!');
+            
+            // Exemple de stockage local (à implémenter selon vos besoins)
+            // localStorage.setItem('lastCourse', JSON.stringify(courseData));
+        }
+
+        // Fonction d'alerte personnalisée
+        function alert(message, title = 'Information') {
+            const alertBox = document.createElement('div');
+            alertBox.style.position = 'fixed';
+            alertBox.style.top = '50%';
+            alertBox.style.left = '50%';
+            alertBox.style.transform = 'translate(-50%, -50%)';
+            alertBox.style.backgroundColor = 'white';
+            alertBox.style.padding = '20px';
+            alertBox.style.borderRadius = '5px';
+            alertBox.style.boxShadow = '0 0 10px rgba(0,0,0,0.3)';
+            alertBox.style.zIndex = '1000';
+            alertBox.style.maxWidth = '80%';
+            alertBox.style.maxHeight = '80%';
+            alertBox.style.overflow = 'auto';
+            
+            alertBox.innerHTML = `
+                <h2 style="margin-top: 0;">${title}</h2>
+                <div>${message}</div>
+                <button style="margin-top: 15px; padding: 5px 10px;" onclick="this.parentElement.remove()">OK</button>
+            `;
+            
+            document.body.appendChild(alertBox);
+        }
+
+        // Validation automatique du nombre de filles/garçons
+        document.getElementById('girls').addEventListener('change', validateNumbers);
+        document.getElementById('boys').addEventListener('change', validateNumbers);
+        document.getElementById('totalStudents').addEventListener('change', validateNumbers);
+
+        function validateNumbers() {
+            const total = parseInt(document.getElementById('totalStudents').value) || 0;
+            const girls = parseInt(document.getElementById('girls').value) || 0;
+            const boys = parseInt(document.getElementById('boys').value) || 0;
+
+            if (girls + boys > total) {
+                alert('Le nombre de filles et garçons ne peut pas dépasser l\'effectif total!', 'Erreur de saisie');
+                document.getElementById('girls').value = '';
+                document.getElementById('boys').value = '';
+            }
+        }
+    </script>
+</body>
+</html>
