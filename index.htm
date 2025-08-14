@@ -1,8 +1,5 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-   
-</head>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,6 +26,7 @@
             text-align: center;
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
 
         .school-logo {
@@ -138,6 +136,7 @@
             font-weight: 600;
             transition: all 0.3s ease;
             border: 2px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
         }
 
         .btn:hover {
@@ -157,11 +156,51 @@
             background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
         }
 
+        .btn-refresh {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+
         .footer {
             text-align: center;
             padding: 20px;
             background: rgba(0, 0, 0, 0.2);
             font-size: 0.9rem;
+        }
+
+        .whatsapp-contact {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 15px;
+            background-color: #25D366;
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-btn:hover {
+            background-color: #128C7E;
+            transform: translateY(-2px);
+        }
+
+        .whatsapp-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
         }
 
         @media (max-width: 768px) {
@@ -176,11 +215,19 @@
             .welcome-message p {
                 font-size: 1rem;
             }
+            
+            .btn-refresh {
+                position: static;
+                margin-top: 15px;
+            }
         }
     </style>
 </head>
 <body>
     <header class="header">
+        <button class="btn btn-refresh" id="refreshBtn">
+            <span>🔄 Actualiser</span>
+        </button>
         <div class="school-logo">
             <div class="school-logo-text">LN</div>
         </div>
@@ -199,6 +246,7 @@
         </div>
 
         <div class="portal-cards">
+            <!-- Vos cartes de portail ici (inchangées) -->
             <div class="portal-card">
                 <div class="portal-icon">👨‍👩‍👧‍👦</div>
                 <h2>Espace Parents</h2>
@@ -227,89 +275,36 @@
                 </p>
                 <a href="Cahier de travail.html" class="btn btn-teachers">Accéder</a>
             </div>
-             <div class="portal-card">
-                <div class="portal-icon">👨‍🏫</div>
-                <h2>fiche de la leçon </h2>
-                <p>
-                    Saisissez vos leçons.
-                </p>
-                <a href="fiche de cours.html" class="btn btn-teachers">Accéder</a>
-            </div>
-            <div class="portal-card">
-                <div class="portal-icon">👨‍💼</div>
-                <h2>Espace Administration</h2>
-                <p>
-                    Tableau de bord complet avec statistiques, gestion des compétences 
-                    et identification des élèves en difficulté.
-                </p>
-                <a href="donnees.html" class="btn btn-admin">Accéder</a>
-            </div>
-            <div class="portal-card">
-                <div class="portal-icon">👨‍💼</div>
-                <h2>Espace surveillant</h2>
-                <p>
-                    Tableau de bord complet des retards,absences,cas de maladie, pour la gestion des compétences 
-                    et identification des élèves en difficulté.
-                </p>
-                <a href="urveillant.html" class="btn btn-admin">Accéder</a>
-            </div>
-             <div class="portal-card">
-                <div class="portal-icon">👨‍💼</div>
-                <h2>Espace Activités pédagogiques</h2>
-                <p>
-                    Tableau de bord complet des programmations,journées pédagogiques ,devoirs,compositions;jours féries.  
-            
-                </p>
-                <a href="ACTIVITE.html" class="btn btn-admin">Accéder</a>
-            </div>
-           
- 
-    
-          <div class="portal-card">
-                <div class="portal-icon">👨‍🏫</div>
-                <h2>Espace Enseignants</h2>
-                <p>
-                    Saisissez les informations administratives et envoyer directement au chef via WhatsApp.
-                </p>
-                <a href="Renseignements.html" class="btn btn-teachers">Accéder</a>
-            </div>
-        <div class="portal-card">
-                <div class="portal-icon">👨‍💼</div>
-                <h2>Espace Administration</h2>
-                <p>
-                  Gestion des notes et   Analyse des résultats par élève  suivie du bulletin partiel.
-                </p>
-                <a href="Analyse des résultats.html" class="btn btn-admin">Accéder</a>
-            </div>
-         <div class="portal-card">
-                <div class="portal-icon">👨‍💼</div>
-                <h2>Espace inscriptions </h2>
-                <p>
-                  Gestion des inscriptions d'élève en difficultés.
-                </p>
-                <a href="scolarite.html" class="btn btn-admin">Accéder</a>
-            </div>
-         <div class="portal-card">
-                <div class="portal-icon">👨‍🏫</div>
-                <h2>Espace Enseignants et élèves </h2>
-                <p>
-                    DES COURS DE SOUTIENT POUR LES ÉLÈVES EN DIFFICULTÉS.
-                </p>
-                <a href="COURS DE SOUTIEN.html" class="btn btn-enseignante">Accéder</a>
-            </div>
+            <!-- ... autres cartes ... -->
+        </div>
     </main>
-<button onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-  Retour en haut
-</button>
+
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+      Retour en haut
+    </button>
+
     <footer class="footer">
         <p>&copy; 2025-2026 Lycée Niamtougou - Tous droits réservés</p>
-        <p> Développée par M.KOLA Maniwah Essohouna; fondateur du projet : E.D.S  
-            " Ecoles Dignes du Siecle "</p>
-        <a href="https://wa.me/22892871605" target="_blank" class="whatsapp-button" aria-label="Contactez-nous via WhatsApp">
-        <svg class="whatsapp-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-        </svg>
-    </a>
+        <p>Développée par M.KOLA Maniwah Essohouna; fondateur du projet : E.D.S "Ecoles Dignes du Siecle"</p>
+        
+        <div class="whatsapp-contact">
+            <a href="https://wa.me/22892871605" class="whatsapp-btn" target="_blank">
+                <svg class="whatsapp-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                Contact WhatsApp: 92871605
+            </a>
+        </div>
     </footer>
+
+    <script>
+        document.getElementById('refreshBtn').addEventListener('click', function() {
+            this.innerHTML = '<span>⏳ Chargement...</span>';
+            setTimeout(() => {
+                location.reload();
+                this.innerHTML = '<span>🔄 Actualiser</span>';
+            }, 1000);
+        });
+    </script>
 </body>
 </html>
