@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiche de Préparation de Cours</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            border-left: 4px solid #3498db;
+            padding-left: 10px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #2980b9;
+            margin-top: 20px;
+        }
+        .header-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"], input[type="date"], textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .activity {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 3px solid #3498db;
+        }
+        .example {
+            background-color: #e8f4fc;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .exercise {
+            background-color: #e8f8e8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .solution {
+            background-color: #fef9e7;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .toggle-solution {
+            background-color: #f39c12;
+        }
+        .toggle-solution:hover {
+            background-color: #e67e22;
+        }
+        .save-btn {
+            background-color: #27ae60;
+        }
+        .save-btn:hover {
+            background-color: #219653;
+        }
+        .print-btn {
+            background-color: #7f8c8d;
+        }
+        .print-btn:hover {
+            background-color: #95a5a6;
+        }
+        .saved-lessons {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .search-filter {
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            align-items: end;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .filter-group label {
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+        .lesson-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .lesson-item {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+            transition: all 0.3s ease;
+        }
+        .lesson-item.recent {
+            border-left-color: #2ecc71;
+            background-color: #f8f9fa;
+        }
+        .lesson-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .lesson-date {
+            font-size: 0.8em;
+            color: #7f8c8d;
+        }
+        .lesson-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85em;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .lesson-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .lesson-summary {
+            color: #333;
+            line-height: 1.5;
+        }
+        .lesson-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .whatsapp-btn {
+            background-color: #25D366;
+            color: white;
+        }
+        .whatsapp-btn:hover {
+            background-color: #128C7E;
+        }
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+        .view-btn {
+            background-color: #3498db;
+            color: white;
+        }
+        .edit-btn {
+            background-color: #f39c12;
+            color: white;
+        }
+        .edit-btn:hover {
+            background-color: #e67e22;
+        }
+        .help-btn {
+            background-color: #f8f9fa;
+            color: #3498db;
+            border: 1px solid #3498db;
+        }
+        .no-lessons {
+            text-align: center;
+            padding: 30px;
+            color: #7f8c8d;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            color: #3498db;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .stats span {
+            background-color: #e8f4fc;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .modal-content {
+            background-color: white;
+            margin: 20px auto;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 800px;
+            position: relative;
+        }
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .btn-retour {
+            padding: 8px 16px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .btn-retour:hover {
+            background-color: #e0e0e0;
+        }
+        .whatsapp-all-btn {
+            background-color: #25D366;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 15px;
+            display: inline-flex;
+            align-items: center;
+        }
+        .whatsapp-all-btn:hover {
+            background-color: #128C7E;
+        }
+        .refresh-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            margin-left: 10px;
+        }
+        .refresh-btn:hover {
+            background-color: #2980b9;
+        }
+        .add-lesson-btn {
+            background-color: #9b59b6;
+            color: white;
+            margin-bottom: 20px;
+        }
+        .add-lesson-btn:hover {
+            background-color: #8e44ad;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <button class="btn-retour" onclick="history.back()">
+        <i class="fas fa-arrow-left"></i> Retour
+    </button>
+    
+    <div class="container">
+        <h1>Fiche de Préparation de Cours</h1>
+        
+        <div class="header-info">
+            <div>
+                <div class="form-group">
+                    <label for="teacherLastName">Nom de l'enseignant:</label>
+                    <input type="text" id="teacherLastName" required>
+                </div>
+                <div class="form-group">
+                    <label for="teacherFirstName">Prénom de l'enseignant:</label>
+                    <input type="text" id="teacherFirstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="school">Établissement:</label>
+                    <input type="text" id="school" required>
+                </div>
+            </div>
+            <div>
+                <div class="form-group">
+                    <label for="class">Classe:</label>
+                    <select id="class" required>
+                        <option value="">-- Sélectionnez --</option>
+                        <option value="6eme">6ème</option>
+                        <option value="5eme">5ème</option>
+                        <option value="4eme">4ème</option>
+                        <option value="3eme">3ème</option>
+                        <option value="2nde">Seconde</option>
+                        <option value="1ere">Première</option>
+                        <option value="terminale">Terminale</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="discipline">Discipline:</label>
+                    <input type="text" id="discipline" required>
+                </div>
+                <div class="form-group">
+                    <label for="totalStudents">Effectif total:</label>
+                    <input type="number" id="totalStudents" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="girls">Nombre de filles:</label>
+                    <input type="number" id="girls" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="boys">Nombre de garçons:</label>
+                    <input type="number" id="boys" min="0" required>
+                </div>
+            </div>
+        </div>
+
+        <h2>Prérequis</h2>
+        <div class="form-group">
+            <label for="prerequisites">Connaissances et compétences préalables requises:</label>
+            <textarea id="prerequisites" placeholder="Listez les prérequis nécessaires pour ce cours..."></textarea>
+        </div>
+
+        <h2>Situation Problème</h2>
+        <div class="form-group">
+            <label for="problemStatement">Énoncé de la situation problème:</label>
+            <textarea id="problemStatement" placeholder="Décrivez la situation problème qui servira de point de départ..."></textarea>
+        </div>
+
+        <h2>Solution de la Situation Problème</h2>
+        <div class="form-group">
+            <label for="problemSolution">Solution proposée:</label>
+            <textarea id="problemSolution" placeholder="Expliquez la solution à la situation problème..."></textarea>
+        </div>
+
+        <h2>Activités d'Apprentissage</h2>
+        <div id="activities">
+            <div class="activity">
+                <div class="form-group">
+                    <label>Activité 1:</label>
+                    <textarea placeholder="Décrivez la première activité..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Solution:</label>
+                    <textarea placeholder="Solution de l'activité..."></textarea>
+                </div>
+            </div>
+        </div>
+        <button onclick="addActivity()">
+            <i class="fas fa-plus"></i> Ajouter une activité
+        </button>
+
+        <h2>Définitions, Propriétés et Théorèmes</h2>
+        <div class="form-group">
+            <label for="definitions">Éléments théoriques à retenir:</label>
+            <textarea id="definitions" placeholder="Listez et expliquez les définitions, propriétés ou théorèmes abordés..."></textarea>
+        </div>
+
+        <h2>Exemples</h2>
+        <div id="examples">
+            <div class="example">
+                <div class="form-group">
+                    <label>Exemple 1:</label>
+                    <textarea placeholder="Donnez un exemple illustratif..."></textarea>
+                </div>
+            </div>
+        </div>
+        <button onclick="addExample()">
+            <i class="fas fa-plus"></i> Ajouter un exemple
+        </button>
+
+        <h2>Exercices d'Application</h2>
+        <div id="exercises">
+            <div class="exercise">
+                <div class="form-group">
+                    <label>Exercice 1:</label>
+                    <textarea placeholder="Énoncé de l'exercice..."></textarea>
+                </div>
+                <div class="solution">
+                    <div class="form-group">
+                        <label>Solution:</label>
+                        <textarea placeholder="Solution de l'exercice..."></textarea>
+                    </div>
+                </div>
+                <button class="toggle-solution" onclick="toggleSolution(this)">
+                    <i class="fas fa-eye"></i> Afficher/Masquer la solution
+                </button>
+            </div>
+        </div>
+        <button onclick="addExercise()">
+            <i class="fas fa-plus"></i> Ajouter un exercice
+        </button>
+
+        <h2>Récapitulatif</h2>
+        <div class="form-group">
+            <label for="summary">Synthèse de la leçon:</label>
+            <textarea id="summary" placeholder="Faites un résumé des points clés de la leçon..."></textarea>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="save-btn" id="saveButton">
+                <i class="fas fa-save"></i> Enregistrer le cours
+            </button>
+            <button class="print-btn" onclick="window.print()">
+                <i class="fas fa-print"></i> Imprimer la fiche
+            </button>
+        </div>
+
+        <div class="saved-lessons">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>Leçons Enregistrées</h2>
+                <div>
+                    <button class="refresh-btn" onclick="refreshLessons()">
+                        <i class="fas fa-sync-alt"></i> Rafraîchir
+                    </button>
+                    <button class="whatsapp-all-btn" onclick="shareAllLessonsViaWhatsApp()">
+                        <i class="fab fa-whatsapp"></i> Envoyer toutes
+                    </button>
+                </div>
+            </div>
+            
+            <button class="add-lesson-btn" onclick="showAddLessonForm()">
+                <i class="fas fa-plus-circle"></i> Ajouter une leçon directement
+            </button>
+
+            <div class="search-filter">
+                <div class="filter-group">
+                    <label for="searchInput">Rechercher</label>
+                    <input type="text" id="searchInput" placeholder="Discipline, enseignant, établissement..." oninput="filterLessons()">
+                </div>
+                <div class="filter-group">
+                    <label for="classFilter">Filtrer par classe</label>
+                    <select id="classFilter" onchange="filterLessons()">
+                        <option value="">Toutes les classes</option>
+                        <option value="6eme">6ème</option>
+                        <option value="5eme">5ème</option>
+                        <option value="4eme">4ème</option>
+                        <option value="3eme">3ème</option>
+                        <option value="2nde">Seconde</option>
+                        <option value="1ere">Première</option>
+                        <option value="terminale">Terminale</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="disciplineFilter">Filtrer par discipline</label>
+                    <select id="disciplineFilter" onchange="filterLessons()">
+                        <option value="">Toutes les disciplines</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="stats" id="lessonStats">
+                <span>Aucune leçon enregistrée</span>
+            </div>
+            
+            <div class="lesson-list" id="lessonList">
+                <div class="no-lessons">
+                    <i class="fas fa-book-open" style="font-size: 2em; margin-bottom: 10px;"></i>
+                    <p>Aucune leçon enregistrée</p>
+                    <button onclick="showHelp('first-lesson')" class="help-btn">
+                        <i class="fas fa-question-circle"></i> Comment créer une leçon ?
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="lessonModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="modalContent"></div>
+            <div class="modal-actions">
+                <button class="whatsapp-btn" id="modalWhatsappBtn">
+                    <i class="fab fa-whatsapp"></i> Envoyer via WhatsApp
+                </button>
+                <button onclick="closeModal()">
+                    <i class="fas fa-times"></i> Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variable pour stocker les leçons enregistrées
+        let savedLessons = [];
+        let currentEditingIndex = null;
+        
+        // Initialisation au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            document.getElementById('saveButton').addEventListener('click', saveCourse);
+            
+            // Validation des nombres d'élèves
+            document.getElementById('totalStudents').addEventListener('change', validateStudents);
+            document.getElementById('girls').addEventListener('change', validateStudents);
+            document.getElementById('boys').addEventListener('change', validateStudents);
+        });
+
+        function validateStudents() {
+            const total = parseInt(document.getElementById('totalStudents').value) || 0;
+            const girls = parseInt(document.getElementById('girls').value) || 0;
+            const boys = parseInt(document.getElementById('boys').value) || 0;
+            
+            if (girls + boys > total) {
+                alert('Le nombre de filles + garçons ne peut pas dépasser l\'effectif total !');
+                document.getElementById('totalStudents').value = girls + boys;
+            }
+        }
+
+        function saveCourse() {
+            console.log("Début de l'enregistrement...");
+            
+            // Récupération des données du formulaire
+            const courseData = {
+                teacher: {
+                    lastName: document.getElementById('teacherLastName').value.trim(),
+                    firstName: document.getElementById('teacherFirstName').value.trim()
+                },
+                school: document.getElementById('school').value.trim(),
+                class: document.getElementById('class').value,
+                discipline: document.getElementById('discipline').value.trim(),
+                students: {
+                    total: parseInt(document.getElementById('totalStudents').value) || 0,
+                    girls: parseInt(document.getElementById('girls').value) || 0,
+                    boys: parseInt(document.getElementById('boys').value) || 0
+                },
+                prerequisites: document.getElementById('prerequisites').value.trim(),
+                problemStatement: document.getElementById('problemStatement').value.trim(),
+                problemSolution: document.getElementById('problemSolution').value.trim(),
+                activities: [],
+                definitions: document.getElementById('definitions').value.trim(),
+                examples: [],
+                exercises: [],
+                summary: document.getElementById('summary').value.trim(),
+                date: new Date().toISOString(),
+                timestamp: Date.now()
+            };
+
+            // Validation des champs obligatoires
+            const requiredFields = [
+                courseData.teacher.lastName,
+                courseData.teacher.firstName,
+                courseData.school,
+                courseData.class,
+                courseData.discipline
+            ];
+
+            if (requiredFields.some(field => !field)) {
+                alert('Veuillez remplir tous les champs obligatoires (Nom, Prénom, Établissement, Classe, Discipline)');
+                return;
+            }
+
+            // Validation des nombres d'élèves
+            if (courseData.students.girls + courseData.students.boys > courseData.students.total) {
+                alert('Le nombre de filles + garçons ne peut pas dépasser l\'effectif total !');
+                return;
+            }
+
+            // Récupération des activités
+            document.querySelectorAll('#activities .activity').forEach((activity, index) => {
+                const inputs = activity.querySelectorAll('textarea');
+                if (inputs[0].value.trim()) {
+                    courseData.activities.push({
+                        number: index + 1,
+                        description: inputs[0].value.trim(),
+                        solution: inputs[1].value.trim()
+                    });
+                }
+            });
+
+            // Récupération des exemples
+            document.querySelectorAll('#examples .example').forEach((example, index) => {
+                const content = example.querySelector('textarea').value.trim();
+                if (content) {
+                    courseData.examples.push({
+                        number: index + 1,
+                        content: content
+                    });
+                }
+            });
+
+            // Récupération des exercices
+            document.querySelectorAll('#exercises .exercise').forEach((exercise, index) => {
+                const inputs = exercise.querySelectorAll('textarea');
+                if (inputs[0].value.trim()) {
+                    courseData.exercises.push({
+                        number: index + 1,
+                        statement: inputs[0].value.trim(),
+                        solution: inputs[1].value.trim()
+                    });
+                }
+            });
+
+            // Enregistrement de la leçon
+            if (currentEditingIndex !== null) {
+                savedLessons[currentEditingIndex] = courseData; // Mise à jour
+            } else {
+                savedLessons.push(courseData); // Nouvelle entrée
+            }
+
+            // Sauvegarde et feedback
+            saveToStorage();
+            alert('Leçon enregistrée avec succès !');
+            resetForm();
+            refreshLessons();
+        }
+
+        function resetForm() {
+            document.getElementById('teacherLastName').value = '';
+            document.getElementById('teacherFirstName').value = '';
+            document.getElementById('school').value = '';
+            document.getElementById('class').value = '';
+            document.getElementById('discipline').value = '';
+            document.getElementById('totalStudents').value = '';
+            document.getElementById('girls').value = '';
+            document.getElementById('boys').value = '';
+            document.getElementById('prerequisites').value = '';
+            document.getElementById('problemStatement').value = '';
+            document.getElementById('problemSolution').value = '';
+            document.getElementById('definitions').value = '';
+            document.getElementById('summary').value = '';
+            
+            // Réinitialisation des sections dynamiques
+            document.getElementById('activities').innerHTML = `
+                <div class="activity">
+                    <div class="form-group">
+                        <label>Activité 1:</label>
+                        <textarea placeholder="Décrivez la première activité..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Solution:</label>
+                        <textarea placeholder="Solution de l'activité..."></textarea>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('examples').innerHTML = `
+                <div class="example">
+                    <div class="form-group">
+                        <label>Exemple 1:</label>
+                        <textarea placeholder="Donnez un exemple illustratif..."></textarea>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('exercises').innerHTML = `
+                <div class="exercise">
+                    <div class="form-group">
+                        <label>Exercice 1:</label>
+                        <textarea placeholder="Énoncé de l'exercice..."></textarea>
+                    </div>
+                    <div class="solution">
+                        <div class="form-group">
+                            <label>Solution:</label>
+                            <textarea placeholder="Solution de l'exercice..."></textarea>
+                        </div>
+                    </div>
+                    <button class="toggle-solution" onclick="toggleSolution(this)">
+                        <i class="fas fa-eye"></i> Afficher/Masquer la solution
+                    </button>
+                </div>
+            `;
+            
+            currentEditingIndex = null;
+            document.querySelector('.save-btn').innerHTML = '<i class="fas fa-save"></i> Enregistrer le cours';
+        }
+
+        function saveToStorage() {
+            try {
+                const storageData = {
+                    version: '1.0',
+                    lastUpdated: new Date().toISOString(),
+                    lessons: savedLessons
+                };
+                localStorage.setItem('savedLessons', JSON.stringify(storageData));
+                console.log('Données sauvegardées:', storageData);
+            } catch (e) {
+                console.error('Erreur de sauvegarde:', e);
+                alert('Erreur lors de la sauvegarde des données');
+            }
+        }
+
+        function loadFromStorage() {
+            try {
+                const storedData = localStorage.getItem('savedLessons');
+                if (storedData) {
+                    const parsedData = JSON.parse(storedData);
+                    savedLessons = parsedData.lessons || [];
+                    console.log('Données chargées:', savedLessons);
+                }
+            } catch (e) {
+                console.error('Erreur de chargement:', e);
+                savedLessons = [];
+            }
+        }
+
+        function refreshLessons() {
+            loadFromStorage();
+            initFilters();
+            displaySavedLessons();
+            updateStats();
+        }
+
+        function initFilters() {
+            const disciplineFilter = document.getElementById('disciplineFilter');
+            const disciplines = new Set();
+            
+            savedLessons.forEach(lesson => {
+                if (lesson.discipline) {
+                    disciplines.add(lesson.discipline);
+                }
+            });
+            
+            disciplineFilter.innerHTML = '<option value="">Toutes les disciplines</option>';
+            disciplines.forEach(discipline => {
+                disciplineFilter.innerHTML += `<option value="${discipline}">${discipline}</option>`;
+            });
+        }
+
+        function displaySavedLessons(lessonsToDisplay = null) {
+            const lessons = lessonsToDisplay || savedLessons;
+            const lessonList = document.getElementById('lessonList');
+            
+            if (!lessons || lessons.length === 0) {
+                lessonList.innerHTML = `
+                    <div class="no-lessons">
+                        <i class="fas fa-book-open" style="font-size: 2em; margin-bottom: 10px;"></i>
+                        <p>Aucune leçon trouvée</p>
+                        <button onclick="showHelp('first-lesson')" class="help-btn">
+                            <i class="fas fa-question-circle"></i> Comment créer une leçon ?
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            lessonList.innerHTML = lessons.map((lesson, index) => {
+                const date = new Date(lesson.date);
+                const isRecent = (new Date() - date) < 1000 * 60 * 60 * 24 * 7; // < 7 jours
+                
+                return `
+                    <div class="lesson-item ${isRecent ? 'recent' : ''}">
+                        <div class="lesson-header">
+                            <h3>${lesson.discipline || 'Sans titre'} - ${getClassLabel(lesson.class)}</h3>
+                            <span class="lesson-date">
+                                ${date.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })}
+                            </span>
+                        </div>
+                        <div class="lesson-meta">
+                            <span><i class="fas fa-user"></i> ${lesson.teacher.firstName || ''} ${lesson.teacher.lastName || ''}</span>
+                            <span><i class="fas fa-school"></i> ${lesson.school || ''}</span>
+                            <span><i class="fas fa-users"></i> ${lesson.students.total || 0} élèves</span>
+                        </div>
+                        <p class="lesson-summary">${lesson.summary?.substring(0, 120) || 'Aucun résumé'}...</p>
+                        
+                        <div class="lesson-actions">
+                            <button class="view-btn" onclick="viewLesson(${index})">
+                                <i class="fas fa-eye"></i> Voir
+                            </button>
+                            <button class="whatsapp-btn" onclick="shareViaWhatsApp(${index})">
+                                <i class="fab fa-whatsapp"></i> 
+                            </button>
+                            <button class="edit-btn" onclick="editLesson(${index})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="delete-btn" onclick="deleteLesson(${index})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateStats() {
+            const statsDiv = document.getElementById('lessonStats');
+            
+            if (!savedLessons || savedLessons.length === 0) {
+                statsDiv.innerHTML = '<span>Aucune leçon enregistrée</span>';
+                return;
+            }
+            
+            const disciplines = {};
+            savedLessons.forEach(lesson => {
+                if (!disciplines[lesson.discipline]) {
+                    disciplines[lesson.discipline] = 0;
+                }
+                disciplines[lesson.discipline]++;
+            });
+            
+            let statsHTML = `<span>Total: ${savedLessons.length} leçon${savedLessons.length > 1 ? 's' : ''}</span>`;
+            
+            for (const discipline in disciplines) {
+                statsHTML += `<span>${discipline}: ${disciplines[discipline]}</span>`;
+            }
+            
+            statsDiv.innerHTML = statsHTML;
+        }
+
+        function filterLessons() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const classFilter = document.getElementById('classFilter').value;
+            const disciplineFilter = document.getElementById('disciplineFilter').value;
+            
+            const filtered = savedLessons.filter(lesson => {
+                const matchesSearch = 
+                    (lesson.discipline && lesson.discipline.toLowerCase().includes(searchTerm)) ||
+                    (lesson.teacher.lastName && lesson.teacher.lastName.toLowerCase().includes(searchTerm)) ||
+                    (lesson.teacher.firstName && lesson.teacher.firstName.toLowerCase().includes(searchTerm)) ||
+                    (lesson.school && lesson.school.toLowerCase().includes(searchTerm)) ||
+                    (lesson.summary && lesson.summary.toLowerCase().includes(searchTerm));
+                
+                const matchesClass = classFilter === '' || lesson.class === classFilter;
+                const matchesDiscipline = disciplineFilter === '' || lesson.discipline === disciplineFilter;
+                
+                return matchesSearch && matchesClass && matchesDiscipline;
+            });
+            
+            displaySavedLessons(filtered);
+        }
+
+        function addActivity() {
+            const activitiesDiv = document.getElementById('activities');
+            const activityCount = activitiesDiv.children.length + 1;
+            
+            const newActivity = document.createElement('div');
+            newActivity.className = 'activity';
+            newActivity.innerHTML = `
+                <div class="form-group">
+                    <label>Activité ${activityCount}:</label>
+                    <textarea placeholder="Décrivez l'activité..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Solution:</label>
+                    <textarea placeholder="Solution de l'activité..."></textarea>
+                </div>
+            `;
+            
+            activitiesDiv.appendChild(newActivity);
+        }
+        
+        function addExample() {
+            const examplesDiv = document.getElementById('examples');
+            const exampleCount = examplesDiv.children.length + 1;
+            
+            const newExample = document.createElement('div');
+            newExample.className = 'example';
+            newExample.innerHTML = `
+                <div class="form-group">
+                    <label>Exemple ${exampleCount}:</label>
+                    <textarea placeholder="Donnez un exemple illustratif..."></textarea>
+                </div>
+            `;
+            
+            examplesDiv.appendChild(newExample);
+        }
+        
+        function addExercise() {
+            const exercisesDiv = document.getElementById('exercises');
+            const exerciseCount = exercisesDiv.children.length + 1;
+            
+            const newExercise = document.createElement('div');
+            newExercise.className = 'exercise';
+            newExercise.innerHTML = `
+                <div class="form-group">
+                    <label>Exercice ${exerciseCount}:</label>
+                    <textarea placeholder="Énoncé de l'exercice..."></textarea>
+                </div>
+                <div class="solution">
+                    <div class="form-group">
+                        <label>Solution:</label>
+                        <textarea placeholder="Solution de l'exercice..."></textarea>
+                    </div>
+                </div>
+                <button class="toggle-solution" onclick="toggleSolution(this)">
+                    <i class="fas fa-eye"></i> Afficher/Masquer la solution
+                </button>
+            `;
+            
+            exercisesDiv.appendChild(newExercise);
+        }
+        
+        function toggleSolution(button) {
+            const solutionDiv = button.previousElementSibling;
+            if (solutionDiv.style.display === 'block') {
+                solutionDiv.style.display = 'none';
+                button.innerHTML = '<i class="fas fa-eye"></i> Afficher la solution';
+            } else {
+                solutionDiv.style.display = 'block';
+                button.innerHTML = '<i class="fas fa-eye-slash"></i> Masquer la solution';
+            }
+        }
+        
+        function viewLesson(index) {
+            const lesson = savedLessons[index];
+            const modal = document.getElementById('lessonModal');
+            const modalContent = document.getElementById('modalContent');
+            const whatsappBtn = document.getElementById('modalWhatsappBtn');
+            
+            let details = `
+                <h2>${lesson.discipline || 'Sans titre'} - ${getClassLabel(lesson.class) || 'N/A'}</h2>
+                <div class="lesson-meta">
+                    <p><strong>Enseignant:</strong> ${lesson.teacher.firstName || ''} ${lesson.teacher.lastName || ''}</p>
+                    <p><strong>Établissement:</strong> ${lesson.school || ''}</p>
+                    <p><strong>Date:</strong> ${new Date(lesson.date).toLocaleString('fr-FR')}</p>
+                    <p><strong>Effectif:</strong> ${lesson.students.total || 0} élèves (${lesson.students.girls || 0} filles, ${lesson.students.boys || 0} garçons)</p>
+                </div>
+                
+                <h3>Prérequis</h3>
+                <div class="activity">${formatText(lesson.prerequisites)}</div>
+                
+                <h3>Situation Problème</h3>
+                <div class="example">${formatText(lesson.problemStatement)}</div>
+                
+                <h3>Solution</h3>
+                <div class="exercise">${formatText(lesson.problemSolution)}</div>
+                
+                <h3>Activités d'Apprentissage</h3>
+            `;
+
+            lesson.activities.forEach(activity => {
+                details += `
+                    <div class="activity">
+                        <h4>Activité ${activity.number}</h4>
+                        <p>${formatText(activity.description)}</p>
+                        <h5>Solution:</h5>
+                        <div class="solution">${formatText(activity.solution)}</div>
+                    </div>
+                `;
+            });
+
+            details += `<h3>Définitions, Propriétés et Théorèmes</h3>
+                <div class="exercise">${formatText(lesson.definitions)}</div>
+                
+                <h3>Exemples</h3>`;
+
+            lesson.examples.forEach(example => {
+                details += `
+                    <div class="example">
+                        <h4>Exemple ${example.number}</h4>
+                        <p>${formatText(example.content)}</p>
+                    </div>
+                `;
+            });
+
+            details += `<h3>Exercices d'Application</h3>`;
+
+            lesson.exercises.forEach(exercise => {
+                details += `
+                    <div class="exercise">
+                        <h4>Exercice ${exercise.number}</h4>
+                        <p>${formatText(exercise.statement)}</p>
+                        <button class="toggle-solution" onclick="toggleSolutionInModal(this)">
+                            <i class="fas fa-eye"></i> Afficher la solution
+                        </button>
+                        <div class="solution" style="display:none;">
+                            <h5>Solution:</h5>
+                            <p>${formatText(exercise.solution)}</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            details += `<h3>Récapitulatif</h3>
+                <div class="summary">${formatText(lesson.summary)}</div>`;
+
+            modalContent.innerHTML = details;
+            whatsappBtn.onclick = function() { shareViaWhatsApp(index); };
+            modal.style.display = 'block';
+        }
+
+        function formatText(text) {
+            if (!text) return 'Non spécifié';
+            return text.replace(/\n/g, '<br>');
+        }
+
+        function toggleSolutionInModal(button) {
+            const solutionDiv = button.nextElementSibling;
+            if (solutionDiv.style.display === 'block') {
+                solutionDiv.style.display = 'none';
+                button.innerHTML = '<i class="fas fa-eye"></i> Afficher la solution';
+            } else {
+                solutionDiv.style.display = 'block';
+                button.innerHTML = '<i class="fas fa-eye-slash"></i> Masquer la solution';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('lessonModal').style.display = 'none';
+        }
+
+        function deleteLesson(index) {
+            if (confirm('Voulez-vous vraiment supprimer cette leçon ?')) {
+                savedLessons.splice(index, 1);
+                saveToStorage();
+                initializeApp();
+            }
+        }
+
+        function getClassLabel(classValue) {
+            const classes = {
+                '6eme': '6ème',
+                '5eme': '5ème',
+                '4eme': '4ème',
+                '3eme': '3ème',
+                '2nde': 'Seconde',
+                '1ere': 'Première',
+                'terminale': 'Terminale'
+            };
+            return classes[classValue] || classValue;
+        }
+
+        function showHelp(topic) {
+            const helpMessages = {
+                'first-lesson': `Pour créer votre première leçon :
+                1. Remplissez les informations de base
+                2. Ajoutez des activités avec le bouton "+"
+                3. Cliquez sur "Enregistrer"`,
+                'sharing': `Partagez les leçons via WhatsApp en cliquant sur l'icône 📱`
+            };
+            
+            alert(helpMessages[topic] || "Aide non disponible pour ce sujet");
+        }
+
+        function shareViaWhatsApp(index) {
+            const lesson = savedLessons[index];
+            sendWhatsAppMessage(formatLessonForSharing(lesson));
+        }
+
+        function shareAllLessonsViaWhatsApp() {
+            if (savedLessons.length === 0) {
+                alert("Aucune leçon à envoyer !");
+                return;
+            }
+
+            let message = "*📚 Toutes mes leçons enregistrées 📚*\n\n";
+            
+            savedLessons.forEach((lesson, index) => {
+                message += `*Leçon ${index + 1}: ${lesson.discipline || 'Sans titre'} - ${getClassLabel(lesson.class) || 'N/A'}*\n`;
+                message += `👨‍🏫 Enseignant: ${lesson.teacher.firstName || ''} ${lesson.teacher.lastName || ''}\n`;
+                message += `📅 Date: ${new Date(lesson.date).toLocaleDateString('fr-FR')}\n`;
+                message += `📝 Résumé: ${lesson.summary ? lesson.summary.substring(0, 50) + (lesson.summary.length > 50 ? '...' : '') : ''}\n\n`;
+            });
+
+            message += "\n*Détails complets disponibles dans l'application*";
+            sendWhatsAppMessage(message);
+        }
+
+        function formatLessonForSharing(lesson) {
+            let message = `*${lesson.discipline || 'Sans titre'} - ${getClassLabel(lesson.class) || 'N/A'}*\n`;
+            message += `👨‍🏫 Enseignant: ${lesson.teacher.firstName || ''} ${lesson.teacher.lastName || ''}\n`;
+            message += `🏫 Établissement: ${lesson.school || ''}\n\n`;
+            
+            message += `*📚 Prérequis:*\n${lesson.prerequisites || 'Non spécifié'}\n\n`;
+            message += `*❓ Situation Problème:*\n${lesson.problemStatement || 'Non spécifié'}\n\n`;
+            message += `*✅ Solution:*\n${lesson.problemSolution || 'Non spécifié'}\n\n`;
+            
+            if (lesson.activities && lesson.activities.length > 0) {
+                message += `*🔄 Activités:*\n`;
+                lesson.activities.forEach(activity => {
+                    message += `- ${activity.description ? activity.description.substring(0, 50) + (activity.description.length > 50 ? '...' : '') : 'Activité'}\n`;
+                });
+                message += `\n`;
+            }
+            
+            message += `*📝 Récapitulatif:*\n${lesson.summary || 'Non spécifié'}\n\n`;
+            
+            return message;
+        }
+
+        function sendWhatsAppMessage(message) {
+            const phoneNumber = '92871605';
+            const maxLength = 1000;
+            
+            if (message.length > maxLength) {
+                message = message.substring(0, maxLength) + '...\n\n*Message tronqué - voir les détails dans l\'application*';
+            }
+            
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+            
+            window.open(whatsappUrl, '_blank');
+        }
+
+        function showAddLessonForm() {
+            const lessonData = prompt("Collez ici les données JSON de la leçon à ajouter:");
+            if (lessonData) {
+                try {
+                    const lesson = JSON.parse(lessonData);
+                    addLessonToDatabase(lesson);
+                } catch (e) {
+                    alert("Format JSON invalide ! Veuillez fournir des données valides.");
+                    console.error("Erreur de parsing JSON:", e);
+                }
+            }
+        }
+
+        function addLessonToDatabase(lesson) {
+            if (!lesson.discipline || !lesson.class) {
+                alert("La leçon doit avoir au moins une discipline et une classe définie");
+                return;
+            }
+
+            if (!lesson.date) lesson.date = new Date().toISOString();
+            if (!lesson.timestamp) lesson.timestamp = new Date().getTime();
+            
+            savedLessons.push(lesson);
+            saveToStorage();
+            refreshLessons();
+            alert("Leçon ajoutée avec succès !");
+        }
+
+        function initializeApp() {
+            loadFromStorage();
+            initFilters();
+            displaySavedLessons();
+            updateStats();
+            
+            // Charger les dernières valeurs utilisées si disponibles
+            const lastTeacher = localStorage.getItem('lastTeacher');
+            if (lastTeacher) {
+                const teacher = JSON.parse(lastTeacher);
+                document.getElementById('teacherLastName').value = teacher.lastName || '';
+                document.getElementById('teacherFirstName').value = teacher.firstName || '';
+            }
+        }
+    </script>
+</body>
+</html>
