@@ -1,20 +1,5 @@
 <!DOCTYPE html>
 <html lang="fr">
-     <style>
-  .btn-retour {
-    padding: 8px 16px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .btn-retour:hover {
-    background-color: #e0e0e0;
-  }
-</style>
-
-<button class="btn-retour" onclick="history.back()">← Retour</button>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -110,6 +95,16 @@
         .btn-success:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(67, 233, 123, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107, #ffab00);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
         }
 
         .file-input {
@@ -277,6 +272,73 @@
             background: #5a6268;
         }
 
+        .stats-container {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stats-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4facfe;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .confirmation-dialog {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .confirmation-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .confirmation-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
         /* Styles pour l'authentification */
         .auth-container {
             display: flex;
@@ -396,6 +458,10 @@
             .auth-box {
                 padding: 20px;
             }
+
+            .confirmation-content {
+                padding: 20px;
+            }
         }
     </style>
 </head>
@@ -454,10 +520,10 @@
                     📥 Importer un fichier JSON
                 </button>
                 <button class="btn btn-success" onclick="saveToDatabase()">
-                    💾 Enregistrer dans la base de données
+                    💾 Enregistrer dans la base
                 </button>
-                <button class="btn btn-danger" onclick="confirmDatabaseDeletion()">
-                    🗑 Supprimer la base de données
+                <button class="btn btn-warning" onclick="showDeleteConfirmation()">
+                    🗑 Supprimer les données
                 </button>
                 <button class="btn" onclick="loadFromDatabase()">
                     🔄 Charger depuis la base
@@ -473,18 +539,26 @@
             <div id="error-message" class="message error-message"></div>
             <div id="success-message" class="message success-message"></div>
 
+            <!-- Statistiques -->
+            <div id="stats-section" class="stats-container" style="display: none;">
+                <h3 class="stats-title">Statistiques globales</h3>
+                <div class="stats-grid" id="stats-grid">
+                    <!-- Les statistiques seront insérées ici -->
+                </div>
+            </div>
+
             <!-- Filtres -->
             <div id="filters-section" class="filters" style="display: none;">
+                <div class="filter-group">
+                    <label class="filter-label">Classe</label>
+                    <select id="class-filter" class="filter-select" onchange="filterEvaluations()">
+                        <option value="">Toutes les classes</option>
+                    </select>
+                </div>
                 <div class="filter-group">
                     <label class="filter-label">Élève</label>
                     <select id="student-filter" class="filter-select" onchange="filterEvaluations()">
                         <option value="">Tous les élèves</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label class="filter-label">Matière</label>
-                    <select id="subject-filter" class="filter-select" onchange="filterEvaluations()">
-                        <option value="">Toutes les matières</option>
                     </select>
                 </div>
                 <div class="filter-group">
@@ -496,31 +570,12 @@
                 <button class="reset-btn" onclick="resetFilters()">Réinitialiser</button>
             </div>
 
-            <!-- Meta informations -->
-            <div id="meta-section" class="meta-info" style="display: none;">
-                <div class="meta-item">
-                    <div class="meta-label">Enseignant</div>
-                    <div class="meta-value" id="meta-teacher"></div>
-                </div>
-                <div class="meta-item">
-                    <div class="meta-label">Matière</div>
-                    <div class="meta-value" id="meta-subject"></div>
-                </div>
-                <div class="meta-item">
-                    <div class="meta-label">Classe</div>
-                    <div class="meta-value" id="meta-class"></div>
-                </div>
-                <div class="meta-item">
-                    <div class="meta-label">Date d'import</div>
-                    <div class="meta-value" id="meta-date"></div>
-                </div>
-            </div>
-
             <!-- Tableau des évaluations -->
             <table id="evaluations-table" class="evaluations-table" style="display: none;">
                 <thead>
                     <tr>
                         <th>Élève</th>
+                        <th>Classe</th>
                         <th>Type</th>
                         <th>Titre</th>
                         <th>Date</th>
@@ -540,6 +595,18 @@
         </div>
     </div>
 
+    <!-- Boîte de dialogue de confirmation -->
+    <div id="confirmation-dialog" class="confirmation-dialog">
+        <div class="confirmation-content">
+            <h3>Confirmation de suppression</h3>
+            <p>Êtes-vous sûr de vouloir supprimer toutes les données de la base de données ? Cette action est irréversible.</p>
+            <div class="confirmation-buttons">
+                <button class="btn" onclick="hideDeleteConfirmation()">Annuler</button>
+                <button class="btn btn-danger" onclick="deleteDatabase()">Confirmer la suppression</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Indicateur de chargement -->
     <div id="loading" class="loading">
         <div class="loading-content">
@@ -554,10 +621,11 @@
         let databaseName = "evaluationsDatabase";
         let allEvaluations = []; // Stocke toutes les évaluations pour le filtrage
         let currentUser = null; // Stocke l'utilisateur actuellement connecté
+        const usersDatabaseName = "usersDatabase";
 
         // Initialisation de la base de données des utilisateurs
         function initUserDatabase() {
-            if (!localStorage.getItem('usersDatabase')) {
+            if (!localStorage.getItem(usersDatabaseName)) {
                 // Créer un compte admin par défaut
                 const defaultUsers = {
                     'admin': {
@@ -565,13 +633,13 @@
                         isAdmin: true
                     }
                 };
-                localStorage.setItem('usersDatabase', JSON.stringify(defaultUsers));
+                localStorage.setItem(usersDatabaseName, JSON.stringify(defaultUsers));
             }
         }
 
         // Vérifier les informations de connexion
         function checkCredentials(username, password) {
-            const users = JSON.parse(localStorage.getItem('usersDatabase'));
+            const users = JSON.parse(localStorage.getItem(usersDatabaseName));
             if (users && users[username] && users[username].password === password) {
                 return users[username];
             }
@@ -580,7 +648,7 @@
 
         // Enregistrer un nouvel utilisateur
         function registerUser(username, password) {
-            const users = JSON.parse(localStorage.getItem('usersDatabase'));
+            const users = JSON.parse(localStorage.getItem(usersDatabaseName));
             if (users[username]) {
                 return false; // L'utilisateur existe déjà
             }
@@ -590,7 +658,7 @@
                 isAdmin: false
             };
             
-            localStorage.setItem('usersDatabase', JSON.stringify(users));
+            localStorage.setItem(usersDatabaseName, JSON.stringify(users));
             return true;
         }
 
@@ -628,7 +696,7 @@
                 // Charger les données si elles existent
                 loadFromDatabase();
             } else {
-                alert('Identifiant ou mot de passe incorrect');
+                showError('Identifiant ou mot de passe incorrect');
             }
         }
 
@@ -640,15 +708,15 @@
             const confirmPassword = document.getElementById('register-confirm-password').value;
             
             if (password !== confirmPassword) {
-                alert('Les mots de passe ne correspondent pas');
+                showError('Les mots de passe ne correspondent pas');
                 return;
             }
             
             if (registerUser(username, password)) {
-                alert('Compte créé avec succès ! Vous pouvez maintenant vous connecter.');
+                showSuccess('Compte créé avec succès ! Vous pouvez maintenant vous connecter.');
                 showLoginForm();
             } else {
-                alert('Cet identifiant est déjà utilisé');
+                showError('Cet identifiant est déjà utilisé');
             }
         }
 
@@ -674,9 +742,7 @@
             reader.onload = function(e) {
                 try {
                     jsonData = JSON.parse(e.target.result);
-                    allEvaluations = jsonData.evaluations || [];
-                    displayData(jsonData);
-                    populateFilters();
+                    processData(jsonData);
                     showSuccess("Fichier importé avec succès !");
                 } catch (error) {
                     showError("Erreur lors de la lecture du fichier : " + error.message);
@@ -687,43 +753,122 @@
             reader.readAsText(file);
         });
 
-        // Remplir les filtres avec les options disponibles
-        function populateFilters() {
-            if (!jsonData || !jsonData.evaluations) return;
+        // Traiter les données du fichier JSON
+        function processData(data) {
+            if (!data || !data.teachers) {
+                showError("Format de fichier invalide. Aucune donnée d'enseignant trouvée.");
+                return;
+            }
 
+            // Extraire toutes les évaluations
+            allEvaluations = [];
+            data.teachers.forEach(teacher => {
+                if (teacher.evaluations && teacher.evaluations.length > 0) {
+                    teacher.evaluations.forEach(evaluation => {
+                        // Ajouter les informations de l'enseignant à chaque évaluation
+                        evaluation.students.forEach(student => {
+                            allEvaluations.push({
+                                teacher: teacher.name,
+                                subject: teacher.subject,
+                                class: evaluation.class,
+                                cycle: evaluation.cycle,
+                                type: evaluation.type,
+                                title: evaluation.title,
+                                date: evaluation.date,
+                                maxGrade: evaluation.maxGrade,
+                                studentName: student.name,
+                                grade: student.grade,
+                                appreciation: student.appreciation,
+                                comment: student.comment,
+                                evaluationComments: evaluation.comments,
+                                stats: evaluation.stats
+                            });
+                        });
+                    });
+                }
+            });
+
+            // Afficher les données
+            displayData(allEvaluations);
+            populateFilters(data);
+            displayStats(data);
+        }
+
+        // Afficher les statistiques
+        function displayStats(data) {
+            const statsGrid = document.getElementById('stats-grid');
+            statsGrid.innerHTML = '';
+
+            if (!data.teachers || data.teachers.length === 0) return;
+
+            // Compter le nombre total d'évaluations
+            let totalEvaluations = 0;
+            data.teachers.forEach(teacher => {
+                totalEvaluations += teacher.evaluations ? teacher.evaluations.length : 0;
+            });
+
+            // Compter le nombre total d'élèves
+            let totalStudents = 0;
+            for (const classe in data.students) {
+                totalStudents += data.students[classe].length;
+            }
+
+            // Afficher les statistiques
+            const stats = [
+                { label: "Enseignants", value: data.teachers.length },
+                { label: "Élèves", value: totalStudents },
+                { label: "Évaluations", value: totalEvaluations },
+                { label: "Classes", value: Object.keys(data.students).length }
+            ];
+
+            stats.forEach(stat => {
+                const statItem = document.createElement('div');
+                statItem.className = 'stat-item';
+                statItem.innerHTML = `
+                    <div class="stat-value">${stat.value}</div>
+                    <div class="stat-label">${stat.label}</div>
+                `;
+                statsGrid.appendChild(statItem);
+            });
+
+            document.getElementById('stats-section').style.display = 'block';
+        }
+
+        // Remplir les filtres avec les options disponibles
+        function populateFilters(data) {
+            const classSelect = document.getElementById('class-filter');
             const studentSelect = document.getElementById('student-filter');
-            const subjectSelect = document.getElementById('subject-filter');
             const typeSelect = document.getElementById('type-filter');
 
             // Réinitialiser les filtres
+            classSelect.innerHTML = '<option value="">Toutes les classes</option>';
             studentSelect.innerHTML = '<option value="">Tous les élèves</option>';
-            subjectSelect.innerHTML = '<option value="">Toutes les matières</option>';
             typeSelect.innerHTML = '<option value="">Tous les types</option>';
 
             // Collecter toutes les options uniques
+            const classes = new Set();
             const students = new Set();
-            const subjects = new Set();
             const types = new Set();
 
-            jsonData.evaluations.forEach(evaluation => {
-                students.add(evaluation.eleve_nom);
-                subjects.add(jsonData.meta.matiere); // La matière est la même pour toutes les évaluations
-                types.add(evaluation.type_evaluation);
+            allEvaluations.forEach(evaluation => {
+                classes.add(evaluation.class);
+                students.add(evaluation.studentName);
+                types.add(evaluation.type);
             });
 
             // Ajouter les options aux select
+            classes.forEach(classe => {
+                const option = document.createElement('option');
+                option.value = classe;
+                option.textContent = classe;
+                classSelect.appendChild(option);
+            });
+
             students.forEach(student => {
                 const option = document.createElement('option');
                 option.value = student;
                 option.textContent = student;
                 studentSelect.appendChild(option);
-            });
-
-            subjects.forEach(subject => {
-                const option = document.createElement('option');
-                option.value = subject;
-                option.textContent = subject;
-                subjectSelect.appendChild(option);
             });
 
             types.forEach(type => {
@@ -739,24 +884,22 @@
 
         // Filtrer les évaluations
         function filterEvaluations() {
-            if (!jsonData || !jsonData.evaluations) return;
-
+            const classFilter = document.getElementById('class-filter').value;
             const studentFilter = document.getElementById('student-filter').value;
-            const subjectFilter = document.getElementById('subject-filter').value;
             const typeFilter = document.getElementById('type-filter').value;
 
             let filteredEvaluations = [...allEvaluations];
 
-            if (studentFilter) {
-                filteredEvaluations = filteredEvaluations.filter(e => e.eleve_nom === studentFilter);
+            if (classFilter) {
+                filteredEvaluations = filteredEvaluations.filter(e => e.class === classFilter);
             }
 
-            if (subjectFilter) {
-                filteredEvaluations = filteredEvaluations.filter(e => jsonData.meta.matiere === subjectFilter);
+            if (studentFilter) {
+                filteredEvaluations = filteredEvaluations.filter(e => e.studentName === studentFilter);
             }
 
             if (typeFilter) {
-                filteredEvaluations = filteredEvaluations.filter(e => e.type_evaluation === typeFilter);
+                filteredEvaluations = filteredEvaluations.filter(e => e.type === typeFilter);
             }
 
             // Afficher les évaluations filtrées
@@ -765,8 +908,8 @@
 
         // Réinitialiser les filtres
         function resetFilters() {
+            document.getElementById('class-filter').value = '';
             document.getElementById('student-filter').value = '';
-            document.getElementById('subject-filter').value = '';
             document.getElementById('type-filter').value = '';
             filterEvaluations();
         }
@@ -777,7 +920,7 @@
             tbody.innerHTML = '';
 
             if (evaluations.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Aucune évaluation trouvée avec ces critères</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">Aucune évaluation trouvée avec ces critères</td></tr>';
                 return;
             }
 
@@ -785,7 +928,7 @@
                 const row = document.createElement('tr');
                 
                 // Déterminer la classe CSS en fonction de la note
-                const percentage = (evaluation.note / evaluation.note_max) * 100;
+                const percentage = (parseFloat(evaluation.grade) / parseFloat(evaluation.maxGrade)) * 100;
                 let gradeClass = "";
                 if (percentage >= 80) gradeClass = "grade-excellent";
                 else if (percentage >= 60) gradeClass = "grade-good";
@@ -793,13 +936,14 @@
                 else gradeClass = "grade-poor";
 
                 row.innerHTML = `
-                    <td>${evaluation.eleve_nom}</td>
-                    <td>${evaluation.type_evaluation}</td>
-                    <td>${evaluation.titre}</td>
+                    <td>${evaluation.studentName}</td>
+                    <td>${evaluation.class}</td>
+                    <td>${evaluation.type}</td>
+                    <td>${evaluation.title}</td>
                     <td>${formatDate(evaluation.date)}</td>
-                    <td class="${gradeClass}">${evaluation.note}/${evaluation.note_max}</td>
+                    <td class="${gradeClass}">${evaluation.grade}/${evaluation.maxGrade}</td>
                     <td>${evaluation.appreciation || "-"}</td>
-                    <td>${evaluation.commentaires || "-"}</td>
+                    <td>${evaluation.comment || "-"}</td>
                 `;
                 
                 tbody.appendChild(row);
@@ -807,24 +951,17 @@
         }
 
         // Afficher les données dans le tableau
-        function displayData(data) {
-            if (!data || !data.evaluations || data.evaluations.length === 0) {
+        function displayData(evaluations) {
+            if (!evaluations || evaluations.length === 0) {
                 document.getElementById('no-data').style.display = 'block';
                 document.getElementById('evaluations-table').style.display = 'none';
-                document.getElementById('meta-section').style.display = 'none';
                 document.getElementById('filters-section').style.display = 'none';
+                document.getElementById('stats-section').style.display = 'none';
                 return;
             }
 
-            // Afficher les méta-données
-            document.getElementById('meta-teacher').textContent = data.meta.enseignant || "-";
-            document.getElementById('meta-subject').textContent = data.meta.matiere || "-";
-            document.getElementById('meta-class').textContent = data.meta.classe || "-";
-            document.getElementById('meta-date').textContent = data.meta.date_import || "-";
-            document.getElementById('meta-section').style.display = 'grid';
-
             // Afficher toutes les évaluations initialement
-            displayEvaluations(data.evaluations);
+            displayEvaluations(evaluations);
 
             document.getElementById('evaluations-table').style.display = 'table';
             document.getElementById('no-data').style.display = 'none';
@@ -849,6 +986,44 @@
             }
         }
 
+        // Afficher la confirmation de suppression
+        function showDeleteConfirmation() {
+            if (!localStorage.getItem(databaseName)) {
+                showError("Aucune donnée à supprimer dans la base de données.");
+                return;
+            }
+            document.getElementById('confirmation-dialog').style.display = 'flex';
+        }
+
+        // Cacher la confirmation de suppression
+        function hideDeleteConfirmation() {
+            document.getElementById('confirmation-dialog').style.display = 'none';
+        }
+
+        // Supprimer la base de données locale
+        function deleteDatabase() {
+            hideDeleteConfirmation();
+            showLoading();
+            
+            try {
+                localStorage.removeItem(databaseName);
+                jsonData = null;
+                allEvaluations = [];
+                
+                // Réinitialiser l'interface
+                document.getElementById('evaluations-table').style.display = 'none';
+                document.getElementById('filters-section').style.display = 'none';
+                document.getElementById('stats-section').style.display = 'none';
+                document.getElementById('no-data').style.display = 'block';
+                
+                showSuccess("Base de données locale supprimée avec succès.");
+            } catch (error) {
+                showError("Erreur lors de la suppression : " + error.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
         // Charger depuis la base de données locale
         function loadFromDatabase() {
             showLoading();
@@ -857,9 +1032,7 @@
                 const savedData = localStorage.getItem(databaseName);
                 if (savedData) {
                     jsonData = JSON.parse(savedData);
-                    allEvaluations = jsonData.evaluations || [];
-                    displayData(jsonData);
-                    populateFilters();
+                    processData(jsonData);
                     showSuccess("Données chargées depuis la base de données locale !");
                 } else {
                     showError("Aucune donnée trouvée dans la base de données locale.");
@@ -868,29 +1041,6 @@
                 showError("Erreur lors du chargement : " + error.message);
             } finally {
                 hideLoading();
-            }
-        }
-
-        // Confirmer la suppression de la base de données
-        function confirmDatabaseDeletion() {
-            if (confirm("Êtes-vous sûr de vouloir supprimer toutes les données de la base de données locale ? Cette action est irréversible.")) {
-                deleteDatabase();
-            }
-        }
-
-        // Supprimer la base de données locale
-        function deleteDatabase() {
-            try {
-                localStorage.removeItem(databaseName);
-                jsonData = null;
-                allEvaluations = [];
-                document.getElementById('evaluations-table').style.display = 'none';
-                document.getElementById('meta-section').style.display = 'none';
-                document.getElementById('filters-section').style.display = 'none';
-                document.getElementById('no-data').style.display = 'block';
-                showSuccess("Base de données locale supprimée avec succès.");
-            } catch (error) {
-                showError("Erreur lors de la suppression : " + error.message);
             }
         }
 
