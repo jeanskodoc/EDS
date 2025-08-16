@@ -22,7 +22,7 @@
     <style>
         .refresh-button {
             position: fixed;
-            bottom: 90px;  /* Positionné au-dessus du bouton WhatsApp */
+            bottom: 90px;
             right: 20px;
             background-color: #4285f4;
             color: white;
@@ -52,27 +52,7 @@
             height: 24px;
             fill: white;
         }
-    </style>
-</head>
-<body>
-    
-    <!-- Bouton Actualiser -->
-    <button onclick="window.location.reload()" class="refresh-button" aria-label="Actualiser la page">
-        <svg class="refresh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-        </svg>
-    </button>
-</body>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, minimum-scale=1.0, maximum-scale=3.0">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="theme-color" content="#667eea">
-    <title>Espace Enseignant - Lycée Niamtougou</title>
-    <style>
+
         * {
             margin: 0;
             padding: 0;
@@ -659,6 +639,139 @@
             box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
         }
 
+        .database-btn {
+            background: linear-gradient(135deg, #805ad5, #6b46c1);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 15px;
+        }
+
+        .database-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(128, 90, 213, 0.3);
+        }
+
+        .date-range-picker {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .date-range-picker input[type="date"] {
+            padding: 8px 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .database-actions {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 15px;
+        }
+
+        /* Styles pour le filtre d'évaluations */
+        .evaluation-filter {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .filter-controls select, 
+        .filter-controls input {
+            padding: 10px 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .evaluations-list {
+            margin-top: 20px;
+        }
+        
+        .evaluation-item {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .evaluation-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .evaluation-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #4facfe;
+        }
+        
+        .evaluation-date {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+        
+        .evaluation-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .evaluation-stats {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .view-btn {
+            background: #4facfe;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .view-btn:hover {
+            background: #3a8fd6;
+        }
+        
+        .no-evaluations {
+            text-align: center;
+            padding: 20px;
+            color: #718096;
+            font-style: italic;
+        }
+
+        .hidden {
+            display: none;
+        }
+
         @keyframes dots {
             0%, 20% { content: '.'; }
             40% { content: '..'; }
@@ -810,7 +923,7 @@
                 align-items: center;
             }
 
-            .print-btn, .sync-btn, .whatsapp-btn {
+            .print-btn, .sync-btn, .whatsapp-btn, .database-btn {
                 margin-right: 0;
                 margin-bottom: 15px;
                 width: 100%;
@@ -824,6 +937,10 @@
 
             .form-row {
                 grid-template-columns: 1fr;
+            }
+
+            .filter-controls {
+                flex-direction: column;
             }
         }
 
@@ -864,6 +981,13 @@
     </style>
 </head>
 <body>
+    <!-- Bouton Actualiser -->
+    <button onclick="window.location.reload()" class="refresh-button" aria-label="Actualiser la page">
+        <svg class="refresh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+        </svg>
+    </button>
+
     <div class="container">
         <div class="header">
             <div class="school-info">
@@ -934,7 +1058,6 @@
                                     <option value="philosophie">Philosophie</option>
                                     <option value="litterature">Littérature</option>
                                     <option value="ecm">Éducation Civique et Morale</option>
-                                    
                                 </select>
                             </div>
                             <div class="form-group">
@@ -967,6 +1090,28 @@
                     <h3>📋 Liste des enseignants</h3>
                     <div id="teachersList"></div>
                 </div>
+
+                <!-- Gestion de la base de données -->
+                <div class="database-actions">
+                    <h3>🗃️ Gestion de la base de données</h3>
+                    <div class="date-range-picker">
+                        <label for="startDate">Date de début :</label>
+                        <input type="date" id="startDate">
+                        <label for="endDate">Date de fin :</label>
+                        <input type="date" id="endDate">
+                    </div>
+                    <div class="button-group">
+                        <button type="button" class="database-btn" onclick="exportDatabase()">
+                            💾 Sauvegarder la base
+                        </button>
+                        <button type="button" class="database-btn" onclick="importDatabase()">
+                            📤 Importer une sauvegarde
+                        </button>
+                        <button type="button" class="database-btn" onclick="deleteDataByDate()">
+                            🗑️ Supprimer par date
+                        </button>
+                    </div>
+                </div>
                 
                 <button type="button" class="back-btn" onclick="showLoginSection()">
                     ← Retour à la connexion
@@ -983,9 +1128,14 @@
                 <div class="teacher-info">
                     <div class="teacher-header">
                         <h2 id="teacher-name-display">Nom de l'enseignant</h2>
-                        <button id="print-btn" class="print-btn no-print" onclick="printEvaluation()">
-                            🖨️ Imprimer l'évaluation
-                        </button>
+                        <div>
+                            <button id="print-btn" class="print-btn no-print" onclick="printEvaluation()">
+                                🖨️ Imprimer l'évaluation
+                            </button>
+                            <button id="view-evaluations-btn" class="print-btn no-print" onclick="toggleEvaluationsView()">
+                                📋 Voir les évaluations
+                            </button>
+                        </div>
                     </div>
                     <div class="teacher-details">
                         <div class="detail-item">
@@ -1007,130 +1157,177 @@
                     </div>
                 </div>
 
+                <!-- Filtre et liste des évaluations -->
+                <div id="evaluations-view" class="hidden">
+                    <div class="evaluation-filter">
+                        <h3>🔍 Filtre des évaluations</h3>
+                        <div class="filter-controls">
+                            <select id="filter-class">
+                                <option value="">Toutes les classes</option>
+                                <option value="6eme">6ème</option>
+                                <option value="5eme">5ème</option>
+                                <option value="4eme">4ème</option>
+                                <option value="3eme">3ème</option>
+                                <option value="seconde-l">Seconde L</option>
+                                <option value="seconde-cd">Seconde CD</option>
+                                <option value="premiere-a4">Première A4</option>
+                                <option value="premiere-a5">Première A5</option>
+                                <option value="premiere-c4">Première C4</option>
+                                <option value="premiere-d">Première D</option>
+                                <option value="terminale-a4">Terminale A4</option>
+                                <option value="terminale-a5">Terminale A5</option>
+                                <option value="terminale-c4">Terminale C4</option>
+                                <option value="terminale-d">Terminale D</option>
+                            </select>
+                            <select id="filter-type">
+                                <option value="">Tous les types</option>
+                                <option value="controle">Contrôle écrit</option>
+                                <option value="interrogation">Interrogation orale</option>
+                                <option value="devoir">Devoir maison</option>
+                                <option value="tp">Travaux pratiques</option>
+                                <option value="expose">Exposé</option>
+                            </select>
+                            <input type="date" id="filter-start-date" placeholder="Date de début">
+                            <input type="date" id="filter-end-date" placeholder="Date de fin">
+                            <button class="view-btn" onclick="applyEvaluationFilter()">Filtrer</button>
+                            <button class="view-btn" onclick="resetEvaluationFilter()">Réinitialiser</button>
+                        </div>
+                        <div id="evaluations-list" class="evaluations-list">
+                            <!-- Les évaluations seront affichées ici -->
+                        </div>
+                    </div>
+                    <button class="back-btn" onclick="toggleEvaluationsView()">
+                        ← Retour au formulaire
+                    </button>
+                </div>
+
                 <!-- Formulaire d'évaluation -->
-                <div class="evaluation-form">
-                    <form id="gradeForm">
-                        <!-- Informations générales -->
-                        <div class="form-section">
-                            <h2 class="section-title">📋 Informations de l'évaluation</h2>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="teacher">Nom de l'enseignant :</label>
-                                    <input type="text" id="teacher" name="teacher" required readonly>
+                <div id="evaluation-form-view">
+                    <div class="evaluation-form">
+                        <form id="gradeForm">
+                            <!-- Informations générales -->
+                            <div class="form-section">
+                                <h2 class="section-title">📋 Informations de l'évaluation</h2>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="teacher">Nom de l'enseignant :</label>
+                                        <input type="text" id="teacher" name="teacher" required readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cycle">Cycle :</label>
+                                        <select id="cycle" name="cycle" required onchange="updateClasses()">
+                                            <option value="">Sélectionner un cycle</option>
+                                            <option value="college">Collège</option>
+                                            <option value="lycee">Lycée</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="class">Classe :</label>
+                                        <select id="class" name="class" required>
+                                            <option value="">Sélectionner d'abord un cycle</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="subject">Matière :</label>
+                                        <select id="subject" name="subject" required readonly>
+                                            <option value="">Matière automatiquement définie</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="evaluation-date">Date de l'évaluation :</label>
+                                        <input type="date" id="evaluation-date" name="evaluation-date" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="evaluation-type">Type d'évaluation :</label>
+                                        <select id="evaluation-type" name="evaluation-type" required>
+                                            <option value="">Type d'évaluation</option>
+                                            <option value="controle">Contrôle écrit</option>
+                                            <option value="interrogation">Interrogation orale</option>
+                                            <option value="devoir">Devoir maison</option>
+                                            <option value="tp">Travaux pratiques</option>
+                                            <option value="expose">Exposé</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="max-grade">Note maximale :</label>
+                                        <select id="max-grade" name="max-grade" required>
+                                            <option value="20">Sur 20</option>
+                                            <option value="10">Sur 10</option>
+                                            <option value="5">Sur 5</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="cycle">Cycle :</label>
-                                    <select id="cycle" name="cycle" required onchange="updateClasses()">
-                                        <option value="">Sélectionner un cycle</option>
-                                        <option value="college">Collège</option>
-                                        <option value="lycee">Lycée</option>
-                                    </select>
+                                    <label for="evaluation-title">Titre de l'évaluation :</label>
+                                    <input type="text" id="evaluation-title" name="evaluation-title" placeholder="Ex: Contrôle sur les fractions" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="class">Classe :</label>
-                                    <select id="class" name="class" required>
-                                        <option value="">Sélectionner d'abord un cycle</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="subject">Matière :</label>
-                                    <select id="subject" name="subject" required readonly>
-                                        <option value="">Matière automatiquement définie</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="evaluation-date">Date de l'évaluation :</label>
-                                    <input type="date" id="evaluation-date" name="evaluation-date" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="evaluation-type">Type d'évaluation :</label>
-                                    <select id="evaluation-type" name="evaluation-type" required>
-                                        <option value="">Type d'évaluation</option>
-                                        <option value="controle">Contrôle écrit</option>
-                                        <option value="interrogation">Interrogation orale</option>
-                                        <option value="devoir">Devoir maison</option>
-                                       
-                                        <option value="tp">Travaux pratiques</option>
-                                        <option value="expose">Exposé</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="max-grade">Note maximale :</label>
-                                    <select id="max-grade" name="max-grade" required>
-                                        <option value="20">Sur 20</option>
-                                        <option value="10">Sur 10</option>
-                                        <option value="5">Sur 5</option>
-                                        
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="evaluation-title">Titre de l'évaluation :</label>
-                                <input type="text" id="evaluation-title" name="evaluation-title" placeholder="Ex: Contrôle sur les fractions" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="comments">Commentaires généraux :</label>
-                                <textarea id="comments" name="comments" rows="3" placeholder="Observations sur l'évaluation..."></textarea>
-                            </div>
-                        </div>
-
-                        <!-- Liste des élèves et notes -->
-                        <div class="form-section">
-                            <h2 class="section-title">👥 Notes des élèves</h2>
-                            <button type="button" class="add-student-btn no-print" onclick="addStudent()">
-                                ➕ Ajouter un élève
-                            </button>
-                            <div class="students-table">
-                                <div class="table-header">
-                                    <div>Nom et Prénom de l'élève</div>
-                                    <div>Note obtenue</div>
-                                    <div>Appréciation</div>
-                                    <div>Commentaire</div>
-                                    <div class="no-print">Action</div>
-                                </div>
-                                <div id="students-list">
-                                    <!-- Les lignes d'élèves seront ajoutées ici dynamiquement -->
+                                    <label for="comments">Commentaires généraux :</label>
+                                    <textarea id="comments" name="comments" rows="3" placeholder="Observations sur l'évaluation..."></textarea>
                                 </div>
                             </div>
 
-                            <!-- Statistiques en temps réel -->
-                            <div class="stats">
-                                <h3>📈 Statistiques de la classe</h3>
-                                <div class="stats-grid">
-                                    <div class="stat-item">
-                                        <div class="stat-value" id="total-students">0</div>
-                                        <div class="stat-label">Élèves</div>
+                            <!-- Liste des élèves et notes -->
+                            <div class="form-section">
+                                <h2 class="section-title">👥 Notes des élèves</h2>
+                                <button type="button" class="add-student-btn no-print" onclick="addStudent()">
+                                    ➕ Ajouter un élève
+                                </button>
+                                <div class="students-table">
+                                    <div class="table-header">
+                                        <div>Nom et Prénom de l'élève</div>
+                                        <div>Note obtenue</div>
+                                        <div>Appréciation</div>
+                                        <div>Commentaire</div>
+                                        <div class="no-print">Action</div>
                                     </div>
-                                    <div class="stat-item">
-                                        <div class="stat-value" id="average-grade">-</div>
-                                        <div class="stat-label">Moyenne</div>
+                                    <div id="students-list">
+                                        <!-- Les lignes d'élèves seront ajoutées ici dynamiquement -->
                                     </div>
-                                    <div class="stat-item">
-                                        <div class="stat-value" id="highest-grade">-</div>
-                                        <div class="stat-label">Note max</div>
-                                    </div>
-                                    <div class="stat-item">
-                                        <div class="stat-value" id="lowest-grade">-</div>
-                                        <div class="stat-label">Note min</div>
+                                </div>
+
+                                <!-- Statistiques en temps réel -->
+                                <div class="stats">
+                                    <h3>📈 Statistiques de la classe</h3>
+                                    <div class="stats-grid">
+                                        <div class="stat-item">
+                                            <div class="stat-value" id="total-students">0</div>
+                                            <div class="stat-label">Élèves</div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <div class="stat-value" id="average-grade">-</div>
+                                            <div class="stat-label">Moyenne</div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <div class="stat-value" id="highest-grade">-</div>
+                                            <div class="stat-label">Note max</div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <div class="stat-value" id="lowest-grade">-</div>
+                                            <div class="stat-label">Note min</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="submit-section">
-                            <div class="button-group no-print">
-                                <button type="button" class="sync-btn" id="syncButton" onclick="syncData()">
-                                    🔄 Synchroniser
-                                </button>
-                                <button type="button" class="whatsapp-btn" onclick="sendViaWhatsApp()">
-                                    📱 Envoyer par WhatsApp
-                                </button>
-                                <button type="submit" class="submit-btn">
-                                    💾 Enregistrer
-                                </button>
+                            <div class="submit-section">
+                                <div class="button-group no-print">
+                                    <button type="button" class="sync-btn" id="syncButton" onclick="syncData()">
+                                        🔄 Synchroniser
+                                    </button>
+                                    <button type="button" class="whatsapp-btn" onclick="sendViaWhatsApp()">
+                                        📱 Envoyer par WhatsApp
+                                    </button>
+                                    <button type="button" class="database-btn" onclick="saveCurrentEvaluation()">
+                                        💾 Sauvegarder
+                                    </button>
+                                    <button type="submit" class="submit-btn">
+                                        📤 Envoyer
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1225,6 +1422,157 @@
             );
         }
 
+        // Fonction pour exporter la base de données
+        function exportDatabase() {
+            const data = {
+                teachers: teachers,
+                students: studentsDatabase,
+                exportedAt: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `lycee_niamtougou_backup_${new Date().toISOString().slice(0,10)}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            showMessage('success', 'Base de données exportée avec succès');
+        }
+
+        // Fonction pour importer une sauvegarde
+        function importDatabase() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = e => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = event => {
+                    try {
+                        const data = JSON.parse(event.target.result);
+                        
+                        if (data.teachers && data.students) {
+                            teachers = data.teachers;
+                            // Note: studentsDatabase est en lecture seule dans cet exemple
+                            saveTeachersToStorage();
+                            renderTeachersList();
+                            showMessage('success', 'Base de données importée avec succès');
+                        } else {
+                            showMessage('error', 'Format de fichier invalide');
+                        }
+                    } catch (error) {
+                        showMessage('error', 'Erreur lors de la lecture du fichier');
+                    }
+                };
+                
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+
+        // Fonction pour supprimer les données par date
+        function deleteDataByDate() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (!startDate || !endDate) {
+                showMessage('error', 'Veuillez sélectionner une plage de dates');
+                return;
+            }
+            
+            if (confirm(`Êtes-vous sûr de vouloir supprimer toutes les évaluations entre ${startDate} et ${endDate} ?`)) {
+                let deletedCount = 0;
+                
+                teachers.forEach(teacher => {
+                    teacher.evaluations = teacher.evaluations.filter(eval => {
+                        const evalDate = new Date(eval.date).toISOString().slice(0, 10);
+                        if (evalDate >= startDate && evalDate <= endDate) {
+                            deletedCount++;
+                            return false;
+                        }
+                        return true;
+                    });
+                });
+                
+                saveTeachersToStorage();
+                showMessage('success', `${deletedCount} évaluations supprimées entre ${startDate} et ${endDate}`);
+            }
+        }
+
+        // Fonction pour sauvegarder l'évaluation en cours
+        function saveCurrentEvaluation() {
+            const evaluationData = collectEvaluationData();
+            
+            if (!evaluationData) return;
+            
+            // Trouver l'enseignant connecté
+            const teacher = teachers.find(t => t.name === evaluationData.teacher);
+            if (!teacher) return;
+            
+            // Ajouter l'évaluation à l'enseignant
+            teacher.evaluations.push(evaluationData);
+            
+            // Sauvegarder dans le localStorage
+            saveTeachersToStorage();
+            
+            // Mettre à jour le nombre d'évaluations
+            document.getElementById('total-evaluations').textContent = teacher.evaluations.length;
+            document.getElementById('last-evaluation').textContent = formatDate(evaluationData.date);
+            
+            // Afficher un message de confirmation
+            showMessage('success', 'Évaluation sauvegardée avec succès');
+        }
+
+        // Fonction pour collecter les données du formulaire
+        function collectEvaluationData() {
+            // Validation des champs obligatoires
+            if (!document.getElementById('evaluation-date').value || 
+                !document.getElementById('evaluation-title').value) {
+                showMessage('error', 'Veuillez remplir tous les champs obligatoires');
+                return null;
+            }
+            
+            // Récupérer les données du formulaire
+            const evaluationData = {
+                teacher: document.getElementById('teacher').value,
+                cycle: document.getElementById('cycle').value,
+                class: document.getElementById('class').value,
+                subject: document.getElementById('subject').value,
+                date: document.getElementById('evaluation-date').value,
+                type: document.getElementById('evaluation-type').value,
+                maxGrade: document.getElementById('max-grade').value,
+                title: document.getElementById('evaluation-title').value,
+                comments: document.getElementById('comments').value,
+                students: [],
+                stats: {
+                    average: document.getElementById('average-grade').textContent,
+                    highest: document.getElementById('highest-grade').textContent,
+                    lowest: document.getElementById('lowest-grade').textContent,
+                    count: document.getElementById('total-students').textContent
+                },
+                timestamp: new Date().toISOString()
+            };
+            
+            // Récupérer les données des élèves
+            document.querySelectorAll('.student-row').forEach(row => {
+                evaluationData.students.push({
+                    name: row.querySelector('.student-name').value,
+                    grade: row.querySelector('.grade-input').value,
+                    appreciation: row.querySelector('.appreciation').value,
+                    comment: row.querySelector('.comment-input').value
+                });
+            });
+            
+            return evaluationData;
+        }
+
         // Fonction pour afficher la section principale après connexion
         function showMainContent(teacher) {
             document.getElementById('login-section').classList.add('hidden');
@@ -1283,9 +1631,7 @@
                 "allemand": "Allemand",
                 "espagnol": "Espagnol",
                 "philosophie": "Philosophie",
-               
                 "ecm": "Éducation Civique et Morale",
-               
             };
             return subjects[subjectCode] || subjectCode;
         }
@@ -1565,49 +1911,40 @@
 
         // Fonction pour envoyer les données par WhatsApp
         function sendViaWhatsApp() {
-            // Récupérer les données du formulaire
-            const teacher = document.getElementById('teacher').value;
-            const classCode = document.getElementById('class').value;
-            const className = getClassName(classCode);
-            const subject = document.getElementById('subject').value;
-            const subjectName = getSubjectName(subject);
-            const evaluationTitle = document.getElementById('evaluation-title').value;
-            const evaluationDate = document.getElementById('evaluation-date').value;
-            const maxGrade = document.getElementById('max-grade').value;
+            const evaluationData = collectEvaluationData();
+            if (!evaluationData) return;
             
             // Préparer le message
             let message = `*Nouvelle évaluation - Lycée Niamtougou*\n\n`;
-            message += `*Enseignant:* ${teacher}\n`;
-            message += `*Matière:* ${subjectName}\n`;
-            message += `*Classe:* ${className}\n`;
-            message += `*Titre:* ${evaluationTitle}\n`;
-            message += `*Date:* ${formatDate(evaluationDate)}\n`;
-            message += `*Note maximale:* ${maxGrade}\n\n`;
+            message += `*Enseignant:* ${evaluationData.teacher}\n`;
+            message += `*Matière:* ${getSubjectName(evaluationData.subject)}\n`;
+            message += `*Classe:* ${getClassName(evaluationData.class)}\n`;
+            message += `*Titre:* ${evaluationData.title}\n`;
+            message += `*Date:* ${formatDate(evaluationData.date)}\n`;
+            message += `*Note maximale:* ${evaluationData.maxGrade}\n\n`;
             message += `*Notes des élèves:*\n`;
             
             // Ajouter les notes des élèves
-            document.querySelectorAll('.student-row').forEach((row, index) => {
-                const name = row.querySelector('.student-name').value || `Élève ${index+1}`;
-                const grade = row.querySelector('.grade-input').value || '-';
-                const appreciation = row.querySelector('.appreciation').value || 'Non évalué';
-                const comment = row.querySelector('.comment-input').value || 'Aucun commentaire';
+            evaluationData.students.forEach((student, index) => {
+                const name = student.name || `Élève ${index+1}`;
+                const grade = student.grade || '-';
                 
-                message += `➡ ${name}: ${grade}/${maxGrade} (${getAppreciationText(appreciation)})\n`;
-                message += `   Commentaire: ${comment}\n\n`;
+                message += `➡ ${name}: ${grade}/${evaluationData.maxGrade} (${getAppreciationText(student.appreciation)})\n`;
+                message += `   Commentaire: ${student.comment || 'Aucun commentaire'}\n\n`;
             });
             
             // Ajouter les statistiques
             message += `\n*Statistiques:*\n`;
-            message += `- Nombre d'élèves: ${document.getElementById('total-students').textContent}\n`;
-            message += `- Moyenne: ${document.getElementById('average-grade').textContent}\n`;
-            message += `- Meilleure note: ${document.getElementById('highest-grade').textContent}\n`;
-            message += `- Plus basse note: ${document.getElementById('lowest-grade').textContent}\n`;
+            message += `- Nombre d'élèves: ${evaluationData.stats.count}\n`;
+            message += `- Moyenne: ${evaluationData.stats.average}\n`;
+            message += `- Meilleure note: ${evaluationData.stats.highest}\n`;
+            message += `- Plus basse note: ${evaluationData.stats.lowest}\n`;
             
             // Encoder le message pour l'URL
             const encodedMessage = encodeURIComponent(message);
             
             // Ouvrir WhatsApp avec le message pré-rempli
-            window.open(`https://wa.me/22892871605?text=${encodedMessage}`, '_blank');
+            window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
         }
 
         // Fonction pour obtenir le texte d'appréciation
@@ -1661,8 +1998,158 @@
             }
         }
 
-        // Fonction pour sauvegarder les notes dans la base de données
-        function saveGradesToDatabase(evaluationData) {
+        // Fonction pour basculer entre la vue formulaire et la vue évaluations
+        function toggleEvaluationsView() {
+            const evaluationsView = document.getElementById('evaluations-view');
+            const evaluationFormView = document.getElementById('evaluation-form-view');
+            
+            if (evaluationsView.classList.contains('hidden')) {
+                evaluationsView.classList.remove('hidden');
+                evaluationFormView.classList.add('hidden');
+                loadTeacherEvaluations();
+            } else {
+                evaluationsView.classList.add('hidden');
+                evaluationFormView.classList.remove('hidden');
+            }
+        }
+
+        // Fonction pour charger les évaluations de l'enseignant
+        function loadTeacherEvaluations(filter = {}) {
+            const teacher = getCurrentTeacher();
+            if (!teacher) return;
+            
+            const evaluationsList = document.getElementById('evaluations-list');
+            evaluationsList.innerHTML = '';
+            
+            let evaluations = teacher.evaluations;
+            
+            // Appliquer les filtres
+            if (filter.class) {
+                evaluations = evaluations.filter(e => e.class === filter.class);
+            }
+            if (filter.type) {
+                evaluations = evaluations.filter(e => e.type === filter.type);
+            }
+            if (filter.startDate) {
+                evaluations = evaluations.filter(e => new Date(e.date) >= new Date(filter.startDate));
+            }
+            if (filter.endDate) {
+                evaluations = evaluations.filter(e => new Date(e.date) <= new Date(filter.endDate));
+            }
+            
+            if (evaluations.length === 0) {
+                evaluationsList.innerHTML = '<div class="no-evaluations">Aucune évaluation trouvée avec ces critères</div>';
+                return;
+            }
+            
+            // Trier par date (du plus récent au plus ancien)
+            evaluations.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            evaluations.forEach(evaluation => {
+                const evaluationItem = document.createElement('div');
+                evaluationItem.className = 'evaluation-item';
+                
+                evaluationItem.innerHTML = `
+                    <div class="evaluation-header">
+                        <div class="evaluation-title">${evaluation.title}</div>
+                        <div class="evaluation-date">${formatDate(evaluation.date)}</div>
+                    </div>
+                    <div class="evaluation-details">
+                        <div>
+                            <strong>Classe:</strong> ${getClassName(evaluation.class)}
+                        </div>
+                        <div>
+                            <strong>Type:</strong> ${getEvaluationTypeName(evaluation.type)}
+                        </div>
+                        <div>
+                            <strong>Note max:</strong> ${evaluation.maxGrade}
+                        </div>
+                    </div>
+                    <div class="evaluation-stats">
+                        <strong>Statistiques:</strong> 
+                        ${evaluation.stats.count} élèves - 
+                        Moyenne: ${evaluation.stats.average} - 
+                        Max: ${evaluation.stats.highest} - 
+                        Min: ${evaluation.stats.lowest}
+                    </div>
+                    <button class="view-btn" onclick="viewEvaluationDetails('${teacher.id}', '${evaluation.timestamp}')">
+                        Voir détails
+                    </button>
+                `;
+                
+                evaluationsList.appendChild(evaluationItem);
+            });
+        }
+
+        // Fonction pour obtenir le nom du type d'évaluation
+        function getEvaluationTypeName(type) {
+            const types = {
+                'controle': 'Contrôle écrit',
+                'interrogation': 'Interrogation orale',
+                'devoir': 'Devoir maison',
+                'tp': 'Travaux pratiques',
+                'expose': 'Exposé'
+            };
+            return types[type] || type;
+        }
+
+        // Fonction pour appliquer le filtre
+        function applyEvaluationFilter() {
+            const filter = {
+                class: document.getElementById('filter-class').value,
+                type: document.getElementById('filter-type').value,
+                startDate: document.getElementById('filter-start-date').value,
+                endDate: document.getElementById('filter-end-date').value
+            };
+            
+            loadTeacherEvaluations(filter);
+        }
+
+        // Fonction pour réinitialiser le filtre
+        function resetEvaluationFilter() {
+            document.getElementById('filter-class').value = '';
+            document.getElementById('filter-type').value = '';
+            document.getElementById('filter-start-date').value = '';
+            document.getElementById('filter-end-date').value = '';
+            
+            loadTeacherEvaluations();
+        }
+
+        // Fonction pour afficher les détails d'une évaluation
+        function viewEvaluationDetails(teacherId, timestamp) {
+            const teacher = teachers.find(t => t.id == teacherId);
+            if (!teacher) return;
+            
+            const evaluation = teacher.evaluations.find(e => e.timestamp === timestamp);
+            if (!evaluation) return;
+            
+            alert(`Détails de l'évaluation:\n\n` +
+                  `Titre: ${evaluation.title}\n` +
+                  `Classe: ${getClassName(evaluation.class)}\n` +
+                  `Date: ${formatDate(evaluation.date)}\n` +
+                  `Type: ${getEvaluationTypeName(evaluation.type)}\n` +
+                  `Note maximale: ${evaluation.maxGrade}\n\n` +
+                  `Commentaires: ${evaluation.comments || 'Aucun'}\n\n` +
+                  `Statistiques:\n` +
+                  `- Nombre d'élèves: ${evaluation.stats.count}\n` +
+                  `- Moyenne: ${evaluation.stats.average}\n` +
+                  `- Meilleure note: ${evaluation.stats.highest}\n` +
+                  `- Plus basse note: ${evaluation.stats.lowest}`);
+        }
+
+        // Fonction pour obtenir l'enseignant connecté
+        function getCurrentTeacher() {
+            const username = document.getElementById('username').value;
+            return teachers.find(teacher => teacher.username === username);
+        }
+
+        // Gestion de la soumission du formulaire principal
+        document.getElementById('gradeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const evaluationData = collectEvaluationData();
+            if (!evaluationData) return;
+            
             // Trouver l'enseignant connecté
             const teacher = teachers.find(t => t.name === evaluationData.teacher);
             if (!teacher) return;
@@ -1673,53 +2160,12 @@
             // Sauvegarder dans le localStorage
             saveTeachersToStorage();
             
-            return teacher.evaluations.length;
-        }
-
-        // Gestion de la soumission du formulaire principal
-        document.getElementById('gradeForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Récupérer les données du formulaire
-            const evaluationData = {
-                teacher: document.getElementById('teacher').value,
-                cycle: document.getElementById('cycle').value,
-                class: document.getElementById('class').value,
-                subject: document.getElementById('subject').value,
-                date: document.getElementById('evaluation-date').value,
-                type: document.getElementById('evaluation-type').value,
-                maxGrade: document.getElementById('max-grade').value,
-                title: document.getElementById('evaluation-title').value,
-                comments: document.getElementById('comments').value,
-                students: [],
-                stats: {
-                    average: document.getElementById('average-grade').textContent,
-                    highest: document.getElementById('highest-grade').textContent,
-                    lowest: document.getElementById('lowest-grade').textContent,
-                    count: document.getElementById('total-students').textContent
-                },
-                timestamp: new Date().toISOString()
-            };
-            
-            // Récupérer les données des élèves
-            document.querySelectorAll('.student-row').forEach(row => {
-                evaluationData.students.push({
-                    name: row.querySelector('.student-name').value,
-                    grade: row.querySelector('.grade-input').value,
-                    appreciation: row.querySelector('.appreciation').value,
-                    comment: row.querySelector('.comment-input').value
-                });
-            });
-            
-            // Sauvegarder dans la base de données
-            const evaluationCount = saveGradesToDatabase(evaluationData);
-            
             // Mettre à jour le nombre d'évaluations
-            document.getElementById('total-evaluations').textContent = evaluationCount;
+            document.getElementById('total-evaluations').textContent = teacher.evaluations.length;
             document.getElementById('last-evaluation').textContent = formatDate(evaluationData.date);
             
             // Afficher un message de confirmation
-            showMessage('success', 'Les notes ont été enregistrées avec succès');
+            showMessage('success', 'Les notes ont été enregistrées et envoyées avec succès');
             
             // Réinitialiser le formulaire
             this.reset();
@@ -1785,6 +2231,11 @@
                     updateStats();
                 }
             });
+            
+            // Définir la date du jour comme date par défaut
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('evaluation-date').value = today;
+            document.getElementById('filter-end-date').value = today;
         });
     </script>
 </body>
