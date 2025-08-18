@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Notes Scolaires</title>
     <style>
-        /* Styles existants */
         body {
             font-family: Arial, sans-serif;
             line-height: 1.6;
@@ -21,15 +20,7 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        .auth-container {
-            max-width: 400px;
-            margin: 50px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        h1, h2, h3 {
+        h1, h2, h3, h4 {
             color: #333;
         }
         .section {
@@ -109,26 +100,6 @@
             color: red;
             font-size: 0.9em;
         }
-        .user-info {
-            float: right;
-            margin: 10px;
-            font-weight: bold;
-        }
-        .logout-btn {
-            background-color: #f44336;
-            margin-left: 10px;
-        }
-        .hidden {
-            display: none;
-        }
-        .role-admin {
-            background-color: #e7f3fe;
-        }
-        .role-teacher {
-            background-color: #fff8e1;
-        }
-        
-        /* Style pour le bouton Retour */
         .btn-retour {
             padding: 8px 16px;
             background-color: #f0f0f0;
@@ -140,8 +111,6 @@
         .btn-retour:hover {
             background-color: #e0e0e0;
         }
-        
-        /* Style pour le bouton Actualiser */
         .refresh-button {
             position: fixed;
             bottom: 90px;
@@ -162,84 +131,121 @@
             transition: all 0.3s ease;
             z-index: 1000;
         }
-        
         .refresh-button:hover {
             background-color: #3367d6;
             transform: rotate(360deg);
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
-        
         .refresh-icon {
             width: 24px;
             height: 24px;
             fill: white;
         }
+        /* Styles pour la consultation */
+        .top-students {
+            background-color: #e8f5e9;
+        }
+        .bottom-students {
+            background-color: #ffebee;
+        }
+        .highlight-row {
+            font-weight: bold;
+        }
+        .separator-row {
+            height: 10px;
+            background-color: #f5f5f5;
+        }
+        .rank-cell {
+            font-weight: bold;
+            color: #1976d2;
+        }
+        .average-cell {
+            font-weight: bold;
+        }
+        .good-average {
+            color: #2e7d32;
+        }
+        .average-average {
+            color: #f9a825;
+        }
+        .bad-average {
+            color: #c62828;
+        }
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .stat-box {
+            flex: 1;
+            min-width: 200px;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+        .report-section {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .report-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .report-option {
+            flex: 1;
+            min-width: 200px;
+        }
+        .pdf-button {
+            background-color: #d32f2f;
+            margin-top: 10px;
+        }
+        .pdf-button:hover {
+            background-color: #b71c1c;
+        }
+        .db-actions {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+        }
+        .export-btn {
+            background-color: #2196F3;
+        }
+        .import-btn {
+            background-color: #4CAF50;
+        }
+        .clear-btn {
+            background-color: #f44336;
+        }
     </style>
+    <!-- Ajout de la bibliothèque jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
     <button class="btn-retour" onclick="history.back()">← Retour</button>
     
-    <!-- Bouton Actualiser -->
     <button onclick="window.location.reload()" class="refresh-button" aria-label="Actualiser la page">
         <svg class="refresh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
         </svg>
     </button>
 
-    <div id="auth-section" class="auth-container">
-        <h1>Connexion</h1>
-        <form id="login-form">
-            <div>
-                <label for="login-email">Email:</label>
-                <input type="email" id="login-email" required>
-            </div>
-            <div>
-                <label for="login-password">Mot de passe:</label>
-                <input type="password" id="login-password" required>
-            </div>
-            <button type="submit">Se connecter</button>
-            <button type="button" onclick="showRegisterForm()">Créer un compte</button>
-            <p id="login-error" class="error"></p>
-        </form>
-
-        <form id="register-form" class="hidden">
-            <h1>Création de compte</h1>
-            <div>
-                <label for="register-nom">Nom:</label>
-                <input type="text" id="register-nom" required>
-            </div>
-            <div>
-                <label for="register-prenom">Prénom:</label>
-                <input type="text" id="register-prenom" required>
-            </div>
-            <div>
-                <label for="register-email">Email:</label>
-                <input type="email" id="register-email" required>
-            </div>
-            <div>
-                <label for="register-password">Mot de passe:</label>
-                <input type="password" id="register-password" required>
-            </div>
-            <div>
-                <label for="register-role">Rôle:</label>
-                <select id="register-role" required>
-                    <option value="teacher">Enseignant</option>
-                    <option value="admin">Administrateur</option>
-                </select>
-            </div>
-            <button type="submit">Créer le compte</button>
-            <button type="button" onclick="showLoginForm()">Retour à la connexion</button>
-            <p id="register-error" class="error"></p>
-        </form>
-    </div>
-
-    <div id="app-section" class="container hidden">
-        <div class="user-info">
-            <span id="current-user"></span>
-            <button class="logout-btn" onclick="logout()">Déconnexion</button>
-        </div>
-        
+    <div class="container">
         <h1>Système de Gestion des Notes Scolaires</h1>
+        
+        <!-- Actions sur la base de données -->
+        <div class="db-actions">
+            <button class="export-btn" onclick="exportDatabase()">Exporter les données</button>
+            <button class="import-btn" onclick="document.getElementById('import-file').click()">Importer des données</button>
+            <button class="clear-btn" onclick="clearDatabase()">Supprimer toutes les données</button>
+            <input type="file" id="import-file" style="display: none;" accept=".json" onchange="importDatabase(this)">
+        </div>
         
         <div class="tab">
             <button class="tablinks active" onclick="openTab(event, 'Enseignants')">Enseignants</button>
@@ -249,7 +255,7 @@
             <button class="tablinks" onclick="openTab(event, 'Eleves')">Élèves</button>
             <button class="tablinks" onclick="openTab(event, 'Notes')">Saisie des Notes</button>
             <button class="tablinks" onclick="openTab(event, 'Consultation')">Consultation</button>
-            <button class="tablinks" onclick="openTab(event, 'Comptes')">Comptes</button>
+            <button class="tablinks" onclick="openTab(event, 'Rapports')">Rapports PDF</button>
         </div>
 
         <!-- Section Enseignants -->
@@ -284,9 +290,7 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Les données seront ajoutées dynamiquement -->
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
 
@@ -312,9 +316,7 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Les données seront ajoutées dynamiquement -->
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
 
@@ -345,9 +347,7 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Les données seront ajoutées dynamiquement -->
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
 
@@ -394,9 +394,7 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Les données seront ajoutées dynamiquement -->
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
 
@@ -412,6 +410,18 @@
                 <div>
                     <label for="elevePrenom">Prénom:</label>
                     <input type="text" id="elevePrenom" required>
+                </div>
+                <div>
+                    <label for="eleveAge">Âge:</label>
+                    <input type="number" id="eleveAge" min="5" max="25" required>
+                </div>
+                <div>
+                    <label for="eleveSexe">Sexe:</label>
+                    <select id="eleveSexe" required>
+                        <option value="">Sélectionner</option>
+                        <option value="M">Masculin</option>
+                        <option value="F">Féminin</option>
+                    </select>
                 </div>
                 <div>
                     <label for="eleveClasse">Classe:</label>
@@ -430,13 +440,13 @@
                         <th>ID</th>
                         <th>Nom</th>
                         <th>Prénom</th>
+                        <th>Âge</th>
+                        <th>Sexe</th>
                         <th>Classe</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Les données seront ajoutées dynamiquement -->
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
 
@@ -512,9 +522,7 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Les données seront ajoutées dynamiquement -->
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
 
@@ -547,66 +555,106 @@
             </div>
         </div>
 
-        <!-- Section Comptes -->
-        <div id="Comptes" class="tabcontent">
-            <h2>Gestion des Comptes</h2>
-            <form id="formCompte">
-                <input type="hidden" id="compteId">
-                <div>
-                    <label for="compteNom">Nom:</label>
-                    <input type="text" id="compteNom" required>
-                </div>
-                <div>
-                    <label for="comptePrenom">Prénom:</label>
-                    <input type="text" id="comptePrenom" required>
-                </div>
-                <div>
-                    <label for="compteEmail">Email:</label>
-                    <input type="email" id="compteEmail" required>
-                </div>
-                <div>
-                    <label for="comptePassword">Mot de passe:</label>
-                    <input type="password" id="comptePassword" placeholder="Laisser vide pour ne pas changer">
-                </div>
-                <div>
-                    <label for="compteRole">Rôle:</label>
-                    <select id="compteRole" required>
-                        <option value="teacher">Enseignant</option>
-                        <option value="admin">Administrateur</option>
-                    </select>
-                </div>
-                <button type="submit">Enregistrer</button>
-                <button type="button" onclick="resetCompteForm()">Annuler</button>
-            </form>
+        <!-- Nouvelle Section Rapports PDF -->
+        <div id="Rapports" class="tabcontent">
+            <h2>Génération de Rapports PDF</h2>
             
-            <h3>Liste des Comptes</h3>
-            <table id="tableComptes">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nom</th>
-                        <th>Prénom</th>
-                        <th>Email</th>
-                        <th>Rôle</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Les données seront ajoutées dynamiquement -->
-                </tbody>
-            </table>
+            <div class="report-section">
+                <h3>Rapport par Classe</h3>
+                <div class="report-options">
+                    <div class="report-option">
+                        <label for="rapportClasse">Classe:</label>
+                        <select id="rapportClasse">
+                            <option value="">Toutes les classes</option>
+                        </select>
+                    </div>
+                    <div class="report-option">
+                        <label for="rapportMatiereClasse">Matière (optionnel):</label>
+                        <select id="rapportMatiereClasse">
+                            <option value="">Toutes les matières</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="genererRapportClasse()" class="pdf-button">Générer PDF</button>
+            </div>
+            
+            <div class="report-section">
+                <h3>Rapport par Enseignant</h3>
+                <div class="report-options">
+                    <div class="report-option">
+                        <label for="rapportEnseignant">Enseignant:</label>
+                        <select id="rapportEnseignant">
+                            <option value="">Tous les enseignants</option>
+                        </select>
+                    </div>
+                    <div class="report-option">
+                        <label for="rapportMatiereEnseignant">Matière (optionnel):</label>
+                        <select id="rapportMatiereEnseignant">
+                            <option value="">Toutes les matières</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="genererRapportEnseignant()" class="pdf-button">Générer PDF</button>
+            </div>
+            
+            <div class="report-section">
+                <h3>Rapport par Matière</h3>
+                <div class="report-options">
+                    <div class="report-option">
+                        <label for="rapportMatiere">Matière:</label>
+                        <select id="rapportMatiere">
+                            <option value="">Toutes les matières</option>
+                        </select>
+                    </div>
+                    <div class="report-option">
+                        <label for="rapportClasseMatiere">Classe (optionnel):</label>
+                        <select id="rapportClasseMatiere">
+                            <option value="">Toutes les classes</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="genererRapportMatiere()" class="pdf-button">Générer PDF</button>
+            </div>
+            
+            <div class="report-section">
+                <h3>Rapport des Évaluations</h3>
+                <div class="report-options">
+                    <div class="report-option">
+                        <label for="rapportTypeEvaluation">Type d'évaluation:</label>
+                        <select id="rapportTypeEvaluation">
+                            <option value="">Tous types</option>
+                            <option value="DS">Devoir Surveillé</option>
+                            <option value="CC">Contrôle Continu</option>
+                            <option value="Examen">Examen</option>
+                            <option value="Projet">Projet</option>
+                        </select>
+                    </div>
+                    <div class="report-option">
+                        <label for="rapportPeriode">Période:</label>
+                        <select id="rapportPeriode">
+                            <option value="">Toute période</option>
+                            <option value="trimestre1">1er Trimestre</option>
+                            <option value="trimestre2">2ème Trimestre</option>
+                            <option value="trimestre3">3ème Trimestre</option>
+                            <option value="semestre1">1er Semestre</option>
+                            <option value="semestre2">2ème Semestre</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="genererRapportEvaluations()" class="pdf-button">Générer PDF</button>
+            </div>
         </div>
     </div>
 
     <script>
         // Variables globales
         let db;
-        let currentUser = null;
+        const { jsPDF } = window.jspdf;
         
         // Initialisation de la base de données
         function initDB() {
             return new Promise((resolve, reject) => {
-                const request = indexedDB.open('GestionNotesDB', 1);
+                const request = indexedDB.open('GestionNotesDB', 3);
                 
                 request.onerror = function(event) {
                     console.error("Erreur d'ouverture de la base de données", event);
@@ -621,46 +669,56 @@
                 
                 request.onupgradeneeded = function(event) {
                     const db = event.target.result;
+                    const oldVersion = event.oldVersion;
                     
-                    // Création des object stores (tables)
-                    const compteStore = db.createObjectStore('comptes', { keyPath: 'id', autoIncrement: true });
-                    compteStore.createIndex('email', 'email', { unique: true });
+                    if (oldVersion < 1) {
+                        // Création des tables pour la version 1
+                        const enseignantStore = db.createObjectStore('enseignants', { keyPath: 'id', autoIncrement: true });
+                        enseignantStore.createIndex('email', 'email', { unique: true });
+                        
+                        const matiereStore = db.createObjectStore('matieres', { keyPath: 'id', autoIncrement: true });
+                        
+                        const classeStore = db.createObjectStore('classes', { keyPath: 'id', autoIncrement: true });
+                        
+                        const attributionStore = db.createObjectStore('attributions', { keyPath: 'id', autoIncrement: true });
+                        attributionStore.createIndex('enseignant_matiere_classe', ['id_enseignant', 'id_matiere', 'id_classe'], { unique: true });
+                        
+                        const eleveStore = db.createObjectStore('eleves', { keyPath: 'id', autoIncrement: true });
+                        
+                        const noteStore = db.createObjectStore('notes', { keyPath: 'id', autoIncrement: true });
+                    }
                     
-                    const enseignantStore = db.createObjectStore('enseignants', { keyPath: 'id', autoIncrement: true });
-                    enseignantStore.createIndex('email', 'email', { unique: true });
+                    if (oldVersion < 2) {
+                        // Mise à jour pour la version 2
+                        const transaction = event.target.transaction;
+                        const eleveStore = transaction.objectStore('eleves');
+                        
+                        eleveStore.getAll().onsuccess = function(e) {
+                            const eleves = e.target.result;
+                            eleves.forEach(eleve => {
+                                if (typeof eleve.age === 'undefined') {
+                                    eleve.age = 10;
+                                }
+                                if (typeof eleve.sexe === 'undefined') {
+                                    eleve.sexe = 'M';
+                                }
+                                eleveStore.put(eleve);
+                            });
+                        };
+                    }
                     
-                    const matiereStore = db.createObjectStore('matieres', { keyPath: 'id', autoIncrement: true });
+                    if (oldVersion < 3) {
+                        // Mise à jour pour la version 3 - Ajout des données initiales
+                        addInitialData(event.target.transaction);
+                    }
                     
-                    const classeStore = db.createObjectStore('classes', { keyPath: 'id', autoIncrement: true });
-                    
-                    const attributionStore = db.createObjectStore('attributions', { keyPath: 'id', autoIncrement: true });
-                    attributionStore.createIndex('enseignant_matiere_classe', ['id_enseignant', 'id_matiere', 'id_classe'], { unique: true });
-                    
-                    const eleveStore = db.createObjectStore('eleves', { keyPath: 'id', autoIncrement: true });
-                    
-                    const noteStore = db.createObjectStore('notes', { keyPath: 'id', autoIncrement: true });
-                    
-                    console.log("Structure de la base de données créée");
-                    
-                    // Ajout des données initiales
-                    addInitialData(event.target.transaction);
+                    console.log("Structure de la base de données créée/mise à jour");
                 };
             });
         }
         
-        // Ajout des données initiales
         function addInitialData(transaction) {
-            // Comptes initiaux
-            const comptes = [
-                {nom: "Admin", prenom: "System", email: "admin@example.com", password: "admin123", role: "admin"},
-                {nom: "KOLA", prenom: "Jean", email: "jean@example.com", password: "KOLA1", role: "teacher"}
-            ];
-            
-            comptes.forEach(compte => {
-                transaction.objectStore('comptes').add(compte);
-            });
-            
-            // Enseignants
+            // Ajout des enseignants initiaux
             const enseignants = [
                 {nom: "KOLA", prenom: "Jean", email: "jean@example.com"}
             ];
@@ -669,7 +727,7 @@
                 transaction.objectStore('enseignants').add(enseignant);
             });
             
-            // Matières
+            // Ajout des matières initiales
             const matieres = [
                 {nom: "Mathématiques"},
                 {nom: "Français"},
@@ -680,7 +738,7 @@
                 transaction.objectStore('matieres').add(matiere);
             });
             
-            // Classes
+            // Ajout des classes initiales
             const classes = [
                 {nom: "6ème", niveau: "Collège"},
                 {nom: "Tle D", niveau: "Lycée"}
@@ -690,7 +748,7 @@
                 transaction.objectStore('classes').add(classe);
             });
             
-            // Attributions
+            // Ajout des attributions initiales
             const attributions = [
                 {id_enseignant: 1, id_matiere: 1, id_classe: 1, annee: "2024-2025"},
                 {id_enseignant: 1, id_matiere: 2, id_classe: 1, annee: "2024-2025"},
@@ -701,18 +759,18 @@
                 transaction.objectStore('attributions').add(attribution);
             });
             
-            // Élèves
+            // Ajout des élèves initiaux
             const eleves = [
-                {nom: "Durand", prenom: "Pierre", id_classe: 1},
-                {nom: "Leroy", prenom: "Marie", id_classe: 1},
-                {nom: "Moreau", prenom: "Luc", id_classe: 2}
+                {nom: "Durand", prenom: "Pierre", age: 12, sexe: "M", id_classe: 1},
+                {nom: "Leroy", prenom: "Marie", age: 11, sexe: "F", id_classe: 1},
+                {nom: "Moreau", prenom: "Luc", age: 18, sexe: "M", id_classe: 2}
             ];
             
             eleves.forEach(eleve => {
                 transaction.objectStore('eleves').add(eleve);
             });
             
-            // Notes
+            // Ajout des notes initiales
             const notes = [
                 {id_enseignement: 1, id_eleve: 1, note: 15, type: "DS", date: "2023-10-15", coefficient: 2, commentaire: "Très bien"},
                 {id_enseignement: 1, id_eleve: 2, note: 12, type: "DS", date: "2023-10-15", coefficient: 2, commentaire: "Bien"},
@@ -724,7 +782,7 @@
             });
         }
         
-        // Fonction générique pour ajouter un élément
+        // Fonctions de base pour la base de données
         function addItem(storeName, item) {
             return new Promise((resolve, reject) => {
                 const transaction = db.transaction([storeName], 'readwrite');
@@ -733,7 +791,7 @@
                 const request = store.add(item);
                 
                 request.onsuccess = function() {
-                    resolve(request.result); // Retourne l'ID généré
+                    resolve(request.result);
                 };
                 
                 request.onerror = function(event) {
@@ -742,7 +800,6 @@
             });
         }
         
-        // Fonction générique pour mettre à jour un élément
         function updateItem(storeName, item) {
             return new Promise((resolve, reject) => {
                 const transaction = db.transaction([storeName], 'readwrite');
@@ -760,7 +817,6 @@
             });
         }
         
-        // Fonction générique pour supprimer un élément
         function deleteItem(storeName, id) {
             return new Promise((resolve, reject) => {
                 const transaction = db.transaction([storeName], 'readwrite');
@@ -778,7 +834,6 @@
             });
         }
         
-        // Fonction générique pour récupérer tous les éléments
         function getAllItems(storeName) {
             return new Promise((resolve, reject) => {
                 const transaction = db.transaction([storeName], 'readonly');
@@ -796,7 +851,6 @@
             });
         }
         
-        // Fonction générique pour récupérer un élément par son ID
         function getItemById(storeName, id) {
             return new Promise((resolve, reject) => {
                 const transaction = db.transaction([storeName], 'readonly');
@@ -814,26 +868,8 @@
             });
         }
         
-        // Fonction pour ouvrir les onglets
+        // Fonctions d'interface utilisateur
         function openTab(evt, tabName) {
-            // Vérifier les permissions
-            if (currentUser.role !== 'admin') {
-                if (tabName === 'Comptes' || tabName === 'Enseignants' || tabName === 'Matieres' || tabName === 'Classes' || tabName === 'Attributions') {
-                    alert("Accès réservé aux administrateurs");
-                    return;
-                }
-                
-                // Pour les enseignants, limiter l'accès à certaines fonctionnalités
-                if (currentUser.role === 'teacher') {
-                    if (tabName === 'Notes' || tabName === 'Consultation') {
-                        // Autoriser
-                    } else {
-                        alert("Accès non autorisé");
-                        return;
-                    }
-                }
-            }
-            
             let i, tabcontent, tablinks;
             
             tabcontent = document.getElementsByClassName("tabcontent");
@@ -850,127 +886,14 @@
             evt.currentTarget.className += " active";
         }
         
-        // Fonctions d'authentification
-        function showLoginForm() {
-            document.getElementById("login-form").classList.remove("hidden");
-            document.getElementById("register-form").classList.add("hidden");
-            document.getElementById("login-error").textContent = "";
-            document.getElementById("register-error").textContent = "";
-        }
-        
-        function showRegisterForm() {
-            document.getElementById("login-form").classList.add("hidden");
-            document.getElementById("register-form").classList.remove("hidden");
-            document.getElementById("login-error").textContent = "";
-            document.getElementById("register-error").textContent = "";
-        }
-        
-        document.getElementById("login-form").addEventListener("submit", async function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById("login-email").value;
-            const password = document.getElementById("login-password").value;
-            
-            try {
-                const comptes = await getAllItems('comptes');
-                const compte = comptes.find(c => c.email === email && c.password === password);
-                
-                if (compte) {
-                    currentUser = compte;
-                    document.getElementById("auth-section").classList.add("hidden");
-                    document.getElementById("app-section").classList.remove("hidden");
-                    document.getElementById("current-user").textContent = `${compte.prenom} ${compte.nom} (${compte.role === 'admin' ? 'Administrateur' : 'Enseignant'})`;
-                    
-                    // Appliquer le style en fonction du rôle
-                    document.body.className = `role-${compte.role}`;
-                    
-                    // Initialiser l'interface
-                    await updateAllTables();
-                    await fillSelectOptions();
-                    
-                    // Définir la date d'aujourd'hui par défaut pour les notes
-                    document.getElementById("noteDate").valueAsDate = new Date();
-                    
-                    // Si c'est un enseignant, ouvrir directement l'onglet Notes
-                    if (compte.role === 'teacher') {
-                        document.querySelector('.tabcontent[style*="display: block"]').style.display = 'none';
-                        document.querySelector('.tablinks.active').classList.remove('active');
-                        
-                        document.getElementById("Notes").style.display = 'block';
-                        document.querySelector('.tablinks:nth-child(6)').classList.add('active');
-                    }
-                } else {
-                    document.getElementById("login-error").textContent = "Email ou mot de passe incorrect";
-                }
-            } catch (error) {
-                console.error("Erreur lors de la connexion:", error);
-                document.getElementById("login-error").textContent = "Erreur lors de la connexion";
-            }
-        });
-        
-        document.getElementById("register-form").addEventListener("submit", async function(e) {
-            e.preventDefault();
-            
-            const nom = document.getElementById("register-nom").value;
-            const prenom = document.getElementById("register-prenom").value;
-            const email = document.getElementById("register-email").value;
-            const password = document.getElementById("register-password").value;
-            const role = document.getElementById("register-role").value;
-            
-            try {
-                // Vérifier si l'email existe déjà
-                const comptes = await getAllItems('comptes');
-                if (comptes.some(c => c.email === email)) {
-                    document.getElementById("register-error").textContent = "Cet email est déjà utilisé";
-                    return;
-                }
-                
-                // Créer le compte
-                const newCompte = {
-                    nom,
-                    prenom,
-                    email,
-                    password,
-                    role
-                };
-                
-                const compteId = await addItem('comptes', newCompte);
-                
-                // Si c'est un enseignant, créer aussi un profil enseignant
-                if (role === 'teacher') {
-                    const newEnseignant = {
-                        nom,
-                        prenom,
-                        email
-                    };
-                    
-                    await addItem('enseignants', newEnseignant);
-                }
-                
-                // Afficher un message de succès et revenir au formulaire de connexion
-                alert("Compte créé avec succès ! Vous pouvez maintenant vous connecter.");
-                showLoginForm();
-                document.getElementById("login-email").value = email;
-                document.getElementById("login-password").value = "";
-            } catch (error) {
-                console.error("Erreur lors de la création du compte:", error);
-                document.getElementById("register-error").textContent = "Erreur lors de la création du compte";
-            }
-        });
-        
-        function logout() {
-            currentUser = null;
-            document.getElementById("app-section").classList.add("hidden");
-            document.getElementById("auth-section").classList.remove("hidden");
-            document.body.className = "";
-            showLoginForm();
-        }
-        
-        // Fonctions pour remplir les select options
+        // Fonctions pour remplir les sélecteurs
         async function fillSelectOptions() {
             try {
-                // Enseignants
                 const enseignants = await getAllItems('enseignants');
+                const matieres = await getAllItems('matieres');
+                const classes = await getAllItems('classes');
+                
+                // Remplir les sélecteurs pour les formulaires
                 const selectEnseignants = document.querySelectorAll("select[id$='Enseignant']");
                 selectEnseignants.forEach(select => {
                     select.innerHTML = '<option value="">Sélectionner un enseignant</option>';
@@ -979,8 +902,6 @@
                     });
                 });
                 
-                // Matières
-                const matieres = await getAllItems('matieres');
                 const selectMatieres = document.querySelectorAll("select[id$='Matiere']");
                 selectMatieres.forEach(select => {
                     select.innerHTML = '<option value="">Sélectionner une matière</option>';
@@ -989,8 +910,6 @@
                     });
                 });
                 
-                // Classes
-                const classes = await getAllItems('classes');
                 const selectClasses = document.querySelectorAll("select[id$='Classe']");
                 selectClasses.forEach(select => {
                     select.innerHTML = '<option value="">Sélectionner une classe</option>';
@@ -999,7 +918,7 @@
                     });
                 });
                 
-                // Pour la consultation
+                // Remplir les sélecteurs pour la consultation
                 document.getElementById("consultationClasse").innerHTML = '<option value="">Toutes les classes</option>';
                 classes.forEach(cl => {
                     document.getElementById("consultationClasse").innerHTML += `<option value="${cl.id}">${cl.nom} (${cl.niveau})</option>`;
@@ -1009,12 +928,44 @@
                 enseignants.forEach(ens => {
                     document.getElementById("consultationEnseignant").innerHTML += `<option value="${ens.id}">${ens.nom} ${ens.prenom}</option>`;
                 });
+                
+                // Remplir les sélecteurs pour les rapports PDF
+                document.getElementById("rapportClasse").innerHTML = '<option value="">Toutes les classes</option>';
+                classes.forEach(cl => {
+                    document.getElementById("rapportClasse").innerHTML += `<option value="${cl.id}">${cl.nom} (${cl.niveau})</option>`;
+                });
+                
+                document.getElementById("rapportMatiereClasse").innerHTML = '<option value="">Toutes les matières</option>';
+                matieres.forEach(mat => {
+                    document.getElementById("rapportMatiereClasse").innerHTML += `<option value="${mat.id}">${mat.nom}</option>`;
+                });
+                
+                document.getElementById("rapportEnseignant").innerHTML = '<option value="">Tous les enseignants</option>';
+                enseignants.forEach(ens => {
+                    document.getElementById("rapportEnseignant").innerHTML += `<option value="${ens.id}">${ens.nom} ${ens.prenom}</option>`;
+                });
+                
+                document.getElementById("rapportMatiereEnseignant").innerHTML = '<option value="">Toutes les matières</option>';
+                matieres.forEach(mat => {
+                    document.getElementById("rapportMatiereEnseignant").innerHTML += `<option value="${mat.id}">${mat.nom}</option>`;
+                });
+                
+                document.getElementById("rapportMatiere").innerHTML = '<option value="">Toutes les matières</option>';
+                matieres.forEach(mat => {
+                    document.getElementById("rapportMatiere").innerHTML += `<option value="${mat.id}">${mat.nom}</option>`;
+                });
+                
+                document.getElementById("rapportClasseMatiere").innerHTML = '<option value="">Toutes les classes</option>';
+                classes.forEach(cl => {
+                    document.getElementById("rapportClasseMatiere").innerHTML += `<option value="${cl.id}">${cl.nom} (${cl.niveau})</option>`;
+                });
+                
             } catch (error) {
                 console.error("Erreur lors du remplissage des options:", error);
             }
         }
         
-        // Fonction pour charger les matières et classes d'un enseignant
+        // Fonctions pour charger les données dynamiques
         async function chargerMatieresClasses() {
             const enseignantId = document.getElementById("noteEnseignant").value;
             const matiereSelect = document.getElementById("noteMatiere");
@@ -1026,15 +977,12 @@
             if (!enseignantId) return;
             
             try {
-                // Filtrer les attributions pour cet enseignant
                 const attributions = await getAllItems('attributions');
                 const attribs = attributions.filter(a => a.id_enseignant == enseignantId);
                 
-                // Récupérer toutes les matières et classes
                 const matieres = await getAllItems('matieres');
                 const classes = await getAllItems('classes');
                 
-                // Remplir les matières
                 const matieresEnseignant = [];
                 attribs.forEach(att => {
                     const matiere = matieres.find(m => m.id == att.id_matiere);
@@ -1047,7 +995,6 @@
                     matiereSelect.innerHTML += `<option value="${mat.id}">${mat.nom}</option>`;
                 });
                 
-                // Remplir les classes
                 const classesEnseignant = [];
                 attribs.forEach(att => {
                     const classe = classes.find(c => c.id == att.id_classe);
@@ -1064,7 +1011,6 @@
             }
         }
         
-        // Fonction pour charger les élèves d'une classe
         async function chargerEleves() {
             const classeId = document.getElementById("noteClasse").value;
             const eleveSelect = document.getElementById("noteEleve");
@@ -1084,7 +1030,6 @@
             }
         }
         
-        // Fonction pour charger les matières dans la consultation
         async function chargerMatieresConsultation() {
             const classeId = document.getElementById("consultationClasse").value;
             const matiereSelect = document.getElementById("consultationMatiere");
@@ -1095,14 +1040,12 @@
                 const matieres = await getAllItems('matieres');
                 
                 if (!classeId) {
-                    // Si aucune classe sélectionnée, montrer toutes les matières
                     matieres.forEach(mat => {
                         matiereSelect.innerHTML += `<option value="${mat.id}">${mat.nom}</option>`;
                     });
                     return;
                 }
                 
-                // Filtrer les matières enseignées dans cette classe
                 const attributions = await getAllItems('attributions');
                 const matieresClasse = [];
                 
@@ -1123,7 +1066,7 @@
             }
         }
         
-        // Fonction pour filtrer les notes dans la consultation
+        // Fonctions pour la consultation des notes
         async function filtrerNotes() {
             const classeId = document.getElementById("consultationClasse").value;
             const matiereId = document.getElementById("consultationMatiere").value;
@@ -1133,39 +1076,24 @@
                 let notes = await getAllItems('notes');
                 let notesFiltrees = [...notes];
                 
-                // Si c'est un enseignant, ne montrer que ses propres notes
-                if (currentUser.role === 'teacher') {
-                    const enseignants = await getAllItems('enseignants');
-                    const enseignant = enseignants.find(e => e.email === currentUser.email);
-                    if (enseignant) {
-                        const attributions = await getAllItems('attributions');
-                        const enseignements = attributions.filter(a => a.id_enseignant == enseignant.id).map(a => a.id);
-                        notesFiltrees = notesFiltrees.filter(n => enseignements.includes(n.id_enseignement));
-                    }
-                }
-                
-                // Filtrer par classe (via les élèves)
                 if (classeId) {
                     const eleves = await getAllItems('eleves');
                     const elevesClasse = eleves.filter(e => e.id_classe == classeId).map(e => e.id);
                     notesFiltrees = notesFiltrees.filter(n => elevesClasse.includes(n.id_eleve));
                 }
                 
-                // Filtrer par matière (via les enseignements)
                 if (matiereId) {
                     const attributions = await getAllItems('attributions');
                     const enseignements = attributions.filter(a => a.id_matiere == matiereId).map(a => a.id);
                     notesFiltrees = notesFiltrees.filter(n => enseignements.includes(n.id_enseignement));
                 }
                 
-                // Filtrer par enseignant (via les enseignements)
                 if (enseignantId) {
                     const attributions = await getAllItems('attributions');
                     const enseignements = attributions.filter(a => a.id_enseignant == enseignantId).map(a => a.id);
                     notesFiltrees = notesFiltrees.filter(n => enseignements.includes(n.id_enseignement));
                 }
                 
-                // Afficher les résultats
                 await afficherResultatsConsultation(notesFiltrees);
             } catch (error) {
                 console.error("Erreur lors du filtrage des notes:", error);
@@ -1173,7 +1101,6 @@
             }
         }
         
-        // Fonction pour afficher les résultats de la consultation
         async function afficherResultatsConsultation(notesFiltrees) {
             const resultatsDiv = document.getElementById("resultatsConsultation");
             
@@ -1189,30 +1116,763 @@
                 const eleves = await getAllItems('eleves');
                 const enseignants = await getAllItems('enseignants');
                 
-                let html = '<table><thead><tr><th>Élève</th><th>Matière</th><th>Classe</th><th>Note</th><th>Type</th><th>Date</th></tr></thead><tbody>';
+                const moyennesParEleve = {};
                 
                 notesFiltrees.forEach(note => {
-                    const enseignement = attributions.find(a => a.id === note.id_enseignement);
-                    const matiere = matieres.find(m => m.id === enseignement.id_matiere);
-                    const classe = classes.find(c => c.id === enseignement.id_classe);
-                    const eleve = eleves.find(e => e.id === note.id_eleve);
-                    const enseignant = enseignants.find(e => e.id === enseignement.id_enseignant);
+                    if (!moyennesParEleve[note.id_eleve]) {
+                        moyennesParEleve[note.id_eleve] = {
+                            sommeNotes: 0,
+                            sommeCoefficients: 0,
+                            count: 0
+                        };
+                    }
                     
-                    html += `<tr>
-                        <td>${eleve.nom} ${eleve.prenom}</td>
-                        <td>${matiere.nom} (${enseignant.nom})</td>
-                        <td>${classe.nom}</td>
-                        <td>${note.note}/20</td>
-                        <td>${note.type}</td>
-                        <td>${note.date}</td>
-                    </tr>`;
+                    moyennesParEleve[note.id_eleve].sommeNotes += note.note * note.coefficient;
+                    moyennesParEleve[note.id_eleve].sommeCoefficients += note.coefficient;
+                    moyennesParEleve[note.id_eleve].count++;
+                });
+                
+                const resultats = [];
+                
+                for (const eleveId in moyennesParEleve) {
+                    const eleve = eleves.find(e => e.id == eleveId);
+                    const moyenne = moyennesParEleve[eleveId].sommeNotes / moyennesParEleve[eleveId].sommeCoefficients;
+                    
+                    resultats.push({
+                        eleveId: parseInt(eleveId),
+                        nom: eleve.nom,
+                        prenom: eleve.prenom,
+                        age: eleve.age,
+                        sexe: eleve.sexe === 'M' ? 'Masculin' : 'Féminin',
+                        classe: classes.find(c => c.id == eleve.id_classe).nom,
+                        moyenne: moyenne,
+                        nbNotes: moyennesParEleve[eleveId].count
+                    });
+                }
+                
+                resultats.sort((a, b) => b.moyenne - a.moyenne);
+                
+                resultats.forEach((result, index) => {
+                    result.rang = index + 1;
+                });
+                
+                const top5 = resultats.slice(0, 5);
+                const bottom5 = resultats.slice(-5);
+                const autres = resultats.slice(5, -5);
+                
+                let html = '<h4>Classement des élèves</h4>';
+                html += '<table><thead><tr>';
+                html += '<th>Rang</th>';
+                html += '<th>Élève</th>';
+                html += '<th>Âge</th>';
+                html += '<th>Sexe</th>';
+                html += '<th>Classe</th>';
+                html += '<th>Moyenne</th>';
+                html += '<th>Nombre de notes</th>';
+                html += '</tr></thead><tbody>';
+                
+                top5.forEach(result => {
+                    html += `<tr class="top-students highlight-row">`;
+                    html += `<td class="rank-cell">${result.rang}</td>`;
+                    html += `<td>${result.nom} ${result.prenom}</td>`;
+                    html += `<td>${result.age} ans</td>`;
+                    html += `<td>${result.sexe}</td>`;
+                    html += `<td>${result.classe}</td>`;
+                    html += `<td class="average-cell good-average">${result.moyenne.toFixed(2)}/20</td>`;
+                    html += `<td>${result.nbNotes}</td>`;
+                    html += '</tr>';
+                });
+                
+                if (autres.length > 0) {
+                    html += '<tr class="separator-row"><td colspan="7"></td></tr>';
+                }
+                
+                autres.forEach(result => {
+                    const averageClass = result.moyenne >= 12 ? 'good-average' : 
+                                        result.moyenne >= 8 ? 'average-average' : 'bad-average';
+                    
+                    html += `<tr>`;
+                    html += `<td class="rank-cell">${result.rang}</td>`;
+                    html += `<td>${result.nom} ${result.prenom}</td>`;
+                    html += `<td>${result.age} ans</td>`;
+                    html += `<td>${result.sexe}</td>`;
+                    html += `<td>${result.classe}</td>`;
+                    html += `<td class="average-cell ${averageClass}">${result.moyenne.toFixed(2)}/20</td>`;
+                    html += `<td>${result.nbNotes}</td>`;
+                    html += '</tr>';
+                });
+                
+                if (bottom5.length > 0 && (top5.length > 0 || autres.length > 0)) {
+                    html += '<tr class="separator-row"><td colspan="7"></td></tr>';
+                }
+                
+                bottom5.forEach(result => {
+                    html += `<tr class="bottom-students highlight-row">`;
+                    html += `<td class="rank-cell">${result.rang}</td>`;
+                    html += `<td>${result.nom} ${result.prenom}</td>`;
+                    html += `<td>${result.age} ans</td>`;
+                    html += `<td>${result.sexe}</td>`;
+                    html += `<td>${result.classe}</td>`;
+                    html += `<td class="average-cell bad-average">${result.moyenne.toFixed(2)}/20</td>`;
+                    html += `<td>${result.nbNotes}</td>`;
+                    html += '</tr>';
                 });
                 
                 html += '</tbody></table>';
+                
+                if (resultats.length > 0) {
+                    const moyenneClasse = resultats.reduce((sum, result) => sum + result.moyenne, 0) / resultats.length;
+                    const meilleur = resultats[0];
+                    const moinsBon = resultats[resultats.length - 1];
+                    
+                    html += '<div class="stats-container">';
+                    html += '<div class="stat-box">';
+                    html += '<h4>Statistiques de la classe</h4>';
+                    html += `<p>Nombre d'élèves: <strong>${resultats.length}</strong></p>`;
+                    html += `<p>Moyenne de la classe: <strong>${moyenneClasse.toFixed(2)}/20</strong></p>`;
+                    html += '</div>';
+                    
+                    html += '<div class="stat-box">';
+                    html += '<h4>Meilleur élève</h4>';
+                    html += `<p>${meilleur.nom} ${meilleur.prenom}</p>`;
+                    html += `<p>Moyenne: <strong class="good-average">${meilleur.moyenne.toFixed(2)}/20</strong></p>`;
+                    html += `<p>Âge: ${meilleur.age} ans | Sexe: ${meilleur.sexe}</p>`;
+                    html += '</div>';
+                    
+                    html += '<div class="stat-box">';
+                    html += '<h4>Élève en difficulté</h4>';
+                    html += `<p>${moinsBon.nom} ${moinsBon.prenom}</p>`;
+                    html += `<p>Moyenne: <strong class="bad-average">${moinsBon.moyenne.toFixed(2)}/20</strong></p>`;
+                    html += `<p>Âge: ${moinsBon.age} ans | Sexe: ${moinsBon.sexe}</p>`;
+                    html += '</div>';
+                    html += '</div>';
+                }
+                
                 resultatsDiv.innerHTML = html;
             } catch (error) {
                 console.error("Erreur lors de l'affichage des résultats:", error);
                 resultatsDiv.innerHTML = "<p>Erreur lors de l'affichage des résultats</p>";
+            }
+        }
+        
+        // Fonctions pour générer les rapports PDF
+        async function genererRapportClasse() {
+            const classeId = document.getElementById("rapportClasse").value;
+            const matiereId = document.getElementById("rapportMatiereClasse").value;
+            
+            try {
+                const classes = await getAllItems('classes');
+                const eleves = await getAllItems('eleves');
+                const notes = await getAllItems('notes');
+                const attributions = await getAllItems('attributions');
+                const matieres = await getAllItems('matieres');
+                const enseignants = await getAllItems('enseignants');
+                
+                // Filtrer les élèves par classe
+                let elevesFiltres = [...eleves];
+                if (classeId) {
+                    elevesFiltres = elevesFiltres.filter(e => e.id_classe == classeId);
+                }
+                
+                // Filtrer les notes par matière si spécifiée
+                let notesFiltrees = [...notes];
+                if (matiereId) {
+                    const enseignements = attributions.filter(a => a.id_matiere == matiereId).map(a => a.id);
+                    notesFiltrees = notesFiltrees.filter(n => enseignements.includes(n.id_enseignement));
+                }
+                
+                // Créer un nouveau document PDF
+                const doc = new jsPDF();
+                
+                // Titre du rapport
+                let titre = "Rapport des notes par classe";
+                if (classeId) {
+                    const classe = classes.find(c => c.id == classeId);
+                    titre += ` - ${classe.nom} (${classe.niveau})`;
+                }
+                if (matiereId) {
+                    const matiere = matieres.find(m => m.id == matiereId);
+                    titre += ` - ${matiere.nom}`;
+                }
+                
+                doc.setFontSize(16);
+                doc.text(titre, 14, 20);
+                doc.setFontSize(12);
+                doc.text(`Généré le ${new Date().toLocaleDateString()}`, 14, 30);
+                
+                // Tableau des notes
+                const headers = ["Élève", "Classe", "DS", "CC", "Examen", "Projet", "Moyenne"];
+                const data = [];
+                
+                // Calculer les moyennes pour chaque élève
+                elevesFiltres.forEach(eleve => {
+                    const notesEleve = notesFiltrees.filter(n => n.id_eleve == eleve.id);
+                    const classe = classes.find(c => c.id == eleve.id_classe);
+                    
+                    // Calculer les moyennes par type
+                    const notesDS = notesEleve.filter(n => n.type === "DS");
+                    const notesCC = notesEleve.filter(n => n.type === "CC");
+                    const notesExam = notesEleve.filter(n => n.type === "Examen");
+                    const notesProjet = notesEleve.filter(n => n.type === "Projet");
+                    
+                    const moyenneDS = notesDS.length > 0 ? 
+                        notesDS.reduce((sum, n) => sum + n.note, 0) / notesDS.length : null;
+                    const moyenneCC = notesCC.length > 0 ? 
+                        notesCC.reduce((sum, n) => sum + n.note, 0) / notesCC.length : null;
+                    const moyenneExam = notesExam.length > 0 ? 
+                        notesExam.reduce((sum, n) => sum + n.note, 0) / notesExam.length : null;
+                    const moyenneProjet = notesProjet.length > 0 ? 
+                        notesProjet.reduce((sum, n) => sum + n.note, 0) / notesProjet.length : null;
+                    
+                    // Calculer la moyenne générale
+                    const moyenneGenerale = notesEleve.length > 0 ? 
+                        notesEleve.reduce((sum, n) => sum + n.note, 0) / notesEleve.length : null;
+                    
+                    data.push([
+                        `${eleve.nom} ${eleve.prenom}`,
+                        classe ? `${classe.nom} (${classe.niveau})` : "",
+                        moyenneDS ? moyenneDS.toFixed(2) : "-",
+                        moyenneCC ? moyenneCC.toFixed(2) : "-",
+                        moyenneExam ? moyenneExam.toFixed(2) : "-",
+                        moyenneProjet ? moyenneProjet.toFixed(2) : "-",
+                        moyenneGenerale ? moyenneGenerale.toFixed(2) : "-"
+                    ]);
+                });
+                
+                // Ajouter le tableau au PDF
+                doc.autoTable({
+                    head: [headers],
+                    body: data,
+                    startY: 40,
+                    styles: {
+                        fontSize: 10,
+                        cellPadding: 3,
+                        overflow: 'linebreak'
+                    },
+                    headStyles: {
+                        fillColor: [41, 128, 185],
+                        textColor: 255,
+                        fontStyle: 'bold'
+                    },
+                    alternateRowStyles: {
+                        fillColor: [245, 245, 245]
+                    },
+                    columnStyles: {
+                        0: {cellWidth: 40},
+                        1: {cellWidth: 30},
+                        2: {cellWidth: 20},
+                        3: {cellWidth: 20},
+                        4: {cellWidth: 20},
+                        5: {cellWidth: 20},
+                        6: {cellWidth: 20}
+                    }
+                });
+                
+                // Enregistrer le PDF
+                let nomFichier = "Rapport_Classe";
+                if (classeId) {
+                    const classe = classes.find(c => c.id == classeId);
+                    nomFichier += `_${classe.nom.replace(/\s+/g, '_')}`;
+                }
+                if (matiereId) {
+                    const matiere = matieres.find(m => m.id == matiereId);
+                    nomFichier += `_${matiere.nom.replace(/\s+/g, '_')}`;
+                }
+                nomFichier += ".pdf";
+                
+                doc.save(nomFichier);
+                
+            } catch (error) {
+                console.error("Erreur lors de la génération du rapport:", error);
+                alert("Erreur lors de la génération du rapport PDF");
+            }
+        }
+        
+        async function genererRapportEnseignant() {
+            const enseignantId = document.getElementById("rapportEnseignant").value;
+            const matiereId = document.getElementById("rapportMatiereEnseignant").value;
+            
+            try {
+                const enseignants = await getAllItems('enseignants');
+                const eleves = await getAllItems('eleves');
+                const notes = await getAllItems('notes');
+                const attributions = await getAllItems('attributions');
+                const matieres = await getAllItems('matieres');
+                const classes = await getAllItems('classes');
+                
+                // Filtrer les attributions par enseignant
+                let attributionsFiltrees = [...attributions];
+                if (enseignantId) {
+                    attributionsFiltrees = attributionsFiltrees.filter(a => a.id_enseignant == enseignantId);
+                }
+                
+                // Filtrer par matière si spécifiée
+                if (matiereId) {
+                    attributionsFiltrees = attributionsFiltrees.filter(a => a.id_matiere == matiereId);
+                }
+                
+                // Récupérer les IDs des enseignements
+                const enseignementsIds = attributionsFiltrees.map(a => a.id);
+                
+                // Filtrer les notes par ces enseignements
+                const notesFiltrees = notes.filter(n => enseignementsIds.includes(n.id_enseignement));
+                
+                // Créer un nouveau document PDF
+                const doc = new jsPDF();
+                
+                // Titre du rapport
+                let titre = "Rapport des notes par enseignant";
+                if (enseignantId) {
+                    const enseignant = enseignants.find(e => e.id == enseignantId);
+                    titre += ` - ${enseignant.nom} ${enseignant.prenom}`;
+                }
+                if (matiereId) {
+                    const matiere = matieres.find(m => m.id == matiereId);
+                    titre += ` - ${matiere.nom}`;
+                }
+                
+                doc.setFontSize(16);
+                doc.text(titre, 14, 20);
+                doc.setFontSize(12);
+                doc.text(`Généré le ${new Date().toLocaleDateString()}`, 14, 30);
+                
+                // Tableau des notes
+                const headers = ["Élève", "Classe", "Matière", "DS", "CC", "Examen", "Projet", "Moyenne"];
+                const data = [];
+                
+                // Grouper les notes par élève et matière
+                const notesParEleveMatiere = {};
+                
+                notesFiltrees.forEach(note => {
+                    const attribution = attributions.find(a => a.id == note.id_enseignement);
+                    const matiere = matieres.find(m => m.id == attribution.id_matiere);
+                    const enseignant = enseignants.find(e => e.id == attribution.id_enseignant);
+                    const eleve = eleves.find(e => e.id == note.id_eleve);
+                    const classe = classes.find(c => c.id == eleve.id_classe);
+                    
+                    const key = `${eleve.id}_${matiere.id}`;
+                    if (!notesParEleveMatiere[key]) {
+                        notesParEleveMatiere[key] = {
+                            eleve: eleve,
+                            matiere: matiere,
+                            classe: classe,
+                            notesDS: [],
+                            notesCC: [],
+                            notesExam: [],
+                            notesProjet: []
+                        };
+                    }
+                    
+                    switch(note.type) {
+                        case "DS": notesParEleveMatiere[key].notesDS.push(note); break;
+                        case "CC": notesParEleveMatiere[key].notesCC.push(note); break;
+                        case "Examen": notesParEleveMatiere[key].notesExam.push(note); break;
+                        case "Projet": notesParEleveMatiere[key].notesProjet.push(note); break;
+                    }
+                });
+                
+                // Calculer les moyennes et remplir le tableau
+                Object.values(notesParEleveMatiere).forEach(item => {
+                    const moyenneDS = item.notesDS.length > 0 ? 
+                        item.notesDS.reduce((sum, n) => sum + n.note, 0) / item.notesDS.length : null;
+                    const moyenneCC = item.notesCC.length > 0 ? 
+                        item.notesCC.reduce((sum, n) => sum + n.note, 0) / item.notesCC.length : null;
+                    const moyenneExam = item.notesExam.length > 0 ? 
+                        item.notesExam.reduce((sum, n) => sum + n.note, 0) / item.notesExam.length : null;
+                    const moyenneProjet = item.notesProjet.length > 0 ? 
+                        item.notesProjet.reduce((sum, n) => sum + n.note, 0) / item.notesProjet.length : null;
+                    
+                    // Calculer la moyenne générale pour cette matière
+                    const toutesNotes = [...item.notesDS, ...item.notesCC, ...item.notesExam, ...item.notesProjet];
+                    const moyenneGenerale = toutesNotes.length > 0 ? 
+                        toutesNotes.reduce((sum, n) => sum + n.note, 0) / toutesNotes.length : null;
+                    
+                    data.push([
+                        `${item.eleve.nom} ${item.eleve.prenom}`,
+                        item.classe ? `${item.classe.nom} (${item.classe.niveau})` : "",
+                        item.matiere.nom,
+                        moyenneDS ? moyenneDS.toFixed(2) : "-",
+                        moyenneCC ? moyenneCC.toFixed(2) : "-",
+                        moyenneExam ? moyenneExam.toFixed(2) : "-",
+                        moyenneProjet ? moyenneProjet.toFixed(2) : "-",
+                        moyenneGenerale ? moyenneGenerale.toFixed(2) : "-"
+                    ]);
+                });
+                
+                // Ajouter le tableau au PDF
+                doc.autoTable({
+                    head: [headers],
+                    body: data,
+                    startY: 40,
+                    styles: {
+                        fontSize: 10,
+                        cellPadding: 3,
+                        overflow: 'linebreak'
+                    },
+                    headStyles: {
+                        fillColor: [41, 128, 185],
+                        textColor: 255,
+                        fontStyle: 'bold'
+                    },
+                    alternateRowStyles: {
+                        fillColor: [245, 245, 245]
+                    },
+                    columnStyles: {
+                        0: {cellWidth: 30},
+                        1: {cellWidth: 25},
+                        2: {cellWidth: 25},
+                        3: {cellWidth: 15},
+                        4: {cellWidth: 15},
+                        5: {cellWidth: 15},
+                        6: {cellWidth: 15},
+                        7: {cellWidth: 15}
+                    }
+                });
+                
+                // Enregistrer le PDF
+                let nomFichier = "Rapport_Enseignant";
+                if (enseignantId) {
+                    const enseignant = enseignants.find(e => e.id == enseignantId);
+                    nomFichier += `_${enseignant.nom}_${enseignant.prenom}`;
+                }
+                if (matiereId) {
+                    const matiere = matieres.find(m => m.id == matiereId);
+                    nomFichier += `_${matiere.nom.replace(/\s+/g, '_')}`;
+                }
+                nomFichier += ".pdf";
+                
+                doc.save(nomFichier);
+                
+            } catch (error) {
+                console.error("Erreur lors de la génération du rapport:", error);
+                alert("Erreur lors de la génération du rapport PDF");
+            }
+        }
+        
+        async function genererRapportMatiere() {
+            const matiereId = document.getElementById("rapportMatiere").value;
+            const classeId = document.getElementById("rapportClasseMatiere").value;
+            
+            try {
+                const matieres = await getAllItems('matieres');
+                const eleves = await getAllItems('eleves');
+                const notes = await getAllItems('notes');
+                const attributions = await getAllItems('attributions');
+                const classes = await getAllItems('classes');
+                const enseignants = await getAllItems('enseignants');
+                
+                // Filtrer les attributions par matière
+                let attributionsFiltrees = [...attributions];
+                if (matiereId) {
+                    attributionsFiltrees = attributionsFiltrees.filter(a => a.id_matiere == matiereId);
+                }
+                
+                // Filtrer par classe si spécifiée
+                if (classeId) {
+                    attributionsFiltrees = attributionsFiltrees.filter(a => a.id_classe == classeId);
+                }
+                
+                // Récupérer les IDs des enseignements
+                const enseignementsIds = attributionsFiltrees.map(a => a.id);
+                
+                // Filtrer les notes par ces enseignements
+                const notesFiltrees = notes.filter(n => enseignementsIds.includes(n.id_enseignement));
+                
+                // Créer un nouveau document PDF
+                const doc = new jsPDF();
+                
+                // Titre du rapport
+                let titre = "Rapport des notes par matière";
+                if (matiereId) {
+                    const matiere = matieres.find(m => m.id == matiereId);
+                    titre += ` - ${matiere.nom}`;
+                }
+                if (classeId) {
+                    const classe = classes.find(c => c.id == classeId);
+                    titre += ` - ${classe.nom} (${classe.niveau})`;
+                }
+                
+                doc.setFontSize(16);
+                doc.text(titre, 14, 20);
+                doc.setFontSize(12);
+                doc.text(`Généré le ${new Date().toLocaleDateString()}`, 14, 30);
+                
+                // Tableau des notes
+                const headers = ["Élève", "Classe", "Enseignant", "DS", "CC", "Examen", "Projet", "Moyenne"];
+                const data = [];
+                
+                // Grouper les notes par élève et enseignant
+                const notesParEleveEnseignant = {};
+                
+                notesFiltrees.forEach(note => {
+                    const attribution = attributions.find(a => a.id == note.id_enseignement);
+                    const enseignant = enseignants.find(e => e.id == attribution.id_enseignant);
+                    const eleve = eleves.find(e => e.id == note.id_eleve);
+                    const classe = classes.find(c => c.id == eleve.id_classe);
+                    
+                    const key = `${eleve.id}_${enseignant.id}`;
+                    if (!notesParEleveEnseignant[key]) {
+                        notesParEleveEnseignant[key] = {
+                            eleve: eleve,
+                            enseignant: enseignant,
+                            classe: classe,
+                            notesDS: [],
+                            notesCC: [],
+                            notesExam: [],
+                            notesProjet: []
+                        };
+                    }
+                    
+                    switch(note.type) {
+                        case "DS": notesParEleveEnseignant[key].notesDS.push(note); break;
+                        case "CC": notesParEleveEnseignant[key].notesCC.push(note); break;
+                        case "Examen": notesParEleveEnseignant[key].notesExam.push(note); break;
+                        case "Projet": notesParEleveEnseignant[key].notesProjet.push(note); break;
+                    }
+                });
+                
+                // Calculer les moyennes et remplir le tableau
+                Object.values(notesParEleveEnseignant).forEach(item => {
+                    const moyenneDS = item.notesDS.length > 0 ? 
+                        item.notesDS.reduce((sum, n) => sum + n.note, 0) / item.notesDS.length : null;
+                    const moyenneCC = item.notesCC.length > 0 ? 
+                        item.notesCC.reduce((sum, n) => sum + n.note, 0) / item.notesCC.length : null;
+                    const moyenneExam = item.notesExam.length > 0 ? 
+                        item.notesExam.reduce((sum, n) => sum + n.note, 0) / item.notesExam.length : null;
+                    const moyenneProjet = item.notesProjet.length > 0 ? 
+                        item.notesProjet.reduce((sum, n) => sum + n.note, 0) / item.notesProjet.length : null;
+                    
+                    // Calculer la moyenne générale pour cet enseignant
+                    const toutesNotes = [...item.notesDS, ...item.notesCC, ...item.notesExam, ...item.notesProjet];
+                    const moyenneGenerale = toutesNotes.length > 0 ? 
+                        toutesNotes.reduce((sum, n) => sum + n.note, 0) / toutesNotes.length : null;
+                    
+                    data.push([
+                        `${item.eleve.nom} ${item.eleve.prenom}`,
+                        item.classe ? `${item.classe.nom} (${item.classe.niveau})` : "",
+                        `${item.enseignant.nom} ${item.enseignant.prenom}`,
+                        moyenneDS ? moyenneDS.toFixed(2) : "-",
+                        moyenneCC ? moyenneCC.toFixed(2) : "-",
+                        moyenneExam ? moyenneExam.toFixed(2) : "-",
+                        moyenneProjet ? moyenneProjet.toFixed(2) : "-",
+                        moyenneGenerale ? moyenneGenerale.toFixed(2) : "-"
+                    ]);
+                });
+                
+                // Ajouter le tableau au PDF
+                doc.autoTable({
+                    head: [headers],
+                    body: data,
+                    startY: 40,
+                    styles: {
+                        fontSize: 10,
+                        cellPadding: 3,
+                        overflow: 'linebreak'
+                    },
+                    headStyles: {
+                        fillColor: [41, 128, 185],
+                        textColor: 255,
+                        fontStyle: 'bold'
+                    },
+                    alternateRowStyles: {
+                        fillColor: [245, 245, 245]
+                    },
+                    columnStyles: {
+                        0: {cellWidth: 30},
+                        1: {cellWidth: 25},
+                        2: {cellWidth: 30},
+                        3: {cellWidth: 15},
+                        4: {cellWidth: 15},
+                        5: {cellWidth: 15},
+                        6: {cellWidth: 15},
+                        7: {cellWidth: 15}
+                    }
+                });
+                
+                // Enregistrer le PDF
+                let nomFichier = "Rapport_Matiere";
+                if (matiereId) {
+                    const matiere = matieres.find(m => m.id == matiereId);
+                    nomFichier += `_${matiere.nom.replace(/\s+/g, '_')}`;
+                }
+                if (classeId) {
+                    const classe = classes.find(c => c.id == classeId);
+                    nomFichier += `_${classe.nom.replace(/\s+/g, '_')}`;
+                }
+                nomFichier += ".pdf";
+                
+                doc.save(nomFichier);
+                
+            } catch (error) {
+                console.error("Erreur lors de la génération du rapport:", error);
+                alert("Erreur lors de la génération du rapport PDF");
+            }
+        }
+        
+        async function genererRapportEvaluations() {
+            const typeEvaluation = document.getElementById("rapportTypeEvaluation").value;
+            const periode = document.getElementById("rapportPeriode").value;
+            
+            try {
+                const notes = await getAllItems('notes');
+                const attributions = await getAllItems('attributions');
+                const eleves = await getAllItems('eleves');
+                const classes = await getAllItems('classes');
+                const matieres = await getAllItems('matieres');
+                const enseignants = await getAllItems('enseignants');
+                
+                // Filtrer les notes par type d'évaluation
+                let notesFiltrees = [...notes];
+                if (typeEvaluation) {
+                    notesFiltrees = notesFiltrees.filter(n => n.type === typeEvaluation);
+                }
+                
+                // Filtrer par période si spécifiée
+                if (periode) {
+                    const dateActuelle = new Date();
+                    let dateDebut, dateFin;
+                    
+                    switch(periode) {
+                        case "trimestre1":
+                            dateDebut = new Date(dateActuelle.getFullYear(), 0, 1);
+                            dateFin = new Date(dateActuelle.getFullYear(), 3, 31);
+                            break;
+                        case "trimestre2":
+                            dateDebut = new Date(dateActuelle.getFullYear(), 4, 1);
+                            dateFin = new Date(dateActuelle.getFullYear(), 7, 31);
+                            break;
+                        case "trimestre3":
+                            dateDebut = new Date(dateActuelle.getFullYear(), 8, 1);
+                            dateFin = new Date(dateActuelle.getFullYear(), 11, 31);
+                            break;
+                        case "semestre1":
+                            dateDebut = new Date(dateActuelle.getFullYear(), 0, 1);
+                            dateFin = new Date(dateActuelle.getFullYear(), 5, 30);
+                            break;
+                        case "semestre2":
+                            dateDebut = new Date(dateActuelle.getFullYear(), 6, 1);
+                            dateFin = new Date(dateActuelle.getFullYear(), 11, 31);
+                            break;
+                    }
+                    
+                    notesFiltrees = notesFiltrees.filter(n => {
+                        const dateNote = new Date(n.date);
+                        return dateNote >= dateDebut && dateNote <= dateFin;
+                    });
+                }
+                
+                // Créer un nouveau document PDF
+                const doc = new jsPDF();
+                
+                // Titre du rapport
+                let titre = "Rapport des évaluations";
+                if (typeEvaluation) {
+                    const typeText = {
+                        "DS": "Devoirs Surveillés",
+                        "CC": "Contrôles Continus",
+                        "Examen": "Examens",
+                        "Projet": "Projets"
+                    }[typeEvaluation];
+                    titre += ` - ${typeText}`;
+                }
+                if (periode) {
+                    const periodeText = {
+                        "trimestre1": "1er Trimestre",
+                        "trimestre2": "2ème Trimestre",
+                        "trimestre3": "3ème Trimestre",
+                        "semestre1": "1er Semestre",
+                        "semestre2": "2ème Semestre"
+                    }[periode];
+                    titre += ` - ${periodeText}`;
+                }
+                
+                doc.setFontSize(16);
+                doc.text(titre, 14, 20);
+                doc.setFontSize(12);
+                doc.text(`Généré le ${new Date().toLocaleDateString()}`, 14, 30);
+                
+                // Tableau des notes
+                const headers = ["Élève", "Classe", "Matière", "Enseignant", "Note", "Date", "Coefficient"];
+                const data = [];
+                
+                notesFiltrees.forEach(note => {
+                    const attribution = attributions.find(a => a.id == note.id_enseignement);
+                    const matiere = matieres.find(m => m.id == attribution.id_matiere);
+                    const enseignant = enseignants.find(e => e.id == attribution.id_enseignant);
+                    const eleve = eleves.find(e => e.id == note.id_eleve);
+                    const classe = classes.find(c => c.id == eleve.id_classe);
+                    
+                    data.push([
+                        `${eleve.nom} ${eleve.prenom}`,
+                        classe ? `${classe.nom} (${classe.niveau})` : "",
+                        matiere.nom,
+                        `${enseignant.nom} ${enseignant.prenom}`,
+                        note.note.toFixed(2),
+                        note.date,
+                        note.coefficient
+                    ]);
+                });
+                
+                // Ajouter le tableau au PDF
+                doc.autoTable({
+                    head: [headers],
+                    body: data,
+                    startY: 40,
+                    styles: {
+                        fontSize: 10,
+                        cellPadding: 3,
+                        overflow: 'linebreak'
+                    },
+                    headStyles: {
+                        fillColor: [41, 128, 185],
+                        textColor: 255,
+                        fontStyle: 'bold'
+                    },
+                    alternateRowStyles: {
+                        fillColor: [245, 245, 245]
+                    },
+                    columnStyles: {
+                        0: {cellWidth: 30},
+                        1: {cellWidth: 25},
+                        2: {cellWidth: 25},
+                        3: {cellWidth: 30},
+                        4: {cellWidth: 15},
+                        5: {cellWidth: 20},
+                        6: {cellWidth: 15}
+                    }
+                });
+                
+                // Statistiques
+                if (notesFiltrees.length > 0) {
+                    const moyenneGenerale = notesFiltrees.reduce((sum, n) => sum + n.note, 0) / notesFiltrees.length;
+                    const noteMax = Math.max(...notesFiltrees.map(n => n.note));
+                    const noteMin = Math.min(...notesFiltrees.map(n => n.note));
+                    
+                    doc.setFontSize(12);
+                    doc.text("Statistiques:", 14, doc.autoTable.previous.finalY + 20);
+                    
+                    doc.setFontSize(10);
+                    doc.text(`Nombre d'évaluations: ${notesFiltrees.length}`, 14, doc.autoTable.previous.finalY + 30);
+                    doc.text(`Moyenne générale: ${moyenneGenerale.toFixed(2)}/20`, 14, doc.autoTable.previous.finalY + 40);
+                    doc.text(`Note maximale: ${noteMax.toFixed(2)}/20`, 14, doc.autoTable.previous.finalY + 50);
+                    doc.text(`Note minimale: ${noteMin.toFixed(2)}/20`, 14, doc.autoTable.previous.finalY + 60);
+                }
+                
+                // Enregistrer le PDF
+                let nomFichier = "Rapport_Evaluations";
+                if (typeEvaluation) {
+                    nomFichier += `_${typeEvaluation}`;
+                }
+                if (periode) {
+                    nomFichier += `_${periode}`;
+                }
+                nomFichier += ".pdf";
+                
+                doc.save(nomFichier);
+                
+            } catch (error) {
+                console.error("Erreur lors de la génération du rapport:", error);
+                alert("Erreur lors de la génération du rapport PDF");
             }
         }
         
@@ -1224,7 +1884,7 @@
             await updateTableAttributions();
             await updateTableEleves();
             await updateTableNotes();
-            await updateTableComptes();
+            await fillSelectOptions();
         }
         
         async function updateTableEnseignants() {
@@ -1349,6 +2009,8 @@
                             <td>${el.id}</td>
                             <td>${el.nom}</td>
                             <td>${el.prenom}</td>
+                            <td>${el.age}</td>
+                            <td>${el.sexe === 'M' ? 'Masculin' : 'Féminin'}</td>
                             <td>${classe.nom}</td>
                             <td>
                                 <button onclick="editEleve(${el.id})">Modifier</button>
@@ -1400,33 +2062,7 @@
             }
         }
         
-        async function updateTableComptes() {
-            try {
-                const comptes = await getAllItems('comptes');
-                const tbody = document.querySelector("#tableComptes tbody");
-                tbody.innerHTML = '';
-                
-                comptes.forEach(compte => {
-                    tbody.innerHTML += `
-                        <tr>
-                            <td>${compte.id}</td>
-                            <td>${compte.nom}</td>
-                            <td>${compte.prenom}</td>
-                            <td>${compte.email}</td>
-                            <td>${compte.role === 'admin' ? 'Administrateur' : 'Enseignant'}</td>
-                            <td>
-                                <button onclick="editCompte(${compte.id})">Modifier</button>
-                                <button onclick="deleteCompte(${compte.id})">Supprimer</button>
-                            </td>
-                        </tr>
-                    `;
-                });
-            } catch (error) {
-                console.error("Erreur lors de la mise à jour de la table comptes:", error);
-            }
-        }
-        
-        // Fonctions CRUD pour les enseignants
+        // Gestion des formulaires
         document.getElementById("formEnseignant").addEventListener("submit", async function(e) {
             e.preventDefault();
             
@@ -1437,7 +2073,6 @@
             
             try {
                 if (id) {
-                    // Modification
                     const enseignant = await getItemById('enseignants', parseInt(id));
                     enseignant.nom = nom;
                     enseignant.prenom = prenom;
@@ -1445,7 +2080,6 @@
                     
                     await updateItem('enseignants', enseignant);
                 } else {
-                    // Ajout
                     const newEnseignant = {
                         nom,
                         prenom,
@@ -1472,7 +2106,6 @@
                 document.getElementById("enseignantPrenom").value = ens.prenom;
                 document.getElementById("enseignantEmail").value = ens.email;
                 
-                // Ouvrir l'onglet enseignants
                 document.querySelector('.tablinks.active').classList.remove('active');
                 document.querySelector('.tabcontent[style*="display: block"]').style.display = 'none';
                 
@@ -1487,7 +2120,6 @@
         async function deleteEnseignant(id) {
             if (confirm("Voulez-vous vraiment supprimer cet enseignant ?")) {
                 try {
-                    // Vérifier s'il y a des attributions pour cet enseignant
                     const attributions = await getAllItems('attributions');
                     const hasAttributions = attributions.some(a => a.id_enseignant === id);
                     
@@ -1511,7 +2143,6 @@
             document.getElementById("enseignantId").value = '';
         }
         
-        // Fonctions CRUD pour les matières
         document.getElementById("formMatiere").addEventListener("submit", async function(e) {
             e.preventDefault();
             
@@ -1520,13 +2151,11 @@
             
             try {
                 if (id) {
-                    // Modification
                     const matiere = await getItemById('matieres', parseInt(id));
                     matiere.nom = nom;
                     
                     await updateItem('matieres', matiere);
                 } else {
-                    // Ajout
                     const newMatiere = {
                         nom
                     };
@@ -1549,7 +2178,6 @@
                 document.getElementById("matiereId").value = mat.id;
                 document.getElementById("nomMatiere").value = mat.nom;
                 
-                // Ouvrir l'onglet matières
                 document.querySelector('.tablinks.active').classList.remove('active');
                 document.querySelector('.tabcontent[style*="display: block"]').style.display = 'none';
                 
@@ -1564,7 +2192,6 @@
         async function deleteMatiere(id) {
             if (confirm("Voulez-vous vraiment supprimer cette matière ?")) {
                 try {
-                    // Vérifier s'il y a des attributions pour cette matière
                     const attributions = await getAllItems('attributions');
                     const hasAttributions = attributions.some(a => a.id_matiere === id);
                     
@@ -1588,7 +2215,6 @@
             document.getElementById("matiereId").value = '';
         }
         
-        // Fonctions CRUD pour les classes
         document.getElementById("formClasse").addEventListener("submit", async function(e) {
             e.preventDefault();
             
@@ -1598,14 +2224,12 @@
             
             try {
                 if (id) {
-                    // Modification
                     const classe = await getItemById('classes', parseInt(id));
                     classe.nom = nom;
                     classe.niveau = niveau;
                     
                     await updateItem('classes', classe);
                 } else {
-                    // Ajout
                     const newClasse = {
                         nom,
                         niveau
@@ -1630,7 +2254,6 @@
                 document.getElementById("nomClasse").value = cl.nom;
                 document.getElementById("niveauClasse").value = cl.niveau;
                 
-                // Ouvrir l'onglet classes
                 document.querySelector('.tablinks.active').classList.remove('active');
                 document.querySelector('.tabcontent[style*="display: block"]').style.display = 'none';
                 
@@ -1645,7 +2268,6 @@
         async function deleteClasse(id) {
             if (confirm("Voulez-vous vraiment supprimer cette classe ?")) {
                 try {
-                    // Vérifier s'il y a des élèves ou des attributions pour cette classe
                     const eleves = await getAllItems('eleves');
                     const attributions = await getAllItems('attributions');
                     
@@ -1672,7 +2294,6 @@
             document.getElementById("classeId").value = '';
         }
         
-        // Fonctions CRUD pour les attributions
         document.getElementById("formAttribution").addEventListener("submit", async function(e) {
             e.preventDefault();
             
@@ -1684,7 +2305,6 @@
             
             try {
                 if (id) {
-                    // Modification
                     const attribution = await getItemById('attributions', parseInt(id));
                     attribution.id_enseignant = parseInt(id_enseignant);
                     attribution.id_matiere = parseInt(id_matiere);
@@ -1693,7 +2313,6 @@
                     
                     await updateItem('attributions', attribution);
                 } else {
-                    // Ajout
                     const newAttribution = {
                         id_enseignant: parseInt(id_enseignant),
                         id_matiere: parseInt(id_matiere),
@@ -1721,7 +2340,6 @@
                 document.getElementById("attributionClasse").value = att.id_classe;
                 document.getElementById("anneeScolaire").value = att.annee;
                 
-                // Ouvrir l'onglet attributions
                 document.querySelector('.tablinks.active').classList.remove('active');
                 document.querySelector('.tabcontent[style*="display: block"]').style.display = 'none';
                 
@@ -1736,12 +2354,11 @@
         async function deleteAttribution(id) {
             if (confirm("Voulez-vous vraiment supprimer cette attribution ?")) {
                 try {
-                    // Vérifier s'il y a des notes pour cette attribution
                     const notes = await getAllItems('notes');
                     const hasNotes = notes.some(n => n.id_enseignement === id);
                     
                     if (hasNotes) {
-                        alert("Impossible de supprimer cette attribution car elle a des notes. Supprimez d'abord les notes liées.");
+                        alert("Impossible de supprimer cette attribution car elle a des notes associées. Supprimez d'abord les notes.");
                         return;
                     }
                     
@@ -1759,29 +2376,32 @@
             document.getElementById("attributionId").value = '';
         }
         
-        // Fonctions CRUD pour les élèves
         document.getElementById("formEleve").addEventListener("submit", async function(e) {
             e.preventDefault();
             
             const id = document.getElementById("eleveId").value;
             const nom = document.getElementById("eleveNom").value;
             const prenom = document.getElementById("elevePrenom").value;
+            const age = document.getElementById("eleveAge").value;
+            const sexe = document.getElementById("eleveSexe").value;
             const id_classe = document.getElementById("eleveClasse").value;
             
             try {
                 if (id) {
-                    // Modification
                     const eleve = await getItemById('eleves', parseInt(id));
                     eleve.nom = nom;
                     eleve.prenom = prenom;
+                    eleve.age = parseInt(age);
+                    eleve.sexe = sexe;
                     eleve.id_classe = parseInt(id_classe);
                     
                     await updateItem('eleves', eleve);
                 } else {
-                    // Ajout
                     const newEleve = {
                         nom,
                         prenom,
+                        age: parseInt(age),
+                        sexe,
                         id_classe: parseInt(id_classe)
                     };
                     
@@ -1802,9 +2422,10 @@
                 document.getElementById("eleveId").value = el.id;
                 document.getElementById("eleveNom").value = el.nom;
                 document.getElementById("elevePrenom").value = el.prenom;
+                document.getElementById("eleveAge").value = el.age;
+                document.getElementById("eleveSexe").value = el.sexe;
                 document.getElementById("eleveClasse").value = el.id_classe;
                 
-                // Ouvrir l'onglet élèves
                 document.querySelector('.tablinks.active').classList.remove('active');
                 document.querySelector('.tabcontent[style*="display: block"]').style.display = 'none';
                 
@@ -1819,7 +2440,6 @@
         async function deleteEleve(id) {
             if (confirm("Voulez-vous vraiment supprimer cet élève ?")) {
                 try {
-                    // Vérifier s'il y a des notes pour cet élève
                     const notes = await getAllItems('notes');
                     const hasNotes = notes.some(n => n.id_eleve === id);
                     
@@ -1842,12 +2462,11 @@
             document.getElementById("eleveId").value = '';
         }
         
-        // Fonctions CRUD pour les notes
         document.getElementById("formNote").addEventListener("submit", async function(e) {
             e.preventDefault();
             
             const id = document.getElementById("noteId").value;
-            const id_enseignant = document.getElementById("noteEnseignant").value;
+            const id_enseignement = document.getElementById("noteEnseignant").value;
             const id_matiere = document.getElementById("noteMatiere").value;
             const id_classe = document.getElementById("noteClasse").value;
             const id_eleve = document.getElementById("noteEleve").value;
@@ -1858,35 +2477,20 @@
             const commentaire = document.getElementById("noteCommentaire").value;
             
             try {
-                // Trouver l'enseignement correspondant
-                const attributions = await getAllItems('attributions');
-                const enseignement = attributions.find(a => 
-                    a.id_enseignant == id_enseignant && 
-                    a.id_matiere == id_matiere && 
-                    a.id_classe == id_classe
-                );
-                
-                if (!enseignement) {
-                    alert("Cette combinaison enseignant/matière/classe n'existe pas !");
-                    return;
-                }
-                
                 if (id) {
-                    // Modification
-                    const noteObj = await getItemById('notes', parseInt(id));
-                    noteObj.id_enseignement = enseignement.id;
-                    noteObj.id_eleve = parseInt(id_eleve);
-                    noteObj.note = parseFloat(note);
-                    noteObj.type = type;
-                    noteObj.date = date;
-                    noteObj.coefficient = parseInt(coefficient);
-                    noteObj.commentaire = commentaire;
+                    const existingNote = await getItemById('notes', parseInt(id));
+                    existingNote.id_enseignement = parseInt(id_enseignement);
+                    existingNote.id_eleve = parseInt(id_eleve);
+                    existingNote.note = parseFloat(note);
+                    existingNote.type = type;
+                    existingNote.date = date;
+                    existingNote.coefficient = parseInt(coefficient);
+                    existingNote.commentaire = commentaire;
                     
-                    await updateItem('notes', noteObj);
+                    await updateItem('notes', existingNote);
                 } else {
-                    // Ajout
                     const newNote = {
-                        id_enseignement: enseignement.id,
+                        id_enseignement: parseInt(id_enseignement),
                         id_eleve: parseInt(id_eleve),
                         note: parseFloat(note),
                         type,
@@ -1909,23 +2513,21 @@
         async function editNote(id) {
             try {
                 const note = await getItemById('notes', id);
-                const attributions = await getAllItems('attributions');
-                const enseignement = attributions.find(a => a.id === note.id_enseignement);
+                const attribution = await getItemById('attributions', note.id_enseignement);
                 
                 document.getElementById("noteId").value = note.id;
-                document.getElementById("noteEnseignant").value = enseignement.id_enseignant;
-                await chargerMatieresClasses(); // Pour remplir les matières et classes
-                document.getElementById("noteMatiere").value = enseignement.id_matiere;
-                document.getElementById("noteClasse").value = enseignement.id_classe;
-                await chargerEleves(); // Pour remplir les élèves
+                document.getElementById("noteEnseignant").value = attribution.id_enseignant;
+                await chargerMatieresClasses();
+                document.getElementById("noteMatiere").value = attribution.id_matiere;
+                document.getElementById("noteClasse").value = attribution.id_classe;
+                await chargerEleves();
                 document.getElementById("noteEleve").value = note.id_eleve;
                 document.getElementById("noteValeur").value = note.note;
                 document.getElementById("noteType").value = note.type;
                 document.getElementById("noteDate").value = note.date;
                 document.getElementById("noteCoefficient").value = note.coefficient;
-                document.getElementById("noteCommentaire").value = note.commentaire;
+                document.getElementById("noteCommentaire").value = note.commentaire || '';
                 
-                // Ouvrir l'onglet notes
                 document.querySelector('.tablinks.active').classList.remove('active');
                 document.querySelector('.tabcontent[style*="display: block"]').style.display = 'none';
                 
@@ -1952,178 +2554,114 @@
         function resetNoteForm() {
             document.getElementById("formNote").reset();
             document.getElementById("noteId").value = '';
-            document.getElementById("noteEleve").innerHTML = '<option value="">Sélectionner un élève</option>';
+            document.getElementById("noteDate").valueAsDate = new Date();
         }
         
-        // Fonctions CRUD pour les comptes
-        document.getElementById("formCompte").addEventListener("submit", async function(e) {
-            e.preventDefault();
-            
-            const id = document.getElementById("compteId").value;
-            const nom = document.getElementById("compteNom").value;
-            const prenom = document.getElementById("comptePrenom").value;
-            const email = document.getElementById("compteEmail").value;
-            const password = document.getElementById("comptePassword").value;
-            const role = document.getElementById("compteRole").value;
-            
+        // Fonctions pour exporter/importer/supprimer la base de données
+        async function exportDatabase() {
             try {
-                if (id) {
-                    // Modification
-                    const compte = await getItemById('comptes', parseInt(id));
-                    compte.nom = nom;
-                    compte.prenom = prenom;
-                    compte.email = email;
-                    compte.role = role;
-                    
-                    // Ne mettre à jour le mot de passe que si un nouveau a été fourni
-                    if (password) {
-                        compte.password = password;
-                    }
-                    
-                    await updateItem('comptes', compte);
-                    
-                    // Si c'est un enseignant, mettre à jour aussi le profil enseignant
-                    if (role === 'teacher') {
-                        const enseignants = await getAllItems('enseignants');
-                        const enseignantIndex = enseignants.findIndex(e => e.email === compte.email);
-                        
-                        if (enseignantIndex !== -1) {
-                            const enseignant = enseignants[enseignantIndex];
-                            enseignant.nom = nom;
-                            enseignant.prenom = prenom;
-                            enseignant.email = email;
-                            
-                            await updateItem('enseignants', enseignant);
-                        } else {
-                            // Créer un nouveau profil enseignant si nécessaire
-                            const newEnseignant = {
-                                nom,
-                                prenom,
-                                email
-                            };
-                            
-                            await addItem('enseignants', newEnseignant);
-                        }
-                    }
-                } else {
-                    // Ajout
-                    // Vérifier si l'email existe déjà
-                    const comptes = await getAllItems('comptes');
-                    if (comptes.some(c => c.email === email)) {
-                        alert("Cet email est déjà utilisé");
-                        return;
-                    }
-                    
-                    const newCompte = {
-                        nom,
-                        prenom,
-                        email,
-                        password,
-                        role
-                    };
-                    
-                    await addItem('comptes', newCompte);
-                    
-                    // Si c'est un enseignant, créer aussi un profil enseignant
-                    if (role === 'teacher') {
-                        const newEnseignant = {
-                            nom,
-                            prenom,
-                            email
-                        };
-                        
-                        await addItem('enseignants', newEnseignant);
-                    }
+                const stores = ['enseignants', 'matieres', 'classes', 'attributions', 'eleves', 'notes'];
+                const data = {};
+                
+                for (const store of stores) {
+                    data[store] = await getAllItems(store);
                 }
                 
-                await updateTableComptes();
-                await updateTableEnseignants();
-                await fillSelectOptions();
-                resetCompteForm();
-            } catch (error) {
-                console.error("Erreur lors de l'enregistrement du compte:", error);
-                alert("Erreur lors de l'enregistrement du compte");
-            }
-        });
-        
-        async function editCompte(id) {
-            try {
-                const compte = await getItemById('comptes', id);
-                document.getElementById("compteId").value = compte.id;
-                document.getElementById("compteNom").value = compte.nom;
-                document.getElementById("comptePrenom").value = compte.prenom;
-                document.getElementById("compteEmail").value = compte.email;
-                document.getElementById("compteRole").value = compte.role;
-                document.getElementById("comptePassword").value = '';
+                const dataStr = JSON.stringify(data, null, 2);
+                const blob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
                 
-                // Ouvrir l'onglet comptes
-                document.querySelector('.tablinks.active').classList.remove('active');
-                document.querySelector('.tabcontent[style*="display: block"]').style.display = 'none';
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'gestion_notes_export.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
                 
-                document.querySelector('.tablinks:nth-child(8)').classList.add('active');
-                document.getElementById("Comptes").style.display = 'block';
+                alert('Données exportées avec succès !');
             } catch (error) {
-                console.error("Erreur lors de l'édition du compte:", error);
-                alert("Erreur lors de l'édition du compte");
+                console.error("Erreur lors de l'export des données:", error);
+                alert("Erreur lors de l'export des données");
             }
         }
         
-        async function deleteCompte(id) {
-            if (confirm("Voulez-vous vraiment supprimer ce compte ?")) {
+        async function importDatabase(input) {
+            if (!input.files || input.files.length === 0) return;
+            
+            const file = input.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = async function(e) {
                 try {
-                    const compte = await getItemById('comptes', id);
+                    const data = JSON.parse(e.target.result);
+                    const stores = ['enseignants', 'matieres', 'classes', 'attributions', 'eleves', 'notes'];
                     
-                    // Ne pas permettre de supprimer son propre compte
-                    if (currentUser && currentUser.id === id) {
-                        alert("Vous ne pouvez pas supprimer votre propre compte !");
-                        return;
+                    // Vider les tables existantes
+                    for (const store of stores) {
+                        const items = await getAllItems(store);
+                        for (const item of items) {
+                            await deleteItem(store, item.id);
+                        }
                     }
                     
-                    await deleteItem('comptes', id);
-                    
-                    // Si c'est un enseignant, supprimer aussi le profil enseignant
-                    if (compte.role === 'teacher') {
-                        const enseignants = await getAllItems('enseignants');
-                        const enseignant = enseignants.find(e => e.email === compte.email);
-                        
-                        if (enseignant) {
-                            // Vérifier s'il y a des attributions pour cet enseignant
-                            const attributions = await getAllItems('attributions');
-                            const hasAttributions = attributions.some(a => a.id_enseignant === enseignant.id);
-                            
-                            if (hasAttributions) {
-                                alert("Impossible de supprimer le profil enseignant car il a des attributions. Supprimez d'abord ses attributions.");
-                            } else {
-                                await deleteItem('enseignants', enseignant.id);
+                    // Importer les nouvelles données
+                    for (const store of stores) {
+                        if (data[store]) {
+                            for (const item of data[store]) {
+                                // Supprimer l'id existant pour éviter les conflits
+                                const { id, ...itemWithoutId } = item;
+                                await addItem(store, itemWithoutId);
                             }
                         }
                     }
                     
-                    await updateTableComptes();
-                    await updateTableEnseignants();
-                    await fillSelectOptions();
+                    await updateAllTables();
+                    alert('Données importées avec succès !');
                 } catch (error) {
-                    console.error("Erreur lors de la suppression du compte:", error);
-                    alert("Erreur lors de la suppression du compte");
+                    console.error("Erreur lors de l'import des données:", error);
+                    alert("Erreur lors de l'import des données");
+                }
+            };
+            
+            reader.readAsText(file);
+            input.value = ''; // Réinitialiser l'input pour permettre le même fichier
+        }
+        
+        async function clearDatabase() {
+            if (confirm("Voulez-vous vraiment supprimer TOUTES les données ? Cette action est irréversible.")) {
+                try {
+                    const stores = ['enseignants', 'matieres', 'classes', 'attributions', 'eleves', 'notes'];
+                    
+                    for (const store of stores) {
+                        const items = await getAllItems(store);
+                        for (const item of items) {
+                            await deleteItem(store, item.id);
+                        }
+                    }
+                    
+                    // Réinitialiser avec les données par défaut
+                    const request = indexedDB.open('GestionNotesDB', 3);
+                    request.onupgradeneeded = function(event) {
+                        addInitialData(event.target.transaction);
+                    };
+                    
+                    await updateAllTables();
+                    alert('Toutes les données ont été supprimées et la base a été réinitialisée.');
+                } catch (error) {
+                    console.error("Erreur lors de la suppression des données:", error);
+                    alert("Erreur lors de la suppression des données");
                 }
             }
         }
         
-        function resetCompteForm() {
-            document.getElementById("formCompte").reset();
-            document.getElementById("compteId").value = '';
-        }
-        
-        // Initialisation
+        // Initialisation de l'application
         window.onload = async function() {
             try {
                 await initDB();
-                showLoginForm();
+                await updateAllTables();
+                await fillSelectOptions();
                 
-                // Cacher l'interface principale au démarrage
-                document.getElementById("app-section").classList.add("hidden");
-                
-                // Définir la date d'aujourd'hui par défaut pour les notes
                 document.getElementById("noteDate").valueAsDate = new Date();
             } catch (error) {
                 console.error("Erreur lors de l'initialisation:", error);
