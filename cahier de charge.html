@@ -166,6 +166,7 @@
             margin: 20px 0;
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
         .export-btn {
             background: #2196F3;
@@ -175,6 +176,9 @@
         }
         .delete-btn {
             background: #f44336;
+        }
+        .print-btn {
+            background: #607d8b;
         }
         #fileInput {
             display: none;
@@ -215,6 +219,27 @@
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
             margin-top: 20px;
+        }
+        
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #timetable-tab, #timetable-tab * {
+                visibility: visible;
+            }
+            #timetable-tab {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .tabs, .filters, .data-actions {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -317,7 +342,15 @@
         </div>
 
         <div id="timetable-tab" class="tab-content">
-            <div class="filters">
+            <div class="data-actions no-print">
+                <button class="export-btn" onclick="exportData()">Exporter les données</button>
+                <button class="import-btn" onclick="document.getElementById('fileInput').click()">Importer des données</button>
+                <input type="file" id="fileInput" accept=".json" onchange="importData(this)">
+                <button class="delete-btn" onclick="clearAllData()">Supprimer toutes les données</button>
+                <button class="print-btn" onclick="window.print()">Imprimer</button>
+            </div>
+            
+            <div class="filters no-print">
                 <div class="filter-group">
                     <label for="selectTeacher">Enseignant:</label>
                     <select id="selectTeacher" onchange="generateTimetable()">
