@@ -654,20 +654,37 @@
         // Initialisation de la base de données
         function initDB() {
             return new Promise((resolve, reject) => {
+                console.log("Tentative d'ouverture de la base de données...");
                 const request = indexedDB.open('GestionNotesDB', 3);
                 
                 request.onerror = function(event) {
                     console.error("Erreur d'ouverture de la base de données", event);
-                    reject("Erreur d'ouverture de la base de données");
+                    reject(new Error(`Erreur d'ouverture de la base de données: ${event.target.error}`));
                 };
                 
                 request.onsuccess = function(event) {
                     db = event.target.result;
                     console.log("Base de données ouverte avec succès");
-                    resolve();
+                    
+                    // Vérification de la connexion
+                    if (!db) {
+                        reject(new Error("La connexion à la base de données a échoué"));
+                        return;
+                    }
+                    
+                    // Vérifier que tous les objectStores existent
+                    const stores = ['enseignants', 'matieres', 'classes', 'attributions', 'eleves', 'notes'];
+                    const missingStores = stores.filter(store => !db.objectStoreNames.contains(store));
+                    
+                    if (missingStores.length > 0) {
+                        reject(new Error(`Stores manquants: ${missingStores.join(', ')}`));
+                    } else {
+                        resolve();
+                    }
                 };
                 
                 request.onupgradeneeded = function(event) {
+                    console.log("Mise à jour de la structure de la base de données");
                     const db = event.target.result;
                     const oldVersion = event.oldVersion;
                     
@@ -676,16 +693,14 @@
                         const enseignantStore = db.createObjectStore('enseignants', { keyPath: 'id', autoIncrement: true });
                         enseignantStore.createIndex('email', 'email', { unique: true });
                         
-                        const matiereStore = db.createObjectStore('matieres', { keyPath: 'id', autoIncrement: true });
-                        
-                        const classeStore = db.createObjectStore('classes', { keyPath: 'id', autoIncrement: true });
+                        db.createObjectStore('matieres', { keyPath: 'id', autoIncrement: true });
+                        db.createObjectStore('classes', { keyPath: 'id', autoIncrement: true });
                         
                         const attributionStore = db.createObjectStore('attributions', { keyPath: 'id', autoIncrement: true });
                         attributionStore.createIndex('enseignant_matiere_classe', ['id_enseignant', 'id_matiere', 'id_classe'], { unique: true });
                         
-                        const eleveStore = db.createObjectStore('eleves', { keyPath: 'id', autoIncrement: true });
-                        
-                        const noteStore = db.createObjectStore('notes', { keyPath: 'id', autoIncrement: true });
+                        db.createObjectStore('eleves', { keyPath: 'id', autoIncrement: true });
+                        db.createObjectStore('notes', { keyPath: 'id', autoIncrement: true });
                     }
                     
                     if (oldVersion < 2) {
@@ -711,12 +726,15 @@
                         // Mise à jour pour la version 3 - Ajout des données initiales
                         addInitialData(event.target.transaction);
                     }
-                    
-                    console.log("Structure de la base de données créée/mise à jour");
+                };
+                
+                request.onblocked = function(event) {
+                    console.error("La base de données est bloquée par une autre connexion");
+                    reject(new Error("La base de données est bloquée. Fermez les autres onglets utilisant cette application."));
                 };
             });
         }
-        
+
         function addInitialData(transaction) {
             // Ajout des enseignants initiaux
             const enseignants = [
@@ -781,7 +799,7 @@
                 transaction.objectStore('notes').add(note);
             });
         }
-        
+
         // Fonctions de base pour la base de données
         function addItem(storeName, item) {
             return new Promise((resolve, reject) => {
@@ -795,7 +813,7 @@
                 };
                 
                 request.onerror = function(event) {
-                    reject("Erreur lors de l'ajout: " + event.target.error);
+                    reject(new Error("Erreur lors de l'ajout: " + event.target.error));
                 };
             });
         }
@@ -812,7 +830,7 @@
                 };
                 
                 request.onerror = function(event) {
-                    reject("Erreur lors de la mise à jour: " + event.target.error);
+                    reject(new Error("Erreur lors de la mise à jour: " + event.target.error));
                 };
             });
         }
@@ -829,7 +847,7 @@
                 };
                 
                 request.onerror = function(event) {
-                    reject("Erreur lors de la suppression: " + event.target.error);
+                    reject(new Error("Erreur lors de la suppression: " + event.target.error));
                 };
             });
         }
@@ -846,7 +864,7 @@
                 };
                 
                 request.onerror = function(event) {
-                    reject("Erreur lors de la récupération: " + event.target.error);
+                    reject(new Error("Erreur lors de la récupération: " + event.target.error));
                 };
             });
         }
@@ -863,11 +881,11 @@
                 };
                 
                 request.onerror = function(event) {
-                    reject("Erreur lors de la récupération: " + event.target.error);
+                    reject(new Error("Erreur lors de la récupération: " + event.target.error));
                 };
             });
         }
-        
+
         // Fonctions d'interface utilisateur
         function openTab(evt, tabName) {
             let i, tabcontent, tablinks;
@@ -885,7 +903,7 @@
             document.getElementById(tabName).style.display = "block";
             evt.currentTarget.className += " active";
         }
-        
+
         // Fonctions pour remplir les sélecteurs
         async function fillSelectOptions() {
             try {
@@ -2658,14 +2676,59 @@
         // Initialisation de l'application
         window.onload = async function() {
             try {
+                console.log("Début de l'initialisation de l'application");
+                
+                // Vérifier le support de IndexedDB
+                if (!('indexedDB' in window)) {
+                    throw new Error("IndexedDB n'est pas supporté par votre navigateur");
+                }
+                
+                // Attendre que jsPDF soit chargé
+                let jsPDFCheckCount = 0;
+                while (typeof window.jspdf === 'undefined' && jsPDFCheckCount < 10) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    jsPDFCheckCount++;
+                }
+                
+                if (typeof window.jspdf === 'undefined') {
+                    throw new Error("La bibliothèque jsPDF n'a pas été chargée correctement");
+                }
+                
+                // Initialiser la base de données
                 await initDB();
+                
+                // Mettre à jour les tables
                 await updateAllTables();
                 await fillSelectOptions();
                 
-                document.getElementById("noteDate").valueAsDate = new Date();
+                // Initialiser la date de note
+                const noteDateInput = document.getElementById("noteDate");
+                if (noteDateInput) {
+                    noteDateInput.valueAsDate = new Date();
+                }
+                
+                console.log("Application initialisée avec succès");
             } catch (error) {
                 console.error("Erreur lors de l'initialisation:", error);
-                alert("Erreur lors de l'initialisation de l'application");
+                
+                // Message d'erreur convivial
+                let errorMessage = "Une erreur est survenue lors du chargement de l'application.\n";
+                errorMessage += "Veuillez rafraîchir la page ou contacter le support.\n\n";
+                errorMessage += `Détails: ${error.message}`;
+                
+                alert(errorMessage);
+                
+                // Tentative de récupération
+                try {
+                    if (error.message.includes("bloquée") || error.message.includes("connexion")) {
+                        if (confirm("La base de données semble bloquée. Voulez-vous essayer de la réinitialiser ?")) {
+                            await clearDatabase();
+                            window.location.reload();
+                        }
+                    }
+                } catch (recoveryError) {
+                    console.error("Échec de la récupération:", recoveryError);
+                }
             }
         };
     </script>
