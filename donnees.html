@@ -30,7 +30,7 @@
         
         .container {
             width: 95%;
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -81,6 +81,8 @@
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s;
+            display: inline-block;
+            margin: 5px;
         }
         
         .btn:hover {
@@ -93,6 +95,22 @@
         
         .btn-danger:hover {
             background-color: #c0392b;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+        }
+        
+        .btn-warning:hover {
+            background-color: #e67e22;
         }
         
         .filters {
@@ -170,6 +188,7 @@
             display: flex;
             border-bottom: 1px solid #ddd;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
         
         .tab {
@@ -260,6 +279,74 @@
             font-size: 14px;
         }
         
+        .file-manager {
+            margin-top: 20px;
+        }
+        
+        .saved-files {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .file-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            width: calc(33.333% - 15px);
+            min-width: 250px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .file-card h4 {
+            margin-bottom: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .file-info {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .file-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--secondary);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .comparison-chart {
+            height: 300px;
+            margin: 20px 0;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        @media (max-width: 1200px) {
+            .file-card {
+                width: calc(50% - 15px);
+            }
+        }
+        
         @media (max-width: 768px) {
             .filters {
                 flex-direction: column;
@@ -272,6 +359,19 @@
             .stats-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .file-card {
+                width: 100%;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                width: 100%;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -279,7 +379,7 @@
     <div class="container">
         <header>
             <h1>Analyse des Évaluations des Élèves</h1>
-            <p>Outil d'analyse pour chef d'établissement</p>
+            <p>Outil d'analyse pour chef d'établissement - Multi-fichiers</p>
         </header>
         
         <div class="alert alert-danger" id="errorAlert"></div>
@@ -288,12 +388,22 @@
         <div class="card">
             <h2>Import des données</h2>
             <div class="upload-section" id="uploadArea">
-                <p>Glissez-déposez votre fichier JSON ici ou</p>
-                <input type="file" id="fileInput" accept=".json" style="display: none;">
+                <p>Glissez-déposez vos fichiers JSON ici ou</p>
+                <input type="file" id="fileInput" accept=".json" multiple style="display: none;">
                 <button class="btn" id="browseButton">Parcourir</button>
                 <p style="margin-top: 15px; font-size: 14px; color: #666;">
-                    Format attendu: Fichier JSON contenant les évaluations des élèves par matière et par classe
+                    Format attendu: Fichiers JSON contenant les évaluations des élèves par matière et par classe
                 </p>
+                <div class="progress-bar">
+                    <div class="progress" id="uploadProgress"></div>
+                </div>
+            </div>
+            
+            <div class="file-manager">
+                <h3>Fichiers sauvegardés</h3>
+                <div class="saved-files" id="savedFiles">
+                    <!-- Les fichiers sauvegardés seront affichés ici -->
+                </div>
             </div>
         </div>
         
@@ -325,7 +435,16 @@
                         <option value="">Toutes les matières</option>
                     </select>
                     
+                    <select id="fichierFilter">
+                        <option value="">Tous les fichiers</option>
+                    </select>
+                    
                     <input type="text" id="searchInput" placeholder="Rechercher un élève...">
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <button class="btn btn-success" id="exportData">Exporter les résultats</button>
+                    <button class="btn btn-warning" id="clearData">Effacer toutes les données</button>
                 </div>
             </div>
             
@@ -341,6 +460,8 @@
                     <div class="tab active" data-tab="students">Élèves en difficulté</div>
                     <div class="tab" data-tab="classes">Analyse par classe</div>
                     <div class="tab" data-tab="subjects">Analyse par matière</div>
+                    <div class="tab" data-tab="files">Analyse par fichier</div>
+                    <div class="tab" data-tab="comparison">Comparaisons</div>
                 </div>
                 
                 <div class="tab-content active" id="studentsTab">
@@ -398,6 +519,35 @@
                         </tbody>
                     </table>
                 </div>
+                
+                <div class="tab-content" id="filesTab">
+                    <h3>Analyse par fichier</h3>
+                    <table id="filesTable">
+                        <thead>
+                            <tr>
+                                <th>Fichier</th>
+                                <th>Date d'import</th>
+                                <th>Nombre d'évaluations</th>
+                                <th>Moyenne générale</th>
+                                <th>Élèves en difficulté</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Les données seront générées ici -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="tab-content" id="comparisonTab">
+                    <h3>Comparaison des données</h3>
+                    <div class="comparison-chart" id="comparisonChart">
+                        <!-- Un graphique de comparaison sera généré ici -->
+                    </div>
+                    <div id="comparisonTable">
+                        <!-- Tableau de comparaison -->
+                    </div>
+                </div>
             </div>
             
             <div class="card student-details" id="studentDetails">
@@ -409,7 +559,7 @@
         </div>
         
         <footer>
-            <p>Outil d'analyse des évaluations - © 2023 Académie</p>
+            <p>Outil d'analyse des évaluations - © 2023 Académie - Version Multi-fichiers</p>
         </footer>
     </div>
 
@@ -426,18 +576,27 @@
             const niveauFilter = document.getElementById('niveauFilter');
             const classeFilter = document.getElementById('classeFilter');
             const matiereFilter = document.getElementById('matiereFilter');
+            const fichierFilter = document.getElementById('fichierFilter');
             const searchInput = document.getElementById('searchInput');
             const tabs = document.querySelectorAll('.tab');
             const tabContents = document.querySelectorAll('.tab-content');
             const studentsTable = document.getElementById('studentsTable');
             const classesTable = document.getElementById('classesTable');
             const subjectsTable = document.getElementById('subjectsTable');
+            const filesTable = document.getElementById('filesTable');
             const statsContainer = document.getElementById('statsContainer');
             const studentDetails = document.getElementById('studentDetails');
             const studentDetailsContent = document.getElementById('studentDetailsContent');
+            const savedFilesContainer = document.getElementById('savedFiles');
+            const exportButton = document.getElementById('exportData');
+            const clearButton = document.getElementById('clearData');
+            const uploadProgress = document.getElementById('uploadProgress');
             
-            let evaluationData = null;
-            let filteredData = null;
+            let evaluationData = { evaluations: [], files: [] };
+            let filteredData = { evaluations: [], files: [] };
+            
+            // Charger les données sauvegardées au démarrage
+            loadSavedData();
             
             // Gestionnaires d'événements pour l'upload
             browseButton.addEventListener('click', () => fileInput.click());
@@ -470,7 +629,12 @@
             niveauFilter.addEventListener('change', updateFilters);
             classeFilter.addEventListener('change', updateFilters);
             matiereFilter.addEventListener('change', updateFilters);
+            fichierFilter.addEventListener('change', updateFilters);
             searchInput.addEventListener('input', updateFilters);
+            
+            // Boutons d'action
+            exportButton.addEventListener('click', exportResults);
+            clearButton.addEventListener('click', clearAllData);
             
             // Onglets
             tabs.forEach(tab => {
@@ -489,59 +653,181 @@
             
             // Fonction pour gérer l'upload de fichier
             function handleFileUpload() {
-                const file = fileInput.files[0];
-                if (!file) return;
+                const files = fileInput.files;
+                if (!files || files.length === 0) return;
                 
-                if (file.type !== 'application/json') {
-                    showError('Veuillez sélectionner un fichier JSON valide.');
-                    return;
-                }
+                let validFiles = 0;
+                let processedFiles = 0;
+                
+                // Réinitialiser la barre de progression
+                uploadProgress.style.width = '0%';
+                
+                Array.from(files).forEach((file, index) => {
+                    if (file.type !== 'application/json') {
+                        showError(`Le fichier "${file.name}" n'est pas un fichier JSON valide.`);
+                        processedFiles++;
+                        updateProgress(processedFiles, files.length);
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const jsonData = JSON.parse(e.target.result);
+                            processData(jsonData, file.name, file.lastModified);
+                            validFiles++;
+                        } catch (error) {
+                            showError(`Erreur lors de l'analyse du fichier "${file.name}": ${error.message}`);
+                        }
+                        
+                        processedFiles++;
+                        updateProgress(processedFiles, files.length);
+                        
+                        // Si tous les fichiers ont été traités
+                        if (processedFiles === files.length) {
+                            if (validFiles > 0) {
+                                analyzeData();
+                                saveData();
+                                loadingIndicator.style.display = 'none';
+                                resultsSection.style.display = 'block';
+                                showSuccess(`${validFiles} fichier(s) importé(s) avec succès!`);
+                            } else {
+                                loadingIndicator.style.display = 'none';
+                            }
+                        }
+                    };
+                    
+                    reader.onerror = function() {
+                        showError(`Erreur lors de la lecture du fichier "${file.name}".`);
+                        processedFiles++;
+                        updateProgress(processedFiles, files.length);
+                    };
+                    
+                    reader.readAsText(file);
+                });
                 
                 loadingIndicator.style.display = 'block';
                 resultsSection.style.display = 'none';
                 errorAlert.style.display = 'none';
-                
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        const jsonData = JSON.parse(e.target.result);
-                        processData(jsonData);
-                    } catch (error) {
-                        showError('Erreur lors de l\'analyse du fichier JSON: ' + error.message);
-                        loadingIndicator.style.display = 'none';
-                    }
-                };
-                
-                reader.onerror = function() {
-                    showError('Erreur lors de la lecture du fichier.');
-                    loadingIndicator.style.display = 'none';
-                };
-                
-                reader.readAsText(file);
+            }
+            
+            // Mettre à jour la barre de progression
+            function updateProgress(processed, total) {
+                const percentage = (processed / total) * 100;
+                uploadProgress.style.width = `${percentage}%`;
             }
             
             // Fonction pour traiter les données JSON
-            function processData(data) {
+            function processData(data, fileName, fileDate) {
                 // Validation basique des données
                 if (!data || !data.evaluations || !Array.isArray(data.evaluations)) {
-                    showError('Le format du fichier JSON est invalide. Il doit contenir un tableau "evaluations".');
-                    loadingIndicator.style.display = 'none';
+                    showError(`Le format du fichier "${fileName}" est invalide. Il doit contenir un tableau "evaluations".`);
                     return;
                 }
                 
-                evaluationData = data;
-                filteredData = JSON.parse(JSON.stringify(data)); // Deep copy
+                // Ajouter les données au dataset global
+                const fileId = Date.now() + Math.random().toString(36).substr(2, 9);
                 
-                // Mise à jour des filtres
-                updateFilterOptions();
+                // Ajouter un identifiant de fichier à chaque évaluation
+                const evaluationsWithFileId = data.evaluations.map(eval => {
+                    return { ...eval, fileId: fileId };
+                });
                 
-                // Analyse des données
+                evaluationData.evaluations = [...evaluationData.evaluations, ...evaluationsWithFileId];
+                
+                // Stocker les métadonnées du fichier
+                evaluationData.files.push({
+                    id: fileId,
+                    name: fileName,
+                    date: fileDate,
+                    importDate: new Date().toISOString(),
+                    evaluationCount: data.evaluations.length
+                });
+                
+                filteredData = JSON.parse(JSON.stringify(evaluationData)); // Deep copy
+            }
+            
+            // Fonction pour sauvegarder les données dans le localStorage
+            function saveData() {
+                try {
+                    localStorage.setItem('evaluationData', JSON.stringify(evaluationData));
+                    updateSavedFilesList();
+                    updateFilterOptions();
+                } catch (e) {
+                    showError('Erreur lors de la sauvegarde des données: ' + e.message);
+                }
+            }
+            
+            // Fonction pour charger les données depuis le localStorage
+            function loadSavedData() {
+                try {
+                    const savedData = localStorage.getItem('evaluationData');
+                    if (savedData) {
+                        evaluationData = JSON.parse(savedData);
+                        filteredData = JSON.parse(JSON.stringify(evaluationData));
+                        updateSavedFilesList();
+                        updateFilterOptions();
+                        
+                        if (evaluationData.evaluations.length > 0) {
+                            analyzeData();
+                            resultsSection.style.display = 'block';
+                        }
+                    }
+                } catch (e) {
+                    showError('Erreur lors du chargement des données sauvegardées: ' + e.message);
+                }
+            }
+            
+            // Mettre à jour la liste des fichiers sauvegardés
+            function updateSavedFilesList() {
+                savedFilesContainer.innerHTML = '';
+                
+                if (evaluationData.files.length === 0) {
+                    savedFilesContainer.innerHTML = '<p>Aucun fichier sauvegardé.</p>';
+                    return;
+                }
+                
+                evaluationData.files.forEach(file => {
+                    const fileCard = document.createElement('div');
+                    fileCard.className = 'file-card';
+                    fileCard.innerHTML = `
+                        <h4 title="${file.name}">${file.name}</h4>
+                        <div class="file-info">
+                            <p>Importé le: ${new Date(file.importDate).toLocaleDateString()}</p>
+                            <p>Évaluations: ${file.evaluationCount}</p>
+                        </div>
+                        <div class="file-actions">
+                            <button class="btn btn-danger btn-sm" data-file-id="${file.id}">Supprimer</button>
+                        </div>
+                    `;
+                    savedFilesContainer.appendChild(fileCard);
+                });
+                
+                // Ajouter les écouteurs d'événements pour les boutons de suppression
+                document.querySelectorAll('.file-card .btn-danger').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const fileId = this.getAttribute('data-file-id');
+                        removeFile(fileId);
+                    });
+                });
+            }
+            
+            // Supprimer un fichier des données
+            function removeFile(fileId) {
+                // Supprimer les évaluations associées à ce fichier
+                evaluationData.evaluations = evaluationData.evaluations.filter(eval => eval.fileId !== fileId);
+                
+                // Supprimer les métadonnées du fichier
+                evaluationData.files = evaluationData.files.filter(file => file.id !== fileId);
+                
+                // Mettre à jour les données filtrées
+                filteredData = JSON.parse(JSON.stringify(evaluationData));
+                
+                // Sauvegarder et mettre à jour l'interface
+                saveData();
                 analyzeData();
                 
-                // Affichage des résultats
-                loadingIndicator.style.display = 'none';
-                resultsSection.style.display = 'block';
-                showSuccess('Données importées avec succès!');
+                showSuccess('Fichier supprimé avec succès!');
             }
             
             // Fonction pour mettre à jour les options des filtres
@@ -549,6 +835,7 @@
                 // Réinitialiser les filtres
                 classeFilter.innerHTML = '<option value="">Toutes les classes</option>';
                 matiereFilter.innerHTML = '<option value="">Toutes les matières</option>';
+                fichierFilter.innerHTML = '<option value="">Tous les fichiers</option>';
                 
                 const classes = new Set();
                 const matieres = new Set();
@@ -573,20 +860,26 @@
                     option.textContent = matiere;
                     matiereFilter.appendChild(option);
                 });
+                
+                // Ajouter les options de fichier
+                evaluationData.files.forEach(file => {
+                    const option = document.createElement('option');
+                    option.value = file.id;
+                    option.textContent = file.name;
+                    fichierFilter.appendChild(option);
+                });
             }
             
             // Fonction pour mettre à jour les filtres
             function updateFilters() {
-                if (!evaluationData) return;
+                if (!evaluationData || evaluationData.evaluations.length === 0) return;
                 
                 const niveau = niveauFilter.value;
                 const classe = classeFilter.value;
                 const matiere = matiereFilter.value;
+                const fichier = fichierFilter.value;
                 const search = searchInput.value.toLowerCase();
                 
-                filteredData = JSON.parse(JSON.stringify(evaluationData)); // Reset filtered data
-                
-                // Appliquer les filtres
                 filteredData.evaluations = evaluationData.evaluations.filter(eval => {
                     let match = true;
                     
@@ -602,11 +895,21 @@
                         match = false;
                     }
                     
+                    if (fichier && eval.fileId !== fichier) {
+                        match = false;
+                    }
+                    
                     if (search && eval.eleve && !eval.eleve.toLowerCase().includes(search)) {
                         match = false;
                     }
                     
                     return match;
+                });
+                
+                // Filtrer également la liste des fichiers
+                filteredData.files = evaluationData.files.filter(file => {
+                    // Vérifier si ce fichier a des évaluations dans les données filtrées
+                    return filteredData.evaluations.some(eval => eval.fileId === file.id);
                 });
                 
                 // Réanalyser les données filtrées
@@ -615,12 +918,17 @@
             
             // Fonction pour analyser les données
             function analyzeData() {
-                if (!filteredData) return;
+                if (!filteredData || filteredData.evaluations.length === 0) {
+                    resultsSection.style.display = 'none';
+                    return;
+                }
                 
                 updateStats();
                 updateStudentsTable();
                 updateClassesTable();
                 updateSubjectsTable();
+                updateFilesTable();
+                updateComparisonTab();
             }
             
             // Fonction pour mettre à jour les statistiques
@@ -632,6 +940,7 @@
                 const totalEleves = new Set(evaluations.map(e => e.eleve)).size;
                 const totalClasses = new Set(evaluations.map(e => e.classe)).size;
                 const totalMatieres = new Set(evaluations.map(e => e.matiere)).size;
+                const totalFichiers = new Set(evaluations.map(e => e.fileId)).size;
                 
                 // Calculer la moyenne générale
                 const notes = evaluations.map(e => e.note).filter(n => !isNaN(n));
@@ -666,6 +975,21 @@
                         <h3>En difficulté</h3>
                         <div class="stat-value">${elevesEnDifficulte.size}</div>
                         <p>Élèves en difficulté</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Classes</h3>
+                        <div class="stat-value">${totalClasses}</div>
+                        <p>Classes concernées</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Matières</h3>
+                        <div class="stat-value">${totalMatieres}</div>
+                        <p>Matières évaluées</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Fichiers</h3>
+                        <div class="stat-value">${totalFichiers}</div>
+                        <p>Fichiers analysés</p>
                     </div>
                 `;
             }
@@ -902,6 +1226,89 @@
                 });
             }
             
+            // Fonction pour mettre à jour le tableau des fichiers
+            function updateFilesTable() {
+                const tbody = filesTable.querySelector('tbody');
+                tbody.innerHTML = '';
+                
+                filteredData.files.forEach(file => {
+                    // Calculer les statistiques pour ce fichier
+                    const fileEvaluations = filteredData.evaluations.filter(e => e.fileId === file.id);
+                    const notes = fileEvaluations.map(e => e.note).filter(n => !isNaN(n));
+                    const moyenne = notes.length ? (notes.reduce((a, b) => a + b, 0) / notes.length).toFixed(2) : 'N/A';
+                    
+                    // Compter les élèves en difficulté dans ce fichier
+                    const elevesEnDifficulte = new Set();
+                    fileEvaluations.forEach(e => {
+                        if (e.note < 10) {
+                            elevesEnDifficulte.add(e.eleve);
+                        }
+                    });
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${file.name}</td>
+                        <td>${new Date(file.importDate).toLocaleDateString()}</td>
+                        <td>${fileEvaluations.length}</td>
+                        <td>${moyenne}</td>
+                        <td>${elevesEnDifficulte.size}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" data-file-id="${file.id}">Supprimer</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                
+                // Ajouter les écouteurs d'événements pour les boutons de suppression
+                document.querySelectorAll('#filesTable .btn-danger').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const fileId = this.getAttribute('data-file-id');
+                        removeFile(fileId);
+                    });
+                });
+            }
+            
+            // Mettre à jour l'onglet de comparaison
+            function updateComparisonTab() {
+                // Ici on pourrait implémenter des graphiques de comparaison
+                // Pour l'instant, on va juste afficher un message
+                const comparisonChart = document.getElementById('comparisonChart');
+                comparisonChart.innerHTML = `
+                    <p style="text-align: center; padding: 100px 0;">
+                        Graphiques de comparaison entre classes, matières et fichiers seraient affichés ici.
+                    </p>
+                `;
+                
+                const comparisonTable = document.getElementById('comparisonTable');
+                comparisonTable.innerHTML = `
+                    <h3>Comparaison des moyennes par matière</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Matière</th>
+                                ${Array.from(new Set(filteredData.evaluations.map(e => e.classe))).map(classe => 
+                                    `<th>${classe}</th>`
+                                ).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${Array.from(new Set(filteredData.evaluations.map(e => e.matiere))).map(matiere => {
+                                const row = [`<td>${matiere}</td>`];
+                                Array.from(new Set(filteredData.evaluations.map(e => e.classe))).forEach(classe => {
+                                    const notes = filteredData.evaluations
+                                        .filter(e => e.matiere === matiere && e.classe === classe)
+                                        .map(e => e.note)
+                                        .filter(n => !isNaN(n));
+                                    const moyenne = notes.length ? (notes.reduce((a, b) => a + b, 0) / notes.length).toFixed(2) : '-';
+                                    row.push(`<td>${moyenne}</td>`);
+                                });
+                                return `<tr>${row.join('')}</tr>`;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                `;
+            }
+            
             // Fonction pour afficher les détails d'un élève
             function showStudentDetails(eleve, classe) {
                 studentDetails.style.display = 'block';
@@ -1004,6 +1411,47 @@
                 
                 // Faire défiler jusqu'aux détails
                 studentDetails.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // Exporter les résultats
+            function exportResults() {
+                if (!filteredData.evaluations.length) {
+                    showError('Aucune donnée à exporter.');
+                    return;
+                }
+                
+                try {
+                    // Créer un blob avec les données filtrées
+                    const dataStr = JSON.stringify(filteredData, null, 2);
+                    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                    
+                    // Créer un lien de téléchargement
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(dataBlob);
+                    link.download = `analyse_evaluations_${new Date().toISOString().slice(0, 10)}.json`;
+                    link.click();
+                    
+                    showSuccess('Données exportées avec succès!');
+                } catch (e) {
+                    showError('Erreur lors de l\'exportation: ' + e.message);
+                }
+            }
+            
+            // Effacer toutes les données
+            function clearAllData() {
+                if (confirm('Êtes-vous sûr de vouloir effacer toutes les données? Cette action est irréversible.')) {
+                    evaluationData = { evaluations: [], files: [] };
+                    filteredData = { evaluations: [], files: [] };
+                    
+                    try {
+                        localStorage.removeItem('evaluationData');
+                        updateSavedFilesList();
+                        resultsSection.style.display = 'none';
+                        showSuccess('Toutes les données ont été effacées.');
+                    } catch (e) {
+                        showError('Erreur lors de la suppression des données: ' + e.message);
+                    }
+                }
             }
             
             // Fonctions utilitaires pour afficher les messages
