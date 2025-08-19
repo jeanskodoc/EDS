@@ -3,72 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bouton Actualiser</title>
-    <style>
-        .refresh-button {
-            position: fixed;
-            bottom: 90px;  /* Positionné au-dessus du bouton WhatsApp */
-            right: 20px;
-            background-color: #4285f4;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            text-align: center;
-            font-size: 24px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-        
-        .refresh-button:hover {
-            background-color: #3367d6;
-            transform: rotate(360deg);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        
-        .refresh-icon {
-            width: 24px;
-            height: 24px;
-            fill: white;
-        }
-    </style>
-</head>
-<body>
-    <h1>Contenu de la page</h1>
-    <p>Cliquez sur le bouton en bas à droite pour actualiser la page.</p>
-
-    <!-- Bouton Actualiser -->
-    <button onclick="window.location.reload()" class="refresh-button" aria-label="Actualiser la page">
-        <svg class="refresh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-        </svg>
-    </button>
-</body>
-</html>
-<html lang="fr">
-    <style>
-  .btn-retour {
-    padding: 8px 16px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .btn-retour:hover {
-    background-color: #e0e0e0;
-  }
-</style>
-
-<button class="btn-retour" onclick="history.back()">← Retour</button>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Notes - Lycée Niamtougou</title>
     <style>
         * {
@@ -487,6 +421,103 @@
             background: #3a9ae8;
         }
 
+        /* Nouveaux styles pour les boutons de gestion de base de données */
+        .db-controls {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .db-btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .db-save {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .db-export {
+            background-color: #17a2b8;
+            color: white;
+        }
+        
+        .db-import {
+            background-color: #ffc107;
+            color: black;
+        }
+        
+        .db-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .db-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .file-input {
+            display: none;
+        }
+
+        /* Bouton Retour */
+        .btn-retour {
+            padding: 8px 16px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .btn-retour:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Bouton Actualiser */
+        .refresh-button {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            font-size: 24px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .refresh-button:hover {
+            background-color: #3367d6;
+            transform: rotate(360deg);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .refresh-icon {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .container {
@@ -513,6 +544,10 @@
             .student-info {
                 grid-template-columns: 1fr;
             }
+
+            .db-controls {
+                flex-direction: column;
+            }
         }
 
         @media print {
@@ -533,11 +568,12 @@
             }
         }
     </style>
-    
-    <!-- Lien vers Font Awesome pour les icônes -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
+    <!-- Bouton Retour -->
+    <button class="btn-retour" onclick="history.back()">← Retour</button>
+    
     <div class="container">
         <div class="header">
             <div class="school-info">
@@ -549,6 +585,27 @@
             </div>
             <h1>📊 Gestion des Notes</h1>
             <p>Saisie des évaluations, compositions et génération des bulletins</p>
+        </div>
+
+        <!-- Contrôles de base de données -->
+        <div class="section">
+            <h2 class="section-title">💾 Gestion des Données</h2>
+            <div class="db-controls">
+                <button class="db-btn db-save" onclick="saveToDatabase()">
+                    <i class="fas fa-save"></i> Sauvegarder
+                </button>
+                <button class="db-btn db-export" onclick="exportToJSON()">
+                    <i class="fas fa-download"></i> Exporter JSON
+                </button>
+                <button class="db-btn db-import" onclick="document.getElementById('importFile').click()">
+                    <i class="fas fa-upload"></i> Importer JSON
+                </button>
+                <input type="file" id="importFile" class="file-input" accept=".json" onchange="importFromJSON(this.files)">
+                <button class="db-btn db-delete" onclick="deleteDatabase()">
+                    <i class="fas fa-trash"></i> Supprimer données
+                </button>
+            </div>
+            <div id="db-status" style="margin-top: 10px; padding: 10px; border-radius: 5px; display: none;"></div>
         </div>
 
         <div class="dashboard-content">
@@ -929,6 +986,13 @@
         </div>
     </div>
 
+    <!-- Bouton Actualiser -->
+    <button onclick="window.location.reload()" class="refresh-button" aria-label="Actualiser la page">
+        <svg class="refresh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+        </svg>
+    </button>
+
     <script>
         // Données stockées
         const studentsData = [
@@ -988,20 +1052,196 @@
             'terminale': 'cycle3'
         };
 
-        // Fonction pour obtenir les matières d'une classe
-        function getSubjectsForClass(classLevel) {
-            const cycle = classToCycle[classLevel];
-            return cycle ? Object.keys(cyclesData[cycle]) : [];
-        }
-
-        // Fonction pour obtenir le coefficient d'une matière pour une classe
-        function getCoefficientForSubject(classLevel, subject) {
-            const cycle = classToCycle[classLevel];
-            return cycle ? (cyclesData[cycle][subject] || 1) : 1;
-        }
-
         let evaluationsData = [];
         let compositionsData = [];
+
+        // Fonctions pour la gestion de la base de données
+        function saveToDatabase() {
+            try {
+                const dataToSave = {
+                    students: studentsData,
+                    cycles: cyclesData,
+                    evaluations: evaluationsData,
+                    compositions: compositionsData,
+                    lastUpdated: new Date().toISOString()
+                };
+                
+                localStorage.setItem('schoolGradesData', JSON.stringify(dataToSave));
+                showStatus('Données sauvegardées avec succès!', 'success');
+            } catch (error) {
+                showStatus('Erreur lors de la sauvegarde: ' + error.message, 'error');
+            }
+        }
+
+        function loadFromDatabase() {
+            try {
+                const savedData = localStorage.getItem('schoolGradesData');
+                if (savedData) {
+                    const parsedData = JSON.parse(savedData);
+                    
+                    // Mettre à jour les données seulement si elles existent
+                    if (parsedData.students) studentsData = parsedData.students;
+                    if (parsedData.cycles) cyclesData = parsedData.cycles;
+                    if (parsedData.evaluations) evaluationsData = parsedData.evaluations;
+                    if (parsedData.compositions) compositionsData = parsedData.compositions;
+                    
+                    showStatus('Données chargées avec succès!', 'success');
+                    return true;
+                } else {
+                    showStatus('Aucune donnée sauvegardée trouvée.', 'info');
+                    return false;
+                }
+            } catch (error) {
+                showStatus('Erreur lors du chargement: ' + error.message, 'error');
+                return false;
+            }
+        }
+
+        function exportToJSON() {
+            try {
+                const dataToExport = {
+                    students: studentsData,
+                    cycles: cyclesData,
+                    evaluations: evaluationsData,
+                    compositions: compositionsData,
+                    exportedAt: new Date().toISOString()
+                };
+                
+                const dataStr = JSON.stringify(dataToExport, null, 2);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                
+                const exportFileDefaultName = 'donnees_notes_' + new Date().toISOString().slice(0, 10) + '.json';
+                
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
+                
+                showStatus('Données exportées avec succès!', 'success');
+            } catch (error) {
+                showStatus('Erreur lors de l\'export: ' + error.message, 'error');
+            }
+        }
+
+        function importFromJSON(files) {
+            if (!files || files.length === 0) return;
+            
+            const file = files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    
+                    // Validation basique des données
+                    if (!importedData.students || !importedData.cycles) {
+                        throw new Error("Fichier JSON invalide: structure de données incorrecte");
+                    }
+                    
+                    // Demander confirmation avant de remplacer les données
+                    if (confirm('Voulez-vous vraiment importer ces données? Les données actuelles seront remplacées.')) {
+                        studentsData = importedData.students || studentsData;
+                        cyclesData = importedData.cycles || cyclesData;
+                        evaluationsData = importedData.evaluations || evaluationsData;
+                        compositionsData = importedData.compositions || compositionsData;
+                        
+                        // Mettre à jour l'interface
+                        loadSubjectsTable();
+                        
+                        showStatus('Données importées avec succès!', 'success');
+                    }
+                } catch (error) {
+                    showStatus('Erreur lors de l\'import: ' + error.message, 'error');
+                }
+            };
+            
+            reader.onerror = function() {
+                showStatus('Erreur de lecture du fichier', 'error');
+            };
+            
+            reader.readAsText(file);
+        }
+
+        function deleteDatabase() {
+            if (confirm('Êtes-vous sûr de vouloir supprimer toutes les données? Cette action est irréversible.')) {
+                localStorage.removeItem('schoolGradesData');
+                studentsData = [];
+                evaluationsData = [];
+                compositionsData = [];
+                
+                // Réinitialiser les données des cycles avec des valeurs par défaut
+                cyclesData = {
+                    'cycle1': {
+                        'Mathématiques': 4,
+                        'Français': 4,
+                        'Anglais': 3,
+                        'SVT': 2,
+                        'Histoire-Géo': 2,
+                        'Physique-Chimie': 2
+                    },
+                    'cycle2': {
+                        'Mathématiques': 4,
+                        'Français': 4,
+                        'Anglais': 3,
+                        'SVT': 2,
+                        'Histoire-Géo': 2,
+                        'Physique-Chimie': 3
+                    },
+                    'cycle3': {
+                        'Mathématiques': 4,
+                        'Français': 4,
+                        'Anglais': 3,
+                        'SVT': 2,
+                        'Physique-Chimie': 3,
+                        'Philosophie': 2
+                    }
+                };
+                
+                // Réinitialiser les étudiants avec des valeurs par défaut
+                studentsData = [
+                    { id: '6A01', name: 'Koffi Adjo', class: '6eme', subjects: ['Mathématiques', 'Français', 'Anglais', 'SVT', 'Histoire-Géo'] },
+                    { id: '6A02', name: 'Ama Mensah', class: '6eme', subjects: ['Mathématiques', 'Français', 'Anglais', 'SVT', 'Histoire-Géo'] },
+                    { id: '6A03', name: 'Yao Komlan', class: '6eme', subjects: ['Mathématiques', 'Français', 'Anglais', 'SVT', 'Histoire-Géo'] },
+                    { id: '5A01', name: 'Esi Johnson', class: '5eme', subjects: ['Mathématiques', 'Français', 'Anglais', 'SVT', 'Histoire-Géo'] },
+                    { id: '5A02', name: 'Kwame Akoto', class: '5eme', subjects: ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie', 'Histoire-Géo'] },
+                    { id: '4A01', name: 'Afia Nkrumah', class: '4eme', subjects: ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie', 'Histoire-Géo'] },
+                    { id: '4A02', name: 'Kofi Boateng', class: '4eme', subjects: ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie', 'Histoire-Géo'] },
+                    { id: '3A01', name: 'Yaw Oppong', class: '3eme', subjects: ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie', 'Histoire-Géo'] },
+                    { id: '3A02', name: 'Akosua Mensah', class: '3eme', subjects: ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie', 'Histoire-Géo'] },
+                    { id: '2A01', name: 'Kwabena Osei', class: '2nde', subjects: ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie', 'SVT'] },
+                    { id: '2A02', name: 'Adwoa Safo', class: '2nde', subjects: ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie', 'SVT'] },
+                    { id: '1A01', name: 'Ama Ampofo', class: '1ere', subjects: ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie', 'SVT'] },
+                    { id: '1A02', name: 'Kofi Agyeman', class: '1ere', subjects: ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie', 'SVT'] },
+                    { id: 'TA01', name: 'Esi Owusu', class: 'terminale', subjects: ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie', 'SVT'] },
+                    { id: 'TA02', name: 'Kwame Ansah', class: 'terminale', subjects: ['Mathématiques', 'Français', 'Anglais', 'Physique-Chimie', 'SVT'] }
+                ];
+                
+                loadSubjectsTable();
+                showStatus('Toutes les données ont été supprimées.', 'info');
+            }
+        }
+
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('db-status');
+            statusEl.textContent = message;
+            statusEl.style.display = 'block';
+            
+            // Appliquer le style selon le type
+            statusEl.style.backgroundColor = 
+                type === 'success' ? '#d4edda' : 
+                type === 'error' ? '#f8d7da' : 
+                type === 'info' ? '#d1ecf1' : '#fff3cd';
+            
+            statusEl.style.color = 
+                type === 'success' ? '#155724' : 
+                type === 'error' ? '#721c24' : 
+                type === 'info' ? '#0c5460' : '#856404';
+            
+            // Cacher le message après 5 secondes
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 5000);
+        }
 
         // Fonction pour changer d'onglet
         function openTab(evt, tabName) {
@@ -1017,6 +1257,18 @@
 
             document.getElementById(tabName).classList.add("active");
             evt.currentTarget.classList.add("active");
+        }
+
+        // Fonction pour obtenir les matières d'une classe
+        function getSubjectsForClass(classLevel) {
+            const cycle = classToCycle[classLevel];
+            return cycle ? Object.keys(cyclesData[cycle]) : [];
+        }
+
+        // Fonction pour obtenir le coefficient d'une matière pour une classe
+        function getCoefficientForSubject(classLevel, subject) {
+            const cycle = classToCycle[classLevel];
+            return cycle ? (cyclesData[cycle][subject] || 1) : 1;
         }
 
         // Mettre à jour les matières disponibles pour les évaluations
@@ -1884,6 +2136,9 @@
             
             // Charger la table des matières
             loadSubjectsTable();
+            
+            // Charger les données sauvegardées
+            loadFromDatabase();
         });
     </script>
 </body>
