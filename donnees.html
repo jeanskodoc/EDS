@@ -212,12 +212,19 @@
             margin: 20px 0;
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
         .export-btn {
             background-color: #2196F3;
         }
         .import-btn {
             background-color: #4CAF50;
+        }
+        .save-btn {
+            background-color: #673AB7;
+        }
+        .save-btn:hover {
+            background-color: #5E35B1;
         }
         .clear-btn {
             background-color: #f44336;
@@ -243,6 +250,7 @@
         <div class="db-actions">
             <button class="export-btn" onclick="exportDatabase()">Exporter les données</button>
             <button class="import-btn" onclick="document.getElementById('import-file').click()">Importer des données</button>
+            <button class="save-btn" onclick="saveAllData()">Sauvegarder tout</button>
             <button class="clear-btn" onclick="clearDatabase()">Supprimer toutes les données</button>
             <input type="file" id="import-file" style="display: none;" accept=".json" onchange="importDatabase(this)">
         </div>
@@ -655,6 +663,12 @@
         function initDB() {
             return new Promise((resolve, reject) => {
                 console.log("Tentative d'ouverture de la base de données...");
+                
+                // Fermer toute connexion existante
+                if (db) {
+                    db.close();
+                }
+                
                 const request = indexedDB.open('GestionNotesDB', 3);
                 
                 request.onerror = function(event) {
@@ -673,8 +687,8 @@
                     }
                     
                     // Vérifier que tous les objectStores existent
-                    const stores = ['enseignants', 'matieres', 'classes', 'attributions', 'eleves', 'notes'];
-                    const missingStores = stores.filter(store => !db.objectStoreNames.contains(store));
+                    const requiredStores = ['enseignants', 'matieres', 'classes', 'attributions', 'eleves', 'notes'];
+                    const missingStores = requiredStores.filter(store => !db.objectStoreNames.contains(store));
                     
                     if (missingStores.length > 0) {
                         reject(new Error(`Stores manquants: ${missingStores.join(', ')}`));
@@ -686,44 +700,37 @@
                 request.onupgradeneeded = function(event) {
                     console.log("Mise à jour de la structure de la base de données");
                     const db = event.target.result;
-                    const oldVersion = event.oldVersion;
+                    const oldVersion = event.oldVersion || 0;
                     
-                    if (oldVersion < 1) {
-                        // Création des tables pour la version 1
+                    // Création des tables si elles n'existent pas
+                    if (!db.objectStoreNames.contains('enseignants')) {
                         const enseignantStore = db.createObjectStore('enseignants', { keyPath: 'id', autoIncrement: true });
                         enseignantStore.createIndex('email', 'email', { unique: true });
-                        
+                    }
+                    
+                    if (!db.objectStoreNames.contains('matieres')) {
                         db.createObjectStore('matieres', { keyPath: 'id', autoIncrement: true });
+                    }
+                    
+                    if (!db.objectStoreNames.contains('classes')) {
                         db.createObjectStore('classes', { keyPath: 'id', autoIncrement: true });
-                        
+                    }
+                    
+                    if (!db.objectStoreNames.contains('attributions')) {
                         const attributionStore = db.createObjectStore('attributions', { keyPath: 'id', autoIncrement: true });
                         attributionStore.createIndex('enseignant_matiere_classe', ['id_enseignant', 'id_matiere', 'id_classe'], { unique: true });
-                        
+                    }
+                    
+                    if (!db.objectStoreNames.contains('eleves')) {
                         db.createObjectStore('eleves', { keyPath: 'id', autoIncrement: true });
+                    }
+                    
+                    if (!db.objectStoreNames.contains('notes')) {
                         db.createObjectStore('notes', { keyPath: 'id', autoIncrement: true });
                     }
                     
-                    if (oldVersion < 2) {
-                        // Mise à jour pour la version 2
-                        const transaction = event.target.transaction;
-                        const eleveStore = transaction.objectStore('eleves');
-                        
-                        eleveStore.getAll().onsuccess = function(e) {
-                            const eleves = e.target.result;
-                            eleves.forEach(eleve => {
-                                if (typeof eleve.age === 'undefined') {
-                                    eleve.age = 10;
-                                }
-                                if (typeof eleve.sexe === 'undefined') {
-                                    eleve.sexe = 'M';
-                                }
-                                eleveStore.put(eleve);
-                            });
-                        };
-                    }
-                    
-                    if (oldVersion < 3) {
-                        // Mise à jour pour la version 3 - Ajout des données initiales
+                    // Ajouter les données initiales si c'est une nouvelle base
+                    if (oldVersion < 1) {
                         addInitialData(event.target.transaction);
                     }
                 };
@@ -2575,6 +2582,60 @@
             document.getElementById("noteDate").valueAsDate = new Date();
         }
         
+        // Fonction pour sauvegarder toutes les données
+        async function saveAllData() {
+            try {
+                // Sauvegarder les données du formulaire enseignant si modifié
+                if (document.getElementById("enseignantId").value || 
+                    (document.getElementById("enseignantNom").value && 
+                     document.getElementById("enseignantPrenom").value && 
+                     document.getElementById("enseignantEmail").value)) {
+                    document.getElementById("formEnseignant").dispatchEvent(new Event('submit'));
+                }
+
+                // Sauvegarder les données du formulaire matière si modifié
+                if (document.getElementById("matiereId").value || document.getElementById("nomMatiere").value) {
+                    document.getElementById("formMatiere").dispatchEvent(new Event('submit'));
+                }
+
+                // Sauvegarder les données du formulaire classe si modifié
+                if (document.getElementById("classeId").value || 
+                    (document.getElementById("nomClasse").value && 
+                     document.getElementById("niveauClasse").value)) {
+                    document.getElementById("formClasse").dispatchEvent(new Event('submit'));
+                }
+
+                // Sauvegarder les données du formulaire attribution si modifié
+                if (document.getElementById("attributionId").value || 
+                    (document.getElementById("attributionEnseignant").value && 
+                     document.getElementById("attributionMatiere").value && 
+                     document.getElementById("attributionClasse").value)) {
+                    document.getElementById("formAttribution").dispatchEvent(new Event('submit'));
+                }
+
+                // Sauvegarder les données du formulaire élève si modifié
+                if (document.getElementById("eleveId").value || 
+                    (document.getElementById("eleveNom").value && 
+                     document.getElementById("elevePrenom").value && 
+                     document.getElementById("eleveClasse").value)) {
+                    document.getElementById("formEleve").dispatchEvent(new Event('submit'));
+                }
+
+                // Sauvegarder les données du formulaire note si modifié
+                if (document.getElementById("noteId").value || 
+                    (document.getElementById("noteEnseignant").value && 
+                     document.getElementById("noteEleve").value && 
+                     document.getElementById("noteValeur").value)) {
+                    document.getElementById("formNote").dispatchEvent(new Event('submit'));
+                }
+
+                alert("Toutes les données ont été sauvegardées avec succès !");
+            } catch (error) {
+                console.error("Erreur lors de la sauvegarde des données:", error);
+                alert("Une erreur est survenue lors de la sauvegarde des données");
+            }
+        }
+
         // Fonctions pour exporter/importer/supprimer la base de données
         async function exportDatabase() {
             try {
