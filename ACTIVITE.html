@@ -1,57 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bouton Actualiser</title>
-    <style>
-        .refresh-button {
-            position: fixed;
-            bottom: 90px;  /* Positionné au-dessus du bouton WhatsApp */
-            right: 20px;
-            background-color: #4285f4;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            text-align: center;
-            font-size: 24px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-        
-        .refresh-button:hover {
-            background-color: #3367d6;
-            transform: rotate(360deg);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        
-        .refresh-icon {
-            width: 24px;
-            height: 24px;
-            fill: white;
-        }
-    </style>
-</head>
-<body>
-    
-    <!-- Bouton Actualiser -->
-    <button onclick="window.location.reload()" class="refresh-button" aria-label="Actualiser la page">
-        <svg class="refresh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-        </svg>
-    </button>
-</body>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Activités Pédagogiques</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -252,6 +205,7 @@
 
         .form-group textarea {
             min-height: 100px;
+            resize: vertical;
         }
 
         .form-group input:focus,
@@ -291,6 +245,16 @@
 
         .btn-danger {
             background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffa726, #ff7043);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #26c6da, #00bcd4);
             color: white;
         }
 
@@ -382,6 +346,7 @@
         .whatsapp-popup h3 {
             margin-bottom: 15px;
             color: #333;
+            font-size: 16px;
         }
 
         .whatsapp-popup select {
@@ -390,6 +355,7 @@
             margin-bottom: 15px;
             border: 1px solid #ddd;
             border-radius: 5px;
+            font-size: 14px;
         }
 
         .whatsapp-popup-buttons {
@@ -402,6 +368,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 14px;
         }
 
         .whatsapp-popup .send-btn {
@@ -412,6 +379,86 @@
         .whatsapp-popup .cancel-btn {
             background-color: #f1f1f1;
             color: #333;
+        }
+
+        /* Boutons de gestion de la base de données */
+        .database-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            padding: 0 20px;
+        }
+
+        .refresh-button {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            font-size: 24px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .refresh-button:hover {
+            background-color: #3367d6;
+            transform: rotate(360deg);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .refresh-icon {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .btn-retour {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            z-index: 10;
+        }
+        .btn-retour:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* Responsive Design */
@@ -449,76 +496,21 @@
                 width: 250px;
                 right: 15px;
             }
-        }
-    </style>
-    
-    <!-- Lien vers Font Awesome pour l'icône WhatsApp -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-</head>
-    <style>
-  .btn-retour {
-    padding: 8px 16px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .btn-retour:hover {
-    background-color: #e0e0e0;
-  }
-</style>
 
-<button class="btn-retour" onclick="history.back()">← Retour</button>
-    <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bouton Actualiser</title>
-    <style>
-        .refresh-button {
-            position: fixed;
-            bottom: 90px;  /* Positionné au-dessus du bouton WhatsApp */
-            right: 20px;
-            background-color: #4285f4;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            text-align: center;
-            font-size: 24px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-        
-        .refresh-button:hover {
-            background-color: #3367d6;
-            transform: rotate(360deg);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        
-        .refresh-icon {
-            width: 24px;
-            height: 24px;
-            fill: white;
+            .database-controls {
+                flex-direction: column;
+            }
+            
+            .btn-retour {
+                top: 10px;
+                left: 10px;
+            }
         }
     </style>
 </head>
 <body>
+    <button class="btn-retour" onclick="history.back()">← Retour</button>
     
-    <!-- Bouton Actualiser -->
-    <button onclick="window.location.reload()" class="refresh-button" aria-label="Actualiser la page">
-        <svg class="refresh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-        </svg>
-    </button>
-</body>
-<body>
     <div class="container">
         <div class="header">
             <div class="school-info">
@@ -530,6 +522,14 @@
             </div>
             <h1>📚 Activités Pédagogiques</h1>
             <p>Gestion des conseils, journées pédagogiques et évaluations</p>
+        </div>
+
+        <!-- Contrôles de la base de données -->
+        <div class="database-controls">
+            <button class="btn btn-primary" onclick="saveToDatabase()">💾 Sauvegarder dans la base</button>
+            <button class="btn btn-secondary" onclick="importFromJSON()">📂 Importer JSON</button>
+            <button class="btn btn-info" onclick="exportToJSON()">📤 Exporter JSON</button>
+            <button class="btn btn-danger" onclick="clearDatabase()">🗑️ Supprimer les données</button>
         </div>
 
         <div class="dashboard-content">
@@ -696,6 +696,13 @@
         </div>
     </div>
 
+    <!-- Bouton Actualiser -->
+    <button onclick="window.location.reload()" class="refresh-button" aria-label="Actualiser la page">
+        <svg class="refresh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+        </svg>
+    </button>
+
     <!-- Bouton WhatsApp flottant -->
     <div class="whatsapp-btn" onclick="toggleWhatsAppPopup()">
         <i class="fab fa-whatsapp"></i>
@@ -717,6 +724,8 @@
         </div>
     </div>
 
+    <div id="notification" class="notification"></div>
+
     <script>
         // Données stockées
         let councilsData = [];
@@ -726,6 +735,146 @@
 
         // Compteur pour les champs d'évaluation
         let evaluationCounter = 1;
+
+        // Initialisation - Charger les données depuis le localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFromDatabase();
+            updateView();
+        });
+
+        // Afficher une notification
+        function showNotification(message, isSuccess = true) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.background = isSuccess ? '#4CAF50' : '#f44336';
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Charger les données depuis la base de données (localStorage)
+        function loadFromDatabase() {
+            const savedData = localStorage.getItem('pedagogicalData');
+            if (savedData) {
+                try {
+                    const data = JSON.parse(savedData);
+                    councilsData = data.councils || [];
+                    pedagogicalDaysData = data.pedagogicalDays || [];
+                    evaluationsData = data.evaluations || [];
+                    holidaysData = data.holidays || [];
+                    showNotification("Données chargées depuis la base de données");
+                } catch (e) {
+                    console.error("Erreur lors du chargement des données:", e);
+                    showNotification("Erreur lors du chargement des données", false);
+                }
+            }
+        }
+
+        // Sauvegarder les données dans la base de données (localStorage)
+        function saveToDatabase() {
+            const dataToSave = {
+                councils: councilsData,
+                pedagogicalDays: pedagogicalDaysData,
+                evaluations: evaluationsData,
+                holidays: holidaysData
+            };
+            
+            try {
+                localStorage.setItem('pedagogicalData', JSON.stringify(dataToSave));
+                showNotification('Données sauvegardées avec succès dans la base de données!');
+            } catch (e) {
+                console.error("Erreur lors de la sauvegarde:", e);
+                showNotification('Erreur lors de la sauvegarde des données.', false);
+            }
+        }
+
+        // Exporter les données en JSON
+        function exportToJSON() {
+            const dataToExport = {
+                councils: councilsData,
+                pedagogicalDays: pedagogicalDaysData,
+                evaluations: evaluationsData,
+                holidays: holidaysData,
+                exportedAt: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(dataToExport, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `donnees_pedagogiques_${new Date().toISOString().slice(0,10)}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            showNotification('Données exportées avec succès!');
+        }
+
+        // Importer des données depuis un fichier JSON
+        function importFromJSON() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = e => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        
+                        if (confirm("Voulez-vous remplacer les données existantes par celles du fichier?")) {
+                            councilsData = importedData.councils || [];
+                            pedagogicalDaysData = importedData.pedagogicalDays || [];
+                            evaluationsData = importedData.evaluations || [];
+                            holidaysData = importedData.holidays || [];
+                            
+                            // Sauvegarder automatiquement après import
+                            saveToDatabase();
+                            updateView();
+                            showNotification('Données importées avec succès!');
+                        } else if (confirm("Voulez-vous fusionner avec les données existantes?")) {
+                            // Fusionner les données
+                            if (importedData.councils) councilsData = [...councilsData, ...importedData.councils];
+                            if (importedData.pedagogicalDays) pedagogicalDaysData = [...pedagogicalDaysData, ...importedData.pedagogicalDays];
+                            if (importedData.evaluations) evaluationsData = [...evaluationsData, ...importedData.evaluations];
+                            if (importedData.holidays) holidaysData = [...holidaysData, ...importedData.holidays];
+                            
+                            // Sauvegarder automatiquement après import
+                            saveToDatabase();
+                            updateView();
+                            showNotification('Données fusionnées avec succès!');
+                        }
+                    } catch (error) {
+                        console.error("Erreur lors de l'import:", error);
+                        showNotification('Erreur: Le fichier sélectionné n\'est pas un fichier JSON valide.', false);
+                    }
+                };
+                
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+
+        // Supprimer toutes les données de la base
+        function clearDatabase() {
+            if (confirm("Êtes-vous sûr de vouloir supprimer toutes les données? Cette action est irréversible.")) {
+                localStorage.removeItem('pedagogicalData');
+                councilsData = [];
+                pedagogicalDaysData = [];
+                evaluationsData = [];
+                holidaysData = [];
+                updateView();
+                showNotification('Toutes les données ont été supprimées.');
+            }
+        }
 
         // Ajouter un champ d'évaluation
         function addEvaluationField() {
@@ -791,7 +940,7 @@
             };
             
             councilsData.push(newCouncil);
-            alert('Conseil enregistré avec succès!');
+            showNotification('Conseil enregistré avec succès!');
             this.reset();
             updateView();
         });
@@ -807,7 +956,7 @@
             };
             
             pedagogicalDaysData.push(newPedagogicalDay);
-            alert('Journée pédagogique enregistrée avec succès!');
+            showNotification('Journée pédagogique enregistrée avec succès!');
             this.reset();
             updateView();
         });
@@ -842,7 +991,7 @@
                 }
             });
             
-            alert('Données enregistrées avec succès!');
+            showNotification('Données enregistrées avec succès!');
             this.reset();
             // Réinitialiser le conteneur d'évaluation
             document.getElementById('evaluationContainer').innerHTML = `
@@ -883,8 +1032,11 @@
             const tbody = document.getElementById('dataTableBody');
             tbody.innerHTML = '';
             
+            let dataAvailable = false;
+            
             switch(viewType) {
                 case 'councils':
+                    if (councilsData.length > 0) dataAvailable = true;
                     councilsData.forEach(council => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
@@ -900,6 +1052,10 @@
                                         onclick="showDetails('council', ${council.id})">
                                     Détails
                                 </button>
+                                <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8rem;" 
+                                        onclick="deleteItem('council', ${council.id})">
+                                    Supprimer
+                                </button>
                             </td>
                         `;
                         tbody.appendChild(row);
@@ -907,6 +1063,7 @@
                     break;
                     
                 case 'pedagogicalDays':
+                    if (pedagogicalDaysData.length > 0) dataAvailable = true;
                     pedagogicalDaysData.forEach(day => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
@@ -918,6 +1075,10 @@
                                         onclick="showDetails('pedagogicalDay', ${day.id})">
                                     Détails
                                 </button>
+                                <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8rem;" 
+                                        onclick="deleteItem('pedagogicalDay', ${day.id})">
+                                    Supprimer
+                                </button>
                             </td>
                         `;
                         tbody.appendChild(row);
@@ -925,6 +1086,7 @@
                     break;
                     
                 case 'evaluations':
+                    if (evaluationsData.length > 0) dataAvailable = true;
                     evaluationsData.forEach(eval => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
@@ -939,6 +1101,10 @@
                                         onclick="showDetails('evaluation', ${eval.id})">
                                     Détails
                                 </button>
+                                <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8rem;" 
+                                        onclick="deleteItem('evaluation', ${eval.id})">
+                                    Supprimer
+                                </button>
                             </td>
                         `;
                         tbody.appendChild(row);
@@ -946,6 +1112,7 @@
                     break;
                     
                 case 'holidays':
+                    if (holidaysData.length > 0) dataAvailable = true;
                     holidaysData.forEach(holiday => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
@@ -954,7 +1121,7 @@
                             <td>-</td>
                             <td>
                                 <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8rem;" 
-                                        onclick="deleteHoliday(${holiday.id})">
+                                        onclick="deleteItem('holiday', ${holiday.id})">
                                     Supprimer
                                 </button>
                             </td>
@@ -964,8 +1131,31 @@
                     break;
             }
             
-            if (tbody.innerHTML === '') {
+            if (!dataAvailable) {
                 tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Aucune donnée disponible</td></tr>';
+            }
+        }
+
+        // Supprimer un élément
+        function deleteItem(type, id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cet élément ?')) {
+                switch(type) {
+                    case 'council':
+                        councilsData = councilsData.filter(c => c.id !== id);
+                        break;
+                    case 'pedagogicalDay':
+                        pedagogicalDaysData = pedagogicalDaysData.filter(d => d.id !== id);
+                        break;
+                    case 'evaluation':
+                        evaluationsData = evaluationsData.filter(e => e.id !== id);
+                        break;
+                    case 'holiday':
+                        holidaysData = holidaysData.filter(h => h.id !== id);
+                        break;
+                }
+                updateView();
+                saveToDatabase();
+                showNotification('Élément supprimé avec succès!');
             }
         }
 
@@ -978,6 +1168,7 @@
             switch(type) {
                 case 'council':
                     item = councilsData.find(c => c.id === id);
+                    if (!item) return;
                     title = `${item.type === 'enseignement' ? 'Conseil d\'Enseignement' : 'Conseil de Classe'} du ${formatDate(item.date)}`;
                     content = `
                         <p><strong>Date:</strong> ${formatDate(item.date)}</p>
@@ -997,6 +1188,7 @@
                     
                 case 'pedagogicalDay':
                     item = pedagogicalDaysData.find(d => d.id === id);
+                    if (!item) return;
                     title = `Journée Pédagogique - ${item.dates.map(d => formatDate(d)).join(', ')}`;
                     content = `
                         <p><strong>Dates:</strong> ${item.dates.map(d => formatDate(d)).join(', ')}</p>
@@ -1007,6 +1199,7 @@
                     
                 case 'evaluation':
                     item = evaluationsData.find(e => e.id === id);
+                    if (!item) return;
                     title = `${getEvaluationTypeName(item.type)} du ${formatDate(item.date)}`;
                     content = `
                         <p><strong>Date:</strong> ${formatDate(item.date)}</p>
@@ -1023,15 +1216,30 @@
                     break;
             }
             
-            alert(`${title}\n\n${content.replace(/<[^>]*>/g, '')}`);
-        }
-
-        // Supprimer un jour férié
-        function deleteHoliday(id) {
-            if (confirm('Êtes-vous sûr de vouloir supprimer ce jour férié ?')) {
-                holidaysData = holidaysData.filter(h => h.id !== id);
-                updateView();
-            }
+            // Créer une modale pour afficher les détails
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.backgroundColor = 'rgba(0,0,0,0.7)';
+            modal.style.display = 'flex';
+            modal.style.justifyContent = 'center';
+            modal.style.alignItems = 'center';
+            modal.style.zIndex = '2000';
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 20px; border-radius: 10px; max-width: 600px; max-height: 80vh; overflow-y: auto;">
+                    <h2>${title}</h2>
+                    <div>${content}</div>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button onclick="this.parentElement.parentElement.remove()" class="btn btn-primary">Fermer</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
         }
 
         // Obtenir le nom du type d'évaluation
@@ -1047,8 +1255,12 @@
         // Formater une date
         function formatDate(dateString) {
             if (!dateString) return '';
-            const options = { day: 'numeric', month: 'long', year: 'numeric' };
-            return new Date(dateString).toLocaleDateString('fr-FR', options);
+            try {
+                const options = { day: 'numeric', month: 'long', year: 'numeric' };
+                return new Date(dateString).toLocaleDateString('fr-FR', options);
+            } catch (e) {
+                return dateString;
+            }
         }
 
         // Fonction pour afficher/masquer la popup WhatsApp
@@ -1176,11 +1388,6 @@
             // Fermer la popup
             toggleWhatsAppPopup();
         }
-
-        // Initialisation
-        document.addEventListener('DOMContentLoaded', function() {
-            updateView();
-        });
     </script>
 </body>
 </html>
