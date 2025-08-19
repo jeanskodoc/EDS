@@ -706,7 +706,7 @@
                 
                 <button type="button" class="register-btn" onclick="showRegisterForm()">
                     📝 Créer un compte surveillant
-                </button>
+                    </button>
             </div>
         </div>
 
@@ -843,6 +843,9 @@
                             </button>
                             <button class="action-btn secondary" onclick="saveData()">
                                 💾 Sauvegarder les données
+                            </button>
+                            <button class="action-btn" onclick="importData()">
+                                📂 Importer des données
                             </button>
                             <button class="action-btn danger" onclick="confirmDeleteAllData()">
                                 🗑️ Supprimer toutes les données
@@ -1142,7 +1145,8 @@
                     request = store.put(record);
                 } else {
                     // Création d'un nouvel enregistrement (sans spécifier l'id pour l'auto-incrémentation)
-                    const {id, ...recordWithoutId} = record;
+                    const recordWithoutId = Object.assign({}, record);
+                    delete recordWithoutId.id;
                     request = store.add(recordWithoutId);
                 }
                 
@@ -1567,6 +1571,54 @@
             URL.revokeObjectURL(url);
             
             alert('Données exportées avec succès !');
+        }
+
+        // Fonction pour importer des données
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        
+                        if (!importedData.records || !Array.isArray(importedData.records)) {
+                            throw new Error("Format de fichier invalide");
+                        }
+                        
+                        if (confirm(`Voulez-vous importer ${importedData.records.length} enregistrements ?`)) {
+                            // Sauvegarder chaque enregistrement importé
+                            const importPromises = importedData.records.map(record => saveRecord(record));
+                            
+                            Promise.all(importPromises)
+                                .then(() => {
+                                    alert(`Importation réussie : ${importedData.records.length} enregistrements importés`);
+                                    loadAllRecords().then(() => {
+                                        displayRecords();
+                                        updateStats();
+                                    });
+                                })
+                                .catch(error => {
+                                    console.error("Erreur lors de l'importation", error);
+                                    alert("Une erreur est survenue lors de l'importation des données");
+                                });
+                        }
+                    } catch (error) {
+                        console.error("Erreur de lecture du fichier", error);
+                        alert("Le fichier sélectionné n'est pas valide ou est corrompu");
+                    }
+                };
+                
+                reader.readAsText(file);
+            };
+            
+            input.click();
         }
 
         // Fonction pour imprimer les données
