@@ -3,2530 +3,1026 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Système de Gestion des Notes Scolaires</title>
+    <title>Analyse des Évaluations - Chef d'Établissement</title>
     <style>
-        /* Styles généraux */
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+        }
+        
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
             background-color: #f5f7fa;
             color: #333;
-            padding: 20px;
+            line-height: 1.6;
         }
         
         .container {
-            max-width: 1200px;
+            width: 95%;
+            max-width: 1400px;
             margin: 0 auto;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            padding: 20px;
         }
         
-        h1, h2, h3, h4 {
-            color: #2c3e50;
-            margin-top: 0;
-        }
-        
-        h1 {
-            text-align: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #ecf0f1;
-            color: #3498db;
-        }
-        
-        /* Styles des onglets */
-        .tab {
-            overflow: hidden;
-            border: 1px solid #ccc;
-            background-color: #f1f1f1;
-            border-radius: 5px 5px 0 0;
-            margin-bottom: 0;
-        }
-        
-        .tab button {
-            background-color: inherit;
-            float: left;
-            border: none;
-            outline: none;
-            cursor: pointer;
-            padding: 14px 16px;
-            transition: 0.3s;
-            color: black;
-            font-weight: 600;
-        }
-        
-        .tab button:hover {
-            background-color: #ddd;
-        }
-        
-        .tab button.active {
-            background-color: #3498db;
+        header {
+            background-color: var(--primary);
             color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         
-        .tabcontent {
-            display: none;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-top: none;
-            border-radius: 0 0 5px 5px;
-            background: white;
-        }
-        
-        /* Styles des formulaires */
-        form {
-            margin-bottom: 30px;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f8f9fa;
-        }
-        
-        form div {
+        h1, h2, h3 {
             margin-bottom: 15px;
         }
         
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #2c3e50;
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
+        .upload-section {
+            text-align: center;
+            padding: 30px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            background-color: #fafafa;
+            transition: all 0.3s;
         }
         
-        select {
-            background-color: white;
-            background-image: linear-gradient(45deg, transparent 50%, #3498db 50%),
-                              linear-gradient(135deg, #3498db 50%, transparent 50%);
-            background-position: calc(100% - 20px) center, calc(100% - 15px) center;
-            background-size: 5px 5px, 5px 5px;
-            background-repeat: no-repeat;
-            appearance: none;
+        .upload-section:hover {
+            border-color: var(--secondary);
+            background-color: #edf7ff;
         }
         
-        button[type="submit"], button[type="button"] {
-            background: #3498db;
+        .btn {
+            padding: 12px 24px;
+            background-color: var(--secondary);
             color: white;
             border: none;
-            padding: 12px 20px;
             border-radius: 4px;
             cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin-right: 10px;
+            font-size: 16px;
+            transition: background-color 0.3s;
         }
         
-        button[type="submit"]:hover, button[type="button"]:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        .btn:hover {
+            background-color: #2980b9;
         }
         
-        /* Styles des tables */
+        .btn-danger {
+            background-color: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        select, input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .results {
+            display: none;
+        }
+        
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         
         th, td {
             padding: 12px 15px;
             text-align: left;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 1px solid #ddd;
         }
         
         th {
-            background-color: #3498db;
-            color: white;
-            font-weight: 600;
-        }
-        
-        tr:nth-child(even) {
-            background-color: #f8f9fa;
+            background-color: var(--light);
+            font-weight: bold;
         }
         
         tr:hover {
-            background-color: #ecf0f1;
+            background-color: #f9f9f9;
         }
         
-        /* Styles pour la consultation */
-        .filters-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            border: 1px solid #e9ecef;
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
         }
         
-        .filter-group {
+        .badge-success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .badge-warning {
+            background-color: #fff8e1;
+            color: #f57c00;
+        }
+        
+        .badge-danger {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .student-details {
+            margin-top: 20px;
+        }
+        
+        .tab-container {
+            margin-top: 20px;
+        }
+        
+        .tabs {
             display: flex;
-            flex-direction: column;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
         }
         
-        .filter-group label {
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #2c3e50;
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
         }
         
-        .stats-container {
+        .tab.active {
+            border-bottom: 3px solid var(--secondary);
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
-            margin-top: 30px;
+            margin-bottom: 30px;
         }
         
-        .stat-box {
-            padding: 20px;
+        .stat-card {
+            background: white;
             border-radius: 8px;
-            background-color: white;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-            border-left: 4px solid #3498db;
-        }
-        
-        .stat-box h4 {
-            margin-top: 0;
-            color: #3498db;
-            border-bottom: 1px solid #ecf0f1;
-            padding-bottom: 10px;
-        }
-        
-        .good-score {
-            color: #27ae60;
-            font-weight: bold;
-        }
-        
-        .average-score {
-            color: #f39c12;
-            font-weight: bold;
-        }
-        
-        .poor-score {
-            color: #e74c3c;
-            font-weight: bold;
-        }
-        
-        .student-ranking {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-        }
-        
-        .ranking-box {
-            flex: 1;
-            margin: 0 10px;
             padding: 20px;
-            border-radius: 8px;
-            background-color: white;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-        }
-        
-        .top-students {
-            border-top: 4px solid #27ae60;
-        }
-        
-        .bottom-students {
-            border-top: 4px solid #e74c3c;
-        }
-        
-        .ranking-box h4 {
-            margin-top: 0;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #ecf0f1;
-        }
-        
-        .ranking-item {
-            padding: 10px 0;
-            border-bottom: 1px solid #f1f1f1;
-        }
-        
-        .ranking-item:last-child {
-            border-bottom: none;
-        }
-        
-        .student-name {
-            font-weight: 600;
-        }
-        
-        .student-score {
-            float: right;
-            font-weight: 600;
-        }
-        
-        .no-results {
             text-align: center;
-            padding: 40px;
-            color: #7f8c8d;
-            font-style: italic;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
         }
         
         .loading {
             text-align: center;
-            padding: 30px;
-            color: #3498db;
+            padding: 40px;
+            display: none;
         }
         
-        /* Boutons de base de données */
-        .db-actions {
-            margin: 20px 0;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .export-btn, .import-btn, .save-btn, .clear-btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            color: white;
-        }
-        
-        .export-btn {
-            background-color: #2196F3;
-        }
-        
-        .import-btn {
-            background-color: #4CAF50;
-        }
-        
-        .save-btn {
-            background-color: #673AB7;
-        }
-        
-        .save-btn:hover {
-            background-color: #5E35B1;
-        }
-        
-        .clear-btn {
-            background-color: #f44336;
-        }
-        
-        /* Bouton de rafraîchissement */
-        .refresh-button {
-            position: fixed;
-            bottom: 90px;
-            right: 20px;
-            background-color: #4285f4;
-            color: white;
-            border: none;
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--secondary);
             border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            text-align: center;
-            font-size: 24px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s ease;
-            z-index: 1000;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
         }
         
-        .refresh-button:hover {
-            background-color: #3367d6;
-            transform: rotate(360deg);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
-        .refresh-icon {
-            width: 24px;
-            height: 24px;
-            fill: white;
-        }
-        
-        /* Bouton retour */
-        .btn-retour {
-            padding: 8px 16px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
+        .alert {
+            padding: 15px;
             border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
             margin-bottom: 20px;
+            display: none;
         }
         
-        .btn-retour:hover {
-            background-color: #e0e0e0;
+        .alert-danger {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
         }
         
-        /* Responsive */
+        .alert-success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
         @media (max-width: 768px) {
-            .filters-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .student-ranking {
+            .filters {
                 flex-direction: column;
             }
             
-            .ranking-box {
-                margin: 10px 0;
-            }
-            
-            .db-actions {
-                flex-direction: column;
-            }
-            
-            .tab button {
+            select, input {
                 width: 100%;
-                float: none;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
-    <!-- Ajout de la bibliothèque jsPDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
-    <button class="btn-retour" onclick="history.back()">← Retour</button>
-    
-    <button onclick="window.location.reload()" class="refresh-button" aria-label="Actualiser la page">
-        <svg class="refresh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-        </svg>
-    </button>
-
     <div class="container">
-        <h1>Système de Gestion des Notes Scolaires</h1>
+        <header>
+            <h1>Analyse des Évaluations des Élèves</h1>
+            <p>Outil d'analyse pour chef d'établissement</p>
+        </header>
         
-        <!-- Actions sur la base de données -->
-        <div class="db-actions">
-            <button class="export-btn" onclick="exportDatabase()">Exporter les données</button>
-            <button class="import-btn" onclick="document.getElementById('import-file').click()">Importer des données</button>
-            <button class="save-btn" onclick="saveAllData()">Sauvegarder tout</button>
-            <button class="clear-btn" onclick="clearDatabase()">Supprimer toutes les données</button>
-            <input type="file" id="import-file" style="display: none;" accept=".json" onchange="importDatabase(this)">
+        <div class="alert alert-danger" id="errorAlert"></div>
+        <div class="alert alert-success" id="successAlert"></div>
+        
+        <div class="card">
+            <h2>Import des données</h2>
+            <div class="upload-section" id="uploadArea">
+                <p>Glissez-déposez votre fichier JSON ici ou</p>
+                <input type="file" id="fileInput" accept=".json" style="display: none;">
+                <button class="btn" id="browseButton">Parcourir</button>
+                <p style="margin-top: 15px; font-size: 14px; color: #666;">
+                    Format attendu: Fichier JSON contenant les évaluations des élèves par matière et par classe
+                </p>
+            </div>
         </div>
         
-        <div class="tab">
-            <button class="tablinks active" onclick="openTab(event, 'Enseignants')">Enseignants</button>
-            <button class="tablinks" onclick="openTab(event, 'Matieres')">Matières</button>
-            <button class="tablinks" onclick="openTab(event, 'Classes')">Classes</button>
-            <button class="tablinks" onclick="openTab(event, 'Attributions')">Attributions</button>
-            <button class="tablinks" onclick="openTab(event, 'Eleves')">Élèves</button>
-            <button class="tablinks" onclick="openTab(event, 'Notes')">Saisie des Notes</button>
-            <button class="tablinks" onclick="openTab(event, 'Consultation')">Consultation</button>
-            <button class="tablinks" onclick="openTab(event, 'Rapports')">Rapports PDF</button>
+        <div class="loading" id="loadingIndicator">
+            <div class="spinner"></div>
+            <p>Analyse des données en cours...</p>
         </div>
-
-        <!-- Section Enseignants -->
-        <div id="Enseignants" class="tabcontent" style="display: block;">
-            <h2>Gestion des Enseignants</h2>
-            <form id="formEnseignant">
-                <input type="hidden" id="enseignantId">
-                <div>
-                    <label for="enseignantNom">Nom:</label>
-                    <input type="text" id="enseignantNom" required>
-                </div>
-                <div>
-                    <label for="enseignantPrenom">Prénom:</label>
-                    <input type="text" id="enseignantPrenom" required>
-                </div>
-                <div>
-                    <label for="enseignantEmail">Email:</label>
-                    <input type="email" id="enseignantEmail" required>
-                </div>
-                <button type="submit">Enregistrer</button>
-                <button type="button" onclick="resetEnseignantForm()">Annuler</button>
-            </form>
-            
-            <h3>Liste des Enseignants</h3>
-            <table id="tableEnseignants">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nom</th>
-                        <th>Prénom</th>
-                        <th>Email</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-
-        <!-- Section Matières -->
-        <div id="Matieres" class="tabcontent">
-            <h2>Gestion des Matières</h2>
-            <form id="formMatiere">
-                <input type="hidden" id="matiereId">
-                <div>
-                    <label for="nomMatiere">Nom de la matière:</label>
-                    <input type="text" id="nomMatiere" required>
-                </div>
-                <button type="submit">Enregistrer</button>
-                <button type="button" onclick="resetMatiereForm()">Annuler</button>
-            </form>
-            
-            <h3>Liste des Matières</h3>
-            <table id="tableMatieres">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nom</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-
-        <!-- Section Classes -->
-        <div id="Classes" class="tabcontent">
-            <h2>Gestion des Classes</h2>
-            <form id="formClasse">
-                <input type="hidden" id="classeId">
-                <div>
-                    <label for="nomClasse">Nom de la classe:</label>
-                    <input type="text" id="nomClasse" required>
-                </div>
-                <div>
-                    <label for="niveauClasse">Niveau:</label>
-                    <input type="text" id="niveauClasse" required>
-                </div>
-                <button type="submit">Enregistrer</button>
-                <button type="button" onclick="resetClasseForm()">Annuler</button>
-            </form>
-            
-            <h3>Liste des Classes</h3>
-            <table id="tableClasses">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nom</th>
-                        <th>Niveau</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-
-        <!-- Section Attributions -->
-        <div id="Attributions" class="tabcontent">
-            <h2>Attribution des Matières aux Enseignants par Classe</h2>
-            <form id="formAttribution">
-                <input type="hidden" id="attributionId">
-                <div>
-                    <label for="attributionEnseignant">Enseignant:</label>
-                    <select id="attributionEnseignant" required>
-                        <option value="">Sélectionner un enseignant</option>
+        
+        <div class="results" id="resultsSection">
+            <div class="card">
+                <h2>Filtres</h2>
+                <div class="filters">
+                    <select id="niveauFilter">
+                        <option value="">Tous les niveaux</option>
+                        <option value="6ème">6ème</option>
+                        <option value="5ème">5ème</option>
+                        <option value="4ème">4ème</option>
+                        <option value="3ème">3ème</option>
+                        <option value="2nde">Seconde</option>
+                        <option value="1ère">Première</option>
+                        <option value="Terminale">Terminale</option>
                     </select>
-                </div>
-                <div>
-                    <label for="attributionMatiere">Matière:</label>
-                    <select id="attributionMatiere" required>
-                        <option value="">Sélectionner une matière</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="attributionClasse">Classe:</label>
-                    <select id="attributionClasse" required>
-                        <option value="">Sélectionner une classe</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="anneeScolaire">Année scolaire:</label>
-                    <input type="text" id="anneeScolaire" placeholder="Ex: 2023-2024" required>
-                </div>
-                <button type="submit">Enregistrer</button>
-                <button type="button" onclick="resetAttributionForm()">Annuler</button>
-            </form>
-            
-            <h3>Liste des Attributions</h3>
-            <table id="tableAttributions">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Enseignant</th>
-                        <th>Matière</th>
-                        <th>Classe</th>
-                        <th>Année</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-
-        <!-- Section Élèves -->
-        <div id="Eleves" class="tabcontent">
-            <h2>Gestion des Élèves</h2>
-            <form id="formEleve">
-                <input type="hidden" id="eleveId">
-                <div>
-                    <label for="eleveNom">Nom:</label>
-                    <input type="text" id="eleveNom" required>
-                </div>
-                <div>
-                    <label for="elevePrenom">Prénom:</label>
-                    <input type="text" id="elevePrenom" required>
-                </div>
-                <div>
-                    <label for="eleveAge">Âge:</label>
-                    <input type="number" id="eleveAge" min="5" max="25" required>
-                </div>
-                <div>
-                    <label for="eleveSexe">Sexe:</label>
-                    <select id="eleveSexe" required>
-                        <option value="">Sélectionner</option>
-                        <option value="M">Masculin</option>
-                        <option value="F">Féminin</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="eleveClasse">Classe:</label>
-                    <select id="eleveClasse" required>
-                        <option value="">Sélectionner une classe</option>
-                    </select>
-                </div>
-                <button type="submit">Enregistrer</button>
-                <button type="button" onclick="resetEleveForm()">Annuler</button>
-            </form>
-            
-            <h3>Liste des Élèves</h3>
-            <table id="tableEleves">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nom</th>
-                        <th>Prénom</th>
-                        <th>Âge</th>
-                        <th>Sexe</th>
-                        <th>Classe</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-
-        <!-- Section Saisie des Notes -->
-        <div id="Notes" class="tabcontent">
-            <h2>Saisie des Notes</h2>
-            <form id="formNote">
-                <input type="hidden" id="noteId">
-                <div>
-                    <label for="noteEnseignant">Enseignant:</label>
-                    <select id="noteEnseignant" required onchange="chargerMatieresClasses()">
-                        <option value="">Sélectionner un enseignant</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="noteMatiere">Matière:</label>
-                    <select id="noteMatiere" required>
-                        <option value="">Sélectionner une matière</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="noteClasse">Classe:</label>
-                    <select id="noteClasse" required onchange="chargerEleves()">
-                        <option value="">Sélectionner une classe</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="noteEleve">Élève:</label>
-                    <select id="noteEleve" required>
-                        <option value="">Sélectionner un élève</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="noteValeur">Note (sur 20):</label>
-                    <input type="number" id="noteValeur" min="0" max="20" step="0.01" required>
-                </div>
-                <div>
-                    <label for="noteType">Type d'évaluation:</label>
-                    <select id="noteType" required>
-                        <option value="DS">Devoir Surveillé</option>
-                        <option value="CC">Contrôle Continu</option>
-                        <option value="Examen">Examen</option>
-                        <option value="Projet">Projet</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="noteDate">Date:</label>
-                    <input type="date" id="noteDate" required>
-                </div>
-                <div>
-                    <label for="noteCoefficient">Coefficient:</label>
-                    <input type="number" id="noteCoefficient" min="1" value="1" required>
-                </div>
-                <div>
-                    <label for="noteCommentaire">Commentaire:</label>
-                    <input type="text" id="noteCommentaire">
-                </div>
-                <button type="submit">Enregistrer</button>
-                <button type="button" onclick="resetNoteForm()">Annuler</button>
-            </form>
-            
-            <h3>Notes enregistrées</h3>
-            <table id="tableNotes">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Élève</th>
-                        <th>Matière</th>
-                        <th>Classe</th>
-                        <th>Note</th>
-                        <th>Type</th>
-                        <th>Date</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-
-        <!-- Section Consultation - CORRIGÉE -->
-        <div id="Consultation" class="tabcontent">
-            <h2>Consultation des Notes</h2>
-            
-            <div class="filters-container">
-                <div class="filter-group">
-                    <label for="consultationClasse">Classe:</label>
-                    <select id="consultationClasse" onchange="chargerMatieresConsultation()">
+                    
+                    <select id="classeFilter">
                         <option value="">Toutes les classes</option>
                     </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label for="consultationMatiere">Matière:</label>
-                    <select id="consultationMatiere">
+                    
+                    <select id="matiereFilter">
                         <option value="">Toutes les matières</option>
                     </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label for="consultationEnseignant">Enseignant:</label>
-                    <select id="consultationEnseignant">
-                        <option value="">Tous les enseignants</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label for="consultationTypeEvaluation">Type d'évaluation:</label>
-                    <select id="consultationTypeEvaluation">
-                        <option value="">Tous types</option>
-                        <option value="DS">Devoir Surveillé</option>
-                        <option value="CC">Contrôle Continu</option>
-                        <option value="Examen">Examen</option>
-                        <option value="Projet">Projet</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label for="consultationPeriode">Période:</label>
-                    <select id="consultationPeriode">
-                        <option value="">Toute période</option>
-                        <option value="trimestre1">1er Trimestre</option>
-                        <option value="trimestre2">2ème Trimestre</option>
-                        <option value="trimestre3">3ème Trimestre</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label style="opacity: 0;">Filtrer</label>
-                    <button onclick="filtrerNotes()">Appliquer les filtres</button>
+                    
+                    <input type="text" id="searchInput" placeholder="Rechercher un élève...">
                 </div>
             </div>
             
-            <h3>Résultats</h3>
-            <div id="resultatsConsultation">
-                <p class="no-results">Sélectionnez des critères de filtrage pour afficher les résultats.</p>
-            </div>
-        </div>
-
-        <!-- Section Rapports PDF -->
-        <div id="Rapports" class="tabcontent">
-            <h2>Génération de Rapports PDF</h2>
-            
-            <div class="report-section">
-                <h3>Rapport par Classe</h3>
-                <div class="report-options">
-                    <div class="report-option">
-                        <label for="rapportClasse">Classe:</label>
-                        <select id="rapportClasse">
-                            <option value="">Toutes les classes</option>
-                        </select>
-                    </div>
-                    <div class="report-option">
-                        <label for="rapportMatiereClasse">Matière (optionnel):</label>
-                        <select id="rapportMatiereClasse">
-                            <option value="">Toutes les matières</option>
-                        </select>
-                    </div>
+            <div class="card">
+                <h2>Statistiques globales</h2>
+                <div class="stats-grid" id="statsContainer">
+                    <!-- Les statistiques seront générées ici -->
                 </div>
-                <button onclick="genererRapportClasse()" class="pdf-button">Générer PDF</button>
             </div>
             
-            <div class="report-section">
-                <h3>Rapport par Enseignant</h3>
-                <div class="report-options">
-                    <div class="report-option">
-                        <label for="rapportEnseignant">Enseignant:</label>
-                        <select id="rapportEnseignant">
-                            <option value="">Tous les enseignants</option>
-                        </select>
-                    </div>
-                    <div class="report-option">
-                        <label for="rapportMatiereEnseignant">Matière (optionnel):</label>
-                        <select id="rapportMatiereEnseignant">
-                            <option value="">Toutes les matières</option>
-                        </select>
-                    </div>
+            <div class="card">
+                <div class="tabs">
+                    <div class="tab active" data-tab="students">Élèves en difficulté</div>
+                    <div class="tab" data-tab="classes">Analyse par classe</div>
+                    <div class="tab" data-tab="subjects">Analyse par matière</div>
                 </div>
-                <button onclick="genererRapportEnseignant()" class="pdf-button">Générer PDF</button>
-            </div>
-            
-            <div class="report-section">
-                <h3>Rapport par Matière</h3>
-                <div class="report-options">
-                    <div class="report-option">
-                        <label for="rapportMatiere">Matière:</label>
-                        <select id="rapportMatiere">
-                            <option value="">Toutes les matières</option>
-                        </select>
-                    </div>
-                    <div class="report-option">
-                        <label for="rapportClasseMatiere">Classe (optionnel):</label>
-                        <select id="rapportClasseMatiere">
-                            <option value="">Toutes les classes</option>
-                        </select>
-                    </div>
-                </div>
-                <button onclick="genererRapportMatiere()" class="pdf-button">Générer PDF</button>
-            </div>
-            
-            <div class="report-section">
-                <h3>Rapport des Évaluations</h3>
-                <div class="report-options">
-                    <div class="report-option">
-                        <label for="rapportTypeEvaluation">Type d'évaluation:</label>
-                        <select id="rapportTypeEvaluation">
-                            <option value="">Tous types</option>
-                            <option value="DS">Devoir Surveillé</option>
-                            <option value="CC">Contrôle Continu</option>
-                            <option value="Examen">Examen</option>
-                            <option value="Projet">Projet</option>
-                        </select>
-                    </div>
-                    <div class="report-option">
-                        <label for="rapportPeriode">Période:</label>
-                        <select id="rapportPeriode">
-                            <option value="">Toute période</option>
-                            <option value="trimestre1">1er Trimestre</option>
-                            <option value="trimestre2">2ème Trimestre</option>
-                            <option value="trimestre3">3ème Trimestre</option>
-                            <option value="semestre1">1er Semestre</option>
-                            <option value="semestre2">2ème Semestre</option>
-                        </select>
-                    </div>
-                </div>
-                <button onclick="genererRapportEvaluations()" class="pdf-button">Générer PDF</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Variables globales
-        let db;
-        const { jsPDF } = window.jspdf;
-        
-        // Initialisation de la base de données
-        function initDB() {
-            return new Promise((resolve, reject) => {
-                console.log("Tentative d'ouverture de la base de données...");
                 
-                // Fermer toute connexion existante
-                if (db) {
-                    db.close();
-                }
-                
-                const request = indexedDB.open('GestionNotesDB', 3);
-                
-                request.onerror = function(event) {
-                    console.error("Erreur d'ouverture de la base de données", event);
-                    reject(new Error(`Erreur d'ouverture de la base de données: ${event.target.error}`));
-                };
-                
-                request.onsuccess = function(event) {
-                    db = event.target.result;
-                    console.log("Base de données ouverte avec succès");
-                    
-                    // Vérification de la connexion
-                    if (!db) {
-                        reject(new Error("La connexion à la base de données a échoué"));
-                        return;
-                    }
-                    
-                    // Vérifier que tous les objectStores existent
-                    const requiredStores = ['enseignants', 'matieres', 'classes', 'attributions', 'eleves', 'notes'];
-                    const missingStores = requiredStores.filter(store => !db.objectStoreNames.contains(store));
-                    
-                    if (missingStores.length > 0) {
-                        reject(new Error(`Stores manquants: ${missingStores.join(', ')}`));
-                    } else {
-                        resolve();
-                    }
-                };
-                
-                request.onupgradeneeded = function(event) {
-                    console.log("Mise à jour de la structure de la base de données");
-                    const db = event.target.result;
-                    const oldVersion = event.oldVersion || 0;
-                    
-                    // Création des tables si elles n'existent pas
-                    if (!db.objectStoreNames.contains('enseignants')) {
-                        const enseignantStore = db.createObjectStore('enseignants', { keyPath: 'id', autoIncrement: true });
-                        enseignantStore.createIndex('email', 'email', { unique: true });
-                    }
-                    
-                    if (!db.objectStoreNames.contains('matieres')) {
-                        db.createObjectStore('matieres', { keyPath: 'id', autoIncrement: true });
-                    }
-                    
-                    if (!db.objectStoreNames.contains('classes')) {
-                        db.createObjectStore('classes', { keyPath: 'id', autoIncrement: true });
-                    }
-                    
-                    if (!db.objectStoreNames.contains('attributions')) {
-                        const attributionStore = db.createObjectStore('attributions', { keyPath: 'id', autoIncrement: true });
-                        attributionStore.createIndex('enseignant_matiere_classe', ['id_enseignant', 'id_matiere', 'id_classe'], { unique: true });
-                    }
-                    
-                    if (!db.objectStoreNames.contains('eleves')) {
-                        db.createObjectStore('eleves', { keyPath: 'id', autoIncrement: true });
-                    }
-                    
-                    if (!db.objectStoreNames.contains('notes')) {
-                        db.createObjectStore('notes', { keyPath: 'id', autoIncrement: true });
-                    }
-                    
-                    // Ajouter les données initiales si c'est une nouvelle base
-                    if (oldVersion < 1) {
-                        addInitialData(event.target.transaction);
-                    }
-                };
-                
-                request.onblocked = function(event) {
-                    console.error("La base de données est bloquée par une autre connexion");
-                    reject(new Error("La base de données est bloquée. Fermez les autres onglets utilisant cette application."));
-                };
-            });
-        }
-
-        function addInitialData(transaction) {
-            // Ajout des enseignants initiaux
-            const enseignants = [
-                {nom: "KOLA", prenom: "Jean", email: "jean@example.com"}
-            ];
-            
-            enseignants.forEach(enseignant => {
-                transaction.objectStore('enseignants').add(enseignant);
-            });
-            
-            // Ajout des matières initiales
-            const matieres = [
-                {nom: "Mathématiques"},
-                {nom: "Français"},
-                {nom: "Histoire-Géographie"}
-            ];
-            
-            matieres.forEach(matiere => {
-                transaction.objectStore('matieres').add(matiere);
-            });
-            
-            // Ajout des classes initiales
-            const classes = [
-                {nom: "6ème", niveau: "Collège"},
-                {nom: "Tle D", niveau: "Lycée"}
-            ];
-            
-            classes.forEach(classe => {
-                transaction.objectStore('classes').add(classe);
-            });
-            
-            // Ajout des attributions initiales
-            const attributions = [
-                {id_enseignant: 1, id_matiere: 1, id_classe: 1, annee: "2024-2025"},
-                {id_enseignant: 1, id_matiere: 2, id_classe: 1, annee: "2024-2025"},
-                {id_enseignant: 1, id_matiere: 1, id_classe: 2, annee: "2024-2025"}
-            ];
-            
-            attributions.forEach(attribution => {
-                transaction.objectStore('attributions').add(attribution);
-            });
-            
-            // Ajout des élèves initiaux
-            const eleves = [
-                {nom: "Durand", prenom: "Pierre", age: 12, sexe: "M", id_classe: 1},
-                {nom: "Leroy", prenom: "Marie", age: 11, sexe: "F", id_classe: 1},
-                {nom: "Moreau", prenom: "Luc", age: 18, sexe: "M", id_classe: 2}
-            ];
-            
-            eleves.forEach(eleve => {
-                transaction.objectStore('eleves').add(eleve);
-            });
-            
-            // Ajout des notes initiales
-            const notes = [
-                {id_enseignement: 1, id_eleve: 1, note: 15, type: "DS", date: "2023-10-15", coefficient: 2, commentaire: "Très bien"},
-                {id_enseignement: 1, id_eleve: 2, note: 12, type: "DS", date: "2023-10-15", coefficient: 2, commentaire: "Bien"},
-                {id_enseignement: 3, id_eleve: 3, note: 18, type: "CC", date: "2023-10-10", coefficient: 1, commentaire: "Excellent"}
-            ];
-            
-            notes.forEach(note => {
-                transaction.objectStore('notes').add(note);
-            });
-        }
-
-        // Fonctions de base pour la base de données
-        function addItem(storeName, item) {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction([storeName], 'readwrite');
-                const store = transaction.objectStore(storeName);
-                
-                const request = store.add(item);
-                
-                request.onsuccess = function() {
-                    resolve(request.result);
-                };
-                
-                request.onerror = function(event) {
-                    reject(new Error("Erreur lors de l'ajout: " + event.target.error));
-                };
-            });
-        }
-        
-        function updateItem(storeName, item) {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction([storeName], 'readwrite');
-                const store = transaction.objectStore(storeName);
-                
-                const request = store.put(item);
-                
-                request.onsuccess = function() {
-                    resolve();
-                };
-                
-                request.onerror = function(event) {
-                    reject(new Error("Erreur lors de la mise à jour: " + event.target.error));
-                };
-            });
-        }
-        
-        function deleteItem(storeName, id) {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction([storeName], 'readwrite');
-                const store = transaction.objectStore(storeName);
-                
-                const request = store.delete(id);
-                
-                request.onsuccess = function() {
-                    resolve();
-                };
-                
-                request.onerror = function(event) {
-                    reject(new Error("Erreur lors de la suppression: " + event.target.error));
-                };
-            });
-        }
-        
-        function getAllItems(storeName) {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction([storeName], 'readonly');
-                const store = transaction.objectStore(storeName);
-                
-                const request = store.getAll();
-                
-                request.onsuccess = function() {
-                    resolve(request.result);
-                };
-                
-                request.onerror = function(event) {
-                    reject(new Error("Erreur lors de la récupération: " + event.target.error));
-                };
-            });
-        }
-        
-        function getItemById(storeName, id) {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction([storeName], 'readonly');
-                const store = transaction.objectStore(storeName);
-                
-                const request = store.get(id);
-                
-                request.onsuccess = function() {
-                    resolve(request.result);
-                };
-                
-                request.onerror = function(event) {
-                    reject(new Error("Erreur lors de la récupération: " + event.target.error));
-                };
-            });
-        }
-
-        // Fonctions d'interface utilisateur
-        function openTab(evt, tabName) {
-            let i, tabcontent, tablinks;
-            
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-            }
-            
-            tablinks = document.getElementsByClassName("tablinks");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-            
-            document.getElementById(tabName).style.display = "block";
-            evt.currentTarget.className += " active";
-        }
-
-        // Fonctions pour remplir les sélecteurs
-        async function fillSelectOptions() {
-            try {
-                const enseignants = await getAllItems('enseignants');
-                const matieres = await getAllItems('matieres');
-                const classes = await getAllItems('classes');
-                
-                // Remplir les sélecteurs pour les formulaires
-                const selectEnseignants = document.querySelectorAll("select[id$='Enseignant']");
-                selectEnseignants.forEach(select => {
-                    select.innerHTML = '<option value="">Sélectionner un enseignant</option>';
-                    enseignants.forEach(ens => {
-                        select.innerHTML += `<option value="${ens.id}">${ens.nom} ${ens.prenom}</option>`;
-                    });
-                });
-                
-                const selectMatieres = document.querySelectorAll("select[id$='Matiere']");
-                selectMatieres.forEach(select => {
-                    select.innerHTML = '<option value="">Sélectionner une matière</option>';
-                    matieres.forEach(mat => {
-                        select.innerHTML += `<option value="${mat.id}">${mat.nom}</option>`;
-                    });
-                });
-                
-                const selectClasses = document.querySelectorAll("select[id$='Classe']");
-                selectClasses.forEach(select => {
-                    select.innerHTML = '<option value="">Sélectionner une classe</option>';
-                    classes.forEach(cl => {
-                        select.innerHTML += `<option value="${cl.id}">${cl.nom} (${cl.niveau})</option>`;
-                    });
-                });
-                
-                // Remplir les sélecteurs pour la consultation
-                document.getElementById("consultationClasse").innerHTML = '<option value="">Toutes les classes</option>';
-                classes.forEach(cl => {
-                    document.getElementById("consultationClasse").innerHTML += `<option value="${cl.id}">${cl.nom} (${cl.niveau})</option>`;
-                });
-                
-                document.getElementById("consultationEnseignant").innerHTML = '<option value="">Tous les enseignants</option>';
-                enseignants.forEach(ens => {
-                    document.getElementById("consultationEnseignant").innerHTML += `<option value="${ens.id}">${ens.nom} ${ens.prenom}</option>`;
-                });
-                
-                // Remplir les sélecteurs pour les rapports PDF
-                document.getElementById("rapportClasse").innerHTML = '<option value="">Toutes les classes</option>';
-                classes.forEach(cl => {
-                    document.getElementById("rapportClasse").innerHTML += `<option value="${cl.id}">${cl.nom} (${cl.niveau})</option>`;
-                });
-                
-                document.getElementById("rapportMatiereClasse").innerHTML = '<option value="">Toutes les matières</option>';
-                matieres.forEach(mat => {
-                    document.getElementById("rapportMatiereClasse").innerHTML += `<option value="${mat.id}">${mat.nom}</option>`;
-                });
-                
-                document.getElementById("rapportEnseignant").innerHTML = '<option value="">Tous les enseignants</option>';
-                enseignants.forEach(ens => {
-                    document.getElementById("rapportEnseignant").innerHTML += `<option value="${ens.id}">${ens.nom} ${ens.prenom}</option>`;
-                });
-                
-                document.getElementById("rapportMatiereEnseignant").innerHTML = '<option value="">Toutes les matières</option>';
-                matieres.forEach(mat => {
-                    document.getElementById("rapportMatiereEnseignant").innerHTML += `<option value="${mat.id}">${mat.nom}</option>`;
-                });
-                
-                document.getElementById("rapportMatiere").innerHTML = '<option value="">Toutes les matières</option>';
-                matieres.forEach(mat => {
-                    document.getElementById("rapportMatiere").innerHTML += `<option value="${mat.id}">${mat.nom}</option>`;
-                });
-                
-                document.getElementById("rapportClasseMatiere").innerHTML = '<option value="">Toutes les classes</option>';
-                classes.forEach(cl => {
-                    document.getElementById("rapportClasseMatiere").innerHTML += `<option value="${cl.id}">${cl.nom} (${cl.niveau})</option>`;
-                });
-                
-            } catch (error) {
-                console.error("Erreur lors du remplissage des options:", error);
-            }
-        }
-        
-        // Fonctions pour charger les données dynamiques
-        async function chargerMatieresClasses() {
-            const enseignantId = document.getElementById("noteEnseignant").value;
-            const matiereSelect = document.getElementById("noteMatiere");
-            const classeSelect = document.getElementById("noteClasse");
-            
-            matiereSelect.innerHTML = '<option value="">Sélectionner une matière</option>';
-            classeSelect.innerHTML = '<option value="">Sélectionner une classe</option>';
-            
-            if (!enseignantId) return;
-            
-            try {
-                const attributions = await getAllItems('attributions');
-                const attribs = attributions.filter(a => a.id_enseignant == enseignantId);
-                
-                const matieres = await getAllItems('matieres');
-                const classes = await getAllItems('classes');
-                
-                const matieresEnseignant = [];
-                attribs.forEach(att => {
-                    const matiere = matieres.find(m => m.id == att.id_matiere);
-                    if (matiere && !matieresEnseignant.some(m => m.id == matiere.id)) {
-                        matieresEnseignant.push(matiere);
-                    }
-                });
-                
-                matieresEnseignant.forEach(mat => {
-                    matiereSelect.innerHTML += `<option value="${mat.id}">${mat.nom}</option>`;
-                });
-                
-                const classesEnseignant = [];
-                attribs.forEach(att => {
-                    const classe = classes.find(c => c.id == att.id_classe);
-                    if (classe && !classesEnseignant.some(c => c.id == classe.id)) {
-                        classesEnseignant.push(classe);
-                    }
-                });
-                
-                classesEnseignant.forEach(cl => {
-                    classeSelect.innerHTML += `<option value="${cl.id}">${cl.nom} (${cl.niveau})</option>`;
-                });
-            } catch (error) {
-                console.error("Erreur lors du chargement des matières et classes:", error);
-            }
-        }
-        
-        async function chargerEleves() {
-            const classeId = document.getElementById("noteClasse").value;
-            const eleveSelect = document.getElementById("noteEleve");
-            
-            eleveSelect.innerHTML = '<option value="">Sélectionner un élève</option>';
-            
-            if (!classeId) return;
-            
-            try {
-                const eleves = await getAllItems('eleves');
-                const elevesClasse = eleves.filter(e => e.id_classe == classeId);
-                elevesClasse.forEach(el => {
-                    eleveSelect.innerHTML += `<option value="${el.id}">${el.nom} ${el.prenom}</option>`;
-                });
-            } catch (error) {
-                console.error("Erreur lors du chargement des élèves:", error);
-            }
-        }
-        
-        async function chargerMatieresConsultation() {
-            const classeId = document.getElementById("consultationClasse").value;
-            const matiereSelect = document.getElementById("consultationMatiere");
-            
-            matiereSelect.innerHTML = '<option value="">Toutes les matières</option>';
-            
-            try {
-                const matieres = await getAllItems('matieres');
-                
-                if (!classeId) {
-                    matieres.forEach(mat => {
-                        matiereSelect.innerHTML += `<option value="${mat.id}">${mat.nom}</option>`;
-                    });
-                    return;
-                }
-                
-                const attributions = await getAllItems('attributions');
-                const matieresClasse = [];
-                
-                attributions.forEach(att => {
-                    if (att.id_classe == classeId) {
-                        const matiere = matieres.find(m => m.id == att.id_matiere);
-                        if (matiere && !matieresClasse.some(m => m.id == matiere.id)) {
-                            matieresClasse.push(matiere);
-                        }
-                    }
-                });
-                
-                matieresClasse.forEach(mat => {
-                    matiereSelect.innerHTML += `<option value="${mat.id}">${mat.nom}</option>`;
-                });
-            } catch (error) {
-                console.error("Erreur lors du chargement des matières:", error);
-            }
-        }
-        
-        // Fonctions pour la consultation des notes - CORRIGÉES
-        async function filtrerNotes() {
-            const classeId = document.getElementById("consultationClasse").value;
-            const matiereId = document.getElementById("consultationMatiere").value;
-            const enseignantId = document.getElementById("consultationEnseignant").value;
-            const typeEvaluation = document.getElementById("consultationTypeEvaluation").value;
-            const periode = document.getElementById("consultationPeriode").value;
-            
-            try {
-                let notes = await getAllItems('notes');
-                let notesFiltrees = [...notes];
-                
-                // Filtrer par classe
-                if (classeId) {
-                    const eleves = await getAllItems('eleves');
-                    const elevesClasse = eleves.filter(e => e.id_classe == classeId).map(e => e.id);
-                    notesFiltrees = notesFiltrees.filter(n => elevesClasse.includes(n.id_eleve));
-                }
-                
-                // Filtrer par matière
-                if (matiereId) {
-                    const attributions = await getAllItems('attributions');
-                    const enseignements = attributions.filter(a => a.id_matiere == matiereId).map(a => a.id);
-                    notesFiltrees = notesFiltrees.filter(n => enseignements.includes(n.id_enseignement));
-                }
-                
-                // Filtrer par enseignant
-                if (enseignantId) {
-                    const attributions = await getAllItems('attributions');
-                    const enseignements = attributions.filter(a => a.id_enseignant == enseignantId).map(a => a.id);
-                    notesFiltrees = notesFiltrees.filter(n => enseignements.includes(n.id_enseignement));
-                }
-                
-                // Filtrer par type d'évaluation
-                if (typeEvaluation) {
-                    notesFiltrees = notesFiltrees.filter(n => n.type === typeEvaluation);
-                }
-                
-                // Filtrer par période
-                if (periode) {
-                    notesFiltrees = notesFiltrees.filter(n => checkPeriod(n.date, periode));
-                }
-                
-                await afficherResultatsConsultation(notesFiltrees);
-            } catch (error) {
-                console.error("Erreur lors du filtrage des notes:", error);
-                document.getElementById("resultatsConsultation").innerHTML = "<p>Erreur lors du filtrage des notes</p>";
-            }
-        }
-        
-        // Fonction pour vérifier si une date correspond à la période sélectionnée
-        function checkPeriod(dateString, periode) {
-            if (!periode) return true;
-            
-            const date = new Date(dateString);
-            const month = date.getMonth(); // 0-11 (janvier à décembre)
-            
-            if (periode === 'trimestre1') return month >= 8 || month <= 1; // Septembre à Janvier
-            if (periode === 'trimestre2') return month >= 2 && month <= 4; // Février à Avril
-            if (periode === 'trimestre3') return month >= 5 && month <= 7; // Mai à Juillet
-            
-            return true;
-        }
-        
-        async function afficherResultatsConsultation(notesFiltrees) {
-            const resultatsDiv = document.getElementById("resultatsConsultation");
-            
-            if (notesFiltrees.length === 0) {
-                resultatsDiv.innerHTML = "<p class='no-results'>Aucun résultat trouvé avec ces critères de filtrage.</p>";
-                return;
-            }
-            
-            try {
-                const attributions = await getAllItems('attributions');
-                const matieres = await getAllItems('matieres');
-                const classes = await getAllItems('classes');
-                const eleves = await getAllItems('eleves');
-                const enseignants = await getAllItems('enseignants');
-                
-                // Préparer les données pour l'affichage
-                let html = `
-                    <table>
+                <div class="tab-content active" id="studentsTab">
+                    <h3>Élèves nécessitant une attention particulière</h3>
+                    <table id="studentsTable">
                         <thead>
                             <tr>
                                 <th>Élève</th>
                                 <th>Classe</th>
                                 <th>Matière</th>
-                                <th>Enseignant</th>
-                                <th>Type</th>
-                                <th>Note</th>
-                                <th>Coefficient</th>
-                                <th>Date</th>
+                                <th>Moyenne</th>
+                                <th>Points forts</th>
+                                <th>Points faibles</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
+                            <!-- Les données seront générées ici -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="tab-content" id="classesTab">
+                    <h3>Performances par classe</h3>
+                    <table id="classesTable">
+                        <thead>
+                            <tr>
+                                <th>Classe</th>
+                                <th>Moyenne générale</th>
+                                <th>Élèves en difficulté</th>
+                                <th>Matière la plus faible</th>
+                                <th>Matière la plus forte</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Les données seront générées ici -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="tab-content" id="subjectsTab">
+                    <h3>Performances par matière</h3>
+                    <table id="subjectsTable">
+                        <thead>
+                            <tr>
+                                <th>Matière</th>
+                                <th>Moyenne générale</th>
+                                <th>Élèves en difficulté</th>
+                                <th>Classe la plus faible</th>
+                                <th>Classe la plus forte</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Les données seront générées ici -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="card student-details" id="studentDetails">
+                <h2>Détails de l'élève</h2>
+                <div id="studentDetailsContent">
+                    <!-- Les détails de l'élève seront affichés ici -->
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Outil d'analyse des évaluations - © 2023 Académie</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Références aux éléments DOM
+            const fileInput = document.getElementById('fileInput');
+            const browseButton = document.getElementById('browseButton');
+            const uploadArea = document.getElementById('uploadArea');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const resultsSection = document.getElementById('resultsSection');
+            const errorAlert = document.getElementById('errorAlert');
+            const successAlert = document.getElementById('successAlert');
+            const niveauFilter = document.getElementById('niveauFilter');
+            const classeFilter = document.getElementById('classeFilter');
+            const matiereFilter = document.getElementById('matiereFilter');
+            const searchInput = document.getElementById('searchInput');
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const studentsTable = document.getElementById('studentsTable');
+            const classesTable = document.getElementById('classesTable');
+            const subjectsTable = document.getElementById('subjectsTable');
+            const statsContainer = document.getElementById('statsContainer');
+            const studentDetails = document.getElementById('studentDetails');
+            const studentDetailsContent = document.getElementById('studentDetailsContent');
+            
+            let evaluationData = null;
+            let filteredData = null;
+            
+            // Gestionnaires d'événements pour l'upload
+            browseButton.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', handleFileUpload);
+            
+            // Glisser-déposer
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#3498db';
+                uploadArea.style.backgroundColor = '#edf7ff';
+            });
+            
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.style.borderColor = '#ccc';
+                uploadArea.style.backgroundColor = '#fafafa';
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#ccc';
+                uploadArea.style.backgroundColor = '#fafafa';
+                
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    handleFileUpload();
+                }
+            });
+            
+            // Filtres
+            niveauFilter.addEventListener('change', updateFilters);
+            classeFilter.addEventListener('change', updateFilters);
+            matiereFilter.addEventListener('change', updateFilters);
+            searchInput.addEventListener('input', updateFilters);
+            
+            // Onglets
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    
+                    // Désactiver tous les onglets
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(tc => tc.classList.remove('active'));
+                    
+                    // Activer l'onglet cliqué
+                    tab.classList.add('active');
+                    document.getElementById(`${tabId}Tab`).classList.add('active');
+                });
+            });
+            
+            // Fonction pour gérer l'upload de fichier
+            function handleFileUpload() {
+                const file = fileInput.files[0];
+                if (!file) return;
+                
+                if (file.type !== 'application/json') {
+                    showError('Veuillez sélectionner un fichier JSON valide.');
+                    return;
+                }
+                
+                loadingIndicator.style.display = 'block';
+                resultsSection.style.display = 'none';
+                errorAlert.style.display = 'none';
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const jsonData = JSON.parse(e.target.result);
+                        processData(jsonData);
+                    } catch (error) {
+                        showError('Erreur lors de l\'analyse du fichier JSON: ' + error.message);
+                        loadingIndicator.style.display = 'none';
+                    }
+                };
+                
+                reader.onerror = function() {
+                    showError('Erreur lors de la lecture du fichier.');
+                    loadingIndicator.style.display = 'none';
+                };
+                
+                reader.readAsText(file);
+            }
+            
+            // Fonction pour traiter les données JSON
+            function processData(data) {
+                // Validation basique des données
+                if (!data || !data.evaluations || !Array.isArray(data.evaluations)) {
+                    showError('Le format du fichier JSON est invalide. Il doit contenir un tableau "evaluations".');
+                    loadingIndicator.style.display = 'none';
+                    return;
+                }
+                
+                evaluationData = data;
+                filteredData = JSON.parse(JSON.stringify(data)); // Deep copy
+                
+                // Mise à jour des filtres
+                updateFilterOptions();
+                
+                // Analyse des données
+                analyzeData();
+                
+                // Affichage des résultats
+                loadingIndicator.style.display = 'none';
+                resultsSection.style.display = 'block';
+                showSuccess('Données importées avec succès!');
+            }
+            
+            // Fonction pour mettre à jour les options des filtres
+            function updateFilterOptions() {
+                // Réinitialiser les filtres
+                classeFilter.innerHTML = '<option value="">Toutes les classes</option>';
+                matiereFilter.innerHTML = '<option value="">Toutes les matières</option>';
+                
+                const classes = new Set();
+                const matieres = new Set();
+                
+                evaluationData.evaluations.forEach(eval => {
+                    if (eval.classe) classes.add(eval.classe);
+                    if (eval.matiere) matieres.add(eval.matiere);
+                });
+                
+                // Ajouter les options de classe
+                classes.forEach(classe => {
+                    const option = document.createElement('option');
+                    option.value = classe;
+                    option.textContent = classe;
+                    classeFilter.appendChild(option);
+                });
+                
+                // Ajouter les options de matière
+                matieres.forEach(matiere => {
+                    const option = document.createElement('option');
+                    option.value = matiere;
+                    option.textContent = matiere;
+                    matiereFilter.appendChild(option);
+                });
+            }
+            
+            // Fonction pour mettre à jour les filtres
+            function updateFilters() {
+                if (!evaluationData) return;
+                
+                const niveau = niveauFilter.value;
+                const classe = classeFilter.value;
+                const matiere = matiereFilter.value;
+                const search = searchInput.value.toLowerCase();
+                
+                filteredData = JSON.parse(JSON.stringify(evaluationData)); // Reset filtered data
+                
+                // Appliquer les filtres
+                filteredData.evaluations = evaluationData.evaluations.filter(eval => {
+                    let match = true;
+                    
+                    if (niveau && eval.classe && !eval.classe.includes(niveau)) {
+                        match = false;
+                    }
+                    
+                    if (classe && eval.classe !== classe) {
+                        match = false;
+                    }
+                    
+                    if (matiere && eval.matiere !== matiere) {
+                        match = false;
+                    }
+                    
+                    if (search && eval.eleve && !eval.eleve.toLowerCase().includes(search)) {
+                        match = false;
+                    }
+                    
+                    return match;
+                });
+                
+                // Réanalyser les données filtrées
+                analyzeData();
+            }
+            
+            // Fonction pour analyser les données
+            function analyzeData() {
+                if (!filteredData) return;
+                
+                updateStats();
+                updateStudentsTable();
+                updateClassesTable();
+                updateSubjectsTable();
+            }
+            
+            // Fonction pour mettre à jour les statistiques
+            function updateStats() {
+                const evaluations = filteredData.evaluations;
+                
+                // Calculer les statistiques de base
+                const totalEvaluations = evaluations.length;
+                const totalEleves = new Set(evaluations.map(e => e.eleve)).size;
+                const totalClasses = new Set(evaluations.map(e => e.classe)).size;
+                const totalMatieres = new Set(evaluations.map(e => e.matiere)).size;
+                
+                // Calculer la moyenne générale
+                const notes = evaluations.map(e => e.note).filter(n => !isNaN(n));
+                const moyenneGenerale = notes.length ? (notes.reduce((a, b) => a + b, 0) / notes.length).toFixed(2) : 'N/A';
+                
+                // Compter les élèves en difficulté (note < 10)
+                const elevesEnDifficulte = new Set();
+                evaluations.forEach(e => {
+                    if (e.note < 10) {
+                        elevesEnDifficulte.add(e.eleve);
+                    }
+                });
+                
+                // Mettre à jour l'interface
+                statsContainer.innerHTML = `
+                    <div class="stat-card">
+                        <h3>Évaluations</h3>
+                        <div class="stat-value">${totalEvaluations}</div>
+                        <p>Total des évaluations</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Élèves</h3>
+                        <div class="stat-value">${totalEleves}</div>
+                        <p>Élèves évalués</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Moyenne</h3>
+                        <div class="stat-value">${moyenneGenerale}</div>
+                        <p>Moyenne générale</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>En difficulté</h3>
+                        <div class="stat-value">${elevesEnDifficulte.size}</div>
+                        <p>Élèves en difficulté</p>
+                    </div>
+                `;
+            }
+            
+            // Fonction pour mettre à jour le tableau des élèves
+            function updateStudentsTable() {
+                const evaluations = filteredData.evaluations;
+                const tbody = studentsTable.querySelector('tbody');
+                tbody.innerHTML = '';
+                
+                // Grouper les évaluations par élève et matière
+                const eleves = {};
+                
+                evaluations.forEach(eval => {
+                    if (!eleves[eval.eleve]) {
+                        eleves[eval.eleve] = {
+                            classe: eval.classe,
+                            matieres: {}
+                        };
+                    }
+                    
+                    if (!eleves[eval.eleve].matieres[eval.matiere]) {
+                        eleves[eval.eleve].matieres[eval.matiere] = {
+                            notes: [],
+                            pointsForts: [],
+                            pointsFaibles: []
+                        };
+                    }
+                    
+                    eleves[eval.eleve].matieres[eval.matiere].notes.push(eval.note);
+                    
+                    if (eval.pointsForts && Array.isArray(eval.pointsForts)) {
+                        eleves[eval.eleve].matieres[eval.matiere].pointsForts.push(...eval.pointsForts);
+                    }
+                    
+                    if (eval.pointsFaibles && Array.isArray(eval.pointsFaibles)) {
+                        eleves[eval.eleve].matieres[eval.matiere].pointsFaibles.push(...eval.pointsFaibles);
+                    }
+                });
+                
+                // Générer les lignes du tableau pour les élèves en difficulté
+                Object.keys(eleves).forEach(eleve => {
+                    const eleveData = eleves[eleve];
+                    
+                    Object.keys(eleveData.matieres).forEach(matiere => {
+                        const matiereData = eleveData.matieres[matiere];
+                        const moyenne = matiereData.notes.reduce((a, b) => a + b, 0) / matiereData.notes.length;
+                        
+                        // Afficher seulement les élèves avec une moyenne < 10 dans cette matière
+                        if (moyenne < 10) {
+                            const pointsForts = [...new Set(matiereData.pointsForts)].slice(0, 3).join(', ') || 'Aucun identifié';
+                            const pointsFaibles = [...new Set(matiereData.pointsFaibles)].slice(0, 3).join(', ') || 'Aucun identifié';
+                            
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${eleve}</td>
+                                <td>${eleveData.classe}</td>
+                                <td>${matiere}</td>
+                                <td>${moyenne.toFixed(2)}</td>
+                                <td>${pointsForts}</td>
+                                <td>${pointsFaibles}</td>
+                                <td>
+                                    <button class="btn view-details" data-eleve="${eleve}" data-classe="${eleveData.classe}">Détails</button>
+                                </td>
+                            `;
+                            tbody.appendChild(row);
+                        }
+                    });
+                });
+                
+                // Ajouter les écouteurs d'événements pour les boutons de détails
+                document.querySelectorAll('.view-details').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const eleve = this.getAttribute('data-eleve');
+                        const classe = this.getAttribute('data-classe');
+                        showStudentDetails(eleve, classe);
+                    });
+                });
+            }
+            
+            // Fonction pour mettre à jour le tableau des classes
+            function updateClassesTable() {
+                const evaluations = filteredData.evaluations;
+                const tbody = classesTable.querySelector('tbody');
+                tbody.innerHTML = '';
+                
+                // Grouper les évaluations par classe
+                const classes = {};
+                
+                evaluations.forEach(eval => {
+                    if (!classes[eval.classe]) {
+                        classes[eval.classe] = {
+                            matieres: {},
+                            eleves: new Set()
+                        };
+                    }
+                    
+                    classes[eval.classe].eleves.add(eval.eleve);
+                    
+                    if (!classes[eval.classe].matieres[eval.matiere]) {
+                        classes[eval.classe].matieres[eval.matiere] = {
+                            notes: []
+                        };
+                    }
+                    
+                    classes[eval.classe].matieres[eval.matiere].notes.push(eval.note);
+                });
+                
+                // Calculer les statistiques par classe
+                Object.keys(classes).forEach(classe => {
+                    const classeData = classes[classe];
+                    let moyenneGenerale = 0;
+                    let totalNotes = 0;
+                    let meilleureMatiere = '';
+                    let pireMatiere = '';
+                    let meilleureMoyenne = -1;
+                    let pireMoyenne = 20;
+                    
+                    // Compter les élèves en difficulté dans cette classe
+                    const elevesEnDifficulte = new Set();
+                    evaluations.forEach(e => {
+                        if (e.classe === classe && e.note < 10) {
+                            elevesEnDifficulte.add(e.eleve);
+                        }
+                    });
+                    
+                    // Calculer les moyennes par matière
+                    Object.keys(classeData.matieres).forEach(matiere => {
+                        const notes = classeData.matieres[matiere].notes;
+                        const moyenne = notes.reduce((a, b) => a + b, 0) / notes.length;
+                        moyenneGenerale += moyenne * notes.length;
+                        totalNotes += notes.length;
+                        
+                        if (moyenne > meilleureMoyenne) {
+                            meilleureMoyenne = moyenne;
+                            meilleureMatiere = matiere;
+                        }
+                        
+                        if (moyenne < pireMoyenne) {
+                            pireMoyenne = moyenne;
+                            pireMatiere = matiere;
+                        }
+                    });
+                    
+                    moyenneGenerale = totalNotes > 0 ? (moyenneGenerale / totalNotes).toFixed(2) : 0;
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${classe}</td>
+                        <td>${moyenneGenerale}</td>
+                        <td>${elevesEnDifficulte.size} / ${classeData.eleves.size}</td>
+                        <td>${pireMatiere} (${pireMoyenne.toFixed(2)})</td>
+                        <td>${meilleureMatiere} (${meilleureMoyenne.toFixed(2)})</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+            
+            // Fonction pour mettre à jour le tableau des matières
+            function updateSubjectsTable() {
+                const evaluations = filteredData.evaluations;
+                const tbody = subjectsTable.querySelector('tbody');
+                tbody.innerHTML = '';
+                
+                // Grouper les évaluations par matière
+                const matieres = {};
+                
+                evaluations.forEach(eval => {
+                    if (!matieres[eval.matiere]) {
+                        matieres[eval.matiere] = {
+                            classes: {},
+                            eleves: new Set()
+                        };
+                    }
+                    
+                    matieres[eval.matiere].eleves.add(eval.eleve);
+                    
+                    if (!matieres[eval.matiere].classes[eval.classe]) {
+                        matieres[eval.matiere].classes[eval.classe] = {
+                            notes: []
+                        };
+                    }
+                    
+                    matieres[eval.matiere].classes[eval.classe].notes.push(eval.note);
+                });
+                
+                // Calculer les statistiques par matière
+                Object.keys(matieres).forEach(matiere => {
+                    const matiereData = matieres[matiere];
+                    let moyenneGenerale = 0;
+                    let totalNotes = 0;
+                    let meilleureClasse = '';
+                    let pireClasse = '';
+                    let meilleureMoyenne = -1;
+                    let pireMoyenne = 20;
+                    
+                    // Compter les élèves en difficulté dans cette matière
+                    const elevesEnDifficulte = new Set();
+                    evaluations.forEach(e => {
+                        if (e.matiere === matiere && e.note < 10) {
+                            elevesEnDifficulte.add(e.eleve);
+                        }
+                    });
+                    
+                    // Calculer les moyennes par classe
+                    Object.keys(matiereData.classes).forEach(classe => {
+                        const notes = matiereData.classes[classe].notes;
+                        const moyenne = notes.reduce((a, b) => a + b, 0) / notes.length;
+                        moyenneGenerale += moyenne * notes.length;
+                        totalNotes += notes.length;
+                        
+                        if (moyenne > meilleureMoyenne) {
+                            meilleureMoyenne = moyenne;
+                            meilleureClasse = classe;
+                        }
+                        
+                        if (moyenne < pireMoyenne) {
+                            pireMoyenne = moyenne;
+                            pireClasse = classe;
+                        }
+                    });
+                    
+                    moyenneGenerale = totalNotes > 0 ? (moyenneGenerale / totalNotes).toFixed(2) : 0;
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${matiere}</td>
+                        <td>${moyenneGenerale}</td>
+                        <td>${elevesEnDifficulte.size} / ${matiereData.eleves.size}</td>
+                        <td>${pireClasse} (${pireMoyenne.toFixed(2)})</td>
+                        <td>${meilleureClasse} (${meilleureMoyenne.toFixed(2)})</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+            
+            // Fonction pour afficher les détails d'un élève
+            function showStudentDetails(eleve, classe) {
+                studentDetails.style.display = 'block';
+                
+                // Filtrer les évaluations pour cet élève
+                const evaluations = evaluationData.evaluations.filter(e => 
+                    e.eleve === eleve && e.classe === classe
+                );
+                
+                // Grouper par matière
+                const matieres = {};
+                
+                evaluations.forEach(eval => {
+                    if (!matieres[eval.matiere]) {
+                        matieres[eval.matiere] = {
+                            notes: [],
+                            pointsForts: [],
+                            pointsFaibles: []
+                        };
+                    }
+                    
+                    matieres[eval.matiere].notes.push(eval.note);
+                    
+                    if (eval.pointsForts && Array.isArray(eval.pointsForts)) {
+                        matieres[eval.matiere].pointsForts.push(...eval.pointsForts);
+                    }
+                    
+                    if (eval.pointsFaibles && Array.isArray(eval.pointsFaibles)) {
+                        matieres[eval.matiere].pointsFaibles.push(...eval.pointsFaibles);
+                    }
+                });
+                
+                // Générer le HTML pour les détails
+                let html = `
+                    <h3>${eleve} - ${classe}</h3>
+                    <div class="stats-grid" style="margin-bottom: 20px;">
                 `;
                 
-                notesFiltrees.forEach(note => {
-                    const attribution = attributions.find(a => a.id === note.id_enseignement);
-                    const matiere = matieres.find(m => m.id === attribution.id_matiere);
-                    const enseignant = enseignants.find(e => e.id === attribution.id_enseignant);
-                    const eleve = eleves.find(e => e.id === note.id_eleve);
-                    const classe = classes.find(c => c.id === eleve.id_classe);
-                    
-                    const noteClass = note.note >= 14 ? 'good-score' : 
-                                    note.note >= 10 ? 'average-score' : 'poor-score';
+                // Calculer les statistiques de l'élève
+                const allNotes = evaluations.map(e => e.note).filter(n => !isNaN(n));
+                const moyenneGenerale = allNotes.length ? (allNotes.reduce((a, b) => a + b, 0) / allNotes.length).toFixed(2) : 'N/A';
+                
+                const matieresEnDifficulte = Object.keys(matieres).filter(m => {
+                    const moyenne = matieres[m].notes.reduce((a, b) => a + b, 0) / matieres[m].notes.length;
+                    return moyenne < 10;
+                });
+                
+                html += `
+                    <div class="stat-card">
+                        <h3>Moyenne générale</h3>
+                        <div class="stat-value">${moyenneGenerale}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Matières évaluées</h3>
+                        <div class="stat-value">${Object.keys(matieres).length}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Matières en difficulté</h3>
+                        <div class="stat-value">${matieresEnDifficulte.length}</div>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 20px;">Détails par matière</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Matière</th>
+                            <th>Moyenne</th>
+                            <th>Notes</th>
+                            <th>Points forts</th>
+                            <th>Points faibles</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                `;
+                
+                Object.keys(matieres).forEach(matiere => {
+                    const matiereData = matieres[matiere];
+                    const moyenne = matiereData.notes.reduce((a, b) => a + b, 0) / matiereData.notes.length;
+                    const pointsForts = [...new Set(matiereData.pointsForts)].join(', ') || 'Aucun identifié';
+                    const pointsFaibles = [...new Set(matiereData.pointsFaibles)].join(', ') || 'Aucun identifié';
                     
                     html += `
                         <tr>
-                            <td>${eleve.nom} ${eleve.prenom}</td>
-                            <td>${classe.nom}</td>
-                            <td>${matiere.nom}</td>
-                            <td>${enseignant.nom} ${enseignant.prenom}</td>
-                            <td>${note.type}</td>
-                            <td class="${noteClass}">${note.note}/20</td>
-                            <td>${note.coefficient}</td>
-                            <td>${formatDate(note.date)}</td>
+                            <td>${matiere}</td>
+                            <td>${moyenne.toFixed(2)}</td>
+                            <td>${matiereData.notes.join(', ')}</td>
+                            <td>${pointsForts}</td>
+                            <td>${pointsFaibles}</td>
                         </tr>
                     `;
                 });
                 
                 html += `
-                        </tbody>
-                    </table>
+                    </tbody>
+                </table>
                 `;
                 
-                // Ajouter les statistiques
-                html += await genererStatistiques(notesFiltrees);
+                studentDetailsContent.innerHTML = html;
                 
-                resultatsDiv.innerHTML = html;
-            } catch (error) {
-                console.error("Erreur lors de l'affichage des résultats:", error);
-                resultatsDiv.innerHTML = "<p>Erreur lors de l'affichage des résultats</p>";
+                // Faire défiler jusqu'aux détails
+                studentDetails.scrollIntoView({ behavior: 'smooth' });
             }
-        }
-        
-        // Fonction pour générer les statistiques
-        async function genererStatistiques(notesFiltrees) {
-            if (notesFiltrees.length === 0) return '';
             
-            const eleves = await getAllItems('eleves');
-            const classes = await getAllItems('classes');
-            const attributions = await getAllItems('attributions');
-            const matieres = await getAllItems('matieres');
-            const enseignants = await getAllItems('enseignants');
-            
-            // Calculer la moyenne générale
-            let totalNotes = 0;
-            let totalCoefficients = 0;
-            
-            notesFiltrees.forEach(note => {
-                totalNotes += note.note * note.coefficient;
-                totalCoefficients += note.coefficient;
-            });
-            
-            const moyenneGenerale = totalCoefficients > 0 ? (totalNotes / totalCoefficients).toFixed(2) : 0;
-            
-            // Trouver les meilleurs et moins bons élèves
-            const studentAverages = {};
-            
-            notesFiltrees.forEach(note => {
-                const eleve = eleves.find(e => e.id === note.id_eleve);
-                if (!studentAverages[eleve.id]) {
-                    studentAverages[eleve.id] = {
-                        total: 0,
-                        coefficients: 0,
-                        name: `${eleve.nom} ${eleve.prenom}`
-                    };
-                }
-                
-                studentAverages[eleve.id].total += note.note * note.coefficient;
-                studentAverages[eleve.id].coefficients += note.coefficient;
-            });
-            
-            // Convertir en tableau et calculer les moyennes
-            const studentAveragesArray = Object.values(studentAverages)
-                .map(student => ({
-                    name: student.name,
-                    average: student.coefficients > 0 ? (student.total / student.coefficients).toFixed(2) : 0
-                }))
-                .sort((a, b) => b.average - a.average);
-            
-            const topStudents = studentAveragesArray.slice(0, 3);
-            const bottomStudents = studentAveragesArray.slice(-3).reverse();
-            
-            return `
-                <div class="stats-container">
-                    <div class="stat-box">
-                        <h4>Statistiques Générales</h4>
-                        <p>Nombre d'élèves: <strong>${Object.keys(studentAverages).length}</strong></p>
-                        <p>Nombre de notes: <strong>${notesFiltrees.length}</strong></p>
-                        <p>Moyenne générale: <strong>${moyenneGenerale}/20</strong></p>
-                    </div>
-                    
-                    <div class="student-ranking">
-                        <div class="ranking-box top-students">
-                            <h4>Meilleurs élèves</h4>
-                            ${topStudents.map(student => `
-                                <div class="ranking-item">
-                                    <span class="student-name">${student.name}</span>
-                                    <span class="student-score good-score">${student.average}/20</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                        
-                        <div class="ranking-box bottom-students">
-                            <h4>Élèves en difficulté</h4>
-                            ${bottomStudents.map(student => `
-                                <div class="ranking-item">
-                                    <span class="student-name">${student.name}</span>
-                                    <span class="student-score poor-score">${student.average}/20</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-        
-        // Helper functions
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('fr-FR');
-        }
-
-        // Fonctions pour générer les rapports PDF
-        async function genererRapportClasse() {
-            const classeId = document.getElementById("rapportClasse").value;
-            const matiereId = document.getElementById("rapportMatiereClasse").value;
-            
-            try {
-                const doc = new jsPDF();
-                doc.text("Rapport par Classe", 14, 15);
-                
-                let notes = await getAllItems('notes');
-                let eleves = await getAllItems('eleves');
-                let classes = await getAllItems('classes');
-                let matieres = await getAllItems('matieres');
-                let attributions = await getAllItems('attributions');
-                let enseignants = await getAllItems('enseignants');
-                
-                // Filtrer par classe
-                if (classeId) {
-                    const elevesClasse = eleves.filter(e => e.id_classe == classeId).map(e => e.id);
-                    notes = notes.filter(n => elevesClasse.includes(n.id_eleve));
-                }
-                
-                // Filtrer par matière
-                if (matiereId) {
-                    const enseignements = attributions.filter(a => a.id_matiere == matiereId).map(a => a.id);
-                    notes = notes.filter(n => enseignements.includes(n.id_enseignement));
-                }
-                
-                // Préparer les données pour le tableau
-                const tableData = [];
-                notes.forEach(note => {
-                    const attribution = attributions.find(a => a.id === note.id_enseignement);
-                    const matiere = matieres.find(m => m.id === attribution.id_matiere);
-                    const enseignant = enseignants.find(e => e.id === attribution.id_enseignant);
-                    const eleve = eleves.find(e => e.id === note.id_eleve);
-                    const classe = classes.find(c => c.id === eleve.id_classe);
-                    
-                    tableData.push([
-                        `${eleve.nom} ${eleve.prenom}`,
-                        classe.nom,
-                        matiere.nom,
-                        `${enseignant.nom} ${enseignant.prenom}`,
-                        note.type,
-                        note.note.toString(),
-                        note.coefficient.toString(),
-                        formatDate(note.date)
-                    ]);
-                });
-                
-                // Générer le tableau
-                doc.autoTable({
-                    head: [['Élève', 'Classe', 'Matière', 'Enseignant', 'Type', 'Note', 'Coefficient', 'Date']],
-                    body: tableData,
-                    startY: 20
-                });
-                
-                // Ajouter les statistiques
-                if (notes.length > 0) {
-                    let totalNotes = 0;
-                    let totalCoefficients = 0;
-                    
-                    notes.forEach(note => {
-                        totalNotes += note.note * note.coefficient;
-                        totalCoefficients += note.coefficient;
-                    });
-                    
-                    const moyenneGenerale = totalCoefficients > 0 ? (totalNotes / totalCoefficients).toFixed(2) : 0;
-                    
-                    doc.text(`Nombre de notes: ${notes.length}`, 14, doc.lastAutoTable.finalY + 10);
-                    doc.text(`Moyenne générale: ${moyenneGenerale}/20`, 14, doc.lastAutoTable.finalY + 20);
-                }
-                
-                doc.save('rapport_classe.pdf');
-            } catch (error) {
-                console.error("Erreur lors de la génération du rapport:", error);
-                alert("Erreur lors de la génération du rapport: " + error.message);
+            // Fonctions utilitaires pour afficher les messages
+            function showError(message) {
+                errorAlert.textContent = message;
+                errorAlert.style.display = 'block';
+                setTimeout(() => {
+                    errorAlert.style.display = 'none';
+                }, 5000);
             }
-        }
-        
-        async function genererRapportEnseignant() {
-            const enseignantId = document.getElementById("rapportEnseignant").value;
-            const matiereId = document.getElementById("rapportMatiereEnseignant").value;
             
-            try {
-                const doc = new jsPDF();
-                doc.text("Rapport par Enseignant", 14, 15);
-                
-                let notes = await getAllItems('notes');
-                let eleves = await getAllItems('eleves');
-                let classes = await getAllItems('classes');
-                let matieres = await getAllItems('matieres');
-                let attributions = await getAllItems('attributions');
-                let enseignants = await getAllItems('enseignants');
-                
-                // Filtrer par enseignant
-                if (enseignantId) {
-                    const enseignements = attributions.filter(a => a.id_enseignant == enseignantId).map(a => a.id);
-                    notes = notes.filter(n => enseignements.includes(n.id_enseignement));
-                }
-                
-                // Filtrer par matière
-                if (matiereId) {
-                    const enseignements = attributions.filter(a => a.id_matiere == matiereId).map(a => a.id);
-                    notes = notes.filter(n => enseignements.includes(n.id_enseignement));
-                }
-                
-                // Préparer les données pour le tableau
-                const tableData = [];
-                notes.forEach(note => {
-                    const attribution = attributions.find(a => a.id === note.id_enseignement);
-                    const matiere = matieres.find(m => m.id === attribution.id_matiere);
-                    const enseignant = enseignants.find(e => e.id === attribution.id_enseignant);
-                    const eleve = eleves.find(e => e.id === note.id_eleve);
-                    const classe = classes.find(c => c.id === eleve.id_classe);
-                    
-                    tableData.push([
-                        `${eleve.nom} ${eleve.prenom}`,
-                        classe.nom,
-                        matiere.nom,
-                        note.type,
-                        note.note.toString(),
-                        note.coefficient.toString(),
-                        formatDate(note.date)
-                    ]);
-                });
-                
-                // Générer le tableau
-                doc.autoTable({
-                    head: [['Élève', 'Classe', 'Matière', 'Type', 'Note', 'Coefficient', 'Date']],
-                    body: tableData,
-                    startY: 20
-                });
-                
-                // Ajouter les statistiques
-                if (notes.length > 0) {
-                    let totalNotes = 0;
-                    let totalCoefficients = 0;
-                    
-                    notes.forEach(note => {
-                        totalNotes += note.note * note.coefficient;
-                        totalCoefficients += note.coefficient;
-                    });
-                    
-                    const moyenneGenerale = totalCoefficients > 0 ? (totalNotes / totalCoefficients).toFixed(2) : 0;
-                    
-                    doc.text(`Nombre de notes: ${notes.length}`, 14, doc.lastAutoTable.finalY + 10);
-                    doc.text(`Moyenne générale: ${moyenneGenerale}/20`, 14, doc.lastAutoTable.finalY + 20);
-                }
-                
-                doc.save('rapport_enseignant.pdf');
-            } catch (error) {
-                console.error("Erreur lors de la génération du rapport:", error);
-                alert("Erreur lors de la génération du rapport: " + error.message);
-            }
-        }
-        
-        async function genererRapportMatiere() {
-            const matiereId = document.getElementById("rapportMatiere").value;
-            const classeId = document.getElementById("rapportClasseMatiere").value;
-            
-            try {
-                const doc = new jsPDF();
-                doc.text("Rapport par Matière", 14, 15);
-                
-                let notes = await getAllItems('notes');
-                let eleves = await getAllItems('eleves');
-                let classes = await getAllItems('classes');
-                let matieres = await getAllItems('matieres');
-                let attributions = await getAllItems('attributions');
-                let enseignants = await getAllItems('enseignants');
-                
-                // Filtrer par matière
-                if (matiereId) {
-                    const enseignements = attributions.filter(a => a.id_matiere == matiereId).map(a => a.id);
-                    notes = notes.filter(n => enseignements.includes(n.id_enseignement));
-                }
-                
-                // Filtrer par classe
-                if (classeId) {
-                    const elevesClasse = eleves.filter(e => e.id_classe == classeId).map(e => e.id);
-                    notes = notes.filter(n => elevesClasse.includes(n.id_eleve));
-                }
-                
-                // Préparer les données pour le tableau
-                const tableData = [];
-                notes.forEach(note => {
-                    const attribution = attributions.find(a => a.id === note.id_enseignement);
-                    const matiere = matieres.find(m => m.id === attribution.id_matiere);
-                    const enseignant = enseignants.find(e => e.id === attribution.id_enseignant);
-                    const eleve = eleves.find(e => e.id === note.id_eleve);
-                    const classe = classes.find(c => c.id === eleve.id_classe);
-                    
-                    tableData.push([
-                        `${eleve.nom} ${eleve.prenom}`,
-                        classe.nom,
-                        `${enseignant.nom} ${enseignant.prenom}`,
-                        note.type,
-                        note.note.toString(),
-                        note.coefficient.toString(),
-                        formatDate(note.date)
-                    ]);
-                });
-                
-                // Générer le tableau
-                doc.autoTable({
-                    head: [['Élève', 'Classe', 'Enseignant', 'Type', 'Note', 'Coefficient', 'Date']],
-                    body: tableData,
-                    startY: 20
-                });
-                
-                // Ajouter les statistiques
-                if (notes.length > 0) {
-                    let totalNotes = 0;
-                    let totalCoefficients = 0;
-                    
-                    notes.forEach(note => {
-                        totalNotes += note.note * note.coefficient;
-                        totalCoefficients += note.coefficient;
-                    });
-                    
-                    const moyenneGenerale = totalCoefficients > 0 ? (totalNotes / totalCoefficients).toFixed(2) : 0;
-                    
-                    doc.text(`Nombre de notes: ${notes.length}`, 14, doc.lastAutoTable.finalY + 10);
-                    doc.text(`Moyenne générale: ${moyenneGenerale}/20`, 14, doc.lastAutoTable.finalY + 20);
-                }
-                
-                doc.save('rapport_matiere.pdf');
-            } catch (error) {
-                console.error("Erreur lors de la génération du rapport:", error);
-                alert("Erreur lors de la génération du rapport: " + error.message);
-            }
-        }
-        
-        async function genererRapportEvaluations() {
-            const typeEvaluation = document.getElementById("rapportTypeEvaluation").value;
-            const periode = document.getElementById("rapportPeriode").value;
-            
-            try {
-                const doc = new jsPDF();
-                doc.text("Rapport des Évaluations", 14, 15);
-                
-                let notes = await getAllItems('notes');
-                let eleves = await getAllItems('eleves');
-                let classes = await getAllItems('classes');
-                let matieres = await getAllItems('matieres');
-                let attributions = await getAllItems('attributions');
-                let enseignants = await getAllItems('enseignants');
-                
-                // Filtrer par type d'évaluation
-                if (typeEvaluation) {
-                    notes = notes.filter(n => n.type === typeEvaluation);
-                }
-                
-                // Filtrer par période
-                if (periode) {
-                    notes = notes.filter(n => checkPeriod(n.date, periode));
-                }
-                
-                // Préparer les données pour le tableau
-                const tableData = [];
-                notes.forEach(note => {
-                    const attribution = attributions.find(a => a.id === note.id_enseignement);
-                    const matiere = matieres.find(m => m.id === attribution.id_matiere);
-                    const enseignant = enseignants.find(e => e.id === attribution.id_enseignant);
-                    const eleve = eleves.find(e => e.id === note.id_eleve);
-                    const classe = classes.find(c => c.id === eleve.id_classe);
-                    
-                    tableData.push([
-                        `${eleve.nom} ${eleve.prenom}`,
-                        classe.nom,
-                        matiere.nom,
-                        `${enseignant.nom} ${enseignant.prenom}`,
-                        note.type,
-                        note.note.toString(),
-                        note.coefficient.toString(),
-                        formatDate(note.date)
-                    ]);
-                });
-                
-                // Générer le tableau
-                doc.autoTable({
-                    head: [['Élève', 'Classe', 'Matière', 'Enseignant', 'Type', 'Note', 'Coefficient', 'Date']],
-                    body: tableData,
-                    startY: 20
-                });
-                
-                // Ajouter les statistiques
-                if (notes.length > 0) {
-                    let totalNotes = 0;
-                    let totalCoefficients = 0;
-                    
-                    notes.forEach(note => {
-                        totalNotes += note.note * note.coefficient;
-                        totalCoefficients += note.coefficient;
-                    });
-                    
-                    const moyenneGenerale = totalCoefficients > 0 ? (totalNotes / totalCoefficients).toFixed(2) : 0;
-                    
-                    doc.text(`Nombre de notes: ${notes.length}`, 14, doc.lastAutoTable.finalY + 10);
-                    doc.text(`Moyenne générale: ${moyenneGenerale}/20`, 14, doc.lastAutoTable.finalY + 20);
-                }
-                
-                doc.save('rapport_evaluations.pdf');
-            } catch (error) {
-                console.error("Erreur lors de la génération du rapport:", error);
-                alert("Erreur lors de la génération du rapport: " + error.message);
-            }
-        }
-        
-        // Fonctions pour mettre à jour les tables
-        async function updateAllTables() {
-            await updateTableEnseignants();
-            await updateTableMatieres();
-            await updateTableClasses();
-            await updateTableAttributions();
-            await updateTableEleves();
-            await updateTableNotes();
-            await fillSelectOptions();
-        }
-        
-        async function updateTableEnseignants() {
-            try {
-                const enseignants = await getAllItems('enseignants');
-                const tbody = document.querySelector("#tableEnseignants tbody");
-                tbody.innerHTML = '';
-                
-                enseignants.forEach(ens => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${ens.id}</td>
-                        <td>${ens.nom}</td>
-                        <td>${ens.prenom}</td>
-                        <td>${ens.email}</td>
-                        <td>
-                            <button onclick="editEnseignant(${ens.id})">Modifier</button>
-                            <button onclick="deleteEnseignant(${ens.id})">Supprimer</button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (error) {
-                console.error("Erreur lors de la mise à jour de la table enseignants:", error);
-            }
-        }
-        
-        async function updateTableMatieres() {
-            try {
-                const matieres = await getAllItems('matieres');
-                const tbody = document.querySelector("#tableMatieres tbody");
-                tbody.innerHTML = '';
-                
-                matieres.forEach(mat => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${mat.id}</td>
-                        <td>${mat.nom}</td>
-                        <td>
-                            <button onclick="editMatiere(${mat.id})">Modifier</button>
-                            <button onclick="deleteMatiere(${mat.id})">Supprimer</button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (error) {
-                console.error("Erreur lors de la mise à jour de la table matieres:", error);
-            }
-        }
-        
-        async function updateTableClasses() {
-            try {
-                const classes = await getAllItems('classes');
-                const tbody = document.querySelector("#tableClasses tbody");
-                tbody.innerHTML = '';
-                
-                classes.forEach(cl => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${cl.id}</td>
-                        <td>${cl.nom}</td>
-                        <td>${cl.niveau}</td>
-                        <td>
-                            <button onclick="editClasse(${cl.id})">Modifier</button>
-                            <button onclick="deleteClasse(${cl.id})">Supprimer</button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (error) {
-                console.error("Erreur lors de la mise à jour de la table classes:", error);
-            }
-        }
-        
-        async function updateTableAttributions() {
-            try {
-                const attributions = await getAllItems('attributions');
-                const enseignants = await getAllItems('enseignants');
-                const matieres = await getAllItems('matieres');
-                const classes = await getAllItems('classes');
-                
-                const tbody = document.querySelector("#tableAttributions tbody");
-                tbody.innerHTML = '';
-                
-                attributions.forEach(att => {
-                    const enseignant = enseignants.find(e => e.id === att.id_enseignant);
-                    const matiere = matieres.find(m => m.id === att.id_matiere);
-                    const classe = classes.find(c => c.id === att.id_classe);
-                    
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${att.id}</td>
-                        <td>${enseignant ? enseignant.nom + ' ' + enseignant.prenom : 'N/A'}</td>
-                        <td>${matiere ? matiere.nom : 'N/A'}</td>
-                        <td>${classe ? classe.nom : 'N/A'}</td>
-                        <td>${att.annee}</td>
-                        <td>
-                            <button onclick="editAttribution(${att.id})">Modifier</button>
-                            <button onclick="deleteAttribution(${att.id})">Supprimer</button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (error) {
-                console.error("Erreur lors de la mise à jour de la table attributions:", error);
-            }
-        }
-        
-        async function updateTableEleves() {
-            try {
-                const eleves = await getAllItems('eleves');
-                const classes = await getAllItems('classes');
-                
-                const tbody = document.querySelector("#tableEleves tbody");
-                tbody.innerHTML = '';
-                
-                eleves.forEach(el => {
-                    const classe = classes.find(c => c.id === el.id_classe);
-                    
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${el.id}</td>
-                        <td>${el.nom}</td>
-                        <td>${el.prenom}</td>
-                        <td>${el.age}</td>
-                        <td>${el.sexe === 'M' ? 'Masculin' : 'Féminin'}</td>
-                        <td>${classe ? classe.nom : 'N/A'}</td>
-                        <td>
-                            <button onclick="editEleve(${el.id})">Modifier</button>
-                            <button onclick="deleteEleve(${el.id})">Supprimer</button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (error) {
-                console.error("Erreur lors de la mise à jour de la table eleves:", error);
-            }
-        }
-        
-        async function updateTableNotes() {
-            try {
-                const notes = await getAllItems('notes');
-                const eleves = await getAllItems('eleves');
-                const attributions = await getAllItems('attributions');
-                const matieres = await getAllItems('matieres');
-                const classes = await getAllItems('classes');
-                
-                const tbody = document.querySelector("#tableNotes tbody");
-                tbody.innerHTML = '';
-                
-                notes.forEach(note => {
-                    const attribution = attributions.find(a => a.id === note.id_enseignement);
-                    const matiere = matieres.find(m => m.id === attribution.id_matiere);
-                    const eleve = eleves.find(e => e.id === note.id_eleve);
-                    const classe = classes.find(c => c.id === eleve.id_classe);
-                    
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${note.id}</td>
-                        <td>${eleve ? eleve.nom + ' ' + eleve.prenom : 'N/A'}</td>
-                        <td>${matiere ? matiere.nom : 'N/A'}</td>
-                        <td>${classe ? classe.nom : 'N/A'}</td>
-                        <td>${note.note}/20</td>
-                        <td>${note.type}</td>
-                        <td>${formatDate(note.date)}</td>
-                        <td>
-                            <button onclick="editNote(${note.id})">Modifier</button>
-                            <button onclick="deleteNote(${note.id})">Supprimer</button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (error) {
-                console.error("Erreur lors de la mise à jour de la table notes:", error);
-            }
-        }
-        
-        // Gestion des formulaires
-        document.getElementById("formEnseignant").addEventListener("submit", async function(e) {
-            e.preventDefault();
-            
-            const id = document.getElementById("enseignantId").value;
-            const nom = document.getElementById("enseignantNom").value;
-            const prenom = document.getElementById("enseignantPrenom").value;
-            const email = document.getElementById("enseignantEmail").value;
-            
-            try {
-                if (id) {
-                    await updateItem('enseignants', {id: parseInt(id), nom, prenom, email});
-                } else {
-                    await addItem('enseignants', {nom, prenom, email});
-                }
-                
-                resetEnseignantForm();
-                await updateTableEnseignants();
-                await fillSelectOptions();
-            } catch (error) {
-                console.error("Erreur lors de l'enregistrement de l'enseignant:", error);
-                alert("Erreur lors de l'enregistrement: " + error.message);
+            function showSuccess(message) {
+                successAlert.textContent = message;
+                successAlert.style.display = 'block';
+                setTimeout(() => {
+                    successAlert.style.display = 'none';
+                }, 3000);
             }
         });
-        
-        document.getElementById("formMatiere").addEventListener("submit", async function(e) {
-            e.preventDefault();
-            
-            const id = document.getElementById("matiereId").value;
-            const nom = document.getElementById("nomMatiere").value;
-            
-            try {
-                if (id) {
-                    await updateItem('matieres', {id: parseInt(id), nom});
-                } else {
-                    await addItem('matieres', {nom});
-                }
-                
-                resetMatiereForm();
-                await updateTableMatieres();
-                await fillSelectOptions();
-            } catch (error) {
-                console.error("Erreur lors de l'enregistrement de la matière:", error);
-                alert("Erreur lors de l'enregistrement: " + error.message);
-            }
-        });
-        
-        document.getElementById("formClasse").addEventListener("submit", async function(e) {
-            e.preventDefault();
-            
-            const id = document.getElementById("classeId").value;
-            const nom = document.getElementById("nomClasse").value;
-            const niveau = document.getElementById("niveauClasse").value;
-            
-            try {
-                if (id) {
-                    await updateItem('classes', {id: parseInt(id), nom, niveau});
-                } else {
-                    await addItem('classes', {nom, niveau});
-                }
-                
-                resetClasseForm();
-                await updateTableClasses();
-                await fillSelectOptions();
-            } catch (error) {
-                console.error("Erreur lors de l'enregistrement de la classe:", error);
-                alert("Erreur lors de l'enregistrement: " + error.message);
-            }
-        });
-        
-        document.getElementById("formAttribution").addEventListener("submit", async function(e) {
-            e.preventDefault();
-            
-            const id = document.getElementById("attributionId").value;
-            const id_enseignant = document.getElementById("attributionEnseignant").value;
-            const id_matiere = document.getElementById("attributionMatiere").value;
-            const id_classe = document.getElementById("attributionClasse").value;
-            const annee = document.getElementById("anneeScolaire").value;
-            
-            try {
-                if (id) {
-                    await updateItem('attributions', {id: parseInt(id), id_enseignant: parseInt(id_enseignant), id_matiere: parseInt(id_matiere), id_classe: parseInt(id_classe), annee});
-                } else {
-                    await addItem('attributions', {id_enseignant: parseInt(id_enseignant), id_matiere: parseInt(id_matiere), id_classe: parseInt(id_classe), annee});
-                }
-                
-                resetAttributionForm();
-                await updateTableAttributions();
-                await fillSelectOptions();
-            } catch (error) {
-                console.error("Erreur lors de l'enregistrement de l'attribution:", error);
-                alert("Erreur lors de l'enregistrement: " + error.message);
-            }
-        });
-        
-        document.getElementById("formEleve").addEventListener("submit", async function(e) {
-            e.preventDefault();
-            
-            const id = document.getElementById("eleveId").value;
-            const nom = document.getElementById("eleveNom").value;
-            const prenom = document.getElementById("elevePrenom").value;
-            const age = document.getElementById("eleveAge").value;
-            const sexe = document.getElementById("eleveSexe").value;
-            const id_classe = document.getElementById("eleveClasse").value;
-            
-            try {
-                if (id) {
-                    await updateItem('eleves', {id: parseInt(id), nom, prenom, age: parseInt(age), sexe, id_classe: parseInt(id_classe)});
-                } else {
-                    await addItem('eleves', {nom, prenom, age: parseInt(age), sexe, id_classe: parseInt(id_classe)});
-                }
-                
-                resetEleveForm();
-                await updateTableEleves();
-                await fillSelectOptions();
-            } catch (error) {
-                console.error("Erreur lors de l'enregistrement de l'élève:", error);
-                alert("Erreur lors de l'enregistrement: " + error.message);
-            }
-        });
-        
-        document.getElementById("formNote").addEventListener("submit", async function(e) {
-            e.preventDefault();
-            
-            const id = document.getElementById("noteId").value;
-            const id_enseignement = document.getElementById("noteEnseignant").value;
-            const id_eleve = document.getElementById("noteEleve").value;
-            const note = document.getElementById("noteValeur").value;
-            const type = document.getElementById("noteType").value;
-            const date = document.getElementById("noteDate").value;
-            const coefficient = document.getElementById("noteCoefficient").value;
-            const commentaire = document.getElementById("noteCommentaire").value;
-            
-            try {
-                if (id) {
-                    await updateItem('notes', {id: parseInt(id), id_enseignement: parseInt(id_enseignement), id_eleve: parseInt(id_eleve), note: parseFloat(note), type, date, coefficient: parseInt(coefficient), commentaire});
-                } else {
-                    await addItem('notes', {id_enseignement: parseInt(id_enseignement), id_eleve: parseInt(id_eleve), note: parseFloat(note), type, date, coefficient: parseInt(coefficient), commentaire});
-                }
-                
-                resetNoteForm();
-                await updateTableNotes();
-            } catch (error) {
-                console.error("Erreur lors de l'enregistrement de la note:", error);
-                alert("Erreur lors de l'enregistrement: " + error.message);
-            }
-        });
-        
-        // Fonctions de réinitialisation des formulaires
-        function resetEnseignantForm() {
-            document.getElementById("enseignantId").value = "";
-            document.getElementById("enseignantNom").value = "";
-            document.getElementById("enseignantPrenom").value = "";
-            document.getElementById("enseignantEmail").value = "";
-        }
-        
-        function resetMatiereForm() {
-            document.getElementById("matiereId").value = "";
-            document.getElementById("nomMatiere").value = "";
-        }
-        
-        function resetClasseForm() {
-            document.getElementById("classeId").value = "";
-            document.getElementById("nomClasse").value = "";
-            document.getElementById("niveauClasse").value = "";
-        }
-        
-        function resetAttributionForm() {
-            document.getElementById("attributionId").value = "";
-            document.getElementById("attributionEnseignant").value = "";
-            document.getElementById("attributionMatiere").value = "";
-            document.getElementById("attributionClasse").value = "";
-            document.getElementById("anneeScolaire").value = "";
-        }
-        
-        function resetEleveForm() {
-            document.getElementById("eleveId").value = "";
-            document.getElementById("eleveNom").value = "";
-            document.getElementById("elevePrenom").value = "";
-            document.getElementById("eleveAge").value = "";
-            document.getElementById("eleveSexe").value = "";
-            document.getElementById("eleveClasse").value = "";
-        }
-        
-        function resetNoteForm() {
-            document.getElementById("noteId").value = "";
-            document.getElementById("noteEnseignant").value = "";
-            document.getElementById("noteMatiere").value = "";
-            document.getElementById("noteClasse").value = "";
-            document.getElementById("noteEleve").value = "";
-            document.getElementById("noteValeur").value = "";
-            document.getElementById("noteType").value = "DS";
-            document.getElementById("noteDate").valueAsDate = new Date();
-            document.getElementById("noteCoefficient").value = "1";
-            document.getElementById("noteCommentaire").value = "";
-        }
-        
-        // Fonctions d'édition
-        async function editEnseignant(id) {
-            try {
-                const enseignant = await getItemById('enseignants', id);
-                document.getElementById("enseignantId").value = enseignant.id;
-                document.getElementById("enseignantNom").value = enseignant.nom;
-                document.getElementById("enseignantPrenom").value = enseignant.prenom;
-                document.getElementById("enseignantEmail").value = enseignant.email;
-                
-                // Scroll to form
-                document.getElementById("formEnseignant").scrollIntoView();
-            } catch (error) {
-                console.error("Erreur lors de la récupération de l'enseignant:", error);
-            }
-        }
-        
-        async function editMatiere(id) {
-            try {
-                const matiere = await getItemById('matieres', id);
-                document.getElementById("matiereId").value = matiere.id;
-                document.getElementById("nomMatiere").value = matiere.nom;
-                
-                // Scroll to form
-                document.getElementById("formMatiere").scrollIntoView();
-            } catch (error) {
-                console.error("Erreur lors de la récupération de la matière:", error);
-            }
-        }
-        
-        async function editClasse(id) {
-            try {
-                const classe = await getItemById('classes', id);
-                document.getElementById("classeId").value = classe.id;
-                document.getElementById("nomClasse").value = classe.nom;
-                document.getElementById("niveauClasse").value = classe.niveau;
-                
-                // Scroll to form
-                document.getElementById("formClasse").scrollIntoView();
-            } catch (error) {
-                console.error("Erreur lors de la récupération de la classe:", error);
-            }
-        }
-        
-        async function editAttribution(id) {
-            try {
-                const attribution = await getItemById('attributions', id);
-                document.getElementById("attributionId").value = attribution.id;
-                document.getElementById("attributionEnseignant").value = attribution.id_enseignant;
-                document.getElementById("attributionMatiere").value = attribution.id_matiere;
-                document.getElementById("attributionClasse").value = attribution.id_classe;
-                document.getElementById("anneeScolaire").value = attribution.annee;
-                
-                // Scroll to form
-                document.getElementById("formAttribution").scrollIntoView();
-            } catch (error) {
-                console.error("Erreur lors de la récupération de l'attribution:", error);
-            }
-        }
-        
-        async function editEleve(id) {
-            try {
-                const eleve = await getItemById('eleves', id);
-                document.getElementById("eleveId").value = eleve.id;
-                document.getElementById("eleveNom").value = eleve.nom;
-                document.getElementById("elevePrenom").value = eleve.prenom;
-                document.getElementById("eleveAge").value = eleve.age;
-                document.getElementById("eleveSexe").value = eleve.sexe;
-                document.getElementById("eleveClasse").value = eleve.id_classe;
-                
-                // Scroll to form
-                document.getElementById("formEleve").scrollIntoView();
-            } catch (error) {
-                console.error("Erreur lors de la récupération de l'élève:", error);
-            }
-        }
-        
-        async function editNote(id) {
-            try {
-                const note = await getItemById('notes', id);
-                document.getElementById("noteId").value = note.id;
-                document.getElementById("noteEnseignant").value = note.id_enseignement;
-                await chargerMatieresClasses();
-                document.getElementById("noteMatiere").value = note.id_matiere;
-                document.getElementById("noteClasse").value = note.id_classe;
-                await chargerEleves();
-                document.getElementById("noteEleve").value = note.id_eleve;
-                document.getElementById("noteValeur").value = note.note;
-                document.getElementById("noteType").value = note.type;
-                document.getElementById("noteDate").value = note.date;
-                document.getElementById("noteCoefficient").value = note.coefficient;
-                document.getElementById("noteCommentaire").value = note.commentaire || "";
-                
-                // Scroll to form
-                document.getElementById("formNote").scrollIntoView();
-            } catch (error) {
-                console.error("Erreur lors de la récupération de la note:", error);
-            }
-        }
-        
-        // Fonctions de suppression
-        async function deleteEnseignant(id) {
-            if (!confirm("Êtes-vous sûr de vouloir supprimer cet enseignant ?")) return;
-            
-            try {
-                await deleteItem('enseignants', id);
-                await updateTableEnseignants();
-                await fillSelectOptions();
-            } catch (error) {
-                console.error("Erreur lors de la suppression de l'enseignant:", error);
-                alert("Erreur lors de la suppression: " + error.message);
-            }
-        }
-        
-        async function deleteMatiere(id) {
-            if (!confirm("Êtes-vous sûr de vouloir supprimer cette matière ?")) return;
-            
-            try {
-                await deleteItem('matieres', id);
-                await updateTableMatieres();
-                await fillSelectOptions();
-            } catch (error) {
-                console.error("Erreur lors de la suppression de la matière:", error);
-                alert("Erreur lors de la suppression: " + error.message);
-            }
-        }
-        
-        async function deleteClasse(id) {
-            if (!confirm("Êtes-vous sûr de vouloir supprimer cette classe ?")) return;
-            
-            try {
-                await deleteItem('classes', id);
-                await updateTableClasses();
-                await fillSelectOptions();
-            } catch (error) {
-                console.error("Erreur lors de la suppression de la classe:", error);
-                alert("Erreur lors de la suppression: " + error.message);
-            }
-        }
-        
-        async function deleteAttribution(id) {
-            if (!confirm("Êtes-vous sûr de vouloir supprimer cette attribution ?")) return;
-            
-            try {
-                await deleteItem('attributions', id);
-                await updateTableAttributions();
-                await fillSelectOptions();
-            } catch (error) {
-                console.error("Erreur lors de la suppression de l'attribution:", error);
-                alert("Erreur lors de la suppression: " + error.message);
-            }
-        }
-        
-        async function deleteEleve(id) {
-            if (!confirm("Êtes-vous sûr de vouloir supprimer cet élève ?")) return;
-            
-            try {
-                await deleteItem('eleves', id);
-                await updateTableEleves();
-                await fillSelectOptions();
-            } catch (error) {
-                console.error("Erreur lors de la suppression de l'élève:", error);
-                alert("Erreur lors de la suppression: " + error.message);
-            }
-        }
-        
-        async function deleteNote(id) {
-            if (!confirm("Êtes-vous sûr de vouloir supprimer cette note ?")) return;
-            
-            try {
-                await deleteItem('notes', id);
-                await updateTableNotes();
-            } catch (error) {
-                console.error("Erreur lors de la suppression de la note:", error);
-                alert("Erreur lors de la suppression: " + error.message);
-            }
-        }
-        
-        // Fonctions pour exporter/importer/supprimer la base de données
-        async function exportDatabase() {
-            try {
-                const stores = ['enseignants', 'matieres', 'classes', 'attributions', 'eleves', 'notes'];
-                const data = {};
-                
-                for (const store of stores) {
-                    data[store] = await getAllItems(store);
-                }
-                
-                const dataStr = JSON.stringify(data, null, 2);
-                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-                
-                const exportFileDefaultName = 'gestion_notes_export.json';
-                
-                const linkElement = document.createElement('a');
-                linkElement.setAttribute('href', dataUri);
-                linkElement.setAttribute('download', exportFileDefaultName);
-                linkElement.click();
-            } catch (error) {
-                console.error("Erreur lors de l'export:", error);
-                alert("Erreur lors de l'export: " + error.message);
-            }
-        }
-        
-        async function importDatabase(input) {
-            const file = input.files[0];
-            if (!file) return;
-            
-            const reader = new FileReader();
-            reader.onload = async function(event) {
-                try {
-                    const data = JSON.parse(event.target.result);
-                    const stores = ['enseignants', 'matieres', 'classes', 'attributions', 'eleves', 'notes'];
-                    
-                    for (const store of stores) {
-                        if (data[store]) {
-                            const transaction = db.transaction([store], 'readwrite');
-                            const objectStore = transaction.objectStore(store);
-                            await objectStore.clear();
-                            
-                            for (const item of data[store]) {
-                                await addItem(store, item);
-                            }
-                        }
-                    }
-                    
-                    await updateAllTables();
-                    alert("Import réussi !");
-                } catch (error) {
-                    console.error("Erreur lors de l'import:", error);
-                    alert("Erreur lors de l'import: " + error.message);
-                }
-            };
-            reader.readAsText(file);
-        }
-        
-        async function clearDatabase() {
-            if (!confirm("Êtes-vous sûr de vouloir supprimer toutes les données ? Cette action est irréversible.")) {
-                return;
-            }
-            
-            try {
-                const stores = ['enseignants', 'matieres', 'classes', 'attributions', 'eleves', 'notes'];
-                for (const store of stores) {
-                    const transaction = db.transaction([store], 'readwrite');
-                    const objectStore = transaction.objectStore(store);
-                    await objectStore.clear();
-                }
-                
-                await updateAllTables();
-                alert("Base de données vidée avec succès.");
-            } catch (error) {
-                console.error("Erreur lors de la suppression:", error);
-                alert("Erreur lors de la suppression: " + error.message);
-            }
-        }
-        
-        async function saveAllData() {
-            try {
-                await exportDatabase();
-                alert("Données sauvegardées avec succès !");
-            } catch (error) {
-                console.error("Erreur lors de la sauvegarde:", error);
-                alert("Erreur lors de la sauvegarde: " + error.message);
-            }
-        }
-        
-        // Initialisation de l'application
-        window.onload = async function() {
-            try {
-                console.log("Début de l'initialisation de l'application");
-                
-                // Vérifier le support de IndexedDB
-                if (!('indexedDB' in window)) {
-                    throw new Error("IndexedDB n'est pas supporté par votre navigateur");
-                }
-                
-                // Attendre que jsPDF soit chargé
-                let jsPDFCheckCount = 0;
-                while (typeof window.jspdf === 'undefined' && jsPDFCheckCount < 10) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                    jsPDFCheckCount++;
-                }
-                
-                if (typeof window.jspdf === 'undefined') {
-                    throw new Error("La bibliothèque jsPDF n'a pas été chargée correctement");
-                }
-                
-                // Initialiser la base de données
-                await initDB();
-                
-                // Mettre à jour les tables
-                await updateAllTables();
-                await fillSelectOptions();
-                
-                // Initialiser la date de note
-                const noteDateInput = document.getElementById("noteDate");
-                if (noteDateInput) {
-                    noteDateInput.valueAsDate = new Date();
-                }
-                
-                console.log("Application initialisée avec succès");
-            } catch (error) {
-                console.error("Erreur lors de l'initialisation:", error);
-                
-                // Message d'erreur convivial
-                let errorMessage = "Une erreur est survenue lors du chargement de l'application.\n";
-                errorMessage += "Veuillez rafraîchir la page ou contacter le support.\n\n";
-                errorMessage += `Détails: ${error.message}`;
-                
-                alert(errorMessage);
-                
-                // Tentative de récupération
-                try {
-                    if (error.message.includes("bloquée") || error.message.includes("connexion")) {
-                        if (confirm("La base de données semble bloquée. Voulez-vous essayer de la réinitialiser ?")) {
-                            await clearDatabase();
-                            window.location.reload();
-                        }
-                    }
-                } catch (recoveryError) {
-                    console.error("Échec de la récupération:", recoveryError);
-                }
-            }
-        };
     </script>
 </body>
 </html>
