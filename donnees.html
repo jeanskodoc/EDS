@@ -1,20 +1,5 @@
 <!DOCTYPE html>
 <html lang="fr">
-     <style>
-  .btn-retour {
-    padding: 8px 16px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .btn-retour:hover {
-    background-color: #e0e0e0;
-  }
-</style>
-
-<button class="btn-retour" onclick="history.back()">← Retour</button>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -356,6 +341,20 @@
             padding: 15px;
         }
         
+        .btn-retour {
+            padding: 8px 16px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .btn-retour:hover {
+            background-color: #e0e0e0;
+        }
+        
         @media (max-width: 1200px) {
             .file-card {
                 width: calc(50% - 15px);
@@ -391,6 +390,8 @@
     </style>
 </head>
 <body>
+    <button class="btn-retour" onclick="history.back()">← Retour</button>
+    
     <div class="container">
         <header>
             <h1>Analyse des Évaluations des Élèves</h1>
@@ -450,16 +451,31 @@
                         <option value="">Toutes les matières</option>
                     </select>
                     
+                    <select id="eleveFilter">
+                        <option value="">Tous les élèves</option>
+                    </select>
+                    
                     <select id="fichierFilter">
                         <option value="">Tous les fichiers</option>
                     </select>
-                    
+                </div>
+                
+                <div class="filters">
                     <input type="text" id="searchInput" placeholder="Rechercher un élève...">
+                    
+                    <select id="resultTypeFilter">
+                        <option value="all">Tous les résultats</option>
+                        <option value="difficulty">Élèves en difficulté uniquement</option>
+                        <option value="success">Élèves performants uniquement</option>
+                    </select>
+                    
+                    <button class="btn" id="applyFilters">Appliquer les filtres</button>
+                    <button class="btn btn-warning" id="resetFilters">Réinitialiser</button>
                 </div>
                 
                 <div style="margin-top: 15px;">
                     <button class="btn btn-success" id="exportData">Exporter les résultats</button>
-                    <button class="btn btn-warning" id="clearData">Effacer toutes les données</button>
+                    <button class="btn btn-danger" id="clearData">Effacer toutes les données</button>
                 </div>
             </div>
             
@@ -472,7 +488,7 @@
             
             <div class="card">
                 <div class="tabs">
-                    <div class="tab active" data-tab="students">Élèves en difficulté</div>
+                    <div class="tab active" data-tab="students">Analyse par élève</div>
                     <div class="tab" data-tab="classes">Analyse par classe</div>
                     <div class="tab" data-tab="subjects">Analyse par matière</div>
                     <div class="tab" data-tab="files">Analyse par fichier</div>
@@ -480,14 +496,16 @@
                 </div>
                 
                 <div class="tab-content active" id="studentsTab">
-                    <h3>Élèves nécessitant une attention particulière</h3>
+                    <h3>Résultats des élèves</h3>
                     <table id="studentsTable">
                         <thead>
                             <tr>
                                 <th>Élève</th>
                                 <th>Classe</th>
                                 <th>Matière</th>
+                                <th>Note</th>
                                 <th>Moyenne</th>
+                                <th>Statut</th>
                                 <th>Points forts</th>
                                 <th>Points faibles</th>
                                 <th>Actions</th>
@@ -507,6 +525,7 @@
                                 <th>Classe</th>
                                 <th>Moyenne générale</th>
                                 <th>Élèves en difficulté</th>
+                                <th>Élèves performants</th>
                                 <th>Matière la plus faible</th>
                                 <th>Matière la plus forte</th>
                             </tr>
@@ -525,6 +544,7 @@
                                 <th>Matière</th>
                                 <th>Moyenne générale</th>
                                 <th>Élèves en difficulté</th>
+                                <th>Élèves performants</th>
                                 <th>Classe la plus faible</th>
                                 <th>Classe la plus forte</th>
                             </tr>
@@ -591,8 +611,12 @@
             const niveauFilter = document.getElementById('niveauFilter');
             const classeFilter = document.getElementById('classeFilter');
             const matiereFilter = document.getElementById('matiereFilter');
+            const eleveFilter = document.getElementById('eleveFilter');
             const fichierFilter = document.getElementById('fichierFilter');
             const searchInput = document.getElementById('searchInput');
+            const resultTypeFilter = document.getElementById('resultTypeFilter');
+            const applyFiltersButton = document.getElementById('applyFilters');
+            const resetFiltersButton = document.getElementById('resetFilters');
             const tabs = document.querySelectorAll('.tab');
             const tabContents = document.querySelectorAll('.tab-content');
             const studentsTable = document.getElementById('studentsTable');
@@ -641,10 +665,10 @@
             });
             
             // Filtres
-            niveauFilter.addEventListener('change', updateFilters);
-            classeFilter.addEventListener('change', updateFilters);
-            matiereFilter.addEventListener('change', updateFilters);
-            fichierFilter.addEventListener('change', updateFilters);
+            niveauFilter.addEventListener('change', updateFilterOptions);
+            classeFilter.addEventListener('change', updateFilterOptions);
+            applyFiltersButton.addEventListener('click', updateFilters);
+            resetFiltersButton.addEventListener('click', resetFilters);
             searchInput.addEventListener('input', updateFilters);
             
             // Boutons d'action
@@ -850,14 +874,17 @@
                 // Réinitialiser les filtres
                 classeFilter.innerHTML = '<option value="">Toutes les classes</option>';
                 matiereFilter.innerHTML = '<option value="">Toutes les matières</option>';
+                eleveFilter.innerHTML = '<option value="">Tous les élèves</option>';
                 fichierFilter.innerHTML = '<option value="">Tous les fichiers</option>';
                 
                 const classes = new Set();
                 const matieres = new Set();
+                const eleves = new Set();
                 
                 evaluationData.evaluations.forEach(eval => {
                     if (eval.classe) classes.add(eval.classe);
                     if (eval.matiere) matieres.add(eval.matiere);
+                    if (eval.eleve) eleves.add(eval.eleve);
                 });
                 
                 // Ajouter les options de classe
@@ -876,6 +903,14 @@
                     matiereFilter.appendChild(option);
                 });
                 
+                // Ajouter les options d'élève
+                eleves.forEach(eleve => {
+                    const option = document.createElement('option');
+                    option.value = eleve;
+                    option.textContent = eleve;
+                    eleveFilter.appendChild(option);
+                });
+                
                 // Ajouter les options de fichier
                 evaluationData.files.forEach(file => {
                     const option = document.createElement('option');
@@ -885,6 +920,21 @@
                 });
             }
             
+            // Réinitialiser les filtres
+            function resetFilters() {
+                niveauFilter.value = '';
+                classeFilter.value = '';
+                matiereFilter.value = '';
+                eleveFilter.value = '';
+                fichierFilter.value = '';
+                searchInput.value = '';
+                resultTypeFilter.value = 'all';
+                
+                filteredData = JSON.parse(JSON.stringify(evaluationData));
+                analyzeData();
+                showSuccess('Filtres réinitialisés.');
+            }
+            
             // Fonction pour mettre à jour les filtres
             function updateFilters() {
                 if (!evaluationData || evaluationData.evaluations.length === 0) return;
@@ -892,8 +942,10 @@
                 const niveau = niveauFilter.value;
                 const classe = classeFilter.value;
                 const matiere = matiereFilter.value;
+                const eleve = eleveFilter.value;
                 const fichier = fichierFilter.value;
                 const search = searchInput.value.toLowerCase();
+                const resultType = resultTypeFilter.value;
                 
                 filteredData.evaluations = evaluationData.evaluations.filter(eval => {
                     let match = true;
@@ -910,11 +962,24 @@
                         match = false;
                     }
                     
+                    if (eleve && eval.eleve !== eleve) {
+                        match = false;
+                    }
+                    
                     if (fichier && eval.fileId !== fichier) {
                         match = false;
                     }
                     
                     if (search && eval.eleve && !eval.eleve.toLowerCase().includes(search)) {
+                        match = false;
+                    }
+                    
+                    // Filtrer par type de résultat (difficulté ou performance)
+                    if (resultType === 'difficulty' && eval.note >= 10) {
+                        match = false;
+                    }
+                    
+                    if (resultType === 'success' && eval.note < 10) {
                         match = false;
                     }
                     
@@ -969,6 +1034,14 @@
                     }
                 });
                 
+                // Compter les élèves performants (note >= 15)
+                const elevesPerformants = new Set();
+                evaluations.forEach(e => {
+                    if (e.note >= 15) {
+                        elevesPerformants.add(e.eleve);
+                    }
+                });
+                
                 // Mettre à jour l'interface
                 statsContainer.innerHTML = `
                     <div class="stat-card">
@@ -990,6 +1063,11 @@
                         <h3>En difficulté</h3>
                         <div class="stat-value">${elevesEnDifficulte.size}</div>
                         <p>Élèves en difficulté</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Performants</h3>
+                        <div class="stat-value">${elevesPerformants.size}</div>
+                        <p>Élèves performants</p>
                     </div>
                     <div class="stat-card">
                         <h3>Classes</h3>
@@ -1014,6 +1092,11 @@
                 const evaluations = filteredData.evaluations;
                 const tbody = studentsTable.querySelector('tbody');
                 tbody.innerHTML = '';
+                
+                if (evaluations.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="9" style="text-align: center;">Aucune donnée à afficher avec les filtres actuels</td></tr>';
+                    return;
+                }
                 
                 // Grouper les évaluations par élève et matière
                 const eleves = {};
@@ -1045,33 +1128,45 @@
                     }
                 });
                 
-                // Générer les lignes du tableau pour les élèves en difficulté
+                // Générer les lignes du tableau
                 Object.keys(eleves).forEach(eleve => {
                     const eleveData = eleves[eleve];
                     
                     Object.keys(eleveData.matieres).forEach(matiere => {
                         const matiereData = eleveData.matieres[matiere];
                         const moyenne = matiereData.notes.reduce((a, b) => a + b, 0) / matiereData.notes.length;
+                        const derniereNote = matiereData.notes[matiereData.notes.length - 1];
                         
-                        // Afficher seulement les élèves avec une moyenne < 10 dans cette matière
+                        // Déterminer le statut
+                        let statut = 'Moyen';
+                        let badgeClass = 'badge-warning';
+                        
                         if (moyenne < 10) {
-                            const pointsForts = [...new Set(matiereData.pointsForts)].slice(0, 3).join(', ') || 'Aucun identifié';
-                            const pointsFaibles = [...new Set(matiereData.pointsFaibles)].slice(0, 3).join(', ') || 'Aucun identifié';
-                            
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
-                                <td>${eleve}</td>
-                                <td>${eleveData.classe}</td>
-                                <td>${matiere}</td>
-                                <td>${moyenne.toFixed(2)}</td>
-                                <td>${pointsForts}</td>
-                                <td>${pointsFaibles}</td>
-                                <td>
-                                    <button class="btn view-details" data-eleve="${eleve}" data-classe="${eleveData.classe}">Détails</button>
-                                </td>
-                            `;
-                            tbody.appendChild(row);
+                            statut = 'En difficulté';
+                            badgeClass = 'badge-danger';
+                        } else if (moyenne >= 15) {
+                            statut = 'Performant';
+                            badgeClass = 'badge-success';
                         }
+                        
+                        const pointsForts = [...new Set(matiereData.pointsForts)].slice(0, 3).join(', ') || 'Aucun identifié';
+                        const pointsFaibles = [...new Set(matiereData.pointsFaibles)].slice(0, 3).join(', ') || 'Aucun identifié';
+                        
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${eleve}</td>
+                            <td>${eleveData.classe}</td>
+                            <td>${matiere}</td>
+                            <td>${derniereNote}</td>
+                            <td>${moyenne.toFixed(2)}</td>
+                            <td><span class="badge ${badgeClass}">${statut}</span></td>
+                            <td>${pointsForts}</td>
+                            <td>${pointsFaibles}</td>
+                            <td>
+                                <button class="btn view-details" data-eleve="${eleve}" data-classe="${eleveData.classe}">Détails</button>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
                     });
                 });
                 
@@ -1090,6 +1185,11 @@
                 const evaluations = filteredData.evaluations;
                 const tbody = classesTable.querySelector('tbody');
                 tbody.innerHTML = '';
+                
+                if (evaluations.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Aucune donnée à afficher avec les filtres actuels</td></tr>';
+                    return;
+                }
                 
                 // Grouper les évaluations par classe
                 const classes = {};
@@ -1125,9 +1225,15 @@
                     
                     // Compter les élèves en difficulté dans cette classe
                     const elevesEnDifficulte = new Set();
+                    const elevesPerformants = new Set();
+                    
                     evaluations.forEach(e => {
-                        if (e.classe === classe && e.note < 10) {
-                            elevesEnDifficulte.add(e.eleve);
+                        if (e.classe === classe) {
+                            if (e.note < 10) {
+                                elevesEnDifficulte.add(e.eleve);
+                            } else if (e.note >= 15) {
+                                elevesPerformants.add(e.eleve);
+                            }
                         }
                     });
                     
@@ -1156,6 +1262,7 @@
                         <td>${classe}</td>
                         <td>${moyenneGenerale}</td>
                         <td>${elevesEnDifficulte.size} / ${classeData.eleves.size}</td>
+                        <td>${elevesPerformants.size} / ${classeData.eleves.size}</td>
                         <td>${pireMatiere} (${pireMoyenne.toFixed(2)})</td>
                         <td>${meilleureMatiere} (${meilleureMoyenne.toFixed(2)})</td>
                     `;
@@ -1168,6 +1275,11 @@
                 const evaluations = filteredData.evaluations;
                 const tbody = subjectsTable.querySelector('tbody');
                 tbody.innerHTML = '';
+                
+                if (evaluations.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Aucune donnée à afficher avec les filtres actuels</td></tr>';
+                    return;
+                }
                 
                 // Grouper les évaluations par matière
                 const matieres = {};
@@ -1203,9 +1315,15 @@
                     
                     // Compter les élèves en difficulté dans cette matière
                     const elevesEnDifficulte = new Set();
+                    const elevesPerformants = new Set();
+                    
                     evaluations.forEach(e => {
-                        if (e.matiere === matiere && e.note < 10) {
-                            elevesEnDifficulte.add(e.eleve);
+                        if (e.matiere === matiere) {
+                            if (e.note < 10) {
+                                elevesEnDifficulte.add(e.eleve);
+                            } else if (e.note >= 15) {
+                                elevesPerformants.add(e.eleve);
+                            }
                         }
                     });
                     
@@ -1234,6 +1352,7 @@
                         <td>${matiere}</td>
                         <td>${moyenneGenerale}</td>
                         <td>${elevesEnDifficulte.size} / ${matiereData.eleves.size}</td>
+                        <td>${elevesPerformants.size} / ${matiereData.eleves.size}</td>
                         <td>${pireClasse} (${pireMoyenne.toFixed(2)})</td>
                         <td>${meilleureClasse} (${meilleureMoyenne.toFixed(2)})</td>
                     `;
@@ -1245,6 +1364,11 @@
             function updateFilesTable() {
                 const tbody = filesTable.querySelector('tbody');
                 tbody.innerHTML = '';
+                
+                if (filteredData.files.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Aucune donnée à afficher avec les filtres actuels</td></tr>';
+                    return;
+                }
                 
                 filteredData.files.forEach(file => {
                     // Calculer les statistiques pour ce fichier
@@ -1371,6 +1495,11 @@
                     return moyenne < 10;
                 });
                 
+                const matieresPerformantes = Object.keys(matieres).filter(m => {
+                    const moyenne = matieres[m].notes.reduce((a, b) => a + b, 0) / matieres[m].notes.length;
+                    return moyenne >= 15;
+                });
+                
                 html += `
                     <div class="stat-card">
                         <h3>Moyenne générale</h3>
@@ -1384,6 +1513,10 @@
                         <h3>Matières en difficulté</h3>
                         <div class="stat-value">${matieresEnDifficulte.length}</div>
                     </div>
+                    <div class="stat-card">
+                        <h3>Matières performantes</h3>
+                        <div class="stat-value">${matieresPerformantes.length}</div>
+                    </div>
                 </div>
                 
                 <h3 style="margin-top: 20px;">Détails par matière</h3>
@@ -1395,6 +1528,7 @@
                             <th>Notes</th>
                             <th>Points forts</th>
                             <th>Points faibles</th>
+                            <th>Statut</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1406,6 +1540,17 @@
                     const pointsForts = [...new Set(matiereData.pointsForts)].join(', ') || 'Aucun identifié';
                     const pointsFaibles = [...new Set(matiereData.pointsFaibles)].join(', ') || 'Aucun identifié';
                     
+                    let statut = 'Moyen';
+                    let badgeClass = 'badge-warning';
+                    
+                    if (moyenne < 10) {
+                        statut = 'En difficulté';
+                        badgeClass = 'badge-danger';
+                    } else if (moyenne >= 15) {
+                        statut = 'Performant';
+                        badgeClass = 'badge-success';
+                    }
+                    
                     html += `
                         <tr>
                             <td>${matiere}</td>
@@ -1413,6 +1558,7 @@
                             <td>${matiereData.notes.join(', ')}</td>
                             <td>${pointsForts}</td>
                             <td>${pointsFaibles}</td>
+                            <td><span class="badge ${badgeClass}">${statut}</span></td>
                         </tr>
                     `;
                 });
