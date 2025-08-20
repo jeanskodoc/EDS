@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Bulletins Scolaires</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            margin-bottom: 10px;
+            font-size: 2.2em;
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            padding: 30px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e0e0e0;
+        }
+        
+        .upload-section {
+            text-align: center;
+            padding: 30px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            background-color: #fafafa;
+            transition: all 0.3s;
+        }
+        
+        .upload-section:hover {
+            border-color: var(--primary);
+            background-color: #edf7ff;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            display: inline-block;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+        }
+        
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .file-list {
+            margin-top: 20px;
+        }
+        
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .file-name {
+            flex-grow: 1;
+            margin-right: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        select, input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .student-list {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .student-item {
+            padding: 15px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .student-item:hover {
+            background-color: #f0f8ff;
+        }
+        
+        .student-item.selected {
+            background-color: #e3f2fd;
+            border-color: var(--primary);
+        }
+        
+        /* Styles pour le bulletin */
+        .bulletin {
+            width: 100%;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            page-break-inside: avoid;
+        }
+        
+        .bulletin-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .school-info {
+            margin-bottom: 15px;
+        }
+        
+        .student-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .info-item {
+            margin-bottom: 8px;
+        }
+        
+        .grades-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .grades-table th, .grades-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .grades-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        .subject-row:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .good-grade {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+        
+        .average-grade {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        
+        .bad-grade {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .summary-card {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .summary-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .comments {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        
+        .signature-area {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding-top: 20px;
+            border-top: 1px dashed #ccc;
+        }
+        
+        .signature-line {
+            border-top: 1px solid #ccc;
+            padding-top: 40px;
+            text-align: center;
+        }
+        
+        .bulletin-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        /* Styles pour l'impression */
+        @media print {
+            body, .container {
+                margin: 0;
+                padding: 0;
+                box-shadow: none;
+                background: white;
+                width: 100%;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            .bulletin {
+                padding: 15px;
+                font-size: 12px;
+                width: 148mm; /* A5 width */
+                height: 210mm; /* A5 height */
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+            
+            .grades-table th, .grades-table td {
+                padding: 5px;
+            }
+            
+            .summary-value {
+                font-size: 18px;
+            }
+            
+            .btn {
+                display: none;
+            }
+            
+            header {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+            }
+            
+            .bulletin-container {
+                display: block;
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .bulletin-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .student-info, .summary, .signature-area {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters {
+                flex-direction: column;
+            }
+            
+            select, input {
+                width: 100%;
+            }
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .alert-danger {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+        
+        .alert-success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+        
+        .student-count {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Générateur de Bulletins Scolaires</h1>
+            <p class="subtitle">Importez plusieurs fichiers JSON pour générer des bulletins</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="alert alert-danger" id="errorAlert"></div>
+            <div class="alert alert-success" id="successAlert"></div>
+            
+            <div class="card no-print">
+                <h2>Import des fichiers JSON</h2>
+                <div class="upload-section" id="uploadArea">
+                    <p>Glissez-déposez vos fichiers JSON ici ou</p>
+                    <input type="file" id="fileInput" accept=".json" multiple style="display: none;">
+                    <button class="btn" id="browseButton">Parcourir</button>
+                    <p style="margin-top: 15px; font-size: 14px; color: #666;">
+                        Format attendu: Fichiers JSON contenant les évaluations des élèves
+                    </p>
+                </div>
+                
+                <div class="file-list">
+                    <h3>Fichiers chargés <span id="fileCount">(0)</span></h3>
+                    <div id="fileItems"></div>
+                </div>
+            </div>
+            
+            <div class="loading" id="loadingIndicator">
+                <div class="spinner"></div>
+                <p>Traitement des fichiers en cours...</p>
+            </div>
+            
+            <div class="card no-print" id="filtersCard" style="display: none;">
+                <h2>Filtres et Sélection</h2>
+                <div class="filters">
+                    <select id="classeFilter">
+                        <option value="">Toutes les classes</option>
+                    </select>
+                    
+                    <input type="text" id="searchInput" placeholder="Rechercher un élève...">
+                    
+                    <button class="btn btn-success" id="generateAllBtn">Générer tous les bulletins</button>
+                    <button class="btn btn-warning" id="printAllBtn">Imprimer tous les bulletins</button>
+                </div>
+                
+                <div class="student-list">
+                    <h3>Élèves <span id="studentCount">(0)</span></h3>
+                    <div id="studentList">
+                        <div class="empty-state">Aucun élève trouvé. Importez des fichiers JSON pour commencer.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="bulletinsContainer" class="bulletin-container">
+                <div class="empty-state no-print" id="noBulletinsMessage">
+                    Aucun bulletin généré. Sélectionnez un élève ou générez tous les bulletins.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Références aux éléments DOM
+            const fileInput = document.getElementById('fileInput');
+            const browseButton = document.getElementById('browseButton');
+            const uploadArea = document.getElementById('uploadArea');
+            const fileItems = document.getElementById('fileItems');
+            const fileCount = document.getElementById('fileCount');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const filtersCard = document.getElementById('filtersCard');
+            const classeFilter = document.getElementById('classeFilter');
+            const searchInput = document.getElementById('searchInput');
+            const studentList = document.getElementById('studentList');
+            const studentCount = document.getElementById('studentCount');
+            const generateAllBtn = document.getElementById('generateAllBtn');
+            const printAllBtn = document.getElementById('printAllBtn');
+            const bulletinsContainer = document.getElementById('bulletinsContainer');
+            const noBulletinsMessage = document.getElementById('noBulletinsMessage');
+            const errorAlert = document.getElementById('errorAlert');
+            const successAlert = document.getElementById('successAlert');
+            
+            let studentsData = [];
+            let currentStudent = null;
+            let fileCounter = 0;
+            
+            // Gestionnaires d'événements pour l'upload
+            browseButton.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', handleFileUpload);
+            
+            // Glisser-déposer
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#3498db';
+                uploadArea.style.backgroundColor = '#edf7ff';
+            });
+            
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.style.borderColor = '#ccc';
+                uploadArea.style.backgroundColor = '#fafafa';
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#ccc';
+                uploadArea.style.backgroundColor = '#fafafa';
+                
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    handleFileUpload();
+                }
+            });
+            
+            // Filtres
+            classeFilter.addEventListener('change', filterStudents);
+            searchInput.addEventListener('input', filterStudents);
+            
+            // Boutons d'action
+            generateAllBtn.addEventListener('click', generateAllBulletins);
+            printAllBtn.addEventListener('click', () => window.print());
+            
+            // Fonction pour gérer l'upload de fichier
+            function handleFileUpload() {
+                const files = fileInput.files;
+                if (!files || files.length === 0) return;
+                
+                loadingIndicator.style.display = 'block';
+                filtersCard.style.display = 'none';
+                bulletinsContainer.innerHTML = '<div class="empty-state no-print" id="noBulletinsMessage">Aucun bulletin généré. Sélectionnez un élève ou générez tous les bulletins.</div>';
+                
+                let processedFiles = 0;
+                let validFiles = 0;
+                
+                Array.from(files).forEach(file => {
+                    if (file.type !== 'application/json') {
+                        showError(`Le fichier "${file.name}" n'est pas un fichier JSON valide.`);
+                        processedFiles++;
+                        checkAllFilesProcessed(processedFiles, files.length, validFiles);
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const jsonData = JSON.parse(e.target.result);
+                            processStudentData(jsonData, file.name);
+                            validFiles++;
+                        } catch (error) {
+                            showError(`Erreur lors de l'analyse du fichier "${file.name}": ${error.message}`);
+                        }
+                        
+                        processedFiles++;
+                        checkAllFilesProcessed(processedFiles, files.length, validFiles);
+                    };
+                    
+                    reader.onerror = function() {
+                        showError(`Erreur lors de la lecture du fichier "${file.name}".`);
+                        processedFiles++;
+                        checkAllFilesProcessed(processedFiles, files.length, validFiles);
+                    };
+                    
+                    reader.readAsText(file);
+                    addFileToList(file.name);
+                });
+            }
+            
+            // Vérifier si tous les fichiers ont été traités
+            function checkAllFilesProcessed(processed, total, valid) {
+                if (processed === total) {
+                    loadingIndicator.style.display = 'none';
+                    
+                    if (valid > 0) {
+                        filtersCard.style.display = 'block';
+                        updateStudentList();
+                        showSuccess(`${valid} fichier(s) importé(s) avec succès! ${studentsData.length} élève(s) chargé(s).`);
+                    } else {
+                        showError('Aucun fichier valide n\'a été importé.');
+                    }
+                }
+            }
+            
+            // Ajouter un fichier à la liste
+            function addFileToList(fileName) {
+                fileCounter++;
+                fileCount.textContent = `(${fileCounter})`;
+                
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <div class="file-name" title="${fileName}">${fileName}</div>
+                    <button class="btn btn-danger remove-file-btn">×</button>
+                `;
+                
+                fileItems.appendChild(fileItem);
+                
+                // Bouton de suppression
+                fileItem.querySelector('.remove-file-btn').addEventListener('click', function() {
+                    fileItem.remove();
+                    fileCounter--;
+                    fileCount.textContent = `(${fileCounter})`;
+                    
+                    // Réinitialiser les données
+                    studentsData = [];
+                    updateStudentList();
+                    bulletinsContainer.innerHTML = '<div class="empty-state no-print" id="noBulletinsMessage">Aucun bulletin généré. Sélectionnez un élève ou générez tous les bulletins.</div>';
+                    showError('Les fichiers ont été modifiés. Veuillez recharger les fichiers pour voir les données.');
+                });
+            }
+            
+            // Traiter les données d'élève
+            function processStudentData(data, fileName) {
+                try {
+                    if (data && data.eleves) {
+                        // Format avec plusieurs élèves
+                        data.eleves.forEach(eleve => {
+                            addOrUpdateStudent(eleve);
+                        });
+                    } else if (data && data.eleve) {
+                        // Format avec un seul élève
+                        addOrUpdateStudent(data.eleve);
+                    } else if (data && Array.isArray(data)) {
+                        // Format avec un tableau direct d'élèves
+                        data.forEach(eleve => {
+                            addOrUpdateStudent(eleve);
+                        });
+                    } else {
+                        showError(`Le format du fichier "${fileName}" n'est pas reconnu.`);
+                    }
+                } catch (error) {
+                    showError(`Erreur lors du traitement du fichier "${fileName}": ${error.message}`);
+                }
+            }
+            
+            // Ajouter ou mettre à jour un élève
+            function addOrUpdateStudent(eleve) {
+                // Validation des données requises
+                if (!eleve.nom || !eleve.prenom) {
+                    showError('Données d\'élève incomplètes: nom et prénom requis');
+                    return;
+                }
+                
+                const existingIndex = studentsData.findIndex(s => 
+                    s.nom === eleve.nom && s.prenom === eleve.prenom && s.classe === eleve.classe
+                );
+                
+                if (existingIndex >= 0) {
+                    // Fusionner les données si l'élève existe déjà
+                    const existing = studentsData[existingIndex];
+                    
+                    // Fusionner les matières
+                    if (eleve.matieres && Array.isArray(eleve.matieres)) {
+                        eleve.matieres.forEach(matiere => {
+                            const matiereIndex = existing.matieres.findIndex(m => m.nom === matiere.nom);
+                            
+                            if (matiereIndex >= 0) {
+                                // Fusionner les évaluations
+                                if (matiere.evaluations && Array.isArray(matiere.evaluations)) {
+                                    if (!existing.matieres[matiereIndex].evaluations) {
+                                        existing.matieres[matiereIndex].evaluations = [];
+                                    }
+                                    existing.matieres[matiereIndex].evaluations = [
+                                        ...existing.matieres[matiereIndex].evaluations,
+                                        ...matiere.evaluations
+                                    ];
+                                }
+                                
+                                // Mettre à jour la moyenne si fournie
+                                if (matiere.moyenne !== undefined) {
+                                    existing.matieres[matiereIndex].moyenne = matiere.moyenne;
+                                }
+                                
+                                // Mettre à jour l'appréciation si fournie
+                                if (matiere.appreciation) {
+                                    existing.matieres[matiereIndex].appreciation = matiere.appreciation;
+                                }
+                            } else {
+                                // Ajouter la nouvelle matière
+                                existing.matieres.push(matiere);
+                            }
+                        });
+                    } else if (!existing.matieres && eleve.matieres) {
+                        // Ajouter les matières si elles n'existaient pas
+                        existing.matieres = [...eleve.matieres];
+                    }
+                    
+                    // Fusionner les appréciations
+                    if (eleve.appreciations) {
+                        if (!existing.appreciations) existing.appreciations = {};
+                        
+                        Object.keys(eleve.appreciations).forEach(key => {
+                            if (eleve.appreciations[key]) {
+                                existing.appreciations[key] = eleve.appreciations[key];
+                            }
+                        });
+                    }
+                } else {
+                    // Ajouter le nouvel élève
+                    studentsData.push(eleve);
+                }
+            }
+            
+            // Mettre à jour la liste des élèves
+            function updateStudentList() {
+                studentList.innerHTML = '';
+                classeFilter.innerHTML = '<option value="">Toutes les classes</option>';
+                
+                const classes = new Set();
+                
+                if (studentsData.length === 0) {
+                    studentList.innerHTML = '<div class="empty-state">Aucun élève trouvé. Importez des fichiers JSON pour commencer.</div>';
+                    studentCount.textContent = '(0)';
+                    return;
+                }
+                
+                studentsData.forEach((student, index) => {
+                    if (student.classe) classes.add(student.classe);
+                    
+                    const studentItem = document.createElement('div');
+                    studentItem.className = 'student-item';
+                    studentItem.dataset.index = index;
+                    studentItem.innerHTML = `
+                        <strong>${student.prenom} ${student.nom}</strong> - ${student.classe || 'Non spécifié'}
+                    `;
+                    
+                    studentItem.addEventListener('click', function() {
+                        // Retirer la sélection précédente
+                        document.querySelectorAll('.student-item.selected').forEach(item => {
+                            item.classList.remove('selected');
+                        });
+                        
+                        // Ajouter la sélection actuelle
+                        this.classList.add('selected');
+                        
+                        currentStudent = student;
+                        generateBulletin(student);
+                    });
+                    
+                    studentList.appendChild(studentItem);
+                });
+                
+                // Ajouter les options de classe
+                classes.forEach(classe => {
+                    const option = document.createElement('option');
+                    option.value = classe;
+                    option.textContent = classe;
+                    classeFilter.appendChild(option);
+                });
+                
+                studentCount.textContent = `(${studentsData.length})`;
+            }
+            
+            // Filtrer les élèves
+            function filterStudents() {
+                const classe = classeFilter.value;
+                const search = searchInput.value.toLowerCase();
+                
+                const studentItems = studentList.querySelectorAll('.student-item');
+                let visibleCount = 0;
+                
+                studentsData.forEach((student, index) => {
+                    const studentFullName = `${student.prenom} ${student.nom}`.toLowerCase();
+                    const studentClass = student.classe || '';
+                    
+                    const show = (
+                        (classe === '' || studentClass === classe) &&
+                        (search === '' || 
+                         studentFullName.includes(search) ||
+                         studentClass.toLowerCase().includes(search))
+                    );
+                    
+                    studentItems[index].style.display = show ? 'block' : 'none';
+                    if (show) visibleCount++;
+                });
+                
+                // Afficher un message si aucun élève ne correspond aux filtres
+                if (visibleCount === 0) {
+                    studentList.innerHTML = '<div class="empty-state">Aucun élève ne correspond aux filtres.</div>';
+                }
+            }
+            
+            // Générer un bulletin pour un élève
+            function generateBulletin(student) {
+                noBulletinsMessage.style.display = 'none';
+                bulletinsContainer.innerHTML = '';
+                
+                const bulletinElement = document.createElement('div');
+                bulletinElement.className = 'bulletin';
+                
+                // Calculer les moyennes
+                const overallAvg = calculateOverallAverage(student);
+                const scienceAvg = calculateScienceAverage(student);
+                const literaryAvg = calculateLiteraryAverage(student);
+                
+                bulletinElement.innerHTML = `
+                    <div class="bulletin-header">
+                        <div class="school-info">
+                            <h2>LYCÉE GÉNÉRAL ET TECHNOLOGIQUE</h2>
+                            <h3>BULLETIN SCOLAIRE</h3>
+                            <p>Année scolaire 2023-2024 - Trimestre 2</p>
+                        </div>
+                    </div>
+                    
+                    <div class="student-info">
+                        <div>
+                            <p class="info-item"><strong>Élève:</strong> ${student.prenom} ${student.nom}</p>
+                            <p class="info-item"><strong>Classe:</strong> ${student.classe || 'Non spécifié'}</p>
+                        </div>
+                        <div>
+                            <p class="info-item"><strong>Date de naissance:</strong> ${student.dateNaissance || 'Non spécifié'}</p>
+                            <p class="info-item"><strong>Établissement:</strong> Lycée Descartes</p>
+                        </div>
+                    </div>
+                    
+                    <table class="grades-table">
+                        <thead>
+                            <tr>
+                                <th>Matières</th>
+                                <th>Note</th>
+                                <th>Appréciation</th>
+                                <th>Moyenne classe</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${generateGradesTable(student)}
+                        </tbody>
+                    </table>
+                    
+                    <div class="summary">
+                        <div class="summary-card">
+                            <h3>Moyenne Générale</h3>
+                            <div class="summary-value">${overallAvg.toFixed(2)}/20</div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Moyenne Scientifique</h3>
+                            <div class="summary-value">${scienceAvg.toFixed(2)}/20</div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Moyenne Littéraire</h3>
+                            <div class="summary-value">${literaryAvg.toFixed(2)}/20</div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Rang dans la classe</h3>
+                            <div class="summary-value">${calculateClassRank(student)}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="comments">
+                        <h3>Appréciations générales</h3>
+                        <p>${generateGeneralComments(student, overallAvg)}</p>
+                    </div>
+                    
+                    <div class="signature-area">
+                        <div class="signature-line">
+                            <p>Le professeur principal</p>
+                        </div>
+                        <div class="signature-line">
+                            <p>Le chef d'établissement</p>
+                        </div>
+                    </div>
+                    
+                    <div class="no-print" style="text-align: center; margin-top: 20px;">
+                        <button class="btn" onclick="window.print()">Imprimer ce bulletin</button>
+                    </div>
+                `;
+                
+                // Ajouter le bulletin au conteneur
+                bulletinsContainer.appendChild(bulletinElement);
+                
+                // Faire défiler jusqu'au bulletin
+                bulletinElement.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // Générer le tableau des notes
+            function generateGradesTable(student) {
+                if (!student.matieres || student.matieres.length === 0) {
+                    return '<tr><td colspan="4" style="text-align: center;">Aucune donnée de note disponible</td></tr>';
+                }
+                
+                let tableHTML = '';
+                
+                student.matieres.forEach(matiere => {
+                    // Déterminer la classe CSS en fonction de la note
+                    let noteClass = '';
+                    if (matiere.moyenne >= 15) noteClass = 'good-grade';
+                    else if (matiere.moyenne >= 10) noteClass = 'average-grade';
+                    else if (matiere.moyenne > 0) noteClass = 'bad-grade';
+                    
+                    tableHTML += `
+                        <tr class="subject-row">
+                            <td>${matiere.nom}</td>
+                            <td class="${noteClass}">${matiere.moyenne !== undefined ? matiere.moyenne.toFixed(2) : '--'}/20</td>
+                            <td>${matiere.appreciation || ''}</td>
+                            <td>${matiere.moyenneClasse !== undefined ? matiere.moyenneClasse.toFixed(2) : '--'}/20</td>
+                        </tr>
+                    `;
+                });
+                
+                return tableHTML;
+            }
+            
+            // Calculer la moyenne générale
+            function calculateOverallAverage(student) {
+                if (!student.matieres || student.matieres.length === 0) return 0;
+                
+                let total = 0;
+                let count = 0;
+                
+                student.matieres.forEach(matiere => {
+                    if (matiere.moyenne !== undefined && !isNaN(matiere.moyenne)) {
+                        total += parseFloat(matiere.moyenne);
+                        count++;
+                    }
+                });
+                
+                return count > 0 ? total / count : 0;
+            }
+            
+            // Calculer la moyenne scientifique
+            function calculateScienceAverage(student) {
+                const scientificSubjects = ['Mathématiques', 'Physique-Chimie', 'SVT', 'Sciences', 'Technologie', 'Informatique'];
+                return calculateSubjectAverage(student, scientificSubjects);
+            }
+            
+            // Calculer la moyenne littéraire
+            function calculateLiteraryAverage(student) {
+                const literarySubjects = ['Français', 'Histoire-Géographie', 'Philosophie', 'Anglais', 'Espagnol', 'Allemand', 'Latin', 'Arts'];
+                return calculateSubjectAverage(student, literarySubjects);
+            }
+            
+            // Calculer la moyenne pour un groupe de matières
+            function calculateSubjectAverage(student, subjects) {
+                if (!student.matieres || student.matieres.length === 0) return 0;
+                
+                let total = 0;
+                let count = 0;
+                
+                student.matieres.forEach(matiere => {
+                    if (matiere.moyenne !== undefined && !isNaN(matiere.moyenne) && subjects.includes(matiere.nom)) {
+                        total += parseFloat(matiere.moyenne);
+                        count++;
+                    }
+                });
+                
+                return count > 0 ? total / count : 0;
+            }
+            
+            // Calculer le rang dans la classe (simulé)
+            function calculateClassRank(student) {
+                if (!student.matieres || student.matieres.length === 0) return '--/--';
+                
+                const overallAvg = calculateOverallAverage(student);
+                const randomRank = Math.max(1, Math.min(30, Math.floor((20 - overallAvg) * 1.5) + 1));
+                const randomTotal = Math.floor(Math.random() * 5) + 30;
+                return `${randomRank}/${randomTotal}`;
+            }
+            
+            // Générer les commentaires généraux
+            function generateGeneralComments(student, overallAvg) {
+                if (overallAvg === 0) {
+                    return "Données insuffisantes pour formuler une appréciation.";
+                }
+                
+                let comment = "";
+                
+                if (overallAvg >= 16) {
+                    comment = "Excellents résultats. Élève très consciencieux et investi dans son travail. Félicitations !";
+                } else if (overallAvg >= 14) {
+                    comment = "Très bons résultats. Élève sérieux et motivé. Continue sur cette lancée.";
+                } else if (overallAvg >= 12) {
+                    comment = "Bon travail dans l'ensemble. Quelques efforts supplémentaires pourraient permettre une progression.";
+                } else if (overallAvg >= 10) {
+                    comment = "Résultats satisfaisants mais irréguliers. Doit fournir un travail plus régulier pour progresser.";
+                } else {
+                    comment = "Résultats insuffisants. Doit absolument revoir ses méthodes de travail et fournir des efforts soutenus.";
+                }
+                
+                // Ajouter des commentaires spécifiques si disponibles
+                if (student.appreciations && student.appreciations.generale) {
+                    comment += ` ${student.appreciations.generale}`;
+                }
+                
+                return comment;
+            }
+            
+            // Générer tous les bulletins
+            function generateAllBulletins() {
+                if (studentsData.length === 0) {
+                    showError('Aucune donnée d\'élève à afficher.');
+                    return;
+                }
+                
+                noBulletinsMessage.style.display = 'none';
+                bulletinsContainer.innerHTML = '';
+                
+                studentsData.forEach(student => {
+                    generateBulletin(student);
+                });
+                
+                showSuccess(`Bulletins générés pour ${studentsData.length} élève(s)`);
+                
+                // Faire défiler jusqu'au premier bulletin
+                if (bulletinsContainer.firstChild) {
+                    bulletinsContainer.firstChild.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+            
+            // Afficher une erreur
+            function showError(message) {
+                errorAlert.textContent = message;
+                errorAlert.style.display = 'block';
+                setTimeout(() => {
+                    errorAlert.style.display = 'none';
+                }, 5000);
+            }
+            
+            // Afficher un succès
+            function showSuccess(message) {
+                successAlert.textContent = message;
+                successAlert.style.display = 'block';
+                setTimeout(() => {
+                    successAlert.style.display = 'none';
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
