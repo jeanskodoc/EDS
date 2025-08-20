@@ -1,20 +1,5 @@
 <!DOCTYPE html>
 <html lang="fr">
-     <style>
-  .btn-retour {
-    padding: 8px 16px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .btn-retour:hover {
-    background-color: #e0e0e0;
-  }
-</style>
-
-<button class="btn-retour" onclick="history.back()">← Retour</button>
 <head> 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -246,6 +231,20 @@
             margin-top: 15px;
         }
         
+        .btn-retour {
+            padding: 8px 16px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .btn-retour:hover {
+            background-color: #e0e0e0;
+        }
+        
         @media (max-width: 768px) {
             .main-content {
                 flex-direction: column;
@@ -263,6 +262,8 @@
     </style>
 </head>
 <body>
+    <button class="btn-retour" onclick="history.back()">← Retour</button>
+    
     <div class="container">
         <header>
             <h1>Formulaire d'Évaluation des Élèves</h1>
@@ -277,7 +278,7 @@
                 <h2>Configuration</h2>
                 <div class="form-group">
                     <label for="classe">Classe</label>
-                    <select id="classe" required>
+                    <select id="classe" required onchange="loadStudents()">
                         <option value="">Sélectionnez une classe</option>
                         <option value="6ème A">6ème A</option>
                         <option value="6ème B">6ème B</option>
@@ -340,7 +341,7 @@
                 </div>
                 
                 <button class="btn" id="addStudent">
-                    <i>+</i> Ajouter un élève
+                    <i>+</i> Ajouter un élève manuellement
                 </button>
             </div>
             
@@ -372,6 +373,74 @@
     </div>
 
     <script>
+        // Base de données des élèves par classe
+        const studentsDatabase = {
+            "6ème A": [
+                "Martin Dupont", "Léa Martin", "Hugo Bernard", "Emma Petit", 
+                "Lucas Moreau", "Chloé Durand", "Thomas Dubois", "Manon Richard"
+            ],
+            "6ème B": [
+                "Jules Laurent", "Inès Michel", "Noé Garcia", "Sarah Robert", 
+                "Maxime Leroy", "Lola Roux", "Adam Fournier", "Zoé Morel"
+            ],
+            "5ème A": [
+                "Raphaël Girard", "Louise Blanc", "Victor François", "Julie Gérard", 
+                "Nathan Lefebvre", "Camille Lopez", "Alexandre Sanchez", "Éva Perez"
+            ],
+            "5ème B": [
+                "Mathis Nguyen", "Clara Muller", "Tom Weber", "Léa Klein", 
+                "Enzo Schmidt", "Jade Fischer", "Théo Becker", "Maëlys Hoffmann"
+            ],
+            "4ème A": [
+                "Antoine Meyer", "Léna Wagner", "Baptiste Schneider", "Océane Richter", 
+                "Romain Schulz", "Émilie Neumann", "Quentin Braun", "Lilou Hofmann"
+            ],
+            "4ème B": [
+                "Sacha Zimmermann", "Romane Hartmann", "Gabin Krüger", "Louna Werner", 
+                "Nolan Lange", "Alicia Schmitz", "Eliott Köhler", "Lana Bauer"
+            ],
+            "3ème A": [
+                "Timothé Günther", "Lina Huber", "Mathias Walter", "Charlie Fuchs", 
+                "Raphaël Peters", "Léonie Vogel", "Noam Engel", "Élise Hahn"
+            ],
+            "3ème B": [
+                "Kylian Schubert", "Mya Roth", "Léonard Brandt", "Lily Wolf", 
+                "Aaron Sommer", "Nina Schröder", "Marceau Friedrich", "Eva Zimmermann"
+            ],
+            "2nde A": [
+                "Bryan Schwarz", "Lana Koch", "Rayan Böhm", "Léane Schäfer", 
+                "Matteo Berger", "Lyna Schröder", "Nino Ziegler", "Lilwenn Kuhn"
+            ],
+            "2nde B": [
+                "Ethan Frank", "Lana Keller", "Samuel Günther", "Lilou Becker", 
+                "Mathis Wagner", "Léna Bauer", "Tom Hartmann", "Lina Richter"
+            ],
+            "1ère S": [
+                "Alexandre Schuster", "Louna Vogel", "Maxence Winkler", "Lilou Haas", 
+                "Théophile Otto", "Léa Schmid", "Raphaël Lang", "Lyna Koch"
+            ],
+            "1ère ES": [
+                "Mathias Engel", "Léane Brandt", "Noam Pfeiffer", "Lina Wolf", 
+                "Kylian Horn", "Lilwenn Busch", "Marceau Ziegler", "Lyna Thomas"
+            ],
+            "1ère L": [
+                "Léonard Sommer", "Lily Kuhn", "Aaron Frank", "Léa Keller", 
+                "Rayan Günther", "Léna Becker", "Nino Wagner", "Lina Bauer"
+            ],
+            "Terminale S": [
+                "Matteo Hartmann", "Lyna Richter", "Bryan Schwarz", "Lana Koch", 
+                "Raphaël Böhm", "Léane Schäfer", "Tom Berger", "Lilou Schröder"
+            ],
+            "Terminale ES": [
+                "Ethan Ziegler", "Lilwenn Kuhn", "Samuel Frank", "Léa Keller", 
+                "Mathis Günther", "Léna Becker", "Noam Wagner", "Lina Bauer"
+            ],
+            "Terminale L": [
+                "Théophile Hartmann", "Louna Richter", "Maxence Schwarz", "Lilou Koch", 
+                "Raphaël Böhm", "Lyna Schäfer", "Alexandre Berger", "Léane Schröder"
+            ]
+        };
+
         document.addEventListener('DOMContentLoaded', function() {
             // Initialiser la date du jour
             document.getElementById('date').valueAsDate = new Date();
@@ -386,12 +455,10 @@
             const jsonContent = document.getElementById('jsonContent');
             const successAlert = document.getElementById('successAlert');
             const errorAlert = document.getElementById('errorAlert');
+            const classeSelect = document.getElementById('classe');
             
             // Compteur pour les IDs des élèves
             let studentId = 1;
-            
-            // Ajouter le premier élève
-            addStudentRow();
             
             // Événements
             addStudentBtn.addEventListener('click', addStudentRow);
@@ -399,7 +466,62 @@
             generateJsonBtn.addEventListener('click', generateJson);
             downloadJsonBtn.addEventListener('click', downloadJson);
             
-            // Fonction pour ajouter une ligne d'élève
+            // Fonction pour charger les élèves en fonction de la classe sélectionnée
+            window.loadStudents = function() {
+                const selectedClass = classeSelect.value;
+                if (selectedClass && studentsDatabase[selectedClass]) {
+                    // Vider le conteneur d'élèves
+                    studentsContainer.innerHTML = '';
+                    studentId = 1;
+                    
+                    // Ajouter chaque élève de la classe
+                    studentsDatabase[selectedClass].forEach(studentName => {
+                        addStudentRowWithName(studentName);
+                    });
+                    
+                    showSuccess(`Liste des élèves de ${selectedClass} chargée avec succès!`);
+                }
+            }
+            
+            // Fonction pour ajouter une ligne d'élève avec un nom prédéfini
+            function addStudentRowWithName(name) {
+                const row = document.createElement('div');
+                row.className = 'student-row';
+                row.id = `student-${studentId}`;
+                
+                row.innerHTML = `
+                    <div class="student-name">
+                        <label for="name-${studentId}">Nom de l'élève</label>
+                        <input type="text" id="name-${studentId}" class="student-name-input" value="${name}" required>
+                    </div>
+                    
+                    <div class="student-note">
+                        <label for="note-${studentId}">Note /20</label>
+                        <input type="number" id="note-${studentId}" class="student-note-input" min="0" max="20" step="0.5" required>
+                    </div>
+                    
+                    <div class="student-points">
+                        <label for="points-forts-${studentId}">Points forts (séparés par des virgules)</label>
+                        <textarea id="points-forts-${studentId}" class="student-points-forts-input" placeholder="Ex: Calcul mental, Résolution de problèmes"></textarea>
+                    </div>
+                    
+                    <div class="student-points">
+                        <label for="points-faibles-${studentId}">Points faibles (séparés par des virgules)</label>
+                        <textarea id="points-faibles-${studentId}" class="student-points-faibles-input" placeholder="Ex: Géométrie, Rédaction"></textarea>
+                    </div>
+                    
+                    <div class="student-actions">
+                        <button class="btn btn-danger" onclick="removeStudent(${studentId})">
+                            <i>×</i>
+                        </button>
+                    </div>
+                `;
+                
+                studentsContainer.appendChild(row);
+                studentId++;
+            }
+            
+            // Fonction pour ajouter une ligne d'élève vide
             function addStudentRow() {
                 const row = document.createElement('div');
                 row.className = 'student-row';
@@ -459,7 +581,6 @@
                     errorAlert.style.display = 'none';
                     
                     studentId = 1;
-                    addStudentRow();
                 }
             }
             
