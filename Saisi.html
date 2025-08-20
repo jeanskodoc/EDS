@@ -1,20 +1,5 @@
 <!DOCTYPE html>
 <html lang="fr">
-     <style>
-  .btn-retour {
-    padding: 8px 16px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .btn-retour:hover {
-    background-color: #e0e0e0;
-  }
-</style>
-
-<button class="btn-retour" onclick="history.back()">← Retour</button>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -188,9 +173,25 @@
             padding: 15px;
             margin-bottom: 10px;
         }
+        
+        .btn-retour {
+            padding: 8px 16px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .btn-retour:hover {
+            background-color: #e0e0e0;
+        }
     </style>
 </head>
 <body>
+    <button class="btn-retour" onclick="history.back()">← Retour</button>
+    
     <div class="container">
         <header>
             <h1>Générateur de Fichier JSON</h1>
@@ -201,25 +202,34 @@
             <div class="alert alert-success" id="successAlert"></div>
             
             <div class="card">
-                <h2>Informations de l'élève</h2>
+                <h2>Sélection de l'élève</h2>
                 <div class="form-group">
-                    <label for="nom">Nom</label>
-                    <input type="text" id="nom" placeholder="Dupont">
+                    <label for="eleveSelect">Sélectionner un élève</label>
+                    <select id="eleveSelect">
+                        <option value="">-- Sélectionner un élève --</option>
+                    </select>
                 </div>
                 
-                <div class="form-group">
-                    <label for="prenom">Prénom</label>
-                    <input type="text" id="prenom" placeholder="Jean">
-                </div>
-                
-                <div class="form-group">
-                    <label for="classe">Classe</label>
-                    <input type="text" id="classe" placeholder="Terminale S">
-                </div>
-                
-                <div class="form-group">
-                    <label for="dateNaissance">Date de naissance</label>
-                    <input type="text" id="dateNaissance" placeholder="01/01/2005">
+                <div id="eleveInfo">
+                    <div class="form-group">
+                        <label for="nom">Nom</label>
+                        <input type="text" id="nom" placeholder="Dupont">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="prenom">Prénom</label>
+                        <input type="text" id="prenom" placeholder="Jean">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="classe">Classe</label>
+                        <input type="text" id="classe" placeholder="Terminale S">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dateNaissance">Date de naissance</label>
+                        <input type="text" id="dateNaissance" placeholder="01/01/2005">
+                    </div>
                 </div>
             </div>
             
@@ -233,7 +243,9 @@
                     <div class="dynamic-section matiere">
                         <div class="form-group">
                             <label>Nom de la matière</label>
-                            <input type="text" class="matiere-nom" placeholder="Mathématiques">
+                            <select class="matiere-nom">
+                                <option value="">-- Sélectionner une matière --</option>
+                            </select>
                         </div>
                         
                         <div class="form-group">
@@ -306,8 +318,54 @@
     </div>
 
     <script>
+        // Base de données des élèves
+        const elevesDatabase = [
+            { id: 1, nom: "Dupont", prenom: "Jean", classe: "Terminale S", dateNaissance: "15/03/2005" },
+            { id: 2, nom: "Martin", prenom: "Léa", classe: "Terminale S", dateNaissance: "22/07/2005" },
+            { id: 3, nom: "Bernard", prenom: "Hugo", classe: "Terminale ES", dateNaissance: "03/11/2005" },
+            { id: 4, nom: "Petit", prenom: "Emma", classe: "Terminale ES", dateNaissance: "18/05/2005" },
+            { id: 5, nom: "Moreau", prenom: "Lucas", classe: "Terminale L", dateNaissance: "29/01/2005" },
+            { id: 6, nom: "Durand", prenom: "Chloé", classe: "Terminale L", dateNaissance: "12/09/2005" },
+            { id: 7, nom: "Dubois", prenom: "Thomas", classe: "1ère S", dateNaissance: "07/04/2006" },
+            { id: 8, nom: "Richard", prenom: "Manon", classe: "1ère S", dateNaissance: "24/12/2006" },
+            { id: 9, nom: "Garcia", prenom: "Noé", classe: "1ère ES", dateNaissance: "30/08/2006" },
+            { id: 10, nom: "Robert", prenom: "Sarah", classe: "1ère ES", dateNaissance: "14/02/2006" },
+            { id: 11, nom: "Laurent", prenom: "Jules", classe: "1ère L", dateNaissance: "09/06/2006" },
+            { id: 12, nom: "Michel", prenom: "Inès", classe: "1ère L", dateNaissance: "27/10/2006" },
+            { id: 13, nom: "Girard", prenom: "Raphaël", classe: "2nde", dateNaissance: "05/03/2007" },
+            { id: 14, nom: "Blanc", prenom: "Louise", classe: "2nde", dateNaissance: "19/07/2007" },
+            { id: 15, nom: "François", prenom: "Victor", classe: "2nde", dateNaissance: "11/11/2007" }
+        ];
+
+        // Base de données des matières
+        const matieresDatabase = [
+            "Mathématiques",
+            "Français",
+            "Histoire-Géographie",
+            "SVT",
+            "Physique-Chimie",
+            "Anglais",
+            "Espagnol",
+            "Allemand",
+            "Philosophie",
+            "Éducation Physique et Sportive",
+            "Sciences Économiques et Sociales",
+            "Spécialité Numérique et Sciences Informatiques",
+            "Spécialité Humanités, Littérature et Philosophie",
+            "Spécialité Langues, Littératures et Cultures Étrangères",
+            "Spécialité Sciences de l'Ingénieur",
+            "Enseignement Scientifique",
+            "Histoire des Arts",
+            "Musique"
+        ];
+
         document.addEventListener('DOMContentLoaded', function() {
             // Références aux éléments DOM
+            const eleveSelect = document.getElementById('eleveSelect');
+            const nomInput = document.getElementById('nom');
+            const prenomInput = document.getElementById('prenom');
+            const classeInput = document.getElementById('classe');
+            const dateNaissanceInput = document.getElementById('dateNaissance');
             const addMatiereBtn = document.getElementById('addMatiere');
             const matieresContainer = document.getElementById('matieresContainer');
             const generateJsonBtn = document.getElementById('generateJson');
@@ -315,6 +373,41 @@
             const resetFormBtn = document.getElementById('resetForm');
             const jsonPreview = document.getElementById('jsonPreview');
             const successAlert = document.getElementById('successAlert');
+            
+            // Remplir le sélecteur d'élèves
+            elevesDatabase.forEach(eleve => {
+                const option = document.createElement('option');
+                option.value = eleve.id;
+                option.textContent = `${eleve.nom} ${eleve.prenom} - ${eleve.classe}`;
+                eleveSelect.appendChild(option);
+            });
+            
+            // Remplir le sélecteur de matières de la première matière
+            const firstMatiereSelect = matieresContainer.querySelector('.matiere-nom');
+            matieresDatabase.forEach(matiere => {
+                const option = document.createElement('option');
+                option.value = matiere;
+                option.textContent = matiere;
+                firstMatiereSelect.appendChild(option);
+            });
+            
+            // Événement de changement d'élève
+            eleveSelect.addEventListener('change', function() {
+                const selectedId = parseInt(this.value);
+                const selectedEleve = elevesDatabase.find(eleve => eleve.id === selectedId);
+                
+                if (selectedEleve) {
+                    nomInput.value = selectedEleve.nom;
+                    prenomInput.value = selectedEleve.prenom;
+                    classeInput.value = selectedEleve.classe;
+                    dateNaissanceInput.value = selectedEleve.dateNaissance;
+                } else {
+                    nomInput.value = '';
+                    prenomInput.value = '';
+                    classeInput.value = '';
+                    dateNaissanceInput.value = '';
+                }
+            });
             
             // Compteur pour les nouvelles matières et évaluations
             let matiereCount = 1;
@@ -334,7 +427,9 @@
                 matiereElement.innerHTML = `
                     <div class="form-group">
                         <label>Nom de la matière</label>
-                        <input type="text" class="matiere-nom" placeholder="Mathématiques">
+                        <select class="matiere-nom">
+                            <option value="">-- Sélectionner une matière --</option>
+                        </select>
                     </div>
                     
                     <div class="form-group">
@@ -380,6 +475,15 @@
                     
                     <button class="btn btn-danger remove-matiere">Supprimer cette matière</button>
                 `;
+                
+                // Remplir le sélecteur de matières
+                const matiereSelect = matiereElement.querySelector('.matiere-nom');
+                matieresDatabase.forEach(matiere => {
+                    const option = document.createElement('option');
+                    option.value = matiere;
+                    option.textContent = matiere;
+                    matiereSelect.appendChild(option);
+                });
                 
                 return matiereElement;
             }
@@ -486,23 +590,31 @@
                 // Récupérer les matières
                 const matiereElements = matieresContainer.querySelectorAll('.matiere');
                 matiereElements.forEach(matiereElement => {
+                    const matiereNom = matiereElement.querySelector('.matiere-nom').value;
+                    if (!matiereNom) return; // Ignorer les matières sans nom
+                    
                     const matiere = {
-                        nom: matiereElement.querySelector('.matiere-nom').value || 'Mathématiques',
-                        moyenne: parseFloat(matiereElement.querySelector('.matiere-moyenne').value) || 15.5,
-                        moyenneClasse: parseFloat(matiereElement.querySelector('.matiere-moyenne-classe').value) || 12.8,
-                        appreciation: matiereElement.querySelector('.matiere-appreciation').value || 'Très bon travail',
+                        nom: matiereNom,
+                        moyenne: parseFloat(matiereElement.querySelector('.matiere-moyenne').value) || 0,
+                        moyenneClasse: parseFloat(matiereElement.querySelector('.matiere-moyenne-classe').value) || 0,
+                        appreciation: matiereElement.querySelector('.matiere-appreciation').value || '',
                         evaluations: []
                     };
                     
                     // Récupérer les évaluations
                     const evaluationElements = matiereElement.querySelectorAll('.evaluation-item');
                     evaluationElements.forEach(evaluationElement => {
-                        const evaluation = {
-                            nom: evaluationElement.querySelector('.evaluation-nom').value || 'Contrôle 1',
-                            note: parseFloat(evaluationElement.querySelector('.evaluation-note').value) || 16,
-                            date: evaluationElement.querySelector('.evaluation-date').value || '10/09/2023'
-                        };
-                        matiere.evaluations.push(evaluation);
+                        const evaluationNom = evaluationElement.querySelector('.evaluation-nom').value;
+                        const evaluationNote = parseFloat(evaluationElement.querySelector('.evaluation-note').value);
+                        
+                        if (evaluationNom && !isNaN(evaluationNote)) {
+                            const evaluation = {
+                                nom: evaluationNom,
+                                note: evaluationNote,
+                                date: evaluationElement.querySelector('.evaluation-date').value || ''
+                            };
+                            matiere.evaluations.push(evaluation);
+                        }
                     });
                     
                     eleve.matieres.push(matiere);
@@ -538,10 +650,11 @@
             // Réinitialiser le formulaire
             resetFormBtn.addEventListener('click', function() {
                 if (confirm('Êtes-vous sûr de vouloir réinitialiser le formulaire? Toutes les données seront perdues.')) {
-                    document.getElementById('nom').value = '';
-                    document.getElementById('prenom').value = '';
-                    document.getElementById('classe').value = '';
-                    document.getElementById('dateNaissance').value = '';
+                    eleveSelect.value = '';
+                    nomInput.value = '';
+                    prenomInput.value = '';
+                    classeInput.value = '';
+                    dateNaissanceInput.value = '';
                     document.getElementById('appreciationGenerale').value = '';
                     
                     // Garder seulement la première matière
