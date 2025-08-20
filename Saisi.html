@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Fichier JSON pour Bulletins</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            margin-bottom: 10px;
+            font-size: 2.2em;
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            padding: 30px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e0e0e0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            display: inline-block;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .dynamic-section {
+            border: 1px dashed #ccc;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .json-preview {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .alert-success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+        
+        .evaluation-item {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Générateur de Fichier JSON</h1>
+            <p class="subtitle">Créez des fichiers JSON au format bulletins scolaires</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="alert alert-success" id="successAlert"></div>
+            
+            <div class="card">
+                <h2>Informations de l'élève</h2>
+                <div class="form-group">
+                    <label for="nom">Nom</label>
+                    <input type="text" id="nom" placeholder="Dupont">
+                </div>
+                
+                <div class="form-group">
+                    <label for="prenom">Prénom</label>
+                    <input type="text" id="prenom" placeholder="Jean">
+                </div>
+                
+                <div class="form-group">
+                    <label for="classe">Classe</label>
+                    <input type="text" id="classe" placeholder="Terminale S">
+                </div>
+                
+                <div class="form-group">
+                    <label for="dateNaissance">Date de naissance</label>
+                    <input type="text" id="dateNaissance" placeholder="01/01/2005">
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="section-header">
+                    <h2>Matières</h2>
+                    <button class="btn" id="addMatiere">+ Ajouter une matière</button>
+                </div>
+                
+                <div id="matieresContainer">
+                    <div class="dynamic-section matiere">
+                        <div class="form-group">
+                            <label>Nom de la matière</label>
+                            <input type="text" class="matiere-nom" placeholder="Mathématiques">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Moyenne</label>
+                            <input type="number" step="0.1" class="matiere-moyenne" placeholder="15.5">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Moyenne de la classe</label>
+                            <input type="number" step="0.1" class="matiere-moyenne-classe" placeholder="12.8">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Appréciation</label>
+                            <textarea class="matiere-appreciation" placeholder="Très bon travail"></textarea>
+                        </div>
+                        
+                        <div class="section-header">
+                            <h3>Évaluations</h3>
+                            <button class="btn btn-success add-evaluation">+ Ajouter une évaluation</button>
+                        </div>
+                        
+                        <div class="evaluations-container">
+                            <div class="evaluation-item">
+                                <div class="form-group">
+                                    <label>Nom de l'évaluation</label>
+                                    <input type="text" class="evaluation-nom" placeholder="Contrôle 1">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Note</label>
+                                    <input type="number" step="0.1" class="evaluation-note" placeholder="16">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Date</label>
+                                    <input type="text" class="evaluation-date" placeholder="10/09/2023">
+                                </div>
+                                
+                                <button class="btn btn-danger remove-evaluation">Supprimer</button>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-danger remove-matiere">Supprimer cette matière</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Appréciations générales</h2>
+                <div class="form-group">
+                    <label for="appreciationGenerale">Appréciation générale</label>
+                    <textarea id="appreciationGenerale" placeholder="Élève sérieux et appliqué."></textarea>
+                </div>
+            </div>
+            
+            <div class="card">
+                <button class="btn btn-success" id="generateJson">Générer le JSON</button>
+                <button class="btn" id="downloadJson">Télécharger le fichier JSON</button>
+                <button class="btn btn-danger" id="resetForm">Réinitialiser le formulaire</button>
+            </div>
+            
+            <div class="card">
+                <h2>Prévisualisation du JSON</h2>
+                <div class="json-preview" id="jsonPreview">
+                    <div class="empty-state">Le JSON apparaîtra ici après génération</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Références aux éléments DOM
+            const addMatiereBtn = document.getElementById('addMatiere');
+            const matieresContainer = document.getElementById('matieresContainer');
+            const generateJsonBtn = document.getElementById('generateJson');
+            const downloadJsonBtn = document.getElementById('downloadJson');
+            const resetFormBtn = document.getElementById('resetForm');
+            const jsonPreview = document.getElementById('jsonPreview');
+            const successAlert = document.getElementById('successAlert');
+            
+            // Compteur pour les nouvelles matières et évaluations
+            let matiereCount = 1;
+            
+            // Ajouter une matière
+            addMatiereBtn.addEventListener('click', function() {
+                matiereCount++;
+                const newMatiere = createMatiereElement();
+                matieresContainer.appendChild(newMatiere);
+                attachMatiereEventListeners(newMatiere);
+            });
+            
+            // Créer un élément matière
+            function createMatiereElement() {
+                const matiereElement = document.createElement('div');
+                matiereElement.className = 'dynamic-section matiere';
+                matiereElement.innerHTML = `
+                    <div class="form-group">
+                        <label>Nom de la matière</label>
+                        <input type="text" class="matiere-nom" placeholder="Mathématiques">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Moyenne</label>
+                        <input type="number" step="0.1" class="matiere-moyenne" placeholder="15.5">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Moyenne de la classe</label>
+                        <input type="number" step="0.1" class="matiere-moyenne-classe" placeholder="12.8">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Appréciation</label>
+                        <textarea class="matiere-appreciation" placeholder="Très bon travail"></textarea>
+                    </div>
+                    
+                    <div class="section-header">
+                        <h3>Évaluations</h3>
+                        <button class="btn btn-success add-evaluation">+ Ajouter une évaluation</button>
+                    </div>
+                    
+                    <div class="evaluations-container">
+                        <div class="evaluation-item">
+                            <div class="form-group">
+                                <label>Nom de l'évaluation</label>
+                                <input type="text" class="evaluation-nom" placeholder="Contrôle 1">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Note</label>
+                                <input type="number" step="0.1" class="evaluation-note" placeholder="16">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Date</label>
+                                <input type="text" class="evaluation-date" placeholder="10/09/2023">
+                            </div>
+                            
+                            <button class="btn btn-danger remove-evaluation">Supprimer</button>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-danger remove-matiere">Supprimer cette matière</button>
+                `;
+                
+                return matiereElement;
+            }
+            
+            // Attacher les écouteurs d'événements pour une matière
+            function attachMatiereEventListeners(matiereElement) {
+                // Bouton pour ajouter une évaluation
+                const addEvaluationBtn = matiereElement.querySelector('.add-evaluation');
+                addEvaluationBtn.addEventListener('click', function() {
+                    const evaluationsContainer = matiereElement.querySelector('.evaluations-container');
+                    const newEvaluation = createEvaluationElement();
+                    evaluationsContainer.appendChild(newEvaluation);
+                    attachEvaluationEventListeners(newEvaluation);
+                });
+                
+                // Bouton pour supprimer la matière
+                const removeMatiereBtn = matiereElement.querySelector('.remove-matiere');
+                removeMatiereBtn.addEventListener('click', function() {
+                    if (matieresContainer.children.length > 1) {
+                        matiereElement.remove();
+                    } else {
+                        alert('Vous devez avoir au moins une matière.');
+                    }
+                });
+                
+                // Attacher les écouteurs pour les évaluations existantes
+                const evaluationItems = matiereElement.querySelectorAll('.evaluation-item');
+                evaluationItems.forEach(evaluation => {
+                    attachEvaluationEventListeners(evaluation);
+                });
+            }
+            
+            // Créer un élément évaluation
+            function createEvaluationElement() {
+                const evaluationElement = document.createElement('div');
+                evaluationElement.className = 'evaluation-item';
+                evaluationElement.innerHTML = `
+                    <div class="form-group">
+                        <label>Nom de l'évaluation</label>
+                        <input type="text" class="evaluation-nom" placeholder="Contrôle 1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Note</label>
+                        <input type="number" step="0.1" class="evaluation-note" placeholder="16">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="text" class="evaluation-date" placeholder="10/09/2023">
+                    </div>
+                    
+                    <button class="btn btn-danger remove-evaluation">Supprimer</button>
+                `;
+                
+                return evaluationElement;
+            }
+            
+            // Attacher les écouteurs d'événements pour une évaluation
+            function attachEvaluationEventListeners(evaluationElement) {
+                const removeEvaluationBtn = evaluationElement.querySelector('.remove-evaluation');
+                removeEvaluationBtn.addEventListener('click', function() {
+                    const evaluationsContainer = evaluationElement.parentElement;
+                    if (evaluationsContainer.children.length > 1) {
+                        evaluationElement.remove();
+                    } else {
+                        alert('Vous devez avoir au moins une évaluation.');
+                    }
+                });
+            }
+            
+            // Attacher les écouteurs initiaux
+            const initialMatieres = matieresContainer.querySelectorAll('.matiere');
+            initialMatieres.forEach(matiere => {
+                attachMatiereEventListeners(matiere);
+            });
+            
+            // Générer le JSON
+            generateJsonBtn.addEventListener('click', function() {
+                const jsonData = generateJsonData();
+                const jsonString = JSON.stringify(jsonData, null, 2);
+                jsonPreview.innerHTML = `<pre>${jsonString}</pre>`;
+                successAlert.textContent = 'JSON généré avec succès!';
+                successAlert.style.display = 'block';
+                setTimeout(() => {
+                    successAlert.style.display = 'none';
+                }, 3000);
+            });
+            
+            // Générer les données JSON
+            function generateJsonData() {
+                // Informations de l'élève
+                const eleve = {
+                    nom: document.getElementById('nom').value || 'Dupont',
+                    prenom: document.getElementById('prenom').value || 'Jean',
+                    classe: document.getElementById('classe').value || 'Terminale S',
+                    dateNaissance: document.getElementById('dateNaissance').value || '01/01/2005',
+                    matieres: [],
+                    appreciations: {
+                        generale: document.getElementById('appreciationGenerale').value || 'Élève sérieux et appliqué.'
+                    }
+                };
+                
+                // Récupérer les matières
+                const matiereElements = matieresContainer.querySelectorAll('.matiere');
+                matiereElements.forEach(matiereElement => {
+                    const matiere = {
+                        nom: matiereElement.querySelector('.matiere-nom').value || 'Mathématiques',
+                        moyenne: parseFloat(matiereElement.querySelector('.matiere-moyenne').value) || 15.5,
+                        moyenneClasse: parseFloat(matiereElement.querySelector('.matiere-moyenne-classe').value) || 12.8,
+                        appreciation: matiereElement.querySelector('.matiere-appreciation').value || 'Très bon travail',
+                        evaluations: []
+                    };
+                    
+                    // Récupérer les évaluations
+                    const evaluationElements = matiereElement.querySelectorAll('.evaluation-item');
+                    evaluationElements.forEach(evaluationElement => {
+                        const evaluation = {
+                            nom: evaluationElement.querySelector('.evaluation-nom').value || 'Contrôle 1',
+                            note: parseFloat(evaluationElement.querySelector('.evaluation-note').value) || 16,
+                            date: evaluationElement.querySelector('.evaluation-date').value || '10/09/2023'
+                        };
+                        matiere.evaluations.push(evaluation);
+                    });
+                    
+                    eleve.matieres.push(matiere);
+                });
+                
+                return {
+                    eleves: [eleve]
+                };
+            }
+            
+            // Télécharger le JSON
+            downloadJsonBtn.addEventListener('click', function() {
+                const jsonData = generateJsonData();
+                const jsonString = JSON.stringify(jsonData, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'bulletins.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                successAlert.textContent = 'Fichier JSON téléchargé avec succès!';
+                successAlert.style.display = 'block';
+                setTimeout(() => {
+                    successAlert.style.display = 'none';
+                }, 3000);
+            });
+            
+            // Réinitialiser le formulaire
+            resetFormBtn.addEventListener('click', function() {
+                if (confirm('Êtes-vous sûr de vouloir réinitialiser le formulaire? Toutes les données seront perdues.')) {
+                    document.getElementById('nom').value = '';
+                    document.getElementById('prenom').value = '';
+                    document.getElementById('classe').value = '';
+                    document.getElementById('dateNaissance').value = '';
+                    document.getElementById('appreciationGenerale').value = '';
+                    
+                    // Garder seulement la première matière
+                    while (matieresContainer.children.length > 1) {
+                        matieresContainer.removeChild(matieresContainer.lastChild);
+                    }
+                    
+                    // Réinitialiser la première matière
+                    const firstMatiere = matieresContainer.querySelector('.matiere');
+                    firstMatiere.querySelector('.matiere-nom').value = '';
+                    firstMatiere.querySelector('.matiere-moyenne').value = '';
+                    firstMatiere.querySelector('.matiere-moyenne-classe').value = '';
+                    firstMatiere.querySelector('.matiere-appreciation').value = '';
+                    
+                    // Garder seulement la première évaluation
+                    const evaluationsContainer = firstMatiere.querySelector('.evaluations-container');
+                    while (evaluationsContainer.children.length > 1) {
+                        evaluationsContainer.removeChild(evaluationsContainer.lastChild);
+                    }
+                    
+                    // Réinitialiser la première évaluation
+                    const firstEvaluation = evaluationsContainer.querySelector('.evaluation-item');
+                    firstEvaluation.querySelector('.evaluation-nom').value = '';
+                    firstEvaluation.querySelector('.evaluation-note').value = '';
+                    firstEvaluation.querySelector('.evaluation-date').value = '';
+                    
+                    jsonPreview.innerHTML = '<div class="empty-state">Le JSON apparaîtra ici après génération</div>';
+                    
+                    successAlert.textContent = 'Formulaire réinitialisé avec succès!';
+                    successAlert.style.display = 'block';
+                    setTimeout(() => {
+                        successAlert.style.display = 'none';
+                    }, 3000);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
