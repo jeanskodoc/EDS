@@ -1,923 +1,1373 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-      <style>
-  .btn-retour {
-    padding: 8px 16px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .btn-retour:hover {
-    background-color: #e0e0e0;
-  }
-</style>
+  <style>
+    .btn-retour {
+      padding: 8px 16px;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .btn-retour:hover {
+      background-color: #e0e0e0;
+    }
+  </style>
 
-<button class="btn-retour" onclick="history.back()">← Retour</button>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cahier de Texte Numérique</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-            color: #333;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .login-container {
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 30px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        h1, h2 {
-            color: #2c3e50;
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
-        }
-        .section {
-            margin-bottom: 30px;
-            padding: 20px;
-            background: #f9f9f9;
-            border-radius: 5px;
-            border-left: 4px solid #3498db;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input[type="text"], input[type="password"], input[type="date"], textarea, select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-        button {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-right: 10px;
-        }
-        button:hover {
-            background-color: #2980b9;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #3498db;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-        }
-        .tab {
-            padding: 10px 20px;
-            background: #ddd;
-            cursor: pointer;
-            border-radius: 5px 5px 0 0;
-            margin-right: 5px;
-        }
-        .tab.active {
-            background: #3498db;
-            color: white;
-        }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        .student-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .student-item {
-            display: flex;
-            align-items: center;
-            background: #eee;
-            padding: 8px;
-            border-radius: 4px;
-        }
-        .student-item input {
-            margin-right: 10px;
-        }
-        .search-box {
-            margin-bottom: 15px;
-        }
-        .status-present {
-            color: green;
-        }
-        .status-absent {
-            color: red;
-        }
-        .status-late {
-            color: orange;
-        }
-        .whatsapp-btn {
-            background-color: #25D366;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-right: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .whatsapp-btn:hover {
-            background-color: #128C7E;
-        }
-        .whatsapp-icon {
-            width: 20px;
-            height: 20px;
-        }
-        .logout-btn {
-            background-color: #e74c3c;
-            float: right;
-        }
-        .logout-btn:hover {
-            background-color: #c0392b;
-        }
-        .hidden {
-            display: none;
-        }
-        .error-message {
-            color: #e74c3c;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-    </style>
+  <button class="btn-retour" onclick="history.back()">← Retour</button>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cahier de Texte Numérique</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .login-container {
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 30px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      color: #2c3e50;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 10px;
+    }
+    .section {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 5px;
+      border-left: 4px solid #3498db;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input[type="text"], input[type="password"], input[type="date"], textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #3498db;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    .tab {
+      padding: 10px 20px;
+      background: #ddd;
+      cursor: pointer;
+      border-radius: 5px 5px 0 0;
+      margin-right: 5px;
+    }
+    .tab.active {
+      background: #3498db;
+      color: white;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .student-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .student-item {
+      display: flex;
+      flex-direction: column;
+      background: #eee;
+      padding: 8px;
+      border-radius: 4px;
+    }
+    .student-item .status-options {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+    .student-item .student-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .student-item input {
+      margin-right: 5px;
+    }
+    .search-box {
+      margin-bottom: 15px;
+    }
+    .status-present {
+      color: green;
+    }
+    .status-absent {
+      color: red;
+    }
+    .status-late {
+      color: orange;
+    }
+    .whatsapp-btn {
+      background-color: #25D366;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .whatsapp-btn:hover {
+      background-color: #128C7E;
+    }
+    .whatsapp-icon {
+      width: 20px;
+      height: 20px;
+    }
+    .logout-btn {
+      background-color: #e74c3c;
+      float: right;
+    }
+    .logout-btn:hover {
+      background-color: #c0392b;
+    }
+    .hidden {
+      display: none;
+    }
+    .error-message {
+      color: #e74c3c;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    .gender-icon {
+      font-size: 14px;
+      margin-left: 5px;
+    }
+    .attendance-summary {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f8f9fa;
+      border-radius: 5px;
+      border-left: 4px solid #2c3e50;
+    }
+    .summary-item {
+      margin: 5px 0;
+    }
+    /* Styles pour la saisie intelligente */
+    .autocomplete-container {
+      position: relative;
+      width: 100%;
+    }
+    .autocomplete-items {
+      position: absolute;
+      border: 1px solid #d4d4d4;
+      border-bottom: none;
+      border-top: none;
+      z-index: 99;
+      top: 100%;
+      left: 0;
+      right: 0;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .autocomplete-items div {
+      padding: 10px;
+      cursor: pointer;
+      background-color: #fff;
+      border-bottom: 1px solid #d4d4d4;
+    }
+    .autocomplete-items div:hover {
+      background-color: #e9e9e9;
+    }
+    .autocomplete-active {
+      background-color: #3498db !important;
+      color: #ffffff;
+    }
+    .suggestion-chip {
+      display: inline-block;
+      background-color: #e0e0e0;
+      padding: 4px 8px;
+      margin: 4px;
+      border-radius: 16px;
+      font-size: 0.9em;
+      cursor: pointer;
+    }
+    .suggestion-chip:hover {
+      background-color: #d0d0d0;
+    }
+    .suggestions-container {
+      margin-top: 5px;
+      margin-bottom: 15px;
+    }
+    /* Styles pour l'éditeur de texte enrichi */
+    .rich-text-editor {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 15px;
+    }
+    .toolbar {
+      background-color: #f5f5f5;
+      border-bottom: 1px solid #ddd;
+      padding: 5px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .toolbar button, .toolbar select {
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      padding: 5px 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .toolbar button:hover {
+      background-color: #f0f0f0;
+    }
+    .toolbar select {
+      height: 30px;
+    }
+    .editor-content {
+      min-height: 100px;
+      padding: 10px;
+      resize: vertical;
+      overflow-y: auto;
+    }
+    .editor-content:focus {
+      outline: none;
+    }
+    .color-picker {
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border: 1px solid #ddd;
+    }
+  </style>
 </head>
 <body>
-    <!-- Écran de connexion -->
-    <div id="loginScreen" class="login-container">
-        <h1>Connexion Enseignants</h1>
-        <div id="loginError" class="error-message hidden"></div>
-        <label for="username">Nom d'utilisateur:</label>
-        <input type="text" id="username" placeholder="Votre nom d'utilisateur">
-        
-        <label for="password">Mot de passe:</label>
-        <input type="password" id="password" placeholder="Votre mot de passe">
-        
-        <button onclick="login()">Se connecter</button>
+  <!-- Écran de connexion -->
+  <div id="loginScreen" class="login-container">
+    <h1>Connexion Enseignants</h1>
+    <div id="loginError" class="error-message hidden"></div>
+    <label for="username">Nom d'utilisateur:</label>
+    <input type="text" id="username" placeholder="Votre nom d'utilisateur">
+    
+    <label for="password">Mot de passe:</label>
+    <input type="password" id="password" placeholder="Votre mot de passe">
+    
+    <button onclick="login()">Se connecter</button>
+  </div>
+
+  <!-- Application principale (cachée jusqu'à l'authentification) -->
+  <div id="appContainer" class="container hidden">
+    <button class="logout-btn" onclick="logout()">Déconnexion</button>
+    <h1>Cahier de Texte Numérique</h1>
+    
+    <div class="tabs">
+      <div class="tab active" onclick="openTab('lesson')">Nouvelle Leçon</div>
+      <div class="tab" onclick="openTab('attendance')">Présence</div>
+      <div class="tab" onclick="openTab('view')">Voir les Entrées</div>
     </div>
-
-    <!-- Application principale (cachée jusqu'à l'authentification) -->
-    <div id="appContainer" class="container hidden">
-        <button class="logout-btn" onclick="logout()">Déconnexion</button>
-        <h1>Cahier de Texte Numérique</h1>
+    
+    <!-- Nouvelle Leçon Tab -->
+    <div id="lesson" class="tab-content active">
+      <div class="section">
+        <h2>Informations de la Leçon</h2>
+        <label for="lessonDate">Date:</label>
+        <input type="date" id="lessonDate" required>
         
-        <div class="tabs">
-            <div class="tab active" onclick="openTab('lesson')">Nouvelle Leçon</div>
-            <div class="tab" onclick="openTab('attendance')">Présence</div>
-            <div class="tab" onclick="openTab('view')">Voir les Entrées</div>
-        </div>
+        <label for="subject">Matière:</label>
+        <select id="subject" required>
+          <option value="">-- Sélectionnez une matière --</option>
+          <option value="math">Mathématiques</option>
+          <option value="french">Français</option>
+          <option value="history">Histoire-Géographie</option>
+          <option value="science">Sciences</option>
+          <option value="english">Anglais</option>
+          <option value="art">Arts Plastiques</option>
+          <option value="pe">Éducation Physique</option>
+          <option value="other">Autre</option>
+        </select>
         
-        <!-- Nouvelle Leçon Tab -->
-        <div id="lesson" class="tab-content active">
-            <div class="section">
-                <h2>Informations de la Leçon</h2>
-                <label for="lessonDate">Date:</label>
-                <input type="date" id="lessonDate" required>
-                
-                <label for="subject">Matière:</label>
-                <select id="subject" required>
-                    <option value="">-- Sélectionnez une matière --</option>
-                    <option value="math">Mathématiques</option>
-                    <option value="french">Français</option>
-                    <option value="history">Histoire-Géographie</option>
-                    <option value="science">Sciences</option>
-                    <option value="english">Anglais</option>
-                    <option value="art">Arts Plastiques</option>
-                    <option value="pe">Éducation Physique</option>
-                    <option value="other">Autre</option>
-                </select>
-                
-                <label for="class">Classe:</label>
-                <select id="class" required>
-                    <option value="">-- Sélectionnez une classe --</option>
-                    <option value="6eme">6ème</option>
-                    <option value="5eme">5ème</option>
-                    <option value="4eme">4ème</option>
-                    <option value="3eme">3ème</option>
-                    <option value="2nde">Seconde</option>
-                    <option value="1ere">Première</option>
-                    <option value="terminale">Terminale</option>
-                </select>
-                
-                <label for="lessonTitle">Titre de la leçon:</label>
-                <input type="text" id="lessonTitle" placeholder="Titre de la leçon" required>
-            </div>
-            
-            <div class="section">
-                <h2>Contenu du Cours</h2>
-                <label for="lessonContent">Grandes lignes du cours:</label>
-                <textarea id="lessonContent" placeholder="Décrivez les points principaux abordés pendant le cours..." required></textarea>
-            </div>
-            
-            <div class="section">
-                <h2>Devoirs à la Maison</h2>
-                <label for="homework">Devoirs assignés:</label>
-                <textarea id="homework" placeholder="Décrivez les devoirs à faire pour la prochaine séance..."></textarea>
-                
-                <label for="dueDate">Date de rendu:</label>
-                <input type="date" id="dueDate">
-            </div>
-            
-            <button onclick="saveLesson()">Enregistrer la Leçon</button>
-            <button onclick="clearForm()">Effacer le Formulaire</button>
-        </div>
+        <label for="class">Classe:</label>
+        <select id="class" required>
+          <option value="">-- Sélectionnez une classe --</option>
+          <option value="6eme">6ème</option>
+          <option value="5eme">5ème</option>
+          <option value="4eme">4ème</option>
+          <option value="3eme">3ème</option>
+          <option value="2nde">Seconde</option>
+          <option value="1ere">Première</option>
+          <option value="terminale">Terminale</option>
+        </select>
         
-        <!-- Contrôle de Présence Tab -->
-        <div id="attendance" class="tab-content">
-            <div class="section">
-                <h2>Contrôle de Présence</h2>
-                
-                <label for="attendanceDate">Date:</label>
-                <input type="date" id="attendanceDate" required>
-                
-                <label for="attendanceClass">Classe:</label>
-                <select id="attendanceClass" onchange="loadStudents()" required>
-                    <option value="">-- Sélectionnez une classe --</option>
-                    <option value="6eme">6ème</option>
-                    <option value="5eme">5ème</option>
-                    <option value="4eme">4ème</option>
-                    <option value="3eme">3ème</option>
-                    <option value="2nde">Seconde</option>
-                    <option value="1ere">Première</option>
-                    <option value="terminale">Terminale</option>
-                </select>
-                
-                <label for="attendanceSubject">Matière:</label>
-                <select id="attendanceSubject" required>
-                    <option value="">-- Sélectionnez une matière --</option>
-                    <option value="math">Mathématiques</option>
-                    <option value="french">Français</option>
-                    <option value="history">Histoire-Géographie</option>
-                    <option value="science">Sciences</option>
-                    <option value="english">Anglais</option>
-                    <option value="art">Arts Plastiques</option>
-                    <option value="pe">Éducation Physique</option>
-                    <option value="other">Autre</option>
-                </select>
-                
-                <div class="search-box">
-                    <label for="studentSearch">Rechercher un élève:</label>
-                    <input type="text" id="studentSearch" placeholder="Nom de l'élève..." oninput="filterStudents()">
-                </div>
-                
-                <h3>Liste des Élèves</h3>
-                <div id="studentsContainer" class="student-list">
-                    <!-- Les élèves seront chargés ici dynamiquement -->
-                </div>
-                
-                <button onclick="saveAttendance()">Enregistrer la Présence</button>
-                <button onclick="clearAttendance()">Effacer</button>
-            </div>
-            
-            <div class="section">
-                <h2>Historique de Présence</h2>
-                <div id="attendanceHistory">
-                    <!-- L'historique sera chargé ici dynamiquement -->
-                </div>
-            </div>
+        <label for="lessonTitle">Titre de la leçon:</label>
+        <div class="autocomplete-container">
+          <input type="text" id="lessonTitle" placeholder="Titre de la leçon" required autocomplete="off">
         </div>
+        <div id="titleSuggestions" class="suggestions-container"></div>
+      </div>
+      
+      <div class="section">
+        <h2>Contenu du Cours</h2>
+        <label>Grandes lignes du cours:</label>
+        <div class="rich-text-editor">
+          <div class="toolbar">
+            <select id="fontName">
+              <option value="Arial">Arial</option>
+              <option value="Helvetica">Helvetica</option>
+              <option value="Times New Roman">Times New Roman</option>
+              <option value="Courier New">Courier New</option>
+              <option value="Verdana">Verdana</option>
+              <option value="Georgia">Georgia</option>
+            </select>
+            <select id="fontSize">
+              <option value="1">Très petit</option>
+              <option value="2">Petit</option>
+              <option value="3" selected>Normal</option>
+              <option value="4">Moyen</option>
+              <option value="5">Grand</option>
+              <option value="6">Très grand</option>
+              <option value="7">Maximum</option>
+            </select>
+            <button onclick="formatText('bold')"><strong>G</strong></button>
+            <button onclick="formatText('italic')"><em>I</em></button>
+            <button onclick="formatText('underline')"><u>S</u></button>
+            <button onclick="formatText('insertOrderedList')">①</button>
+            <button onclick="formatText('insertUnorderedList')">•</button>
+            <input type="color" id="textColor" class="color-picker" onchange="applyColor('forecolor', this.value)" value="#000000">
+            <input type="color" id="bgColor" class="color-picker" onchange="applyColor('backcolor', this.value)" value="#ffffff">
+            <button onclick="formatText('removeFormat')">✕</button>
+          </div>
+          <div id="lessonContent" class="editor-content" contenteditable="true" placeholder="Décrivez les points principaux abordés pendant le cours..."></div>
+        </div>
+        <div id="contentSuggestions" class="suggestions-container"></div>
+      </div>
+      
+      <div class="section">
+        <h2>Devoirs à la Maison</h2>
+        <label>Devoirs assignés:</label>
+        <div class="rich-text-editor">
+          <div class="toolbar">
+            <select onchange="formatText('fontName', this.value)">
+              <option value="Arial">Arial</option>
+              <option value="Helvetica">Helvetica</option>
+              <option value="Times New Roman">Times New Roman</option>
+              <option value="Courier New">Courier New</option>
+              <option value="Verdana">Verdana</option>
+              <option value="Georgia">Georgia</option>
+            </select>
+            <select onchange="formatText('fontSize', this.value)">
+              <option value="1">Très petit</option>
+              <option value="2">Petit</option>
+              <option value="3" selected>Normal</option>
+              <option value="4">Moyen</option>
+              <option value="5">Grand</option>
+              <option value="6">Très grand</option>
+              <option value="7">Maximum</option>
+            </select>
+            <button onclick="formatText('bold')"><strong>G</strong></button>
+            <button onclick="formatText('italic')"><em>I</em></button>
+            <button onclick="formatText('underline')"><u>S</u></button>
+            <button onclick="formatText('insertOrderedList')">①</button>
+            <button onclick="formatText('insertUnorderedList')">•</button>
+            <input type="color" class="color-picker" onchange="applyColor('forecolor', this.value)" value="#000000">
+            <input type="color" class="color-picker" onchange="applyColor('backcolor', this.value)" value="#ffffff">
+            <button onclick="formatText('removeFormat')">✕</button>
+          </div>
+          <div id="homework" class="editor-content" contenteditable="true" placeholder="Décrivez les devoirs à faire pour la prochaine séance..."></div>
+        </div>
+        <div id="homeworkSuggestions" class="suggestions-container"></div>
         
-        <!-- Voir les Entrées Tab -->
-        <div id="view" class="tab-content">
-            <div class="section">
-                <h2>Filtrer les Entrées</h2>
-                
-                <label for="filterClass">Classe:</label>
-                <select id="filterClass" onchange="filterEntries()">
-                    <option value="">Toutes les classes</option>
-                    <option value="6eme">6ème</option>
-                    <option value="5eme">5ème</option>
-                    <option value="4eme">4ème</option>
-                    <option value="3eme">3ème</option>
-                    <option value="2nde">Seconde</option>
-                    <option value="1ere">Première</option>
-                    <option value="terminale">Terminale</option>
-                </select>
-                
-                <label for="filterSubject">Matière:</label>
-                <select id="filterSubject" onchange="filterEntries()">
-                    <option value="">Toutes les matières</option>
-                    <option value="math">Mathématiques</option>
-                    <option value="french">Français</option>
-                    <option value="history">Histoire-Géographie</option>
-                    <option value="science">Sciences</option>
-                    <option value="english">Anglais</option>
-                    <option value="art">Arts Plastiques</option>
-                    <option value="pe">Éducation Physique</option>
-                    <option value="other">Autre</option>
-                </select>
-                
-                <label for="filterDateFrom">Date de début:</label>
-                <input type="date" id="filterDateFrom" onchange="filterEntries()">
-                
-                <label for="filterDateTo">Date de fin:</label>
-                <input type="date" id="filterDateTo" onchange="filterEntries()">
-            </div>
-            
-            <div class="section">
-                <h2>Leçons Enregistrées</h2>
-                <button class="whatsapp-btn" onclick="sendViaWhatsApp()">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="whatsapp-icon">
-                    Envoyer via WhatsApp
-                </button>
-                <div id="lessonsList">
-                    <!-- Les leçons seront chargées ici dynamiquement -->
-                </div>
-            </div>
-        </div>
+        <label for="dueDate">Date de rendu:</label>
+        <input type="date" id="dueDate">
+      </div>
+      
+      <button onclick="saveLesson()">Enregistrer la Leçon</button>
+      <button onclick="clearForm()">Effacer le Formulaire</button>
     </div>
+    
+    <!-- Contrôle de Présence Tab -->
+    <div id="attendance" class="tab-content">
+      <div class="section">
+        <h2>Contrôle de Présence</h2>
+        
+        <label for="attendanceDate">Date:</label>
+        <input type="date" id="attendanceDate" required>
+        
+        <label for="attendanceClass">Classe:</label>
+        <select id="attendanceClass" onchange="loadStudents()" required>
+          <option value="">-- Sélectionnez une classe --</option>
+          <option value="6eme">6ème</option>
+          <option value="5eme">5ème</option>
+          <option value="4eme">4ème</option>
+          <option value="3eme">3ème</option>
+          <option value="2nde">Seconde</option>
+          <option value="1ere">Première</option>
+          <option value="terminale">Terminale</option>
+        </select>
+        
+        <label for="attendanceSubject">Matière:</label>
+        <select id="attendanceSubject" required>
+          <option value="">-- Sélectionnez une matière --</option>
+          <option value="math">Mathématiques</option>
+          <option value="french">Français</option>
+          <option value="history">Histoire-Géographie</option>
+          <option value="science">Sciences</option>
+          <option value="english">Anglais</option>
+          <option value="art">Arts Plastiques</option>
+          <option value="pe">Éducation Physique</option>
+          <option value="other">Autre</option>
+        </select>
+        
+        <div class="search-box">
+          <label for="studentSearch">Rechercher un élève:</label>
+          <input type="text" id="studentSearch" placeholder="Nom de l'élève..." oninput="filterStudents()">
+        </div>
+        
+        <h3>Liste des Élèves</h3>
+        <div id="studentsContainer" class="student-list">
+          <!-- Les élèves seront chargés ici dynamiquement -->
+        </div>
+        
+        <button onclick="saveAttendance()">Enregistrer la Présence</button>
+        <button onclick="clearAttendance()">Effacer</button>
+      </div>
+      
+      <div class="section">
+        <h2>Historique de Présence</h2>
+        <div id="attendanceHistory">
+          <!-- L'historique sera chargé ici dynamiquement -->
+        </div>
+      </div>
+    </div>
+    
+    <!-- Voir les Entrées Tab -->
+    <div id="view" class="tab-content">
+      <div class="section">
+        <h2>Filtrer les Entrées</h2>
+        
+        <label for="filterClass">Classe:</label>
+        <select id="filterClass" onchange="filterEntries()">
+          <option value="">Toutes les classes</option>
+          <option value="6eme">6ème</option>
+          <option value="5eme">5ème</option>
+          <option value="4eme">4ème</option>
+          <option value="3eme">3ème</option>
+          <option value="2nde">Seconde</option>
+          <option value="1ere">Première</option>
+          <option value="terminale">Terminale</option>
+        </select>
+        
+        <label for="filterSubject">Matière:</label>
+        <select id="filterSubject" onchange="filterEntries()">
+          <option value="">Toutes les matières</option>
+          <option value="math">Mathématiques</option>
+          <option value="french">Français</option>
+          <option value="history">Histoire-Géographie</option>
+          <option value="science">Sciences</option>
+          <option value="english">Anglais</option>
+          <option value="art">Arts Plastiques</option>
+          <option value="pe">Éducation Physique</option>
+          <option value="other">Autre</option>
+        </select>
+        
+        <label for="filterDateFrom">Date de début:</label>
+        <input type="date" id="filterDateFrom" onchange="filterEntries()">
+        
+        <label for="filterDateTo">Date de fin:</label>
+        <input type="date" id="filterDateTo" onchange="filterEntries()">
+      </div>
+      
+      <div class="section">
+        <h2>Leçons Enregistrées</h2>
+        <button class="whatsapp-btn" onclick="sendViaWhatsApp()">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="whatsapp-icon">
+          Envoyer via WhatsApp
+        </button>
+        <div id="lessonsList">
+          <!-- Les leçons seront chargées ici dynamiquement -->
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <script>
-        // Variables globales
-        let lessons = JSON.parse(localStorage.getItem('teacherLessons')) || [];
-        let attendanceRecords = JSON.parse(localStorage.getItem('teacherAttendance')) || [];
-        let students = {
-            '6eme': ['Jean Dupont', 'Marie Martin', 'Pierre Durand', 'Sophie Lambert', 'Lucie Petit'],
-            '5eme': ['Thomas Moreau', 'Julie Laurent', 'Nicolas Simon', 'Camille Michel', 'Alexandre Bernard'],
-            '4eme': ['Laura Robert', 'Hugo Lefebvre', 'Emma Roux', 'Louis David', 'Chloé Bertrand'],
-            '3eme': ['Mathieu Leroy', 'Manon Morel', 'Antoine Fournier', 'Sarah Girard', 'Julien Bonnet'],
-            '2nde': ['Léa Dumont', 'Paul François', 'Zoé Martinez', 'Gabriel Legrand', 'Inès Garnier'],
-            '1ere': ['Romain Faure', 'Elodie Rousseau', 'Maxime Blanc', 'Charlotte Caron', 'Victor Henry'],
-            'terminale': ['Clara Perrot', 'Baptiste Nicolas', 'Margaux Meyer', 'Arthur Adam', 'Léna Chevalier']
-        };
+  <script>
+    // Variables globales
+    let lessons = JSON.parse(localStorage.getItem('teacherLessons')) || [];
+    let attendanceRecords = JSON.parse(localStorage.getItem('teacherAttendance')) || [];
+    
+    // Structure des élèves avec leur sexe
+    let students = {
+      '6eme': [
+        { name: 'Jean Dupont', gender: 'M' },
+        { name: 'Marie Martin', gender: 'F' },
+        { name: 'Pierre Durand', gender: 'M' },
+        { name: 'Sophie Lambert', gender: 'F' },
+        { name: 'Lucie Petit', gender: 'F' }
+      ],
+      '5eme': [
+        { name: 'Thomas Moreau', gender: 'M' },
+        { name: 'Julie Laurent', gender: 'F' },
+        { name: 'Nicolas Simon', gender: 'M' },
+        { name: 'Camille Michel', gender: 'F' },
+        { name: 'Alexandre Bernard', gender: 'M' }
+      ],
+      '4eme': [
+        { name: 'Laura Robert', gender: 'F' },
+        { name: 'Hugo Lefebvre', gender: 'M' },
+        { name: 'Emma Roux', gender: 'F' },
+        { name: 'Louis David', gender: 'M' },
+        { name: 'Chloé Bertrand', gender: 'F' }
+      ],
+      '3eme': [
+        { name: 'Mathieu Leroy', gender: 'M' },
+        { name: 'Manon Morel', gender: 'F' },
+        { name: 'Antoine Fournier', gender: 'M' },
+        { name: 'Sarah Girard', gender: 'F' },
+        { name: 'Julien Bonnet', gender: 'M' }
+      ],
+      '2nde': [
+        { name: 'Léa Dumont', gender: 'F' },
+        { name: 'Paul François', gender: 'M' },
+        { name: 'Zoé Martinez', gender: 'F' },
+        { name: 'Gabriel Legrand', gender: 'M' },
+        { name: 'Inès Garnier', gender: 'F' }
+      ],
+      '1ere': [
+        { name: 'Romain Faure', gender: 'M' },
+        { name: 'Elodie Rousseau', gender: 'F' },
+        { name: 'Maxime Blanc', gender: 'M' },
+        { name: 'Charlotte Caron', gender: 'F' },
+        { name: 'Victor Henry', gender: 'M' }
+      ],
+      'terminale': [
+        { name: 'Clara Perrot', gender: 'F' },
+        { name: 'Baptiste Nicolas', gender: 'M' },
+        { name: 'Margaux Meyer', gender: 'F' },
+        { name: 'Arthur Adam', gender: 'M' },
+        { name: 'Léna Chevalier', gender: 'F' }
+      ]
+    };
 
-        // Base de données des utilisateurs (en production, utiliser un système sécurisé)
-        const users = [
-            { username: "prof1", password: "pass123", name: "Professeur Dupont" },
-            { username: "prof2", password: "pass456", name: "Professeur Martin" },
-            { username: "admin", password: "admin123", name: "Administrateur" }
-        ];
+    // Base de données des suggestions pour la saisie intelligente
+    const smartSuggestions = {
+      lessonTitles: [
+        "Introduction à",
+        "Révision de",
+        "Exercices pratiques sur",
+        "Cours avancé de",
+        "Les fondamentaux de",
+        "Histoire et évolution des",
+        "Applications pratiques des",
+        "Théorie et pratique des",
+        "Analyse approfondie de",
+        "Synthèse sur"
+      ],
+      lessonContents: [
+        "Définition des concepts clés",
+        "Étude de cas pratiques",
+        "Analyse comparative",
+        "Méthodologie d'application",
+        "Exercices d'approfondissement",
+        "Réponses aux questions fréquentes",
+        "Perspectives historiques",
+        "Applications contemporaines",
+        "Synthèse des connaissances",
+        "Préparation à l'évaluation"
+      ],
+      homework: [
+        "Exercices pages 12-15",
+        "Révision pour l'évaluation",
+        "Préparation exposé",
+        "Recherche documentaire",
+        "QCM en ligne à compléter",
+        "Devoir maison à rendre",
+        "Lecture pages 45-52",
+        "Rédaction de synthèse",
+        "Exercices supplémentaires",
+        "Préparation questions oral"
+      ],
+      subjects: {
+        math: ["algèbre", "géométrie", "calcul", "statistiques", "probabilités", "équations", "fonctions", "théorèmes"],
+        french: ["grammaire", "conjugaison", "orthographe", "littérature", "rédaction", "analyse de texte", "vocabulaire"],
+        history: ["chronologie", "civilisations", "événements clés", "personnages historiques", "cartes", "documents historiques"],
+        science: ["expériences", "méthode scientifique", "hypothèses", "observations", "conclusions", "manipulations"],
+        english: ["vocabulary", "grammar", "conversation", "reading comprehension", "writing", "listening exercises"],
+        art: ["œuvres d'art", "techniques", "artistes", "mouvements artistiques", "analyse d'œuvre", "création"],
+        pe: ["échauffement", "exercices techniques", "règles du jeu", "stratégies", "entraînement", "performance"]
+      }
+    };
 
-        // Vérifier si l'utilisateur est déjà connecté au chargement
-        document.addEventListener('DOMContentLoaded', function() {
-            const loggedInUser = localStorage.getItem('loggedInUser');
-            if (loggedInUser) {
-                showApp();
-            } else {
-                showLogin();
-            }
+    // Base de données des utilisateurs (en production, utiliser un système sécurisé)
+    const users = [
+      { username: "prof1", password: "pass123", name: "Professeur Dupont" },
+      { username: "prof2", password: "pass456", name: "Professeur Martin" },
+      { username: "admin", password: "admin123", name: "Administrateur" }
+    ];
+
+    // Vérifier si l'utilisateur est déjà connecté au chargement
+    document.addEventListener('DOMContentLoaded', function() {
+      const loggedInUser = localStorage.getItem('loggedInUser');
+      if (loggedInUser) {
+        showApp();
+        initAutocomplete();
+      } else {
+        showLogin();
+      }
+    });
+
+    // Fonctions d'authentification
+    function login() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const errorElement = document.getElementById('loginError');
+
+      // Réinitialiser le message d'erreur
+      errorElement.classList.add('hidden');
+      errorElement.textContent = '';
+
+      // Validation basique
+      if (!username || !password) {
+        showError("Veuillez saisir un nom d'utilisateur et un mot de passe");
+        return;
+      }
+
+      // Vérifier les informations de connexion
+      const user = users.find(u => u.username === username && u.password === password);
+      
+      if (user) {
+        // Enregistrer l'utilisateur connecté
+        localStorage.setItem('loggedInUser', JSON.stringify(user));
+        showApp();
+        
+        // Définir la date d'aujourd'hui par défaut
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('lessonDate').value = today;
+        document.getElementById('attendanceDate').value = today;
+        
+        // Charger les données existantes
+        filterEntries();
+        loadAttendanceHistory();
+        
+        // Initialiser la saisie intelligente
+        initAutocomplete();
+      } else {
+        showError("Nom d'utilisateur ou mot de passe incorrect");
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('loggedInUser');
+      showLogin();
+      // Réinitialiser les champs de connexion
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+    }
+
+    function showError(message) {
+      const errorElement = document.getElementById('loginError');
+      errorElement.textContent = message;
+      errorElement.classList.remove('hidden');
+    }
+
+    function showApp() {
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('appContainer').classList.remove('hidden');
+    }
+
+    function showLogin() {
+      document.getElementById('loginScreen').classList.remove('hidden');
+      document.getElementById('appContainer').classList.add('hidden');
+    }
+    
+    // Fonctions pour les onglets
+    function openTab(tabId) {
+      // Cacher tous les onglets
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Désactiver tous les boutons d'onglet
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Activer l'onglet sélectionné
+      document.getElementById(tabId).classList.add('active');
+      
+      // Activer le bouton de l'onglet
+      document.querySelector(`.tab[onclick="openTab('${tabId}')"]`).classList.add('active');
+      
+      // Si c'est l'onglet de présence, charger les élèves
+      if (tabId === 'attendance') {
+        loadStudents();
+      }
+    }
+    
+    // Fonctions pour la gestion des leçons
+    function saveLesson() {
+      const lessonDate = document.getElementById('lessonDate').value;
+      const subject = document.getElementById('subject').value;
+      const classLevel = document.getElementById('class').value;
+      const lessonTitle = document.getElementById('lessonTitle').value;
+      const lessonContent = document.getElementById('lessonContent').innerHTML;
+      const homework = document.getElementById('homework').innerHTML;
+      const dueDate = document.getElementById('dueDate').value;
+      
+      if (!lessonDate || !subject || !classLevel || !lessonTitle || !lessonContent) {
+        alert('Veuillez remplir tous les champs obligatoires.');
+        return;
+      }
+      
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+      
+      const newLesson = {
+        id: Date.now(),
+        date: lessonDate,
+        subject: subject,
+        class: classLevel,
+        title: lessonTitle,
+        content: lessonContent,
+        homework: homework,
+        dueDate: dueDate,
+        teacher: loggedInUser.username // Associer la leçon à l'enseignant
+      };
+      
+      lessons.push(newLesson);
+      localStorage.setItem('teacherLessons', JSON.stringify(lessons));
+      
+      alert('Leçon enregistrée avec succès!');
+      clearForm();
+      filterEntries();
+    }
+    
+    function clearForm() {
+      document.getElementById('lessonDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('subject').value = '';
+      document.getElementById('class').value = '';
+      document.getElementById('lessonTitle').value = '';
+      document.getElementById('lessonContent').innerHTML = '';
+      document.getElementById('homework').innerHTML = '';
+      document.getElementById('dueDate').value = '';
+    }
+    
+    // Fonctions pour le contrôle de présence
+    function loadStudents() {
+      const classLevel = document.getElementById('attendanceClass').value;
+      if (!classLevel) return;
+      
+      const studentsContainer = document.getElementById('studentsContainer');
+      studentsContainer.innerHTML = '';
+      
+      students[classLevel].forEach(student => {
+        const studentItem = document.createElement('div');
+        studentItem.className = 'student-item';
+        studentItem.innerHTML = `
+          <div class="status-options">
+            <div>
+              <input type="radio" name="${student.name}" value="present" id="${student.name}-present" checked>
+              <label for="${student.name}-present">Présent(e)</label>
+            </div>
+            <div>
+              <input type="radio" name="${student.name}" value="absent" id="${student.name}-absent">
+              <label for="${student.name}-absent">Absent(e)</label>
+            </div>
+            <div>
+              <input type="radio" name="${student.name}" value="late" id="${student.name}-late">
+              <label for="${student.name}-late">En retard</label>
+            </div>
+          </div>
+          <div class="student-info">
+            <span>${student.name}</span>
+            <span class="gender-icon">${student.gender === 'M' ? '♂' : '♀'}</span>
+          </div>
+        `;
+        studentsContainer.appendChild(studentItem);
+      });
+    }
+    
+    function filterStudents() {
+      const searchTerm = document.getElementById('studentSearch').value.toLowerCase();
+      const studentItems = document.querySelectorAll('.student-item');
+      
+      studentItems.forEach(item => {
+        const studentName = item.querySelector('.student-info span:first-child').textContent.toLowerCase();
+        if (studentName.includes(searchTerm)) {
+          item.style.display = 'flex';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+    
+    function saveAttendance() {
+      const attendanceDate = document.getElementById('attendanceDate').value;
+      const classLevel = document.getElementById('attendanceClass').value;
+      const subject = document.getElementById('attendanceSubject').value;
+      
+      if (!attendanceDate || !classLevel || !subject) {
+        alert('Veuillez remplir tous les champs obligatoires.');
+        return;
+      }
+      
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+      
+      const attendanceData = {
+        id: Date.now(),
+        date: attendanceDate,
+        class: classLevel,
+        subject: subject,
+        students: [],
+        teacher: loggedInUser.username // Associer la présence à l'enseignant
+      };
+      
+      students[classLevel].forEach(student => {
+        const status = document.querySelector(`input[name="${student.name}"]:checked`).value;
+        attendanceData.students.push({
+          name: student.name,
+          gender: student.gender,
+          status: status
         });
+      });
+      
+      attendanceRecords.push(attendanceData);
+      localStorage.setItem('teacherAttendance', JSON.stringify(attendanceRecords));
+      
+      alert('Présence enregistrée avec succès!');
+      loadAttendanceHistory();
+    }
+    
+    function clearAttendance() {
+      document.getElementById('attendanceDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('attendanceClass').value = '';
+      document.getElementById('attendanceSubject').value = '';
+      document.getElementById('studentSearch').value = '';
+      document.getElementById('studentsContainer').innerHTML = '';
+    }
+    
+    function loadAttendanceHistory() {
+      const historyContainer = document.getElementById('attendanceHistory');
+      historyContainer.innerHTML = '';
+      
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+      const teacherRecords = attendanceRecords.filter(record => record.teacher === loggedInUser.username);
+      
+      if (teacherRecords.length === 0) {
+        historyContainer.innerHTML = '<p>Aucun enregistrement de présence trouvé.</p>';
+        return;
+      }
+      
+      // Trier par date (du plus récent au plus ancien)
+      const sortedRecords = [...teacherRecords].sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      sortedRecords.forEach(record => {
+        const recordElement = document.createElement('div');
+        recordElement.className = 'section';
+        recordElement.style.marginBottom = '15px';
+        
+        let presentCount = 0;
+        let absentCount = 0;
+        let lateCount = 0;
+        let presentMale = 0;
+        let presentFemale = 0;
+        let absentMale = 0;
+        let absentFemale = 0;
+        let lateMale = 0;
+        let lateFemale = 0;
+        
+        record.students.forEach(student => {
+          if (student.status === 'present') {
+            presentCount++;
+            if (student.gender === 'M') presentMale++;
+            else presentFemale++;
+          } else if (student.status === 'absent') {
+            absentCount++;
+            if (student.gender === 'M') absentMale++;
+            else absentFemale++;
+          } else if (student.status === 'late') {
+            lateCount++;
+            if (student.gender === 'M') lateMale++;
+            else lateFemale++;
+          }
+        });
+        
+        recordElement.innerHTML = `
+          <h3>${formatDate(record.date)} - ${getSubjectName(record.subject)} - ${getClassName(record.class)}</h3>
+          <div class="attendance-summary">
+            <h4>Résumé de présence</h4>
+            <p class="summary-item"><strong>Total élèves:</strong> ${record.students.length}</p>
+            <p class="summary-item"><strong>Présents:</strong> ${presentCount} (Garçons: ${presentMale}, Filles: ${presentFemale})</p>
+            <p class="summary-item"><strong>Absents:</strong> ${absentCount} (Garçons: ${absentMale}, Filles: ${absentFemale})</p>
+            <p class="summary-item"><strong>Retards:</strong> ${lateCount} (Garçons: ${lateMale}, Filles: ${lateFemale})</p>
+          </div>
+          <button onclick="viewAttendanceDetails(${record.id})">Voir détails</button>
+          <button onclick="deleteAttendanceRecord(${record.id})">Supprimer</button>
+        `;
+        
+        historyContainer.appendChild(recordElement);
+      });
+    }
+    
+    function viewAttendanceDetails(recordId) {
+      const record = attendanceRecords.find(r => r.id === recordId);
+      if (!record) return;
+      
+      let detailsHTML = `
+        <h3>Détails de présence - ${formatDate(record.date)}</h3>
+        <p>Matière: ${getSubjectName(record.subject)}</p>
+        <p>Classe: ${getClassName(record.class)}</p>
+        <table>
+          <tr>
+            <th>Élève</th>
+            <th>Sexe</th>
+            <th>Statut</th>
+          </tr>
+      `;
+      
+      record.students.forEach(student => {
+        let statusClass = '';
+        if (student.status === 'present') statusClass = 'status-present';
+        else if (student.status === 'absent') statusClass = 'status-absent';
+        else if (student.status === 'late') statusClass = 'status-late';
+        
+        detailsHTML += `
+          <tr>
+            <td>${student.name}</td>
+            <td>${student.gender === 'M' ? 'Garçon' : 'Fille'}</td>
+            <td class="${statusClass}">${getStatusName(student.status)}</td>
+          </tr>
+        `;
+      });
+      
+      detailsHTML += '</table>';
+      
+      alert(detailsHTML, 'Détails de présence');
+    }
+    
+    function deleteAttendanceRecord(recordId) {
+      if (confirm('Êtes-vous sûr de vouloir supprimer cet enregistrement de présence?')) {
+        attendanceRecords = attendanceRecords.filter(r => r.id !== recordId);
+        localStorage.setItem('teacherAttendance', JSON.stringify(attendanceRecords));
+        loadAttendanceHistory();
+      }
+    }
+    
+    // Fonctions pour visualiser les entrées
+    function filterEntries() {
+      const classFilter = document.getElementById('filterClass').value;
+      const subjectFilter = document.getElementById('filterSubject').value;
+      const dateFrom = document.getElementById('filterDateFrom').value;
+      const dateTo = document.getElementById('filterDateTo').value;
+      
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+      let filteredLessons = lessons.filter(lesson => lesson.teacher === loggedInUser.username);
+      
+      if (classFilter) {
+        filteredLessons = filteredLessons.filter(lesson => lesson.class === classFilter);
+      }
+      
+      if (subjectFilter) {
+        filteredLessons = filteredLessons.filter(lesson => lesson.subject === subjectFilter);
+      }
+      
+      if (dateFrom) {
+        filteredLessons = filteredLessons.filter(lesson => lesson.date >= dateFrom);
+      }
+      
+      if (dateTo) {
+        filteredLessons = filteredLessons.filter(lesson => lesson.date <= dateTo);
+      }
+      
+      displayLessons(filteredLessons);
+    }
+    
+    function displayLessons(lessonsToDisplay) {
+      const lessonsList = document.getElementById('lessonsList');
+      lessonsList.innerHTML = '';
+      
+      if (lessonsToDisplay.length === 0) {
+        lessonsList.innerHTML = '<p>Aucune leçon trouvée avec les critères sélectionnés.</p>';
+        return;
+      }
+      
+      // Trier par date (du plus récent au plus ancien)
+      const sortedLessons = [...lessonsToDisplay].sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      sortedLessons.forEach(lesson => {
+        const lessonElement = document.createElement('div');
+        lessonElement.className = 'section';
+        lessonElement.style.marginBottom = '15px';
+        
+        lessonElement.innerHTML = `
+          <h3>${formatDate(lesson.date)} - ${getSubjectName(lesson.subject)} - ${getClassName(lesson.class)}</h3>
+          <h4>${lesson.title}</h4>
+          <p><strong>Contenu du cours:</strong></p>
+          <div class="lesson-content">${lesson.content}</div>
+          ${lesson.homework ? `<p><strong>Devoirs:</strong></p><div class="lesson-content">${lesson.homework}</div>` : ''}
+          ${lesson.dueDate ? `<p><strong>À rendre pour le:</strong> ${formatDate(lesson.dueDate)}</p>` : ''}
+          <button onclick="editLesson(${lesson.id})">Modifier</button>
+          <button onclick="deleteLesson(${lesson.id})">Supprimer</button>
+        `;
+        
+        lessonsList.appendChild(lessonElement);
+      });
+    }
+    
+    function editLesson(lessonId) {
+      const lesson = lessons.find(l => l.id === lessonId);
+      if (!lesson) return;
+      
+      openTab('lesson');
+      
+      document.getElementById('lessonDate').value = lesson.date;
+      document.getElementById('subject').value = lesson.subject;
+      document.getElementById('class').value = lesson.class;
+      document.getElementById('lessonTitle').value = lesson.title;
+      document.getElementById('lessonContent').innerHTML = lesson.content;
+      document.getElementById('homework').innerHTML = lesson.homework;
+      document.getElementById('dueDate').value = lesson.dueDate;
+      
+      // Supprimer l'ancienne version
+      lessons = lessons.filter(l => l.id !== lessonId);
+    }
+    
+    function deleteLesson(lessonId) {
+      if (confirm('Êtes-vous sûr de vouloir supprimer cette leçon?')) {
+        lessons = lessons.filter(l => l.id !== lessonId);
+        localStorage.setItem('teacherLessons', JSON.stringify(lessons));
+        filterEntries();
+      }
+    }
+    
+    // Fonction pour envoyer via WhatsApp
+    function sendViaWhatsApp() {
+      // Récupérer les données filtrées
+      const classFilter = document.getElementById('filterClass').value;
+      const subjectFilter = document.getElementById('filterSubject').value;
+      const dateFrom = document.getElementById('filterDateFrom').value;
+      const dateTo = document.getElementById('filterDateTo').value;
+      
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+      let filteredLessons = lessons.filter(lesson => lesson.teacher === loggedInUser.username);
+      
+      if (classFilter) {
+        filteredLessons = filteredLessons.filter(lesson => lesson.class === classFilter);
+      }
+      
+      if (subjectFilter) {
+        filteredLessons = filteredLessons.filter(lesson => lesson.subject === subjectFilter);
+      }
+      
+      if (dateFrom) {
+        filteredLessons = filteredLessons.filter(lesson => lesson.date >= dateFrom);
+      }
+      
+      if (dateTo) {
+        filteredLessons = filteredLessons.filter(lesson => lesson.date <= dateTo);
+      }
 
-        // Fonctions d'authentification
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const errorElement = document.getElementById('loginError');
+      // Formater le message
+      let message = "📚 Résumé des leçons enregistrées:\n\n";
+      
+      filteredLessons.forEach(lesson => {
+        message += `📅 ${formatDate(lesson.date)}\n`;
+        message += `🏫 ${getClassName(lesson.class)} - ${getSubjectName(lesson.subject)}\n`;
+        message += `📖 ${lesson.title}\n`;
+        
+        // Convertir le HTML en texte brut pour WhatsApp
+        const contentDiv = document.createElement('div');
+        contentDiv.innerHTML = lesson.content;
+        const plainContent = contentDiv.textContent || contentDiv.innerText || '';
+        
+        message += `📝 ${plainContent.substring(0, 100)}${plainContent.length > 100 ? '...' : ''}\n`;
+        
+        if (lesson.homework) {
+          const homeworkDiv = document.createElement('div');
+          homeworkDiv.innerHTML = lesson.homework;
+          const plainHomework = homeworkDiv.textContent || homeworkDiv.innerText || '';
+          
+          message += `📌 Devoirs: ${plainHomework.substring(0, 100)}${plainHomework.length > 100 ? '...' : ''}\n`;
+        }
+        if (lesson.dueDate) {
+          message += `⏰ À rendre pour le: ${formatDate(lesson.dueDate)}\n`;
+        }
+        message += "\n――――――――――\n\n";
+      });
 
-            // Réinitialiser le message d'erreur
-            errorElement.classList.add('hidden');
-            errorElement.textContent = '';
+      // Encoder le message pour l'URL
+      const encodedMessage = encodeURIComponent(message);
+      
+      // Numéro WhatsApp (92871605)
+      const phoneNumber = "92871605";
+      
+      // Créer le lien WhatsApp
+      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+      
+      // Ouvrir dans un nouvel onglet
+      window.open(whatsappUrl, '_blank');
+    }
 
-            // Validation basique
-            if (!username || !password) {
-                showError("Veuillez saisir un nom d'utilisateur et un mot de passe");
-                return;
-            }
-
-            // Vérifier les informations de connexion
-            const user = users.find(u => u.username === username && u.password === password);
-            
-            if (user) {
-                // Enregistrer l'utilisateur connecté
-                localStorage.setItem('loggedInUser', JSON.stringify(user));
-                showApp();
-                
-                // Définir la date d'aujourd'hui par défaut
-                const today = new Date().toISOString().split('T')[0];
-                document.getElementById('lessonDate').value = today;
-                document.getElementById('attendanceDate').value = today;
-                
-                // Charger les données existantes
-                filterEntries();
-                loadAttendanceHistory();
-            } else {
-                showError("Nom d'utilisateur ou mot de passe incorrect");
-            }
+    // Fonctions utilitaires
+    function formatDate(dateString) {
+      if (!dateString) return '';
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString('fr-FR', options);
+    }
+    
+    function getSubjectName(subjectCode) {
+      const subjects = {
+        'math': 'Mathématiques',
+        'french': 'Français',
+        'history': 'Histoire-Géographie',
+        'science': 'Sciences',
+        'english': 'Anglais',
+        'art': 'Arts Plastiques',
+        'pe': 'Éducation Physique',
+        'other': 'Autre'
+      };
+      return subjects[subjectCode] || subjectCode;
+    }
+    
+    function getClassName(classCode) {
+      const classes = {
+        '6eme': '6ème',
+        '5eme': '5ème',
+        '4eme': '4ème',
+        '3eme': '3ème',
+        '2nde': 'Seconde',
+        '1ere': 'Première',
+        'terminale': 'Terminale'
+      };
+      return classes[classCode] || classCode;
+    }
+    
+    function getStatusName(statusCode) {
+      const statuses = {
+        'present': 'Présent(e)',
+        'absent': 'Absent(e)',
+        'late': 'En retard'
+      };
+      return statuses[statusCode] || statusCode;
+    }
+    
+    function alert(message, title = 'Information') {
+      const alertBox = document.createElement('div');
+      alertBox.style.position = 'fixed';
+      alertBox.style.top = '50%';
+      alertBox.style.left = '50%';
+      alertBox.style.transform = 'translate(-50%, -50%)';
+      alertBox.style.backgroundColor = 'white';
+      alertBox.style.padding = '20px';
+      alertBox.style.borderRadius = '5px';
+      alertBox.style.boxShadow = '0 0 10px rgba(0,0,0,0.3)';
+      alertBox.style.zIndex = '1000';
+      alertBox.style.maxWidth = '80%';
+      alertBox.style.maxHeight = '80%';
+      alertBox.style.overflow = 'auto';
+      
+      alertBox.innerHTML = `
+        <h2 style="margin-top: 0;">${title}</h2>
+        <div>${message}</div>
+        <button style="margin-top: 15px; padding: 5px 10px;" onclick="this.parentElement.remove()">Fermer</button>
+      `;
+      
+      document.body.appendChild(alertBox);
+    }
+    
+    // Fonctions pour la saisie intelligente
+    function initAutocomplete() {
+      // Configuration de l'autocomplétion pour le titre de leçon
+      const lessonTitleInput = document.getElementById('lessonTitle');
+      lessonTitleInput.addEventListener('input', function() {
+        const subject = document.getElementById('subject').value;
+        showTitleSuggestions(this.value, subject);
+      });
+      
+      // Configuration de l'autocomplétion pour le contenu de leçon
+      const lessonContentInput = document.getElementById('lessonContent');
+      lessonContentInput.addEventListener('input', function() {
+        showContentSuggestions(this.textContent);
+      });
+      
+      // Configuration de l'autocomplétion pour les devoirs
+      const homeworkInput = document.getElementById('homework');
+      homeworkInput.addEventListener('input', function() {
+        showHomeworkSuggestions(this.textContent);
+      });
+      
+      // Ajouter les écouteurs pour les changements de matière
+      document.getElementById('subject').addEventListener('change', function() {
+        const title = document.getElementById('lessonTitle').value;
+        if (title) {
+          showTitleSuggestions(title, this.value);
         }
-
-        function logout() {
-            localStorage.removeItem('loggedInUser');
-            showLogin();
-            // Réinitialiser les champs de connexion
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-        }
-
-        function showError(message) {
-            const errorElement = document.getElementById('loginError');
-            errorElement.textContent = message;
-            errorElement.classList.remove('hidden');
-        }
-
-        function showApp() {
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('appContainer').classList.remove('hidden');
-        }
-
-        function showLogin() {
-            document.getElementById('loginScreen').classList.remove('hidden');
-            document.getElementById('appContainer').classList.add('hidden');
-        }
-        
-        // Fonctions pour les onglets
-        function openTab(tabId) {
-            // Cacher tous les onglets
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Désactiver tous les boutons d'onglet
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Activer l'onglet sélectionné
-            document.getElementById(tabId).classList.add('active');
-            
-            // Activer le bouton de l'onglet
-            document.querySelector(`.tab[onclick="openTab('${tabId}')"]`).classList.add('active');
-            
-            // Si c'est l'onglet de présence, charger les élèves
-            if (tabId === 'attendance') {
-                loadStudents();
-            }
-        }
-        
-        // Fonctions pour la gestion des leçons
-        function saveLesson() {
-            const lessonDate = document.getElementById('lessonDate').value;
-            const subject = document.getElementById('subject').value;
-            const classLevel = document.getElementById('class').value;
-            const lessonTitle = document.getElementById('lessonTitle').value;
-            const lessonContent = document.getElementById('lessonContent').value;
-            const homework = document.getElementById('homework').value;
-            const dueDate = document.getElementById('dueDate').value;
-            
-            if (!lessonDate || !subject || !classLevel || !lessonTitle || !lessonContent) {
-                alert('Veuillez remplir tous les champs obligatoires.');
-                return;
-            }
-            
-            const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-            
-            const newLesson = {
-                id: Date.now(),
-                date: lessonDate,
-                subject: subject,
-                class: classLevel,
-                title: lessonTitle,
-                content: lessonContent,
-                homework: homework,
-                dueDate: dueDate,
-                teacher: loggedInUser.username // Associer la leçon à l'enseignant
-            };
-            
-            lessons.push(newLesson);
-            localStorage.setItem('teacherLessons', JSON.stringify(lessons));
-            
-            alert('Leçon enregistrée avec succès!');
-            clearForm();
-            filterEntries();
-        }
-        
-        function clearForm() {
-            document.getElementById('lessonDate').value = new Date().toISOString().split('T')[0];
-            document.getElementById('subject').value = '';
-            document.getElementById('class').value = '';
-            document.getElementById('lessonTitle').value = '';
-            document.getElementById('lessonContent').value = '';
-            document.getElementById('homework').value = '';
-            document.getElementById('dueDate').value = '';
-        }
-        
-        // Fonctions pour le contrôle de présence
-        function loadStudents() {
-            const classLevel = document.getElementById('attendanceClass').value;
-            if (!classLevel) return;
-            
-            const studentsContainer = document.getElementById('studentsContainer');
-            studentsContainer.innerHTML = '';
-            
-            students[classLevel].forEach(student => {
-                const studentItem = document.createElement('div');
-                studentItem.className = 'student-item';
-                studentItem.innerHTML = `
-                    <input type="radio" name="${student}" value="present" id="${student}-present" checked>
-                    <label for="${student}-present">Présent(e)</label>
-                    
-                    <input type="radio" name="${student}" value="absent" id="${student}-absent">
-                    <label for="${student}-absent">Absent(e)</label>
-                    
-                    <input type="radio" name="${student}" value="late" id="${student}-late">
-                    <label for="${student}-late">En retard</label>
-                    
-                    <span>${student}</span>
-                `;
-                studentsContainer.appendChild(studentItem);
-            });
-        }
-        
-        function filterStudents() {
-            const searchTerm = document.getElementById('studentSearch').value.toLowerCase();
-            const studentItems = document.querySelectorAll('.student-item');
-            
-            studentItems.forEach(item => {
-                const studentName = item.textContent.toLowerCase();
-                if (studentName.includes(searchTerm)) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        }
-        
-        function saveAttendance() {
-            const attendanceDate = document.getElementById('attendanceDate').value;
-            const classLevel = document.getElementById('attendanceClass').value;
-            const subject = document.getElementById('attendanceSubject').value;
-            
-            if (!attendanceDate || !classLevel || !subject) {
-                alert('Veuillez remplir tous les champs obligatoires.');
-                return;
-            }
-            
-            const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-            
-            const attendanceData = {
-                id: Date.now(),
-                date: attendanceDate,
-                class: classLevel,
-                subject: subject,
-                students: [],
-                teacher: loggedInUser.username // Associer la présence à l'enseignant
-            };
-            
-            students[classLevel].forEach(student => {
-                const status = document.querySelector(`input[name="${student}"]:checked`).value;
-                attendanceData.students.push({
-                    name: student,
-                    status: status
-                });
-            });
-            
-            attendanceRecords.push(attendanceData);
-            localStorage.setItem('teacherAttendance', JSON.stringify(attendanceRecords));
-            
-            alert('Présence enregistrée avec succès!');
-            loadAttendanceHistory();
-        }
-        
-        function clearAttendance() {
-            document.getElementById('attendanceDate').value = new Date().toISOString().split('T')[0];
-            document.getElementById('attendanceClass').value = '';
-            document.getElementById('attendanceSubject').value = '';
-            document.getElementById('studentSearch').value = '';
-            document.getElementById('studentsContainer').innerHTML = '';
-        }
-        
-        function loadAttendanceHistory() {
-            const historyContainer = document.getElementById('attendanceHistory');
-            historyContainer.innerHTML = '';
-            
-            const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-            const teacherRecords = attendanceRecords.filter(record => record.teacher === loggedInUser.username);
-            
-            if (teacherRecords.length === 0) {
-                historyContainer.innerHTML = '<p>Aucun enregistrement de présence trouvé.</p>';
-                return;
-            }
-            
-            // Trier par date (du plus récent au plus ancien)
-            const sortedRecords = [...teacherRecords].sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            sortedRecords.forEach(record => {
-                const recordElement = document.createElement('div');
-                recordElement.className = 'section';
-                recordElement.style.marginBottom = '15px';
-                
-                let presentCount = 0;
-                let absentCount = 0;
-                let lateCount = 0;
-                
-                record.students.forEach(student => {
-                    if (student.status === 'present') presentCount++;
-                    else if (student.status === 'absent') absentCount++;
-                    else if (student.status === 'late') lateCount++;
-                });
-                
-                recordElement.innerHTML = `
-                    <h3>${formatDate(record.date)} - ${getSubjectName(record.subject)} - ${getClassName(record.class)}</h3>
-                    <p>Présents: ${presentCount} | Absents: ${absentCount} | Retards: ${lateCount}</p>
-                    <button onclick="viewAttendanceDetails(${record.id})">Voir détails</button>
-                    <button onclick="deleteAttendanceRecord(${record.id})">Supprimer</button>
-                `;
-                
-                historyContainer.appendChild(recordElement);
-            });
-        }
-        
-        function viewAttendanceDetails(recordId) {
-            const record = attendanceRecords.find(r => r.id === recordId);
-            if (!record) return;
-            
-            let detailsHTML = `
-                <h3>Détails de présence - ${formatDate(record.date)}</h3>
-                <p>Matière: ${getSubjectName(record.subject)}</p>
-                <p>Classe: ${getClassName(record.class)}</p>
-                <table>
-                    <tr>
-                        <th>Élève</th>
-                        <th>Statut</th>
-                    </tr>
-            `;
-            
-            record.students.forEach(student => {
-                let statusClass = '';
-                if (student.status === 'present') statusClass = 'status-present';
-                else if (student.status === 'absent') statusClass = 'status-absent';
-                else if (student.status === 'late') statusClass = 'status-late';
-                
-                detailsHTML += `
-                    <tr>
-                        <td>${student.name}</td>
-                        <td class="${statusClass}">${getStatusName(student.status)}</td>
-                    </tr>
-                `;
-            });
-            
-            detailsHTML += '</table>';
-            
-            alert(detailsHTML, 'Détails de présence');
-        }
-        
-        function deleteAttendanceRecord(recordId) {
-            if (confirm('Êtes-vous sûr de vouloir supprimer cet enregistrement de présence?')) {
-                attendanceRecords = attendanceRecords.filter(r => r.id !== recordId);
-                localStorage.setItem('teacherAttendance', JSON.stringify(attendanceRecords));
-                loadAttendanceHistory();
-            }
-        }
-        
-        // Fonctions pour visualiser les entrées
-        function filterEntries() {
-            const classFilter = document.getElementById('filterClass').value;
-            const subjectFilter = document.getElementById('filterSubject').value;
-            const dateFrom = document.getElementById('filterDateFrom').value;
-            const dateTo = document.getElementById('filterDateTo').value;
-            
-            const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-            let filteredLessons = lessons.filter(lesson => lesson.teacher === loggedInUser.username);
-            
-            if (classFilter) {
-                filteredLessons = filteredLessons.filter(lesson => lesson.class === classFilter);
-            }
-            
-            if (subjectFilter) {
-                filteredLessons = filteredLessons.filter(lesson => lesson.subject === subjectFilter);
-            }
-            
-            if (dateFrom) {
-                filteredLessons = filteredLessons.filter(lesson => lesson.date >= dateFrom);
-            }
-            
-            if (dateTo) {
-                filteredLessons = filteredLessons.filter(lesson => lesson.date <= dateTo);
-            }
-            
-            displayLessons(filteredLessons);
-        }
-        
-        function displayLessons(lessonsToDisplay) {
-            const lessonsList = document.getElementById('lessonsList');
-            lessonsList.innerHTML = '';
-            
-            if (lessonsToDisplay.length === 0) {
-                lessonsList.innerHTML = '<p>Aucune leçon trouvée avec les critères sélectionnés.</p>';
-                return;
-            }
-            
-            // Trier par date (du plus récent au plus ancien)
-            const sortedLessons = [...lessonsToDisplay].sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            sortedLessons.forEach(lesson => {
-                const lessonElement = document.createElement('div');
-                lessonElement.className = 'section';
-                lessonElement.style.marginBottom = '15px';
-                
-                lessonElement.innerHTML = `
-                    <h3>${formatDate(lesson.date)} - ${getSubjectName(lesson.subject)} - ${getClassName(lesson.class)}</h3>
-                    <h4>${lesson.title}</h4>
-                    <p><strong>Contenu du cours:</strong> ${lesson.content}</p>
-                    ${lesson.homework ? `<p><strong>Devoirs:</strong> ${lesson.homework}</p>` : ''}
-                    ${lesson.dueDate ? `<p><strong>À rendre pour le:</strong> ${formatDate(lesson.dueDate)}</p>` : ''}
-                    <button onclick="editLesson(${lesson.id})">Modifier</button>
-                    <button onclick="deleteLesson(${lesson.id})">Supprimer</button>
-                `;
-                
-                lessonsList.appendChild(lessonElement);
-            });
-        }
-        
-        function editLesson(lessonId) {
-            const lesson = lessons.find(l => l.id === lessonId);
-            if (!lesson) return;
-            
-            openTab('lesson');
-            
-            document.getElementById('lessonDate').value = lesson.date;
-            document.getElementById('subject').value = lesson.subject;
-            document.getElementById('class').value = lesson.class;
-            document.getElementById('lessonTitle').value = lesson.title;
-            document.getElementById('lessonContent').value = lesson.content;
-            document.getElementById('homework').value = lesson.homework;
-            document.getElementById('dueDate').value = lesson.dueDate;
-            
-            // Supprimer l'ancienne version
-            lessons = lessons.filter(l => l.id !== lessonId);
-        }
-        
-        function deleteLesson(lessonId) {
-            if (confirm('Êtes-vous sûr de vouloir supprimer cette leçon?')) {
-                lessons = lessons.filter(l => l.id !== lessonId);
-                localStorage.setItem('teacherLessons', JSON.stringify(lessons));
-                filterEntries();
-            }
-        }
-        
-        // Fonction pour envoyer via WhatsApp
-        function sendViaWhatsApp() {
-            // Récupérer les données filtrées
-            const classFilter = document.getElementById('filterClass').value;
-            const subjectFilter = document.getElementById('filterSubject').value;
-            const dateFrom = document.getElementById('filterDateFrom').value;
-            const dateTo = document.getElementById('filterDateTo').value;
-            
-            const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-            let filteredLessons = lessons.filter(lesson => lesson.teacher === loggedInUser.username);
-            
-            if (classFilter) {
-                filteredLessons = filteredLessons.filter(lesson => lesson.class === classFilter);
-            }
-            
-            if (subjectFilter) {
-                filteredLessons = filteredLessons.filter(lesson => lesson.subject === subjectFilter);
-            }
-            
-            if (dateFrom) {
-                filteredLessons = filteredLessons.filter(lesson => lesson.date >= dateFrom);
-            }
-            
-            if (dateTo) {
-                filteredLessons = filteredLessons.filter(lesson => lesson.date <= dateTo);
-            }
-
-            // Formater le message
-            let message = "📚 Résumé des leçons enregistrées:\n\n";
-            
-            filteredLessons.forEach(lesson => {
-                message += `📅 ${formatDate(lesson.date)}\n`;
-                message += `🏫 ${getClassName(lesson.class)} - ${getSubjectName(lesson.subject)}\n`;
-                message += `📖 ${lesson.title}\n`;
-                message += `📝 ${lesson.content}\n`;
-                if (lesson.homework) {
-                    message += `📌 Devoirs: ${lesson.homework}\n`;
-                }
-                if (lesson.dueDate) {
-                    message += `⏰ À rendre pour le: ${formatDate(lesson.dueDate)}\n`;
-                }
-                message += "\n――――――――――\n\n";
-            });
-
-            // Encoder le message pour l'URL
-            const encodedMessage = encodeURIComponent(message);
-            
-            // Numéro WhatsApp (92871605)
-            const phoneNumber = "92871605";
-            
-            // Créer le lien WhatsApp
-            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-            
-            // Ouvrir dans un nouvel onglet
-            window.open(whatsappUrl, '_blank');
-        }
-
-        // Fonctions utilitaires
-        function formatDate(dateString) {
-            if (!dateString) return '';
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            return new Date(dateString).toLocaleDateString('fr-FR', options);
-        }
-        
-        function getSubjectName(subjectCode) {
-            const subjects = {
-                'math': 'Mathématiques',
-                'french': 'Français',
-                'history': 'Histoire-Géographie',
-                'science': 'Sciences',
-                'english': 'Anglais',
-                'art': 'Arts Plastiques',
-                'pe': 'Éducation Physique',
-                'other': 'Autre'
-            };
-            return subjects[subjectCode] || subjectCode;
-        }
-        
-        function getClassName(classCode) {
-            const classes = {
-                '6eme': '6ème',
-                '5eme': '5ème',
-                '4eme': '4ème',
-                '3eme': '3ème',
-                '2nde': 'Seconde',
-                '1ere': 'Première',
-                'terminale': 'Terminale'
-            };
-            return classes[classCode] || classCode;
-        }
-        
-        function getStatusName(statusCode) {
-            const statuses = {
-                'present': 'Présent(e)',
-                'absent': 'Absent(e)',
-                'late': 'En retard'
-            };
-            return statuses[statusCode] || statusCode;
-        }
-        
-        function alert(message, title = 'Information') {
-            const alertBox = document.createElement('div');
-            alertBox.style.position = 'fixed';
-            alertBox.style.top = '50%';
-            alertBox.style.left = '50%';
-            alertBox.style.transform = 'translate(-50%, -50%)';
-            alertBox.style.backgroundColor = 'white';
-            alertBox.style.padding = '20px';
-            alertBox.style.borderRadius = '5px';
-            alertBox.style.boxShadow = '0 0 10px rgba(0,0,0,0.3)';
-            alertBox.style.zIndex = '1000';
-            alertBox.style.maxWidth = '80%';
-            alertBox.style.maxHeight = '80%';
-            alertBox.style.overflow = 'auto';
-            
-            alertBox.innerHTML = `
-                <h2 style="margin-top: 0;">${title}</h2>
-                <div>${message}</div>
-                <button style="margin-top: 15px; padding: 5px 10px;" onclick="this.parentElement.remove()">Fermer</button>
-            `;
-            
-            document.body.appendChild(alertBox);
-        }
-    </script>
+      });
+    }
+    
+    function showTitleSuggestions(input, subject) {
+      const suggestionsContainer = document.getElementById('titleSuggestions');
+      suggestionsContainer.innerHTML = '';
+      
+      if (!input && !subject) return;
+      
+      let suggestions = [];
+      
+      // Si une matière est sélectionnée, proposer des suggestions contextuelles
+      if (subject && subject !== 'other') {
+        const subjectKeywords = smartSuggestions.subjects[subject] || [];
+        suggestions = smartSuggestions.lessonTitles.map(title => {
+          return title + ' ' + (subjectKeywords[0] || 'cette matière');
+        });
+      } else {
+        suggestions = [...smartSuggestions.lessonTitles];
+      }
+      
+      // Filtrer les suggestions en fonction de la saisie
+      if (input) {
+        const inputLower = input.toLowerCase();
+        suggestions = suggestions.filter(suggestion => 
+          suggestion.toLowerCase().includes(inputLower)
+        );
+      }
+      
+      // Afficher les suggestions (limité à 5)
+      suggestions.slice(0, 5).forEach(suggestion => {
+        const chip = document.createElement('span');
+        chip.className = 'suggestion-chip';
+        chip.textContent = suggestion;
+        chip.addEventListener('click', function() {
+          document.getElementById('lessonTitle').value = suggestion;
+          suggestionsContainer.innerHTML = '';
+        });
+        suggestionsContainer.appendChild(chip);
+      });
+    }
+    
+    function showContentSuggestions(input) {
+      const suggestionsContainer = document.getElementById('contentSuggestions');
+      suggestionsContainer.innerHTML = '';
+      
+      if (!input) return;
+      
+      // Filtrer les suggestions en fonction de la saisie
+      const inputLower = input.toLowerCase();
+      const suggestions = smartSuggestions.lessonContents.filter(suggestion => 
+        suggestion.toLowerCase().includes(inputLower)
+      );
+      
+      // Afficher les suggestions (limité à 5)
+      suggestions.slice(0, 5).forEach(suggestion => {
+        const chip = document.createElement('span');
+        chip.className = 'suggestion-chip';
+        chip.textContent = suggestion;
+        chip.addEventListener('click', function() {
+          const contentInput = document.getElementById('lessonContent');
+          formatText('insertText', suggestion);
+          suggestionsContainer.innerHTML = '';
+        });
+        suggestionsContainer.appendChild(chip);
+      });
+    }
+    
+    function showHomeworkSuggestions(input) {
+      const suggestionsContainer = document.getElementById('homeworkSuggestions');
+      suggestionsContainer.innerHTML = '';
+      
+      if (!input) return;
+      
+      // Filtrer les suggestions en fonction de la saisie
+      const inputLower = input.toLowerCase();
+      const suggestions = smartSuggestions.homework.filter(suggestion => 
+        suggestion.toLowerCase().includes(inputLower)
+      );
+      
+      // Afficher les suggestions (limité à 5)
+      suggestions.slice(0, 5).forEach(suggestion => {
+        const chip = document.createElement('span');
+        chip.className = 'suggestion-chip';
+        chip.textContent = suggestion;
+        chip.addEventListener('click', function() {
+          const homeworkInput = document.getElementById('homework');
+          formatText('insertText', suggestion);
+          suggestionsContainer.innerHTML = '';
+        });
+        suggestionsContainer.appendChild(chip);
+      });
+    }
+    
+    // Fonctions pour l'éditeur de texte enrichi
+    function formatText(command, value = null) {
+      document.execCommand(command, false, value);
+      document.getElementById('lessonContent').focus();
+    }
+    
+    function applyColor(command, color) {
+      document.execCommand(command, false, color);
+      document.getElementById('lessonContent').focus();
+    }
+  </script>
 </body>
 </html>
