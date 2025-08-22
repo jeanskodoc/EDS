@@ -327,6 +327,55 @@
         .add-lesson-btn:hover {
             background-color: #8e44ad;
         }
+        /* Styles pour l'éditeur de texte enrichi */
+        .rich-text-editor {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .toolbar {
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+            padding: 5px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .toolbar button, .toolbar select {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            padding: 5px 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .toolbar button:hover {
+            background-color: #f0f0f0;
+        }
+        .toolbar select {
+            height: 30px;
+        }
+        .editor-content {
+            min-height: 100px;
+            padding: 10px;
+            resize: vertical;
+            overflow-y: auto;
+        }
+        .editor-content:focus {
+            outline: none;
+        }
+        .color-picker {
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            border: 1px solid #ddd;
+        }
+        .lesson-content {
+            border: 1px solid #eee;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
@@ -387,21 +436,99 @@
         </div>
 
         <h2>Prérequis</h2>
-        <div class="form-group">
-            <label for="prerequisites">Connaissances et compétences préalables requises:</label>
-            <textarea id="prerequisites" placeholder="Listez les prérequis nécessaires pour ce cours..."></textarea>
+        <div class="rich-text-editor">
+            <div class="toolbar">
+                <select onchange="formatText('fontName', this.value)">
+                    <option value="Arial">Arial</option>
+                    <option value="Helvetica">Helvetica</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Georgia">Georgia</option>
+                </select>
+                <select onchange="formatText('fontSize', this.value)">
+                    <option value="1">Très petit</option>
+                    <option value="2">Petit</option>
+                    <option value="3" selected>Normal</option>
+                    <option value="4">Moyen</option>
+                    <option value="5">Grand</option>
+                    <option value="6">Très grand</option>
+                    <option value="7">Maximum</option>
+                </select>
+                <button onclick="formatText('bold')"><strong>G</strong></button>
+                <button onclick="formatText('italic')"><em>I</em></button>
+                <button onclick="formatText('underline')"><u>S</u></button>
+                <button onclick="formatText('insertOrderedList')">①</button>
+                <button onclick="formatText('insertUnorderedList')">•</button>
+                <input type="color" class="color-picker" onchange="applyColor('forecolor', this.value)" value="#000000">
+                <input type="color" class="color-picker" onchange="applyColor('backcolor', this.value)" value="#ffffff">
+                <button onclick="formatText('removeFormat')">✕</button>
+            </div>
+            <div id="prerequisites" class="editor-content" contenteditable="true" placeholder="Listez les prérequis nécessaires pour ce cours..."></div>
         </div>
 
         <h2>Situation Problème</h2>
-        <div class="form-group">
-            <label for="problemStatement">Énoncé de la situation problème:</label>
-            <textarea id="problemStatement" placeholder="Décrivez la situation problème qui servira de point de départ..."></textarea>
+        <div class="rich-text-editor">
+            <div class="toolbar">
+                <select onchange="formatText('fontName', this.value)">
+                    <option value="Arial">Arial</option>
+                    <option value="Helvetica">Helvetica</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Georgia">Georgia</option>
+                </select>
+                <select onchange="formatText('fontSize', this.value)">
+                    <option value="1">Très petit</option>
+                    <option value="2">Petit</option>
+                    <option value="3" selected>Normal</option>
+                    <option value="4">Moyen</option>
+                    <option value="5">Grand</option>
+                    <option value="6">Très grand</option>
+                    <option value="7">Maximum</option>
+                </select>
+                <button onclick="formatText('bold')"><strong>G</strong></button>
+                <button onclick="formatText('italic')"><em>I</em></button>
+                <button onclick="formatText('underline')"><u>S</u></button>
+                <button onclick="formatText('insertOrderedList')">①</button>
+                <button onclick="formatText('insertUnorderedList')">•</button>
+                <input type="color" class="color-picker" onchange="applyColor('forecolor', this.value)" value="#000000">
+                <input type="color" class="color-picker" onchange="applyColor('backcolor', this.value)" value="#ffffff">
+                <button onclick="formatText('removeFormat')">✕</button>
+            </div>
+            <div id="problemStatement" class="editor-content" contenteditable="true" placeholder="Décrivez la situation problème qui servira de point de départ..."></div>
         </div>
 
         <h2>Solution de la Situation Problème</h2>
-        <div class="form-group">
-            <label for="problemSolution">Solution proposée:</label>
-            <textarea id="problemSolution" placeholder="Expliquez la solution à la situation problème..."></textarea>
+        <div class="rich-text-editor">
+            <div class="toolbar">
+                <select onchange="formatText('fontName', this.value)">
+                    <option value="Arial">Arial</option>
+                    <option value="Helvetica">Helvetica</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Georgia">Georgia</option>
+                </select>
+                <select onchange="formatText('fontSize', this.value)">
+                    <option value="1">Très petit</option>
+                    <option value="2">Petit</option>
+                    <option value="3" selected>Normal</option>
+                    <option value="4">Moyen</option>
+                    <option value="5">Grand</option>
+                    <option value="6">Très grand</option>
+                    <option value="7">Maximum</option>
+                </select>
+                <button onclick="formatText('bold')"><strong>G</strong></button>
+                <button onclick="formatText('italic')"><em>I</em></button>
+                <button onclick="formatText('underline')"><u>S</u></button>
+                <button onclick="formatText('insertOrderedList')">①</button>
+                <button onclick="formatText('insertUnorderedList')">•</button>
+                <input type="color" class="color-picker" onchange="applyColor('forecolor', this.value)" value="#000000">
+                <input type="color" class="color-picker" onchange="applyColor('backcolor', this.value)" value="#ffffff">
+                <button onclick="formatText('removeFormat')">✕</button>
+            </div>
+            <div id="problemSolution" class="editor-content" contenteditable="true" placeholder="Expliquez la solution à la situation problème..."></div>
         </div>
 
         <h2>Activités d'Apprentissage</h2>
@@ -409,11 +536,69 @@
             <div class="activity">
                 <div class="form-group">
                     <label>Activité 1:</label>
-                    <textarea placeholder="Décrivez la première activité..."></textarea>
+                    <div class="rich-text-editor">
+                        <div class="toolbar">
+                            <select onchange="formatText('fontName', this.value)">
+                                <option value="Arial">Arial</option>
+                                <option value="Helvetica">Helvetica</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Verdana">Verdana</option>
+                                <option value="Georgia">Georgia</option>
+                            </select>
+                            <select onchange="formatText('fontSize', this.value)">
+                                <option value="1">Très petit</option>
+                                <option value="2">Petit</option>
+                                <option value="3" selected>Normal</option>
+                                <option value="4">Moyen</option>
+                                <option value="5">Grand</option>
+                                <option value="6">Très grand</option>
+                                <option value="7">Maximum</option>
+                            </select>
+                            <button onclick="formatText('bold')"><strong>G</strong></button>
+                            <button onclick="formatText('italic')"><em>I</em></button>
+                            <button onclick="formatText('underline')"><u>S</u></button>
+                            <button onclick="formatText('insertOrderedList')">①</button>
+                            <button onclick="formatText('insertUnorderedList')">•</button>
+                            <input type="color" class="color-picker" onchange="applyColor('forecolor', this.value)" value="#000000">
+                            <input type="color" class="color-picker" onchange="applyColor('backcolor', this.value)" value="#ffffff">
+                            <button onclick="formatText('removeFormat')">✕</button>
+                        </div>
+                        <div class="editor-content" contenteditable="true" placeholder="Décrivez la première activité..."></div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Solution:</label>
-                    <textarea placeholder="Solution de l'activité..."></textarea>
+                    <div class="rich-text-editor">
+                        <div class="toolbar">
+                            <select onchange="formatText('fontName', this.value)">
+                                <option value="Arial">Arial</option>
+                                <option value="Helvetica">Helvetica</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Verdana">Verdana</option>
+                                <option value="Georgia">Georgia</option>
+                            </select>
+                            <select onchange="formatText('fontSize', this.value)">
+                                <option value="1">Très petit</option>
+                                <option value="2">Petit</option>
+                                <option value="3" selected>Normal</option>
+                                <option value="4">Moyen</option>
+                                <option value="5">Grand</option>
+                                <option value="6">Très grand</option>
+                                <option value="7">Maximum</option>
+                            </select>
+                            <button onclick="formatText('bold')"><strong>G</strong></button>
+                            <button onclick="formatText('italic')"><em>I</em></button>
+                            <button onclick="formatText('underline')"><u>S</u></button>
+                            <button onclick="formatText('insertOrderedList')">①</button>
+                            <button onclick="formatText('insertUnorderedList')">•</button>
+                            <input type="color" class="color-picker" onchange="applyColor('forecolor', this.value)" value="#000000">
+                            <input type="color" class="color-picker" onchange="applyColor('backcolor', this.value)" value="#ffffff">
+                            <button onclick="formatText('removeFormat')">✕</button>
+                        </div>
+                        <div class="editor-content" contenteditable="true" placeholder="Solution de l'activité..."></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -422,9 +607,35 @@
         </button>
 
         <h2>Définitions, Propriétés et Théorèmes</h2>
-        <div class="form-group">
-            <label for="definitions">Éléments théoriques à retenir:</label>
-            <textarea id="definitions" placeholder="Listez et expliquez les définitions, propriétés ou théorèmes abordés..."></textarea>
+        <div class="rich-text-editor">
+            <div class="toolbar">
+                <select onchange="formatText('fontName', this.value)">
+                    <option value="Arial">Arial</option>
+                    <option value="Helvetica">Helvetica</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Georgia">Georgia</option>
+                </select>
+                <select onchange="formatText('fontSize', this.value)">
+                    <option value="1">Très petit</option>
+                    <option value="2">Petit</option>
+                    <option value="3" selected>Normal</option>
+                    <option value="4">Moyen</option>
+                    <option value="5">Grand</option>
+                    <option value="6">Très grand</option>
+                    <option value="7">Maximum</option>
+                </select>
+                <button onclick="formatText('bold')"><strong>G</strong></button>
+                <button onclick="formatText('italic')"><em>I</em></button>
+                <button onclick="formatText('underline')"><u>S</u></button>
+                <button onclick="formatText('insertOrderedList')">①</button>
+                <button onclick="formatText('insertUnorderedList')">•</button>
+                <input type="color" class="color-picker" onchange="applyColor('forecolor', this.value)" value="#000000">
+                <input type="color" class="color-picker" onchange="applyColor('backcolor', this.value)" value="#ffffff">
+                <button onclick="formatText('removeFormat')">✕</button>
+            </div>
+            <div id="definitions" class="editor-content" contenteditable="true" placeholder="Listez et expliquez les définitions, propriétés ou théorèmes abordés..."></div>
         </div>
 
         <h2>Exemples</h2>
@@ -432,7 +643,36 @@
             <div class="example">
                 <div class="form-group">
                     <label>Exemple 1:</label>
-                    <textarea placeholder="Donnez un exemple illustratif..."></textarea>
+                    <div class="rich-text-editor">
+                        <div class="toolbar">
+                            <select onchange="formatText('fontName', this.value)">
+                                <option value="Arial">Arial</option>
+                                <option value="Helvetica">Helvetica</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Verdana">Verdana</option>
+                                <option value="Georgia">Georgia</option>
+                            </select>
+                            <select onchange="formatText('fontSize', this.value)">
+                                <option value="1">Très petit</option>
+                                <option value="2">Petit</option>
+                                <option value="3" selected>Normal</option>
+                                <option value="4">Moyen</option>
+                                <option value="5">Grand</option>
+                                <option value="6">Très grand</option>
+                                <option value="7">Maximum</option>
+                            </select>
+                            <button onclick="formatText('bold')"><strong>G</strong></button>
+                            <button onclick="formatText('italic')"><em>I</em></button>
+                            <button onclick="formatText('underline')"><u>S</u></button>
+                            <button onclick="formatText('insertOrderedList')">①</button>
+                            <button onclick="formatText('insertUnorderedList')">•</button>
+                            <input type="color" class="color-picker" onchange="applyColor('forecolor', this.value)" value="#000000">
+                            <input type="color" class="color-picker" onchange="applyColor('backcolor', this.value)" value="#ffffff">
+                            <button onclick="formatText('removeFormat')">✕</button>
+                        </div>
+                        <div class="editor-content" contenteditable="true" placeholder="Donnez un exemple illustratif..."></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -445,12 +685,70 @@
             <div class="exercise">
                 <div class="form-group">
                     <label>Exercice 1:</label>
-                    <textarea placeholder="Énoncé de l'exercice..."></textarea>
+                    <div class="rich-text-editor">
+                        <div class="toolbar">
+                            <select onchange="formatText('fontName', this.value)">
+                                <option value="Arial">Arial</option>
+                                <option value="Helvetica">Helvetica</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Verdana">Verdana</option>
+                                <option value="Georgia">Georgia</option>
+                            </select>
+                            <select onchange="formatText('fontSize', this.value)">
+                                <option value="1">Très petit</option>
+                                <option value="2">Petit</option>
+                                <option value="3" selected>Normal</option>
+                                <option value="4">Moyen</option>
+                                <option value="5">Grand</option>
+                                <option value="6">Très grand</option>
+                                <option value="7">Maximum</option>
+                            </select>
+                            <button onclick="formatText('bold')"><strong>G</strong></button>
+                            <button onclick="formatText('italic')"><em>I</em></button>
+                            <button onclick="formatText('underline')"><u>S</u></button>
+                            <button onclick="formatText('insertOrderedList')">①</button>
+                            <button onclick="formatText('insertUnorderedList')">•</button>
+                            <input type="color" class="color-picker" onchange="applyColor('forecolor', this.value)" value="#000000">
+                            <input type="color" class="color-picker" onchange="applyColor('backcolor', this.value)" value="#ffffff">
+                            <button onclick="formatText('removeFormat')">✕</button>
+                        </div>
+                        <div class="editor-content" contenteditable="true" placeholder="Énoncé de l'exercice..."></div>
+                    </div>
                 </div>
                 <div class="solution">
                     <div class="form-group">
                         <label>Solution:</label>
-                        <textarea placeholder="Solution de l'exercice..."></textarea>
+                        <div class="rich-text-editor">
+                            <div class="toolbar">
+                                <select onchange="formatText('fontName', this.value)">
+                                    <option value="Arial">Arial</option>
+                                    <option value="Helvetica">Helvetica</option>
+                                    <option value="Times New Roman">Times New Roman</option>
+                                    <option value="Courier New">Courier New</option>
+                                    <option value="Verdana">Verdana</option>
+                                    <option value="Georgia">Georgia</option>
+                                </select>
+                                <select onchange="formatText('fontSize', this.value)">
+                                    <option value="1">Très petit</option>
+                                    <option value="2">Petit</option>
+                                    <option value="3" selected>Normal</option>
+                                    <option value="4">Moyen</option>
+                                    <option value="5">Grand</option>
+                                    <option value="6">Très grand</option>
+                                    <option value="7">Maximum</option>
+                                </select>
+                                <button onclick="formatText('bold')"><strong>G</strong></button>
+                                <button onclick="formatText('italic')"><em>I</em></button>
+                                <button onclick="formatText('underline')"><u>S</u></button>
+                                <button onclick="formatText('insertOrderedList')">①</button>
+                                <button onclick="formatText('insertUnorderedList')">•</button>
+                                <input type="color" class="color-picker" onchange="applyColor('forecolor', this.value)" value="#000000">
+                                <input type="color" class="color-picker" onchange="applyColor('backcolor', this.value)" value="#ffffff">
+                                <button onclick="formatText('removeFormat')">✕</button>
+                            </div>
+                            <div class="editor-content" contenteditable="true" placeholder="Solution de l'exercice..."></div>
+                        </div>
                     </div>
                 </div>
                 <button class="toggle-solution" onclick="toggleSolution(this)">
@@ -463,9 +761,35 @@
         </button>
 
         <h2>Récapitulatif</h2>
-        <div class="form-group">
-            <label for="summary">Synthèse de la leçon:</label>
-            <textarea id="summary" placeholder="Faites un résumé des points clés de la leçon..."></textarea>
+        <div class="rich-text-editor">
+            <div class="toolbar">
+                <select onchange="formatText('fontName', this.value)">
+                    <option value="Arial">Arial</option>
+                    <option value="Helvetica">Helvetica</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Georgia">Georgia</option>
+                </select>
+                <select onchange="formatText('fontSize', this.value)">
+                    <option value="1">Très petit</option>
+                    <option value="2">Petit</option>
+                    <option value="3" selected>Normal</option>
+                    <option value="4">Moyen</option>
+                    <option value="5">Grand</option>
+                    <option value="6">Très grand</option>
+                    <option value="7">Maximum</option>
+                </select>
+                <button onclick="formatText('bold')"><strong>G</strong></button>
+                <button onclick="formatText('italic')"><em>I</em></button>
+                <button onclick="formatText('underline')"><u>S</u></button>
+                <button onclick="formatText('insertOrderedList')">①</button>
+                <button onclick="formatText('insertUnorderedList')">•</button>
+                <input type="color" class="color-picker" onchange="applyColor('forecolor', this.value)" value="#000000">
+                <input type="color" class="color-picker" onchange="applyColor('backcolor', this.value)" value="#ffffff">
+                <button onclick="formatText('removeFormat')">✕</button>
+            </div>
+            <div id="summary" class="editor-content" contenteditable="true" placeholder="Faites un résumé des points clés de la leçon..."></div>
         </div>
 
         <div style="text-align: center; margin-top: 30px;">
@@ -531,6 +855,9 @@
                     <button onclick="showHelp('first-lesson')" class="help-btn">
                         <i class="fas fa-question-circle"></i> Comment créer une leçon ?
                     </button>
+                    <button onclick="showHelp('rich-text')" class="help-btn">
+                        <i class="fas fa-question-circle"></i> Comment utiliser l'éditeur de texte ?
+                    </button>
                 </div>
             </div>
         </div>
@@ -555,6 +882,7 @@
         // Variable pour stocker les leçons enregistrées
         let savedLessons = [];
         let currentEditingIndex = null;
+        let activeEditor = null;
         
         // Initialisation au chargement
         document.addEventListener('DOMContentLoaded', function() {
@@ -565,6 +893,13 @@
             document.getElementById('totalStudents').addEventListener('change', validateStudents);
             document.getElementById('girls').addEventListener('change', validateStudents);
             document.getElementById('boys').addEventListener('change', validateStudents);
+            
+            // Gestion du focus pour les éditeurs
+            document.querySelectorAll('.editor-content').forEach(editor => {
+                editor.addEventListener('focus', function() {
+                    activeEditor = this;
+                });
+            });
         });
 
         function validateStudents() {
@@ -595,14 +930,14 @@
                     girls: parseInt(document.getElementById('girls').value) || 0,
                     boys: parseInt(document.getElementById('boys').value) || 0
                 },
-                prerequisites: document.getElementById('prerequisites').value.trim(),
-                problemStatement: document.getElementById('problemStatement').value.trim(),
-                problemSolution: document.getElementById('problemSolution').value.trim(),
+                prerequisites: document.getElementById('prerequisites').innerHTML,
+                problemStatement: document.getElementById('problemStatement').innerHTML,
+                problemSolution: document.getElementById('problemSolution').innerHTML,
                 activities: [],
-                definitions: document.getElementById('definitions').value.trim(),
+                definitions: document.getElementById('definitions').innerHTML,
                 examples: [],
                 exercises: [],
-                summary: document.getElementById('summary').value.trim(),
+                summary: document.getElementById('summary').innerHTML,
                 date: new Date().toISOString(),
                 timestamp: Date.now()
             };
@@ -629,20 +964,22 @@
 
             // Récupération des activités
             document.querySelectorAll('#activities .activity').forEach((activity, index) => {
-                const inputs = activity.querySelectorAll('textarea');
-                if (inputs[0].value.trim()) {
+                const description = activity.querySelector('.editor-content:first-child').innerHTML;
+                const solution = activity.querySelector('.editor-content:last-child').innerHTML;
+                
+                if (description.trim() || solution.trim()) {
                     courseData.activities.push({
                         number: index + 1,
-                        description: inputs[0].value.trim(),
-                        solution: inputs[1].value.trim()
+                        description: description,
+                        solution: solution
                     });
                 }
             });
 
             // Récupération des exemples
             document.querySelectorAll('#examples .example').forEach((example, index) => {
-                const content = example.querySelector('textarea').value.trim();
-                if (content) {
+                const content = example.querySelector('.editor-content').innerHTML;
+                if (content.trim()) {
                     courseData.examples.push({
                         number: index + 1,
                         content: content
@@ -652,12 +989,14 @@
 
             // Récupération des exercices
             document.querySelectorAll('#exercises .exercise').forEach((exercise, index) => {
-                const inputs = exercise.querySelectorAll('textarea');
-                if (inputs[0].value.trim()) {
+                const statement = exercise.querySelector('.editor-content:first-child').innerHTML;
+                const solution = exercise.querySelector('.solution .editor-content').innerHTML;
+                
+                if (statement.trim() || solution.trim()) {
                     courseData.exercises.push({
                         number: index + 1,
-                        statement: inputs[0].value.trim(),
-                        solution: inputs[1].value.trim()
+                        statement: statement,
+                        solution: solution
                     });
                 }
             });
@@ -685,22 +1024,80 @@
             document.getElementById('totalStudents').value = '';
             document.getElementById('girls').value = '';
             document.getElementById('boys').value = '';
-            document.getElementById('prerequisites').value = '';
-            document.getElementById('problemStatement').value = '';
-            document.getElementById('problemSolution').value = '';
-            document.getElementById('definitions').value = '';
-            document.getElementById('summary').value = '';
+            document.getElementById('prerequisites').innerHTML = '';
+            document.getElementById('problemStatement').innerHTML = '';
+            document.getElementById('problemSolution').innerHTML = '';
+            document.getElementById('definitions').innerHTML = '';
+            document.getElementById('summary').innerHTML = '';
             
             // Réinitialisation des sections dynamiques
             document.getElementById('activities').innerHTML = `
                 <div class="activity">
                     <div class="form-group">
                         <label>Activité 1:</label>
-                        <textarea placeholder="Décrivez la première activité..."></textarea>
+                        <div class="rich-text-editor">
+                            <div class="toolbar">
+                                <select onchange="formatText('fontName', this.value)">
+                                    <option value="Arial">Arial</option>
+                                    <option value="Helvetica">Helvetica</option>
+                                    <option value="Times New Roman">Times New Roman</option>
+                                    <option value="Courier New">Courier New</option>
+                                    <option value="Verdana">Verdana</option>
+                                    <option value="Georgia">Georgia</option>
+                                </select>
+                                <select onchange="formatText('fontSize', this.value)">
+                                    <option value="1">Très petit</option>
+                                    <option value="2">Petit</option>
+                                    <option value="3" selected>Normal</option>
+                                    <option value="4">Moyen</option>
+                                    <option value="5">Grand</option>
+                                    <option value="6">Très grand</option>
+                                    <option value="7">Maximum</option>
+                                </select>
+                                <button onclick="formatText('bold')"><strong>G</strong></button>
+                                <button onclick="formatText('italic')"><em>I</em></button>
+                                <button onclick="formatText('underline')"><u>S</u></button>
+                                <button onclick="formatText('insertOrderedList')">①</button>
+                                <button onclick="formatText('insertUnorderedList')">•</button>
+                                <input type="color" class="color-picker" onchange="applyColor('forecolor', this.value)" value="#000000">
+                                <input type="color" class="color-picker" onchange="applyColor('backcolor', this.value)" value="#ffffff">
+                                <button onclick="formatText('removeFormat')">✕</button>
+                            </div>
+                            <div class="editor-content" contenteditable="true" placeholder="Décrivez la première activité..."></div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Solution:</label>
-                        <textarea placeholder="Solution de l'activité..."></textarea>
+                        <div class="rich-text-editor">
+                            <div class="toolbar">
+                                <select onchange="formatText('fontName', this.value)">
+                                    <option value="Arial">Arial</option>
+                                    <option value="Helvetica">Helvetica</option>
+                                    <option value="Times New Roman">Times New Roman</option>
+                                    <option value="Courier New">Courier New</option>
+                                    <option value="Verdana">Verdana</option>
+                                    <option value="Georgia">Georgia</option>
+                                </select>
+                                <select onchange="formatText('fontSize', this.value)">
+                                    <option value="1">Très petit</option>
+                                    <option value="2">Petit</option>
+                                    <option value="3" selected>Normal</option>
+                                    <option value="4">Moyen</option>
+                                    <option value="5">Grand</option>
+                                    <option value="6">Très grand</option>
+                                    <option value="7">Maximum</option>
+                                </select>
+                                <button onclick="formatText('bold')"><strong>G</strong></button>
+                                <button onclick="formatText('italic')"><em>I</em></button>
+                                <button onclick="formatText('underline')"><u>S</u></button>
+                                <button onclick="formatText('insertOrderedList')">①</button>
+                                <button onclick="formatText('insertUnorderedList')">•</button>
+                                <input type="color" class="color-picker" onchange="applyColor('forecolor', this.value)" value="#000000">
+                                <input type="color" class="color-picker" onchange="applyColor('backcolor', this.value)" value="#ffffff">
+                                <button onclick="formatText('removeFormat')">✕</button>
+                            </div>
+                            <div class="editor-content" contenteditable="true" placeholder="Solution de l'activité..."></div>
+                        </div>
                     </div>
                 </div>
             `;
@@ -709,7 +1106,36 @@
                 <div class="example">
                     <div class="form-group">
                         <label>Exemple 1:</label>
-                        <textarea placeholder="Donnez un exemple illustratif..."></textarea>
+                        <div class="rich-text-editor">
+                            <div class="toolbar">
+                                <select onchange="formatText('fontName', this.value)">
+                                    <option value="Arial">Arial</option>
+                                    <option value="Helvetica">Helvetica</option>
+                                    <option value="Times New Roman">Times New Roman</option>
+                                    <option value="Courier New">Courier New</option>
+                                    <option value="Verdana">Verdana</option>
+                                    <option value="Georgia">Georgia</option>
+                                </select>
+                                <select onchange="formatText('fontSize', this.value)">
+                                    <option value="极">Très petit</option>
+                                    <option value="2">Petit</option>
+                                    <option value="3" selected>Normal</option>
+                                    <option value="4">Moyen</option>
+                                    <option value="5">Grand</option>
+                                    <option value="6">Très grand</option>
+                                    <option value="7">Maximum</option>
+                                </select>
+                                <button onclick="formatText('bold')"><strong>G</strong></button>
+                                <button onclick="formatText('italic')"><em>I</em></button>
+                                <button onclick="formatText('underline')"><u>S</u></button>
+                                <button onclick="formatText('insertOrderedList')">①</button>
+                                <button onclick="formatText('insertUnorderedList')">•</button>
+                                <input type="color" class="color-picker" onchange="applyColor('forecolor', this.value)" value="#000000">
+                                <input type="color" class="color-picker" onchange="applyColor('backcolor', this.value)" value="#ffffff">
+                                <button onclick="formatText('removeFormat')">✕</button>
+                            </div>
+                            <div class="editor-content" contenteditable="true" placeholder="Donnez un exemple illustratif..."></div>
+                        </div>
                     </div>
                 </div>
             `;
@@ -718,12 +1144,70 @@
                 <div class="exercise">
                     <div class="form-group">
                         <label>Exercice 1:</label>
-                        <textarea placeholder="Énoncé de l'exercice..."></textarea>
+                        <div class="rich-text-editor">
+                            <div class="toolbar">
+                                <select onchange="formatText('fontName', this.value)">
+                                    <option value="Arial">Arial</option>
+                                    <option value="Helvetica">Helvetica</option>
+                                    <option value="Times New Roman">Times New Roman</option>
+                                    <option value="Courier New">Courier New</option>
+                                    <option value="Verdana">Verdana</option>
+                                    <option value="Georgia">Georgia</option>
+                                </select>
+                                <select onchange="formatText('fontSize', this.value)">
+                                    <option value="1">Très petit</option>
+                                    <option value="2">Petit</option>
+                                    <option value="3" selected>Normal</option>
+                                    <option value="4">Moyen</option>
+                                    <option value="5">Grand</option>
+                                    <option value="极">Très grand</option>
+                                    <option value="7">Maximum</option>
+                                </select>
+                                <button onclick="formatText('bold')"><strong>G</strong></button>
+                                <button onclick="formatText('italic')"><em>I</em></button>
+                                <button onclick="formatText('underline')"><u>S</u></button>
+                                <button onclick="formatText('insertOrderedList')">①</button>
+                                <button onclick="formatText('insertUnorderedList')">•</button>
+                                <input type="color" class="color-picker" onchange="applyColor('forecolor', this.value)" value="#000000">
+                                <input type="color" class="color-picker" onchange="applyColor('backcolor', this.value)" value="#ffffff">
+                                <button onclick="formatText('removeFormat')">✕</button>
+                            </div>
+                            <div class="editor-content" contenteditable="true" placeholder="Énoncé de l'exercice..."></div>
+                        </div>
                     </div>
                     <div class="solution">
                         <div class="form-group">
                             <label>Solution:</label>
-                            <textarea placeholder="Solution de l'exercice..."></textarea>
+                            <div class="rich-text-editor">
+                                <div class="toolbar">
+                                    <select onchange="formatText('fontName', this.value)">
+                                        <option value="Arial">Arial</option>
+                                        <option value="Helvetica">Helvetica</option>
+                                        <option value="Times New Roman">Times New Roman</option>
+                                        <option value="Courier New">Courier New</option>
+                                        <option value="Verdana">Verdana</option>
+                                        <option value="Georgia">Georgia</option>
+                                    </select>
+                                    <select onchange="formatText('fontSize', this.value)">
+                                        <option value="1">Très petit</option>
+                                        <option value="2">Petit</option>
+                                        <option value="3" selected>Normal</option>
+                                        <option value="4">Moyen</option>
+                                        <option value="5">Grand</option>
+                                        <option value="6">Très grand</option>
+                                        <option value="7">Maximum</option>
+                                    </select>
+                                    <button onclick="formatText('bold')"><strong>G</strong></button>
+                                    <button onclick="formatText('italic')"><em>I</em></button>
+                                    <button onclick="formatText('underline')"><u>S</u></button>
+                                    <button onclick="formatText('insertOrderedList')">①</button>
+                                    <button onclick="formatText('insertUnorderedList')">•</button>
+                                    <input type="color" class="color-picker" onchange="applyColor('forecolor', this.value)" value="#000000">
+                                    <input type="color" class="color-picker" onchange="applyColor('backcolor', this.value)" value="#ffffff">
+                                    <button onclick="formatText('removeFormat')">✕</button>
+                                </div>
+                                <div class="editor-content" contenteditable="true" placeholder="Solution de l'exercice..."></div>
+                            </div>
                         </div>
                     </div>
                     <button class="toggle-solution" onclick="toggleSolution(this)">
@@ -732,6 +1216,13 @@
                 </div>
             `;
             
+            // Réinitialiser les écouteurs d'événements pour les nouveaux éditeurs
+            document.querySelectorAll('.editor-content').forEach(editor => {
+                editor.addEventListener('focus', function() {
+                    activeEditor = this;
+                });
+            });
+            
             currentEditingIndex = null;
             document.querySelector('.save-btn').innerHTML = '<i class="fas fa-save"></i> Enregistrer le cours';
         }
@@ -739,7 +1230,7 @@
         function saveToStorage() {
             try {
                 const storageData = {
-                    version: '1.0',
+                    version: '1.1',
                     lastUpdated: new Date().toISOString(),
                     lessons: savedLessons
                 };
@@ -800,6 +1291,9 @@
                         <button onclick="showHelp('first-lesson')" class="help-btn">
                             <i class="fas fa-question-circle"></i> Comment créer une leçon ?
                         </button>
+                        <button onclick="showHelp('rich-text')" class="help-btn">
+                            <i class="fas fa-question-circle"></i> Comment utiliser l'éditeur de texte ?
+                        </button>
                     </div>
                 `;
                 return;
@@ -822,7 +1316,7 @@
                             <span><i class="fas fa-school"></i> ${lesson.school || ''}</span>
                             <span><i class="fas fa-users"></i> ${lesson.students.total || 0} élèves</span>
                         </div>
-                        <p class="lesson-summary">${lesson.summary?.substring(0, 120) || 'Aucun résumé'}...</p>
+                        <div class="lesson-summary">${lesson.summary ? extractTextFromHTML(lesson.summary).substring(0, 120) + '...' : 'Aucun résumé'}</div>
                         
                         <div class="lesson-actions">
                             <button class="view-btn" onclick="viewLesson(${index})">
@@ -879,7 +1373,7 @@
                     (lesson.teacher.lastName && lesson.teacher.lastName.toLowerCase().includes(searchTerm)) ||
                     (lesson.teacher.firstName && lesson.teacher.firstName.toLowerCase().includes(searchTerm)) ||
                     (lesson.school && lesson.school.toLowerCase().includes(searchTerm)) ||
-                    (lesson.summary && lesson.summary.toLowerCase().includes(searchTerm));
+                    (lesson.summary && extractTextFromHTML(lesson.summary).toLowerCase().includes(searchTerm));
                 
                 const matchesClass = classFilter === '' || lesson.class === classFilter;
                 const matchesDiscipline = disciplineFilter === '' || lesson.discipline === disciplineFilter;
@@ -899,15 +1393,80 @@
             newActivity.innerHTML = `
                 <div class="form-group">
                     <label>Activité ${activityCount}:</label>
-                    <textarea placeholder="Décrivez l'activité..."></textarea>
+                    <div class="rich-text-editor">
+                        <div class="toolbar">
+                            <select onchange="formatText('fontName', this.value)">
+                                <option value="Arial">Arial</option>
+                                <option value="Helvetica">Helvetica</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Verdana">Verdana</option>
+                                <option value="Georgia">Georgia</option>
+                            </select>
+                            <select onchange="formatText('fontSize', this.value)">
+                                <option value="1">Très petit</option>
+                                <option value="2">Petit</option>
+                                <option value="3" selected>Normal</option>
+                                <option value="4">Moyen</option>
+                                <option value="5">Grand</option>
+                                <option value="6">Très grand</option>
+                                <option value="7">Maximum</option>
+                            </select>
+                            <button onclick="formatText('bold')"><strong>G</strong></button>
+                            <button onclick="formatText('italic')"><em>I</em></button>
+                            <button onclick="formatText('underline')"><u>S</u></button>
+                            <button onclick="formatText('insertOrderedList')">①</button>
+                            <button onclick="formatText('insertUnorderedList')">•</button>
+                            <input type="color" class="color-picker" onchange="applyColor('forecolor', this.value)" value="#000000">
+                            <input type="color" class="color-picker" onchange="applyColor('backcolor', this.value)" value="#ffffff">
+                            <button onclick="formatText('removeFormat')">✕</button>
+                        </div>
+                        <div class="editor-content" contenteditable="true" placeholder="Décrivez l'activité..."></div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Solution:</label>
-                    <textarea placeholder="Solution de l'activité..."></textarea>
+                    <div class="rich-text-editor">
+                        <div class="toolbar">
+                            <select onchange="formatText('fontName', this.value)">
+                                <option value="Arial">Arial</option>
+                                <option value="Helvetica">Helvetica</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Verdana">Verdana</option>
+                                <option value="Georgia">Georgia</option>
+                            </select>
+                            <select onchange="formatText('fontSize', this.value)">
+                                <option value="1">Très petit</option>
+                                <option value="2">Petit</option>
+                                <option value="3" selected>Normal</option>
+                                <option value="4">Moyen</option>
+                                <option value="5">Grand</option>
+                                <option value="6">Très grand</option>
+                                <option value="极">Maximum</option>
+                            </select>
+                            <button onclick="formatText('bold')"><strong>G</strong></button>
+                            <button onclick="formatText('italic')"><em>I</em></button>
+                            <button onclick="formatText('underline')"><u>S</u></button>
+                            <button onclick="formatText('insertOrderedList')">①</button>
+                            <button onclick="formatText('insertUnorderedList')">•</button>
+                            <input type="极" class="color-picker" onchange="applyColor('forecolor', this.value)" value="#000000">
+                            <input type="color" class="color-picker" onchange="applyColor('backcolor', this.value)" value="#ffffff">
+                            <button onclick="formatText('removeFormat')">✕</button>
+                        </div>
+                        <div class="editor-content" contenteditable="true" placeholder="Solution de l'activité..."></div>
+                    </div>
                 </div>
             `;
             
             activitiesDiv.appendChild(newActivity);
+            
+            // Ajouter les écouteurs d'événements pour les nouveaux éditeurs
+            newActivity.querySelectorAll('.editor-content').forEach(editor => {
+                editor.addEventListener('focus', function() {
+                    activeEditor = this;
+                });
+            });
         }
         
         function addExample() {
@@ -919,11 +1478,47 @@
             newExample.innerHTML = `
                 <div class="form-group">
                     <label>Exemple ${exampleCount}:</label>
-                    <textarea placeholder="Donnez un exemple illustratif..."></textarea>
+                    <div class="rich-text-editor">
+                        <div class="toolbar">
+                            <select onchange="formatText('fontName', this.value)">
+                                <option value="Arial">Arial</option>
+                                <option value="Helvetica">Helvetica</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Verdana">极</option>
+                                <option value="Georgia">Georgia</option>
+                            </select>
+                            <select onchange="formatText('fontSize',极.value)">
+                                <option value="1">Très petit</option>
+                                <option value="2">Petit</option>
+                                <option value="3" selected>Normal</option>
+                                <option value="4">Moyen</option>
+                                <option value="5">Grand</option>
+                                <option value="6">Très grand</option>
+                                <option value="7">Maximum</option>
+                            </select>
+                            <button onclick="formatText('bold')"><strong>G</strong></button>
+                            <button onclick="formatText('italic')"><em>I</em></button>
+                            <button onclick="formatText('underline')"><u>S</u></button>
+                            <button onclick="formatText('insertOrderedList')">①</button>
+                            <button onclick="formatText('insertUnorderedList')">•</button>
+                            <input type="color" class="color-picker" onchange="applyColor('forecolor', this.value)" value="#000000">
+                            <input type="color" class="color-picker极" onchange="applyColor('backcolor', this.value)" value="#ffffff">
+                            <button onclick="formatText('removeFormat')">✕</button>
+                        </div>
+                        <div class="editor-content" contenteditable="true" placeholder="Donnez un exemple illustratif..."></div>
+                    </div>
                 </div>
             `;
             
             examplesDiv.appendChild(newExample);
+            
+            // Ajouter les écouteurs d'événements pour les nouveaux éditeurs
+            newExample.querySelectorAll('.editor-content').forEach(editor => {
+                editor.addEventListener('focus', function() {
+                    activeEditor = this;
+                });
+            });
         }
         
         function addExercise() {
@@ -935,12 +1530,70 @@
             newExercise.innerHTML = `
                 <div class="form-group">
                     <label>Exercice ${exerciseCount}:</label>
-                    <textarea placeholder="Énoncé de l'exercice..."></textarea>
+                    <div class="rich-text-editor">
+                        <极 class="toolbar">
+                            <select onchange="formatText('fontName', this.value)">
+                                <option value="Arial">Arial</option>
+                                <option value="Helvetica">Helvetica</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Verdana">Verdana</option>
+                                <option value="Georgia">Georgia</option>
+                            </select>
+                            <select onchange="formatText('fontSize', this.value)">
+                                <option value="1">Très petit</option>
+                                <option value="2">Petit</option>
+                                <option value="3" selected>Normal</option>
+                                <option value="4">Moyen</option>
+                                <option value="5">Grand</option>
+                                <option value="6">Très grand</option>
+                                <option value="7">Maximum</option>
+                            </select>
+                            <button onclick="formatText('bold')"><strong>G</strong></button>
+                            <button onclick="formatText('italic')"><em>I</极></button>
+                            <button onclick="formatText('underline')"><u>S</u></button>
+                            <button onclick="formatText('insertOrderedList')">①</button>
+                            <button onclick="formatText('insertUnorderedList')">•</button>
+                            <input type="color" class="color-picker" onchange="applyColor('forecolor', this.value)" value="#000000">
+                            <input type="color" class="color-picker" onchange="applyColor('backcolor', this.value)" value="#ffffff">
+                            <button onclick="formatText('removeFormat')">✕</button>
+                        </div>
+                        <div class="editor-content" contenteditable="true" placeholder="Énoncé de l'exercice..."></div>
+                    </div>
                 </div>
                 <div class="solution">
                     <div class="form-group">
                         <label>Solution:</label>
-                        <textarea placeholder="Solution de l'exercice..."></textarea>
+                        <div class="rich-text-editor">
+                            <div class="toolbar">
+                                <select onchange="formatText('fontName', this.value)">
+                                    <option value="Arial">Arial</option>
+                                    <option value="Helvetica">Helvetica</option>
+                                    <option value="Times New Roman">Times New Roman</option>
+                                    <option value="Courier New">Courier New</option>
+                                    <option value="Verdana">Verdana</option>
+                                    <option value="Georgia">Georgia</option>
+                                </select>
+                                <select onchange="formatText('fontSize', this.value)">
+                                    <option value="1">Très petit</option>
+                                    <option value="2">Petit</option>
+                                    <option value="3" selected>Normal</option>
+                                    <option value="4">Moyen</option>
+                                    <option value="5">Grand</option>
+                                    <option value="6">Très grand</option>
+                                    <option value="7">Maximum</option>
+                                </select>
+                                <button onclick="formatText('bold')"><strong>G</strong></button>
+                                <button onclick="formatText('italic')"><em>I</em></button>
+                                <button onclick="formatText('underline')"><u>S</u></button>
+                                <button onclick="formatText('insertOrderedList')">①</button>
+                                <button onclick="formatText('insertUnorderedList')">•</button>
+                                <input type="color" class="color-picker" onchange="apply极('forecolor', this.value)" value="#000000">
+                                <input type="color" class="color-picker" onchange="applyColor('backcolor', this.value)" value="#ffffff">
+                                <button onclick="formatText('removeFormat')">✕</button>
+                            </div>
+                            <div class="editor-content" contenteditable="true" placeholder="Solution de l'exercice..."></div>
+                        </div>
                     </div>
                 </div>
                 <button class="toggle-solution" onclick="toggleSolution(this)">
@@ -949,6 +1602,13 @@
             `;
             
             exercisesDiv.appendChild(newExercise);
+            
+            // Ajouter les écouteurs d'événements pour les nouveaux éditeurs
+            newExercise.querySelectorAll('.editor-content').forEach(editor => {
+                editor.addEventListener('focus', function() {
+                    activeEditor = this;
+                });
+            });
         }
         
         function toggleSolution(button) {
@@ -978,13 +1638,13 @@
                 </div>
                 
                 <h3>Prérequis</h3>
-                <div class="activity">${formatText(lesson.prerequisites)}</div>
+                <div class="lesson-content">${lesson.prerequisites || 'Non spécifié'}</div>
                 
                 <h3>Situation Problème</h3>
-                <div class="example">${formatText(lesson.problemStatement)}</div>
+                <div class="lesson-content">${lesson.problemStatement || 'Non spécifié'}</div>
                 
                 <h3>Solution</h3>
-                <div class="exercise">${formatText(lesson.problemSolution)}</div>
+                <div class="lesson-content">${lesson.problemSolution || 'Non spécifié'}</div>
                 
                 <h3>Activités d'Apprentissage</h3>
             `;
@@ -993,15 +1653,15 @@
                 details += `
                     <div class="activity">
                         <h4>Activité ${activity.number}</h4>
-                        <p>${formatText(activity.description)}</p>
+                        <div class="lesson-content">${activity.description || 'Non spécifié'}</div>
                         <h5>Solution:</h5>
-                        <div class="solution">${formatText(activity.solution)}</div>
+                        <div class="solution lesson-content">${activity.solution || 'Non spécifié'}</div>
                     </div>
                 `;
             });
 
             details += `<h3>Définitions, Propriétés et Théorèmes</h3>
-                <div class="exercise">${formatText(lesson.definitions)}</div>
+                <div class="lesson-content">${lesson.definitions || 'Non spécifié'}</div>
                 
                 <h3>Exemples</h3>`;
 
@@ -1009,7 +1669,7 @@
                 details += `
                     <div class="example">
                         <h4>Exemple ${example.number}</h4>
-                        <p>${formatText(example.content)}</p>
+                        <div class="lesson-content">${example.content || 'Non spécifié'}</div>
                     </div>
                 `;
             });
@@ -1020,29 +1680,30 @@
                 details += `
                     <div class="exercise">
                         <h4>Exercice ${exercise.number}</h4>
-                        <p>${formatText(exercise.statement)}</p>
+                        <div class="lesson-content">${exercise.statement || 'Non spécifié'}</div>
                         <button class="toggle-solution" onclick="toggleSolutionInModal(this)">
-                            <i class="fas fa-eye"></i> Afficher la solution
+                            <i class="fas fa-eye"></极> Afficher la solution
                         </button>
                         <div class="solution" style="display:none;">
                             <h5>Solution:</h5>
-                            <p>${formatText(exercise.solution)}</p>
+                            <div class="lesson-content">${exercise.solution || 'Non spécifié'}</div>
                         </div>
                     </div>
                 `;
             });
 
             details += `<h3>Récapitulatif</h3>
-                <div class="summary">${formatText(lesson.summary)}</div>`;
+                <div class="lesson-content">${lesson.summary || 'Non spécifié'}</div>`;
 
             modalContent.innerHTML = details;
             whatsappBtn.onclick = function() { shareViaWhatsApp(index); };
             modal.style.display = 'block';
         }
 
-        function formatText(text) {
-            if (!text) return 'Non spécifié';
-            return text.replace(/\n/g, '<br>');
+        function extractTextFromHTML(html) {
+            const div = document.createElement('div');
+            div.innerHTML = html;
+            return div.textContent || div.innerText || '';
         }
 
         function toggleSolutionInModal(button) {
@@ -1087,7 +1748,12 @@
                 1. Remplissez les informations de base
                 2. Ajoutez des activités avec le bouton "+"
                 3. Cliquez sur "Enregistrer"`,
-                'sharing': `Partagez les leçons via WhatsApp en cliquant sur l'icône 📱`
+                'sharing': `Partagez les leçons via WhatsApp en cliquant sur l'icône 📱`,
+                'rich-text': `Utilisez la barre d'outils pour formater votre texte :
+                - Choisissez la police et la taille
+                - Mettez en gras, italique ou souligné
+                - Ajoutez des listes numérotées ou à puces
+                - Changez la couleur du texte ou de l'arrière-plan`
             };
             
             alert(helpMessages[topic] || "Aide non disponible pour ce sujet");
@@ -1109,8 +1775,8 @@
             savedLessons.forEach((lesson, index) => {
                 message += `*Leçon ${index + 1}: ${lesson.discipline || 'Sans titre'} - ${getClassLabel(lesson.class) || 'N/A'}*\n`;
                 message += `👨‍🏫 Enseignant: ${lesson.teacher.firstName || ''} ${lesson.teacher.lastName || ''}\n`;
-                message += `📅 Date: ${new Date(lesson.date).toLocaleDateString('fr-FR')}\n`;
-                message += `📝 Résumé: ${lesson.summary ? lesson.summary.substring(0, 50) + (lesson.summary.length > 50 ? '...' : '') : ''}\n\n`;
+                message += `📅 Date: ${new Date(lesson.date).极caleDateString('fr-FR')}\n`;
+                message += `📝 Résumé: ${lesson.summary ? extractTextFromHTML(lesson.summary).substring(0, 50) + (extractTextFromHTML(lesson.summary).length > 50 ? '...' : '') : ''}\n\n`;
             });
 
             message += "\n*Détails complets disponibles dans l'application*";
@@ -1122,19 +1788,19 @@
             message += `👨‍🏫 Enseignant: ${lesson.teacher.firstName || ''} ${lesson.teacher.lastName || ''}\n`;
             message += `🏫 Établissement: ${lesson.school || ''}\n\n`;
             
-            message += `*📚 Prérequis:*\n${lesson.prerequisites || 'Non spécifié'}\n\n`;
-            message += `*❓ Situation Problème:*\n${lesson.problemStatement || 'Non spécifié'}\n\n`;
-            message += `*✅ Solution:*\n${lesson.problemSolution || 'Non spécifié'}\n\n`;
+            message += `*📚 Prérequis:*\n${extractTextFromHTML(lesson.prerequisites) || 'Non spécifié'}\n\n`;
+            message += `*❓ Situation Problème:*\n${extractTextFromHTML(lesson.problemStatement) || 'Non spécifié'}\n\n`;
+            message += `*✅ Solution:*\n${extractTextFromHTML(lesson.problemSolution) || 'Non spécifié'}\n\n`;
             
             if (lesson.activities && lesson.activities.length > 0) {
                 message += `*🔄 Activités:*\n`;
                 lesson.activities.forEach(activity => {
-                    message += `- ${activity.description ? activity.description.substring(0, 50) + (activity.description.length > 50 ? '...' : '') : 'Activité'}\n`;
+                    message += `- ${activity.description ? extractTextFromHTML(activity.description).substring(0, 50) + (extractTextFromHTML(activity.description).length > 50 ? '...' : '') : 'Activité'}\n`;
                 });
                 message += `\n`;
             }
             
-            message += `*📝 Récapitulatif:*\n${lesson.summary || 'Non spécifié'}\n\n`;
+            message += `*📝 Récapitulatif:*\n${extractTextFromHTML(lesson.summary) || 'Non spécifié'}\n\n`;
             
             return message;
         }
@@ -1176,7 +1842,7 @@
             if (!lesson.timestamp) lesson.timestamp = new Date().getTime();
             
             savedLessons.push(lesson);
-            saveToStorage();
+            save极orage();
             refreshLessons();
             alert("Leçon ajoutée avec succès !");
         }
@@ -1194,6 +1860,43 @@
                 document.getElementById('teacherLastName').value = teacher.lastName || '';
                 document.getElementById('teacherFirstName').value = teacher.firstName || '';
             }
+        }
+
+        // Fonctions pour l'éditeur de texte enrichi
+        function formatText(command, value = null) {
+            if (!activeEditor) return;
+            
+            // Sauvegarder la sélection actuelle
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                activeEditor.focus();
+                
+                // Restaurer la sélection
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+            
+            document.execCommand(command, false, value);
+            activeEditor.focus();
+        }
+        
+        function applyColor(command, color) {
+            if (!activeEditor) return;
+            
+            // Sauvegarder la sélection actuelle
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                activeEditor.focus();
+                
+                // Restaurer la sélection
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+            
+            document.execCommand(command, false, color);
+            activeEditor.focus();
         }
     </script>
 </body>
