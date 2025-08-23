@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fiche de Préparation de Cours</title>
+    <title>Fiche de Préparation de Cours - Éditeur Enrichi</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -378,6 +378,58 @@
         .editor-content:focus {
             border-color: #3498db;
         }
+        .color-picker {
+            position: relative;
+            display: inline-block;
+        }
+        .color-button {
+            background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+        }
+        .color-palette {
+            display: none;
+            position: absolute;
+            top: 35px;
+            left: 0;
+            background: white;
+            border: 1px solid #ddd;
+            padding: 5px;
+            z-index: 1000;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            width: 150px;
+        }
+        .color-option {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            margin: 2px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+        }
+        .toolbar .divider {
+            width: 1px;
+            background-color: #ddd;
+            height: 25px;
+            margin: 0 5px;
+            display: inline-block;
+        }
+        .latex-preview {
+            background-color: #f8f9fa;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border-left: 3px solid #3498db;
+            min-height: 50px;
+        }
+        .latex-error {
+            color: #e74c3c;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
         .notification {
             position: fixed;
             top: 20px;
@@ -419,6 +471,9 @@
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- MathJax pour le rendu LaTeX -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
     <button class="btn-retour" onclick="history.back()">
@@ -426,7 +481,7 @@
     </button>
 
     <div class="container">
-        <h1>Fiche de Préparation de Cours</h1>
+        <h1>Fiche de Préparation de Cours - Éditeur Enrichi</h1>
         
         <div class="action-buttons">
             <button id="saveBtn" class="save-btn">
@@ -480,11 +535,21 @@
                 <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
                 <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
                 <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                <span class="divider"></span>
                 <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
                 <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                <span class="divider"></span>
                 <button type="button" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
                 <button type="button" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
                 <button type="button" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
+                <span class="divider"></span>
+                <div class="color-picker">
+                    <button type="button" class="color-button" data-command="foreColor"></button>
+                    <div class="color-palette" id="objectives-color-palette"></div>
+                </div>
+                <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
+                <button type="button" data-command="insertLatex"><i class="fas fa-square-root-alt"></i></button>
             </div>
             <div class="editor-content" id="objectives-content" contenteditable="true"></div>
         </div>
@@ -499,11 +564,21 @@
                 <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
                 <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
                 <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                <span class="divider"></span>
                 <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
                 <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                <span class="divider"></span>
                 <button type="button" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
                 <button type="button" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
                 <button type="button" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
+                <span class="divider"></span>
+                <div class="color-picker">
+                    <button type="button" class="color-button" data-command="foreColor"></button>
+                    <div class="color-palette" id="procedure-color-palette"></div>
+                </div>
+                <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
+                <button type="button" data-command="insertLatex"><i class="fas fa-square-root-alt"></i></button>
             </div>
             <div class="editor-content" id="procedure-content" contenteditable="true"></div>
         </div>
@@ -520,11 +595,21 @@
                         <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
                         <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
                         <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                        <span class="divider"></span>
                         <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
                         <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                        <span class="divider"></span>
                         <button type="button" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
                         <button type="button" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
                         <button type="button" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
+                        <span class="divider"></span>
+                        <div class="color-picker">
+                            <button type="button" class="color-button" data-command="foreColor"></button>
+                            <div class="color-palette" id="activity1-color-palette"></div>
+                        </div>
+                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                        <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
+                        <button type="button" data-command="insertLatex"><i class="fas fa-square-root-alt"></i></button>
                     </div>
                     <div class="editor-content" id="activity1-content" contenteditable="true"></div>
                 </div>
@@ -544,11 +629,21 @@
                         <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
                         <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
                         <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                        <span class="divider"></span>
                         <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
                         <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                        <span class="divider"></span>
                         <button type="button" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
                         <button type="button" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
                         <button type="button" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
+                        <span class="divider"></span>
+                        <div class="color-picker">
+                            <button type="button" class="color-button" data-command="foreColor"></button>
+                            <div class="color-palette" id="exercise1-color-palette"></div>
+                        </div>
+                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                        <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
+                        <button type="button" data-command="insertLatex"><i class="fas fa-square-root-alt"></i></button>
                     </div>
                     <div class="editor-content" id="exercise1-content" contenteditable="true"></div>
                 </div>
@@ -566,11 +661,21 @@
                 <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
                 <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
                 <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                <span class="divider"></span>
                 <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
                 <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                <span class="divider"></span>
                 <button type="button" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
                 <button type="button" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
                 <button type="button" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
+                <span class="divider"></span>
+                <div class="color-picker">
+                    <button type="button" class="color-button" data-command="foreColor"></button>
+                    <div class="color-palette" id="resources-color-palette"></div>
+                </div>
+                <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
+                <button type="button" data-command="insertLatex"><i class="fas fa-square-root-alt"></i></button>
             </div>
             <div class="editor-content" id="resources-content" contenteditable="true"></div>
         </div>
@@ -585,11 +690,21 @@
                 <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
                 <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
                 <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                <span class="divider"></span>
                 <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
                 <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                <span class="divider"></span>
                 <button type="button" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
                 <button type="button" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
                 <button type="button" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
+                <span class="divider"></span>
+                <div class="color-picker">
+                    <button type="button" class="color-button" data-command="foreColor"></button>
+                    <div class="color-palette" id="evaluation-color-palette"></div>
+                </div>
+                <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
+                <button type="button" data-command="insertLatex"><i class="fas fa-square-root-alt"></i></button>
             </div>
             <div class="editor-content" id="evaluation-content" contenteditable="true"></div>
         </div>
@@ -658,6 +773,23 @@
             'activity1': true,
             'exercise1': true
         };
+        let colorPickerVisible = false;
+
+        // Configuration de MathJax
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                renderActions: {
+                    addMenu: [0, '', '']
+                }
+            }
+        };
 
         // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
@@ -682,6 +814,13 @@
             
             // Initialiser les boutons de basculement d'éditeur
             initEditorToggleButtons();
+            
+            // Initialiser les sélecteurs de couleur
+            initColorPickers();
+
+            // Configurer la date du jour par défaut
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
 
             // Charger les leçons sauvegardées
             loadSavedLessons();
@@ -693,14 +832,30 @@
             document.querySelectorAll('.toolbar button').forEach(button => {
                 button.addEventListener('click', function() {
                     const command = this.dataset.command;
-                    document.execCommand(command, false, null);
-                    updateHiddenTextareas();
+                    
+                    if (command === 'foreColor') {
+                        toggleColorPicker(this.nextElementSibling);
+                    } else if (command === 'insertImage') {
+                        insertImage(this.closest('.rich-text-editor').querySelector('.editor-content'));
+                    } else if (command === 'insertVideo') {
+                        insertVideo(this.closest('.rich-text-editor').querySelector('.editor-content'));
+                    } else if (command === 'insertLatex') {
+                        insertLatex(this.closest('.rich-text-editor').querySelector('.editor-content'));
+                    } else {
+                        document.execCommand(command, false, null);
+                    }
+                    updateTextareaFromEditor(this.closest('.rich-text-editor'));
                 });
             });
 
-            // Mettre à jour les textareas cachés lorsque le contenu change
+            // Ajouter les écouteurs d'événements pour la mise à jour des textarea
             document.querySelectorAll('.editor-content').forEach(editor => {
-                editor.addEventListener('input', updateHiddenTextareas);
+                editor.addEventListener('input', function() {
+                    updateTextareaFromEditor(this.closest('.rich-text-editor'));
+                });
+                editor.addEventListener('blur', function() {
+                    updateTextareaFromEditor(this.closest('.rich-text-editor'));
+                });
             });
         }
 
@@ -708,152 +863,132 @@
         function initEditorToggleButtons() {
             document.querySelectorAll('.editor-toggle-btn').forEach(button => {
                 button.addEventListener('click', function() {
-                    const target = this.dataset.target;
-                    toggleEditorMode(target);
+                    const targetId = this.dataset.target;
+                    toggleEditorMode(targetId);
                 });
             });
         }
 
-        // Fonction pour basculer entre l'éditeur de texte enrichi et le textarea simple
-        function toggleEditorMode(target) {
-            const editorElement = document.getElementById(`${target}-editor`);
-            const textareaElement = document.getElementById(target);
-            const toggleButton = document.querySelector(`.editor-toggle-btn[data-target="${target}"]`);
+        // Fonction pour basculer entre l'éditeur riche et le textarea simple
+        function toggleEditorMode(targetId) {
+            const editorElement = document.getElementById(`${targetId}-editor`);
+            const textareaElement = document.getElementById(targetId);
             
-            if (editorMode[target]) {
+            if (editorMode[targetId]) {
                 // Passer en mode textarea simple
                 editorElement.style.display = 'none';
                 textareaElement.style.display = 'block';
                 textareaElement.value = editorElement.querySelector('.editor-content').innerHTML;
-                toggleButton.textContent = 'Basculer Éditeur';
-                toggleButton.classList.remove('active');
             } else {
-                // Passer en mode éditeur de texte enrichi
+                // Passer en mode éditeur riche
                 editorElement.style.display = 'block';
                 textareaElement.style.display = 'none';
                 editorElement.querySelector('.editor-content').innerHTML = textareaElement.value;
-                toggleButton.textContent = 'Basculer Texte Simple';
-                toggleButton.classList.add('active');
             }
             
-            editorMode[target] = !editorMode[target];
-        }
-
-        // Fonction pour mettre à jour les textareas cachés avec le contenu des éditeurs
-        function updateHiddenTextareas() {
-            document.querySelectorAll('.rich-text-editor').forEach(editor => {
-                const id = editor.id.replace('-editor', '');
-                const textarea = document.getElementById(id);
-                if (textarea) {
-                    textarea.value = editor.querySelector('.editor-content').innerHTML;
-                }
-            });
-        }
-
-        // Fonction pour afficher une notification
-        function showNotification(message, isError = false) {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.className = isError ? 'notification error' : 'notification';
-            notification.classList.add('show');
+            // Mettre à jour l'état
+            editorMode[targetId] = !editorMode[targetId];
             
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-
-        // Fonction pour récupérer les données du formulaire
-        function getFormData() {
-            // Mettre à jour les textareas cachés avant de récupérer les données
-            updateHiddenTextareas();
-
-            const formData = {
-                teacher: document.getElementById('teacher').value,
-                school: document.getElementById('school').value,
-                date: document.getElementById('date').value,
-                subject: document.getElementById('subject').value,
-                classLevel: document.getElementById('classLevel').value,
-                duration: document.getElementById('duration').value,
-                objectives: document.getElementById('objectives').value,
-                procedure: document.getElementById('procedure').value,
-                activities: [],
-                exercises: [],
-                resources: document.getElementById('resources').value,
-                evaluation: document.getElementById('evaluation').value,
-                lastModified: new Date().toISOString()
-            };
-
-            // Récupérer les activités
-            const activityElements = document.querySelectorAll('[id^="activity"]');
-            activityElements.forEach((activity, index) => {
-                if (activity.id.match(/^activity\d+$/) && activity.value.trim() !== '') {
-                    formData.activities.push(activity.value);
-                }
-            });
-
-            // Récupérer les exercices
-            const exerciseElements = document.querySelectorAll('[id^="exercise"]');
-            exerciseElements.forEach((exercise, index) => {
-                if (exercise.id.match(/^exercise\d+$/) && exercise.value.trim() !== '') {
-                    formData.exercises.push(exercise.value);
-                }
-            });
-
-            return formData;
-        }
-
-        // Fonction pour remplir le formulaire avec des données
-        function setFormData(data) {
-            document.getElementById('teacher').value = data.teacher || '';
-            document.getElementById('school').value = data.school || '';
-            document.getElementById('date').value = data.date || '';
-            document.getElementById('subject').value = data.subject || '';
-            document.getElementById('classLevel').value = data.classLevel || '';
-            document.getElementById('duration').value = data.duration || '';
-            document.getElementById('objectives').value = data.objectives || '';
-            document.getElementById('procedure').value = data.procedure || '';
-            document.getElementById('resources').value = data.resources || '';
-            document.getElementById('evaluation').value = data.evaluation || '';
-
-            // Mettre à jour les éditeurs de texte enrichi
-            document.getElementById('objectives-content').innerHTML = data.objectives || '';
-            document.getElementById('procedure-content').innerHTML = data.procedure || '';
-            document.getElementById('resources-content').innerHTML = data.resources || '';
-            document.getElementById('evaluation-content').innerHTML = data.evaluation || '';
-
-            // Vider les activités et exercices existants
-            document.getElementById('activities').innerHTML = '';
-            document.getElementById('exercises').innerHTML = '';
-            activitiesCount = 0;
-            exercisesCount = 0;
-
-            // Ajouter les activités
-            if (data.activities && data.activities.length > 0) {
-                data.activities.forEach((activity, index) => {
-                    addActivity();
-                    document.getElementById(`activity${index + 1}`).value = activity;
-                    document.getElementById(`activity${index + 1}-content`).innerHTML = activity;
-                });
+            // Mettre à jour le texte du bouton
+            const button = document.querySelector(`.editor-toggle-btn[data-target="${targetId}"]`);
+            button.textContent = editorMode[targetId] ? 'Basculer en Texte Simple' : 'Basculer en Éditeur';
+            
+            // Mettre à jour la classe active
+            if (editorMode[targetId]) {
+                button.classList.add('active');
             } else {
-                addActivity(); // Ajouter au moins une activité vide
+                button.classList.remove('active');
             }
+        }
 
-            // Ajouter les exercices
-            if (data.exercises && data.exercises.length > 0) {
-                data.exercises.forEach((exercise, index) => {
-                    addExercise();
-                    document.getElementById(`exercise${index + 1}`).value = exercise;
-                    document.getElementById(`exercise${index + 1}-content`).innerHTML = exercise;
+        // Fonction pour initialiser les sélecteurs de couleur
+        function initColorPickers() {
+            const colors = [
+                '#000000', '#434343', '#666666', '#999999', '#b7b7b7', '#cccccc', '#d9d9d9', '#efefef', '#f3f3f3', '#ffffff',
+                '#980000', '#ff0000', '#ff9900', '#ffff00', '#00ff00', '#00ffff', '#4a86e8', '#0000ff', '#9900ff', '#ff00ff',
+                '#e6b8af', '#f4cccc', '#fce5cd', '#fff2cc', '#d9ead3', '#d0e0e3', '#c9daf8', '#cfe2f3', '#d9d2e9', '#ead1dc',
+                '#dd7e6b', '#ea9999', '#f9cb9c', '#ffe599', '#b6d7a8', '#a2c4c9', '#a4c2f4', '#9fc5e8', '#b4a7d6', '#d5a6bd',
+                '#cc4125', '#e06666', '#f6b26b', '#ffd966', '#93c47d', '#76a5af', '#6d9eeb', '#6fa8dc', '#8e7cc3', '#c27ba0',
+                '#a61c00', '#cc0000', '#e69138', '#f1c232', '#6aa84f', '#45818e', '#3c78d8', '#3d85c6', '#674ea7', '#a64d79',
+                '#85200c', '#990000', '#b45f06', '#bf9000', '#38761d', '#134f5c', '#1155cc', '#0b5394', '#351c75', '#741b47',
+                '#5b0f00', '#660000', '#783f04', '#7f6000', '#274e13', '#0c343d', '#1c4587', '#073763', '#20124d', '#4c1130'
+            ];
+            
+            document.querySelectorAll('.color-palette').forEach(palette => {
+                colors.forEach(color => {
+                    const colorOption = document.createElement('div');
+                    colorOption.className = 'color-option';
+                    colorOption.style.backgroundColor = color;
+                    colorOption.addEventListener('click', function() {
+                        const editorContent = palette.closest('.rich-text-editor').querySelector('.editor-content');
+                        document.execCommand('foreColor', false, color);
+                        palette.style.display = 'none';
+                        colorPickerVisible = false;
+                        updateTextareaFromEditor(palette.closest('.rich-text-editor'));
+                    });
+                    palette.appendChild(colorOption);
                 });
+            });
+        }
+
+        // Fonction pour afficher/masquer le sélecteur de couleur
+        function toggleColorPicker(palette) {
+            if (colorPickerVisible && palette.style.display === 'block') {
+                palette.style.display = 'none';
+                colorPickerVisible = false;
             } else {
-                addExercise(); // Ajouter au moins un exercice vide
+                // Masquer tous les autres sélecteurs de couleur
+                document.querySelectorAll('.color-palette').forEach(p => {
+                    p.style.display = 'none';
+                });
+                palette.style.display = 'block';
+                colorPickerVisible = true;
+            }
+        }
+
+        // Fonction pour insérer une image
+        function insertImage(editor) {
+            const url = prompt('Entrez l\'URL de l\'image:');
+            if (url) {
+                document.execCommand('insertHTML', false, `<img src="${url}" alt="Image" style="max-width: 100%; height: auto;">`);
+                updateTextareaFromEditor(editor.closest('.rich-text-editor'));
+            }
+        }
+
+        // Fonction pour insérer une vidéo
+        function insertVideo(editor) {
+            const url = prompt('Entrez l\'URL de la vidéo (YouTube, Vimeo, etc.):');
+            if (url) {
+                document.execCommand('insertHTML', false, `<div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;"><iframe src="${url}" frameborder="0" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>`);
+                updateTextareaFromEditor(editor.closest('.rich-text-editor'));
+            }
+        }
+
+        // Fonction pour insérer du code LaTeX
+        function insertLatex(editor) {
+            const latexCode = prompt('Entrez votre équation LaTeX (utilisez $...$ pour en ligne ou $$...$$ pour centré):');
+            if (latexCode) {
+                document.execCommand('insertHTML', false, `<span class="latex-formula">${latexCode}</span>`);
+                updateTextareaFromEditor(editor.closest('.rich-text-editor'));
+                
+                // Forcer le rendu MathJax
+                MathJax.typesetPromise();
+            }
+        }
+
+        // Fonction pour mettre à jour le textarea à partir de l'éditeur
+        function updateTextareaFromEditor(editorElement) {
+            const editorId = editorElement.id;
+            const targetId = editorId.replace('-editor', '');
+            const textarea = document.getElementById(targetId);
+            if (textarea) {
+                textarea.value = editorElement.querySelector('.editor-content').innerHTML;
             }
         }
 
         // Fonction pour ajouter une activité
         function addActivity() {
             activitiesCount++;
-            const activitiesDiv = document.getElementById('activities');
             const newActivity = document.createElement('div');
             newActivity.className = 'activity';
             newActivity.innerHTML = `
@@ -865,30 +1000,41 @@
                         <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
                         <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
                         <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                        <span class="divider"></span>
                         <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
                         <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                        <span class="divider"></span>
                         <button type="button" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
                         <button type="button" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
                         <button type="button" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
+                        <span class="divider"></span>
+                        <div class="color-picker">
+                            <button type="button" class="color-button" data-command="foreColor"></button>
+                            <div class="color-palette" id="activity${activitiesCount}-color-palette"></div>
+                        </div>
+                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                        <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
+                        <button type="button" data-command="insertLatex"><i class="fas fa-square-root-alt"></i></button>
                     </div>
                     <div class="editor-content" id="activity${activitiesCount}-content" contenteditable="true"></div>
                 </div>
                 <textarea id="activity${activitiesCount}" name="activity${activitiesCount}" style="display:none;"></textarea>
+                <button class="delete-btn" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i> Supprimer cette activité</button>
             `;
-            activitiesDiv.appendChild(newActivity);
+            document.getElementById('activities').appendChild(newActivity);
             
             // Initialiser le nouvel éditeur
             initRichTextEditors();
             initEditorToggleButtons();
+            initColorPickers();
             
-            // Ajouter au mode éditeur
+            // Ajouter au mode d'éditeur
             editorMode[`activity${activitiesCount}`] = true;
         }
 
         // Fonction pour ajouter un exercice
         function addExercise() {
             exercisesCount++;
-            const exercisesDiv = document.getElementById('exercises');
             const newExercise = document.createElement('div');
             newExercise.className = 'exercise';
             newExercise.innerHTML = `
@@ -900,65 +1046,647 @@
                         <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
                         <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
                         <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                        <span class="divider"></span>
                         <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
                         <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                        <span class="divider"></span>
                         <button type="button" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
                         <button type="button" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
                         <button type="button" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
+                        <span class="divider"></span>
+                        <div class="color-picker">
+                            <button type="button" class="color-button" data-command="foreColor"></button>
+                            <div class="color-palette" id="exercise${exercisesCount}-color-palette"></div>
+                        </div>
+                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                        <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
+                        <button type="button" data-command="insertLatex"><i class="fas fa-square-root-alt"></i></button>
                     </div>
                     <div class="editor-content" id="exercise${exercisesCount}-content" contenteditable="true"></div>
                 </div>
                 <textarea id="exercise${exercisesCount}" name="exercise${exercisesCount}" style="display:none;"></textarea>
+                <button class="delete-btn" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i> Supprimer cet exercice</button>
             `;
-            exercisesDiv.appendChild(newExercise);
+            document.getElementById('exercises').appendChild(newExercise);
             
             // Initialiser le nouvel éditeur
             initRichTextEditors();
             initEditorToggleButtons();
+            initColorPickers();
             
-            // Ajouter au mode éditeur
+            // Ajouter au mode d'éditeur
             editorMode[`exercise${exercisesCount}`] = true;
         }
 
         // Fonction pour sauvegarder la leçon
         function saveLesson() {
-            const formData = getFormData();
-            
-            // Vérifier les champs requis
-            if (!formData.subject || !formData.date) {
-                showNotification('Veuillez remplir au moins la matière et la date.', true);
-                return;
+            const lesson = {
+                id: currentLessonId || Date.now().toString(),
+                teacher: document.getElementById('teacher').value,
+                school: document.getElementById('school').value,
+                date: document.getElementById('date').value,
+                subject: document.getElementById('subject').value,
+                classLevel: document.getElementById('classLevel').value,
+                duration: document.getElementById('duration').value,
+                objectives: document.getElementById('objectives').value,
+                procedure: document.getElementById('procedure').value,
+                resources: document.getElementById('resources').value,
+                evaluation: document.getElementById('evaluation').value,
+                activities: [],
+                exercises: [],
+                createdAt: currentLessonId ? undefined : new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+
+            // Collecter les activités
+            for (let i = 1; i <= activitiesCount; i++) {
+                const activityElement = document.getElementById(`activity${i}`);
+                if (activityElement) {
+                    lesson.activities.push(activityElement.value);
+                }
             }
 
-            // Générer un ID si c'est une nouvelle leçon
-            if (!currentLessonId) {
-                currentLessonId = Date.now().toString();
+            // Collecter les exercices
+            for (let i = 1; i <= exercisesCount; i++) {
+                const exerciseElement = document.getElementById(`exercise${i}`);
+                if (exerciseElement) {
+                    lesson.exercises.push(exerciseElement.value);
+                }
+            }
+
+            // Récupérer les leçons existantes
+            let savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
+            
+            if (currentLessonId) {
+                // Mettre à jour la leçon existante
+                const index = savedLessons.findIndex(l => l.id === currentLessonId);
+                if (index !== -1) {
+                    savedLessons[index] = lesson;
+                }
+            } else {
+                // Ajouter une nouvelle leçon
+                savedLessons.push(lesson);
             }
 
             // Sauvegarder dans le localStorage
-            const savedLessons = JSON.parse(localStorage.getItem('savedLessons')) || {};
-            savedLessons[currentLessonId] = {
-                ...formData,
-                id: currentLessonId
-            };
             localStorage.setItem('savedLessons', JSON.stringify(savedLessons));
-
+            
+            // Afficher une notification
             showNotification('Leçon sauvegardée avec succès!');
+            
+            // Recharger la liste des leçons
             loadSavedLessons();
+            
+            // Réinitialiser le formulaire si c'est une nouvelle leçon
+            if (!currentLessonId) {
+                resetForm();
+            }
+        }
+
+        // Fonction pour charger les leçons sauvegardées
+        function loadSavedLessons() {
+            const savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
+            const lessonList = document.getElementById('lessonList');
+            const filterSubject = document.getElementById('filterSubject');
+            
+            // Mettre à jour les statistiques
+            document.getElementById('totalLessons').textContent = `Total: ${savedLessons.length} leçons`;
+            
+            // Compter les leçons récentes (moins de 7 jours)
+            const recentCount = savedLessons.filter(lesson => {
+                const lessonDate = new Date(lesson.createdAt);
+                const now = new Date();
+                const diffTime = Math.abs(now - lessonDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                return diffDays <= 7;
+            }).length;
+            
+            document.getElementById('recentLessons').textContent = `Récentes: ${recentCount}`;
+            
+            // Mettre à jour le filtre des matières
+            const subjects = [...new Set(savedLessons.map(lesson => lesson.subject).filter(Boolean))];
+            const currentSubject = filterSubject.value;
+            
+            filterSubject.innerHTML = '<option value="">Toutes les matières</option>';
+            subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject;
+                option.textContent = subject;
+                filterSubject.appendChild(option);
+            });
+            
+            // Restaurer la sélection précédente si elle existe toujours
+            if (subjects.includes(currentSubject)) {
+                filterSubject.value = currentSubject;
+            }
+            
+            // Afficher les leçons
+            if (savedLessons.length === 0) {
+                lessonList.innerHTML = `
+                    <div class="no-lessons">
+                        <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 15px;"></i>
+                        <p>Aucune leçon sauvegardée</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            lessonList.innerHTML = '';
+            
+            savedLessons.forEach(lesson => {
+                const lessonDate = new Date(lesson.createdAt);
+                const now = new Date();
+                const diffTime = Math.abs(now - lessonDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                const isRecent = diffDays <= 7;
+                
+                const lessonItem = document.createElement('div');
+                lessonItem.className = `lesson-item ${isRecent ? 'recent' : ''}`;
+                
+                // Créer un résumé du contenu (premières 150 caractères)
+                let summary = '';
+                if (lesson.objectives) {
+                    summary = lesson.objectives.replace(/<[^>]*>/g, '').substring(0, 150);
+                    if (lesson.objectives.length > 150) summary += '...';
+                }
+                
+                lessonItem.innerHTML = `
+                    <div class="lesson-header">
+                        <h3>${lesson.subject || 'Sans titre'} - ${lesson.classLevel || 'Niveau non spécifié'}</h3>
+                        <span class="lesson-date">${formatDate(lesson.createdAt)}</span>
+                    </div>
+                    <div class="lesson-meta">
+                        <span><i class="fas fa-user"></i> ${lesson.teacher || 'Non spécifié'}</span>
+                        <span><i class="fas fa-school"></i> ${lesson.school || 'Non spécifié'}</span>
+                        <span><i class="fas fa-clock"></i> ${lesson.duration || '0'} min</span>
+                    </div>
+                    <div class="lesson-summary">${summary || 'Aucun contenu'}</div>
+                    <div class="lesson-actions">
+                        <button class="view-btn" onclick="viewLesson('${lesson.id}')">
+                            <i class="fas fa-eye"></i> Voir
+                        </button>
+                        <button class="edit-btn" onclick="editLesson('${lesson.id}')">
+                            <i class="fas fa-edit"></i> Modifier
+                        </button>
+                        <button class="whatsapp-btn" onclick="shareLesson('${lesson.id}')">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </button>
+                        <button class="delete-btn" onclick="deleteLesson('${lesson.id}')">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                    </div>
+                `;
+                
+                lessonList.appendChild(lessonItem);
+            });
+        }
+
+        // Fonction pour formater la date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Fonction pour filtrer les leçons
+        function filterLessons() {
+            const searchText = document.getElementById('search').value.toLowerCase();
+            const subjectFilter = document.getElementById('filterSubject').value;
+            const dateFilter = document.getElementById('filterDate').value;
+            
+            const savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
+            const lessonList = document.getElementById('lessonList');
+            
+            lessonList.innerHTML = '';
+            
+            const filteredLessons = savedLessons.filter(lesson => {
+                // Filtre par texte de recherche
+                const matchesSearch = !searchText || 
+                    (lesson.subject && lesson.subject.toLowerCase().includes(searchText)) ||
+                    (lesson.classLevel && lesson.classLevel.toLowerCase().includes(searchText)) ||
+                    (lesson.teacher && lesson.teacher.toLowerCase().includes(searchText)) ||
+                    (lesson.school && lesson.school.toLowerCase().includes(searchText)) ||
+                    (lesson.objectives && lesson.objectives.toLowerCase().includes(searchText));
+                
+                // Filtre par matière
+                const matchesSubject = !subjectFilter || lesson.subject === subjectFilter;
+                
+                // Filtre par date
+                const matchesDate = !dateFilter || lesson.date === dateFilter;
+                
+                return matchesSearch && matchesSubject && matchesDate;
+            });
+            
+            if (filteredLessons.length === 0) {
+                lessonList.innerHTML = `
+                    <div class="no-lessons">
+                        <i class="fas fa-search" style="font-size: 48px; margin-bottom: 15px;"></i>
+                        <p>Aucune leçon ne correspond à vos critères de recherche</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredLessons.forEach(lesson => {
+                const lessonDate = new Date(lesson.createdAt);
+                const now = new Date();
+                const diffTime = Math.abs(now - lessonDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                const isRecent = diffDays <= 7;
+                
+                const lessonItem = document.createElement('div');
+                lessonItem.className = `lesson-item ${isRecent ? 'recent' : ''}`;
+                
+                // Créer un résumé du contenu (premières 150 caractères)
+                let summary = '';
+                if (lesson.objectives) {
+                    summary = lesson.objectives.replace(/<[^>]*>/g, '').substring(0, 150);
+                    if (lesson.objectives.length > 150) summary += '...';
+                }
+                
+                lessonItem.innerHTML = `
+                    <div class="lesson-header">
+                        <h3>${lesson.subject || 'Sans titre'} - ${lesson.classLevel || 'Niveau non spécifié'}</h3>
+                        <span class="lesson-date">${formatDate(lesson.createdAt)}</span>
+                    </div>
+                    <div class="lesson-meta">
+                        <span><i class="fas fa-user"></i> ${lesson.teacher || 'Non spécifié'}</span>
+                        <span><i class="fas fa-school"></i> ${lesson.school || 'Non spécifié'}</span>
+                        <span><i class="fas fa-clock"></i> ${lesson.duration || '0'} min</span>
+                    </div>
+                    <div class="lesson-summary">${summary || 'Aucun contenu'}</div>
+                    <div class="lesson-actions">
+                        <button class="view-btn" onclick="viewLesson('${lesson.id}')">
+                            <i class="fas fa-eye"></i> Voir
+                        </button>
+                        <button class="edit-btn" onclick="editLesson('${lesson.id}')">
+                            <i class="fas fa-edit"></i> Modifier
+                        </button>
+                        <button class="whatsapp-btn" onclick="shareLesson('${lesson.id}')">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </button>
+                        <button class="delete-btn" onclick="deleteLesson('${lesson.id}')">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                    </div>
+                `;
+                
+                lessonList.appendChild(lessonItem);
+            });
+        }
+
+        // Fonction pour visualiser une leçon
+        function viewLesson(id) {
+            const savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
+            const lesson = savedLessons.find(l => l.id === id);
+            
+            if (!lesson) {
+                showNotification('Leçon non trouvée', true);
+                return;
+            }
+            
+            // Créer le contenu de la modal
+            let modalContent = `
+                <h2>${lesson.subject || 'Sans titre'} - ${lesson.classLevel || 'Niveau non spécifié'}</h2>
+                <div class="lesson-meta">
+                    <span><i class="fas fa-user"></i> ${lesson.teacher || 'Non spécifié'}</span>
+                    <span><i class="fas fa-school"></i> ${lesson.school || 'Non spécifié'}</span>
+                    <span><i class="fas fa-calendar"></i> ${lesson.date || 'Date non spécifiée'}</span>
+                    <span><i class="fas fa-clock"></i> ${lesson.duration || '0'} min</span>
+                </div>
+                
+                <h3>Objectifs pédagogiques</h3>
+                <div class="view-content">${lesson.objectives || 'Aucun objectif défini'}</div>
+                
+                <h3>Déroulement de la séance</h3>
+                <div class="view-content">${lesson.procedure || 'Aucun déroulement défini'}</div>
+            `;
+            
+            // Afficher les activités
+            if (lesson.activities && lesson.activities.length > 0) {
+                modalContent += `<h3>Activités</h3>`;
+                lesson.activities.forEach((activity, index) => {
+                    if (activity) {
+                        modalContent += `
+                            <div class="activity">
+                                <h4>Activité ${index + 1}</h4>
+                                <div class="view-content">${activity}</div>
+                            </div>
+                        `;
+                    }
+                });
+            }
+            
+            // Afficher les exercices
+            if (lesson.exercises && lesson.exercises.length > 0) {
+                modalContent += `<h3>Exercices</h3>`;
+                lesson.exercises.forEach((exercise, index) => {
+                    if (exercise) {
+                        modalContent += `
+                            <div class="exercise">
+                                <h4>Exercice ${index + 1}</h4>
+                                <div class="view-content">${exercise}</div>
+                            </div>
+                        `;
+                    }
+                });
+            }
+            
+            modalContent += `
+                <h3>Ressources</h3>
+                <div class="view-content">${lesson.resources || 'Aucune ressource spécifiée'}</div>
+                
+                <h3>Évaluation</h3>
+                <div class="view-content">${lesson.evaluation || 'Aucune méthode d\'évaluation spécifiée'}</div>
+                
+                <div class="modal-actions">
+                    <button class="whatsapp-btn" onclick="shareLesson('${id}')">
+                        <i class="fab fa-whatsapp"></i> Partager sur WhatsApp
+                    </button>
+                    <button class="edit-btn" onclick="editLesson('${id}')">
+                        <i class="fas fa-edit"></i> Modifier
+                    </button>
+                    <button class="btn-retour" onclick="closeModal()">
+                        <i class="fas fa-times"></i> Fermer
+                    </button>
+                </div>
+            `;
+            
+            // Créer et afficher la modal
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.id = 'viewModal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <span class="close-modal" onclick="closeModal()">&times;</span>
+                    ${modalContent}
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            modal.style.display = 'block';
+            
+            // Forcer le rendu MathJax pour les formules LaTeX
+            MathJax.typesetPromise();
+        }
+
+        // Fonction pour éditer une leçon
+        function editLesson(id) {
+            const savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
+            const lesson = savedLessons.find(l => l.id === id);
+            
+            if (!lesson) {
+                showNotification('Leçon non trouvée', true);
+                return;
+            }
+            
+            // Remplir le formulaire avec les données de la leçon
+            document.getElementById('teacher').value = lesson.teacher || '';
+            document.getElementById('school').value = lesson.school || '';
+            document.getElementById('date').value = lesson.date || '';
+            document.getElementById('subject').value = lesson.subject || '';
+            document.getElementById('classLevel').value = lesson.classLevel || '';
+            document.getElementById('duration').value = lesson.duration || '';
+            
+            // Remplir les champs de texte enrichi
+            document.getElementById('objectives-content').innerHTML = lesson.objectives || '';
+            document.getElementById('objectives').value = lesson.objectives || '';
+            
+            document.getElementById('procedure-content').innerHTML = lesson.procedure || '';
+            document.getElementById('procedure').value = lesson.procedure || '';
+            
+            document.getElementById('resources-content').innerHTML = lesson.resources || '';
+            document.getElementById('resources').value = lesson.resources || '';
+            
+            document.getElementById('evaluation-content').innerHTML = lesson.evaluation || '';
+            document.getElementById('evaluation').value = lesson.evaluation || '';
+            
+            // Supprimer les activités et exercices existants
+            document.getElementById('activities').innerHTML = '';
+            document.getElementById('exercises').innerHTML = '';
+            
+            // Réinitialiser les compteurs
+            activitiesCount = 0;
+            exercisesCount = 0;
+            
+            // Ajouter les activités
+            if (lesson.activities && lesson.activities.length > 0) {
+                lesson.activities.forEach((activity, index) => {
+                    activitiesCount++;
+                    const activityDiv = document.createElement('div');
+                    activityDiv.className = 'activity';
+                    activityDiv.innerHTML = `
+                        <div class="editor-toggle">
+                            <button class="editor-toggle-btn" data-target="activity${activitiesCount}">Basculer Éditeur</button>
+                        </div>
+                        <div class="rich-text-editor" id="activity${activitiesCount}-editor">
+                            <div class="toolbar">
+                                <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                                <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                                <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                                <span class="divider"></span>
+                                <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                                <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                                <span class="divider"></span>
+                                <button type="button" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
+                                <button type="button" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
+                                <button type="button" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
+                                <span class="divider"></span>
+                                <div class="color-picker">
+                                    <button type="button" class="color-button" data-command="foreColor"></button>
+                                    <div class="color-palette" id="activity${activitiesCount}-color-palette"></div>
+                                </div>
+                                <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                                <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
+                                <button type="button" data-command="insertLatex"><i class="fas fa-square-root-alt"></i></button>
+                            </div>
+                            <div class="editor-content" id="activity${activitiesCount}-content" contenteditable="true">${activity || ''}</div>
+                        </div>
+                        <textarea id="activity${activitiesCount}" name="activity${activitiesCount}" style="display:none;">${activity || ''}</textarea>
+                        <button class="delete-btn" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i> Supprimer cette activité</button>
+                    `;
+                    document.getElementById('activities').appendChild(activityDiv);
+                    
+                    // Initialiser le mode d'éditeur
+                    editorMode[`activity${activitiesCount}`] = true;
+                });
+            } else {
+                // Ajouter une activité vide par défaut
+                addActivity();
+            }
+            
+            // Ajouter les exercices
+            if (lesson.exercises && lesson.exercises.length > 0) {
+                lesson.exercises.forEach((exercise, index) => {
+                    exercisesCount++;
+                    const exerciseDiv = document.createElement('div');
+                    exerciseDiv.className = 'exercise';
+                    exerciseDiv.innerHTML = `
+                        <div class="editor-toggle">
+                            <button class="editor-toggle-btn" data-target="exercise${exercisesCount}">Basculer Éditeur</button>
+                        </div>
+                        <div class="rich-text-editor" id="exercise${exercisesCount}-editor">
+                            <div class="toolbar">
+                                <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                                <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                                <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                                <span class="divider"></span>
+                                <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                                <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                                <span class="divider"></span>
+                                <button type="button" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
+                                <button type="button" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
+                                <button type="button" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
+                                <span class="divider"></span>
+                                <div class="color-picker">
+                                    <button type="button" class="color-button" data-command="foreColor"></button>
+                                    <div class="color-palette" id="exercise${exercisesCount}-color-palette"></div>
+                                </div>
+                                <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                                <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
+                                <button type="button" data-command="insertLatex"><i class="fas fa-square-root-alt"></i></button>
+                            </div>
+                            <div class="editor-content" id="exercise${exercisesCount}-content" contenteditable="true">${exercise || ''}</div>
+                        </div>
+                        <textarea id="exercise${exercisesCount}" name="exercise${exercisesCount}" style="display:none;">${exercise || ''}</textarea>
+                        <button class="delete-btn" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i> Supprimer cet exercice</button>
+                    `;
+                    document.getElementById('exercises').appendChild(exerciseDiv);
+                    
+                    // Initialiser le mode d'éditeur
+                    editorMode[`exercise${exercisesCount}`] = true;
+                });
+            } else {
+                // Ajouter un exercice vide par défaut
+                addExercise();
+            }
+            
+            // Réinitialiser les éditeurs
+            initRichTextEditors();
+            initEditorToggleButtons();
+            initColorPickers();
+            
+            // Définir l'ID de la leçon actuelle
+            currentLessonId = id;
+            
+            // Faire défiler vers le haut du formulaire
+            window.scrollTo(0, 0);
+            
+            // Afficher une notification
+            showNotification('Leçon chargée pour modification');
+        }
+
+        // Fonction pour partager une leçon via WhatsApp
+        function shareLesson(id) {
+            const savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
+            const lesson = savedLessons.find(l => l.id === id);
+            
+            if (!lesson) {
+                showNotification('Leçon non trouvée', true);
+                return;
+            }
+            
+            // Créer un texte de résumé pour le partage
+            let shareText = `*${lesson.subject || 'Sans titre'} - ${lesson.classLevel || 'Niveau non spécifié'}*%0A`;
+            shareText += `Enseignant: ${lesson.teacher || 'Non spécifié'}%0A`;
+            shareText += `Établissement: ${lesson.school || 'Non spécifié'}%0A`;
+            shareText += `Date: ${lesson.date || 'Date non spécifiée'}%0A`;
+            shareText += `Durée: ${lesson.duration || '0'} minutes%0A%0A`;
+            
+            // Ajouter un extrait des objectifs
+            if (lesson.objectives) {
+                const cleanObjectives = lesson.objectives.replace(/<[^>]*>/g, '');
+                shareText += `*Objectifs:*%0A${cleanObjectives.substring(0, 100)}${cleanObjectives.length > 100 ? '...' : ''}%0A%0A`;
+            }
+            
+            shareText += `_Fiche de préparation générée avec l'éditeur de cours_`;
+            
+            // Ouvrir le lien WhatsApp
+            window.open(`https://wa.me/?text=${shareText}`, '_blank');
+        }
+
+        // Fonction pour supprimer une leçon
+        function deleteLesson(id) {
+            if (!confirm('Êtes-vous sûr de vouloir supprimer cette leçon ? Cette action est irréversible.')) {
+                return;
+            }
+            
+            const savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
+            const updatedLessons = savedLessons.filter(lesson => lesson.id !== id);
+            
+            localStorage.setItem('savedLessons', JSON.stringify(updatedLessons));
+            
+            // Si la leçon supprimée était celle en cours d'édition, réinitialiser le formulaire
+            if (currentLessonId === id) {
+                resetForm();
+            }
+            
+            // Recharger la liste des leçons
+            loadSavedLessons();
+            
+            // Afficher une notification
+            showNotification('Leçon supprimée avec succès');
+        }
+
+        // Fonction pour confirmer la suppression de la leçon en cours
+        function confirmDelete() {
+            if (!currentLessonId) {
+                showNotification('Aucune leçon en cours de modification', true);
+                return;
+            }
+            
+            deleteLesson(currentLessonId);
         }
 
         // Fonction pour exporter en JSON
         function exportJson() {
-            const formData = getFormData();
-            const dataStr = JSON.stringify(formData, null, 2);
-            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            const lesson = {
+                teacher: document.getElementById('teacher').value,
+                school: document.getElementById('school').value,
+                date: document.getElementById('date').value,
+                subject: document.getElementById('subject').value,
+                classLevel: document.getElementById('classLevel').value,
+                duration: document.getElementById('duration').value,
+                objectives: document.getElementById('objectives').value,
+                procedure: document.getElementById('procedure').value,
+                resources: document.getElementById('resources').value,
+                evaluation: document.getElementById('evaluation').value,
+                activities: [],
+                exercises: []
+            };
+
+            // Collecter les activités
+            for (let i = 1; i <= activitiesCount; i++) {
+                const activityElement = document.getElementById(`activity${i}`);
+                if (activityElement) {
+                    lesson.activities.push(activityElement.value);
+                }
+            }
+
+            // Collecter les exercices
+            for (let i = 1; i <= exercisesCount; i++) {
+                const exerciseElement = document.getElementById(`exercise${i}`);
+                if (exerciseElement) {
+                    lesson.exercises.push(exerciseElement.value);
+                }
+            }
+
+            // Créer un blob et un lien de téléchargement
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(lesson, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", `fiche-cours-${lesson.subject || 'sans-titre'}.json`);
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
             
-            const exportFileDefaultName = `fiche_cours_${formData.subject || 'sans_titre'}_${formData.date || ''}.json`;
-            
-            const linkElement = document.createElement('a');
-            linkElement.setAttribute('href', dataUri);
-            linkElement.setAttribute('download', exportFileDefaultName);
-            linkElement.click();
+            // Afficher une notification
+            showNotification('Leçon exportée en JSON');
         }
 
         // Fonction pour importer un JSON
@@ -969,16 +1697,146 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
-                    const jsonData = JSON.parse(e.target.result);
-                    setFormData(jsonData);
+                    const lesson = JSON.parse(e.target.result);
                     
-                    // Réinitialiser l'ID pour créer une nouvelle leçon
+                    // Remplir le formulaire avec les données importées
+                    document.getElementById('teacher').value = lesson.teacher || '';
+                    document.getElementById('school').value = lesson.school || '';
+                    document.getElementById('date').value = lesson.date || '';
+                    document.getElementById('subject').value = lesson.subject || '';
+                    document.getElementById('classLevel').value = lesson.classLevel || '';
+                    document.getElementById('duration').value = lesson.duration || '';
+                    
+                    // Remplir les champs de texte enrichi
+                    document.getElementById('objectives-content').innerHTML = lesson.objectives || '';
+                    document.getElementById('objectives').value = lesson.objectives || '';
+                    
+                    document.getElementById('procedure-content').innerHTML = lesson.procedure || '';
+                    document.getElementById('procedure').value = lesson.procedure || '';
+                    
+                    document.getElementById('resources-content').innerHTML = lesson.resources || '';
+                    document.getElementById('resources').value = lesson.resources || '';
+                    
+                    document.getElementById('evaluation-content').innerHTML = lesson.evaluation || '';
+                    document.getElementById('evaluation').value = lesson.evaluation || '';
+                    
+                    // Supprimer les activités et exercices existants
+                    document.getElementById('activities').innerHTML = '';
+                    document.getElementById('exercises').innerHTML = '';
+                    
+                    // Réinitialiser les compteurs
+                    activitiesCount = 0;
+                    exercisesCount = 0;
+                    
+                    // Ajouter les activités importées
+                    if (lesson.activities && lesson.activities.length > 0) {
+                        lesson.activities.forEach((activity, index) => {
+                            activitiesCount++;
+                            const activityDiv = document.createElement('div');
+                            activityDiv.className = 'activity';
+                            activityDiv.innerHTML = `
+                                <div class="editor-toggle">
+                                    <button class="editor-toggle-btn" data-target="activity${activitiesCount}">Basculer Éditeur</button>
+                                </div>
+                                <div class="rich-text-editor" id="activity${activitiesCount}-editor">
+                                    <div class="toolbar">
+                                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                                        <span class="divider"></span>
+                                        <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                                        <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                                        <span class="divider"></span>
+                                        <button type="button" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
+                                        <button type="button" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
+                                        <button type="button" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
+                                        <span class="divider"></span>
+                                        <div class="color-picker">
+                                            <button type="button" class="color-button" data-command="foreColor"></button>
+                                            <div class="color-palette" id="activity${activitiesCount}-color-palette"></div>
+                                        </div>
+                                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                                        <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
+                                        <button type="button" data-command="insertLatex"><i class="fas fa-square-root-alt"></i></button>
+                                    </div>
+                                    <div class="editor-content" id="activity${activitiesCount}-content" contenteditable="true">${activity || ''}</div>
+                                </div>
+                                <textarea id="activity${activitiesCount}" name="activity${activitiesCount}" style="display:none;">${activity || ''}</textarea>
+                                <button class="delete-btn" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i> Supprimer cette activité</button>
+                            `;
+                            document.getElementById('activities').appendChild(activityDiv);
+                            
+                            // Initialiser le mode d'éditeur
+                            editorMode[`activity${activitiesCount}`] = true;
+                        });
+                    } else {
+                        // Ajouter une activité vide par défaut
+                        addActivity();
+                    }
+                    
+                    // Ajouter les exercices importés
+                    if (lesson.exercises && lesson.exercises.length > 0) {
+                        lesson.exercises.forEach((exercise, index) => {
+                            exercisesCount++;
+                            const exerciseDiv = document.createElement('div');
+                            exerciseDiv.className = 'exercise';
+                            exerciseDiv.innerHTML = `
+                                <div class="editor-toggle">
+                                    <button class="editor-toggle-btn" data-target="exercise${exercisesCount}">Basculer Éditeur</button>
+                                </div>
+                                <div class="rich-text-editor" id="exercise${exercisesCount}-editor">
+                                    <div class="toolbar">
+                                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                                        <span class="divider"></span>
+                                        <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                                        <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                                        <span class="divider"></span>
+                                        <button type="button" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
+                                        <button type="button" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
+                                        <button type="button" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
+                                        <span class="divider"></span>
+                                        <div class="color-picker">
+                                            <button type="button" class="color-button" data-command="foreColor"></button>
+                                            <div class="color-palette" id="exercise${exercisesCount}-color-palette"></div>
+                                        </div>
+                                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                                        <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
+                                        <button type="button" data-command="insertLatex"><i class="fas fa-square-root-alt"></i></button>
+                                    </div>
+                                    <div class="editor-content" id="exercise${exercisesCount}-content" contenteditable="true">${exercise || ''}</div>
+                                </div>
+                                <textarea id="exercise${exercisesCount}" name="exercise${exercisesCount}" style="display:none;">${exercise || ''}</textarea>
+                                <button class="delete-btn" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i> Supprimer cet exercice</button>
+                            `;
+                            document.getElementById('exercises').appendChild(exerciseDiv);
+                            
+                            // Initialiser le mode d'éditeur
+                            editorMode[`exercise${exercisesCount}`] = true;
+                        });
+                    } else {
+                        // Ajouter un exercice vide par défaut
+                        addExercise();
+                    }
+                    
+                    // Réinitialiser les éditeurs
+                    initRichTextEditors();
+                    initEditorToggleButtons();
+                    initColorPickers();
+                    
+                    // Réinitialiser l'ID de la leçon actuelle (nouvelle leçon)
                     currentLessonId = null;
                     
-                    showNotification('Fichier importé avec succès!');
+                    // Faire défiler vers le haut du formulaire
+                    window.scrollTo(0, 0);
+                    
+                    // Afficher une notification
+                    showNotification('Leçon importée avec succès');
+                    
                 } catch (error) {
-                    showNotification('Erreur lors de l\'import du fichier JSON.', true);
-                    console.error(error);
+                    showNotification('Erreur lors de l\'import du fichier JSON', true);
+                    console.error('Erreur d\'import JSON:', error);
                 }
             };
             reader.readAsText(file);
@@ -987,274 +1845,85 @@
             event.target.value = '';
         }
 
-        // Fonction pour confirmer la suppression
-        function confirmDelete() {
-            if (!currentLessonId) {
-                showNotification('Aucune leçon à supprimer.', true);
-                return;
-            }
-
-            if (confirm('Êtes-vous sûr de vouloir supprimer cette leçon?')) {
-                deleteLesson();
-            }
-        }
-
-        // Fonction pour supprimer une leçon
-        function deleteLesson() {
-            const savedLessons = JSON.parse(localStorage.getItem('savedLessons')) || {};
-            delete savedLessons[currentLessonId];
-            localStorage.setItem('savedLessons', JSON.stringify(savedLessons));
+        // Fonction pour réinitialiser le formulaire
+        function resetForm() {
+            document.getElementById('teacher').value = '';
+            document.getElementById('school').value = '';
+            document.getElementById('date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('subject').value = '';
+            document.getElementById('classLevel').value = '';
+            document.getElementById('duration').value = '';
             
-            // Réinitialiser le formulaire
-            document.querySelector('form').reset();
-            document.getElementById('activities').innerHTML = '';
-            document.getElementById('exercises').innerHTML = '';
-            activitiesCount = 0;
-            exercisesCount = 0;
-            addActivity();
-            addExercise();
-            currentLessonId = null;
-            
-            // Réinitialiser les éditeurs
+            // Réinitialiser les éditeurs de texte enrichi
             document.querySelectorAll('.editor-content').forEach(editor => {
                 editor.innerHTML = '';
             });
             
-            showNotification('Leçon supprimée avec succès!');
-            loadSavedLessons();
-        }
-
-        // Fonction pour charger les leçons sauvegardées
-        function loadSavedLessons() {
-            const savedLessons = JSON.parse(localStorage.getItem('savedLessons')) || {};
-            const lessonList = document.getElementById('lessonList');
-            const filterSubject = document.getElementById('filterSubject');
-            const searchTerm = document.getElementById('search').value.toLowerCase();
-            const subjectFilter = document.getElementById('filterSubject').value;
-            const dateFilter = document.getElementById('filterDate').value;
-            
-            // Mettre à jour les statistiques
-            document.getElementById('totalLessons').textContent = `Total: ${Object.keys(savedLessons).length} leçons`;
-            
-            // Compter les leçons récentes (moins de 7 jours)
-            const oneWeekAgo = new Date();
-            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-            const recentCount = Object.values(savedLessons).filter(lesson => {
-                return new Date(lesson.lastModified) > oneWeekAgo;
-            }).length;
-            document.getElementById('recentLessons').textContent = `Récentes: ${recentCount}`;
-            
-            // Vider la liste
-            lessonList.innerHTML = '';
-            
-            // Mettre à jour les options de filtre par matière
-            const subjects = new Set();
-            Object.values(savedLessons).forEach(lesson => {
-                if (lesson.subject) subjects.add(lesson.subject);
-            });
-            
-            // Garder l'option actuelle sélectionnée
-            const currentSelected = filterSubject.value;
-            filterSubject.innerHTML = '<option value="">Toutes les matières</option>';
-            subjects.forEach(subject => {
-                const option = document.createElement('option');
-                option.value = subject;
-                option.textContent = subject;
-                filterSubject.appendChild(option);
-            });
-            filterSubject.value = currentSelected;
-            
-            // Filtrer et afficher les leçons
-            const filteredLessons = Object.values(savedLessons).filter(lesson => {
-                const matchesSearch = !searchTerm || 
-                    (lesson.subject && lesson.subject.toLowerCase().includes(searchTerm)) ||
-                    (lesson.teacher && lesson.teacher.toLowerCase().includes(searchTerm)) ||
-                    (lesson.classLevel && lesson.classLevel.toLowerCase().includes(searchTerm));
-                
-                const matchesSubject = !subjectFilter || lesson.subject === subjectFilter;
-                const matchesDate = !dateFilter || lesson.date === dateFilter;
-                
-                return matchesSearch && matchesSubject && matchesDate;
-            });
-            
-            if (filteredLessons.length === 0) {
-                lessonList.innerHTML = `
-                    <div class="no-lessons">
-                        <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 15px;"></i>
-                        <p>Aucune leçon correspondante</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            // Trier par date (la plus récente d'abord)
-            filteredLessons.sort((a, b) => new Date(b.lastModified) - new Date(a.lastModified));
-            
-            // Afficher les leçons
-            filteredLessons.forEach(lesson => {
-                const lessonDate = new Date(lesson.lastModified);
-                const isRecent = lessonDate > oneWeekAgo;
-                
-                const lessonItem = document.createElement('div');
-                lessonItem.className = isRecent ? 'lesson-item recent' : 'lesson-item';
-                lessonItem.innerHTML = `
-                    <div class="lesson-header">
-                        <h3>${lesson.subject || 'Sans titre'}</h3>
-                        <span class="lesson-date">${formatDate(lessonDate)}</span>
-                    </div>
-                    <div class="lesson-meta">
-                        <span><i class="fas fa-user"></i> ${lesson.teacher || 'Non spécifié'}</span>
-                        <span><i class="fas fa-graduation-cap"></i> ${lesson.classLevel || 'Non spécifié'}</span>
-                        <span><i class="fas fa-clock"></i> ${lesson.duration || '?'} min</span>
-                    </div>
-                    <div class="lesson-summary">
-                        ${truncateText(lesson.objectives, 100)}
-                    </div>
-                    <div class="lesson-actions">
-                        <button class="view-btn" onclick="loadLesson('${lesson.id}')">
-                            <i class="fas fa-eye"></i> Voir
-                        </button>
-                        <button class="edit-btn" onclick="editLesson('${lesson.id}')">
-                            <i class="fas fa-edit"></i> Modifier
-                        </button>
-                        <button class="delete-btn" onclick="deleteSavedLesson('${lesson.id}')">
-                            <i class="fas fa-trash"></i> Supprimer
-                        </button>
-                    </div>
-                `;
-                lessonList.appendChild(lessonItem);
-            });
-        }
-
-        // Fonction pour charger une leçon en mode visualisation
-        function loadLesson(lessonId) {
-            const savedLessons = JSON.parse(localStorage.getItem('savedLessons')) || {};
-            const lesson = savedLessons[lessonId];
-            
-            if (lesson) {
-                // Ouvrir dans une nouvelle fenêtre ou un modal pour visualisation
-                const lessonWindow = window.open('', '_blank');
-                lessonWindow.document.write(`
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <title>${lesson.subject || 'Fiche de cours'}</title>
-                        <style>
-                            body { font-family: Arial, sans-serif; padding: 20px; }
-                            h1 { color: #2c3e50; }
-                            .section { margin-bottom: 20px; }
-                        </style>
-                    </head>
-                    <body>
-                        <h1>${lesson.subject || 'Fiche de cours'}</h1>
-                        <div class="section">
-                            <p><strong>Enseignant:</strong> ${lesson.teacher || 'Non spécifié'}</p>
-                            <p><strong>Établissement:</strong> ${lesson.school || 'Non spécifié'}</p>
-                            <p><strong>Date:</strong> ${lesson.date || 'Non spécifié'}</p>
-                            <p><strong>Niveau:</strong> ${lesson.classLevel || 'Non spécifié'}</p>
-                            <p><strong>Durée:</strong> ${lesson.duration || 'Non spécifié'} minutes</p>
-                        </div>
-                        <div class="section">
-                            <h2>Objectifs pédagogiques</h2>
-                            <div>${lesson.objectives || 'Aucun objectif spécifié'}</div>
-                        </div>
-                        <div class="section">
-                            <h2>Déroulement de la séance</h2>
-                            <div>${lesson.procedure || 'Aucune procédure spécifiée'}</div>
-                        </div>
-                        <div class="section">
-                            <h2>Activités</h2>
-                            ${lesson.activities && lesson.activities.length > 0 
-                                ? lesson.activities.map((act, i) => `<div><strong>Activité ${i+1}:</strong><div>${act}</div></div>`).join('') 
-                                : '<div>Aucune activité spécifiée</div>'}
-                        </div>
-                        <div class="section">
-                            <h2>Exercices</h2>
-                            ${lesson.exercises && lesson.exercises.length > 0 
-                                ? lesson.exercises.map((ex, i) => `<div><strong>Exercice ${i+1}:</strong><div>${ex}</div></div>`).join('') 
-                                : '<div>Aucun exercice spécifié</div>'}
-                        </div>
-                        <div class="section">
-                            <h2>Ressources</h2>
-                            <div>${lesson.resources || 'Aucune ressource spécifiée'}</div>
-                        </div>
-                        <div class="section">
-                            <h2>Évaluation</h2>
-                            <div>${lesson.evaluation || 'Aucun critère d\'évaluation spécifié'}</div>
-                        </div>
-                        <button onclick="window.print()">Imprimer</button>
-                    </body>
-                    </html>
-                `);
-            }
-        }
-
-        // Fonction pour modifier une leçon existante
-        function editLesson(lessonId) {
-            const savedLessons = JSON.parse(localStorage.getItem('savedLessons')) || {};
-            const lesson = savedLessons[lessonId];
-            
-            if (lesson) {
-                setFormData(lesson);
-                currentLessonId = lessonId;
-                showNotification('Leçon chargée pour modification');
-                
-                // Scroll to top
-                window.scrollTo(0, 0);
-            }
-        }
-
-        // Fonction pour supprimer une leçon sauvegardée
-        function deleteSavedLesson(lessonId) {
-            if (confirm('Êtes-vous sûr de vouloir supprimer cette leçon?')) {
-                const savedLessons = JSON.parse(localStorage.getItem('savedLessons')) || {};
-                delete savedLessons[lessonId];
-                localStorage.setItem('savedLessons', JSON.stringify(savedLessons));
-                
-                // Si la leçon supprimée est celle actuellement chargée, vider le formulaire
-                if (currentLessonId === lessonId) {
-                    document.querySelector('form').reset();
-                    document.getElementById('activities').innerHTML = '';
-                    document.getElementById('exercises').innerHTML = '';
-                    activitiesCount = 0;
-                    exercisesCount = 0;
-                    addActivity();
-                    addExercise();
-                    currentLessonId = null;
-                    
-                    // Réinitialiser les éditeurs
-                    document.querySelectorAll('.editor-content').forEach(editor => {
-                        editor.innerHTML = '';
-                    });
+            // Réinitialiser les textarea cachés
+            document.querySelectorAll('textarea[id]').forEach(textarea => {
+                if (textarea.id !== 'search' && textarea.id !== 'filterSubject' && textarea.id !== 'filterDate') {
+                    textarea.value = '';
                 }
-                
-                showNotification('Leçon supprimée avec succès!');
-                loadSavedLessons();
+            });
+            
+            // Supprimer toutes les activités et exercices supplémentaires
+            document.getElementById('activities').innerHTML = '';
+            document.getElementById('exercises').innerHTML = '';
+            
+            // Réinitialiser les compteurs
+            activitiesCount = 0;
+            exercisesCount = 0;
+            
+            // Ajouter une activité et un exercice par défaut
+            addActivity();
+            addExercise();
+            
+            // Réinitialiser l'ID de la leçon actuelle
+            currentLessonId = null;
+        }
+
+        // Fonction pour fermer la modal
+        function closeModal() {
+            const modal = document.getElementById('viewModal');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.removeChild(modal);
             }
         }
 
-        // Fonction pour filtrer les leçons
-        function filterLessons() {
-            loadSavedLessons();
-        }
-
-        // Fonctions utilitaires
-        function formatDate(date) {
-            if (!date) return 'Date non spécifiée';
-            const d = new Date(date);
-            return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
-        }
-
-        function truncateText(text, maxLength) {
-            if (!text) return 'Aucune description';
-            // Supprimer les balises HTML pour la version tronquée
-            const div = document.createElement('div');
-            div.innerHTML = text;
-            const plainText = div.textContent || div.innerText || '';
+        // Fonction pour afficher une notification
+        function showNotification(message, isError = false) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = isError ? 'notification error show' : 'notification show';
             
-            if (plainText.length <= maxLength) return plainText;
-            return plainText.substring(0, maxLength) + '...';
+            setTimeout(() => {
+                notification.className = 'notification';
+            }, 3000);
         }
+
+        // Fermer la modal en cliquant en dehors
+        window.onclick = function(event) {
+            const modal = document.getElementById('viewModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+            
+            // Fermer les sélecteurs de couleur en cliquant en dehors
+            if (colorPickerVisible && !event.target.closest('.color-picker')) {
+                document.querySelectorAll('.color-palette').forEach(palette => {
+                    palette.style.display = 'none';
+                });
+                colorPickerVisible = false;
+            }
+        }
+
+        // Fermer la modal avec la touche Échap
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
     </script>
 </body>
 </html>
