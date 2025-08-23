@@ -117,11 +117,36 @@
         .save-btn:hover {
             background-color: #219653;
         }
+        .json-btn {
+            background-color: #9b59b6;
+        }
+        .json-btn:hover {
+            background-color: #8e44ad;
+        }
+        .import-btn {
+            background-color: #f39c12;
+        }
+        .import-btn:hover {
+            background-color: #e67e22;
+        }
+        .delete-btn {
+            background-color: #e74c3c;
+        }
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
         .print-btn {
             background-color: #7f8c8d;
         }
         .print-btn:hover {
             background-color: #95a5a6;
+        }
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+            justify-content: center;
         }
         .saved-lessons {
             margin-top: 40px;
@@ -199,13 +224,6 @@
         }
         .whatsapp-btn:hover {
             background-color: #128C7E;
-        }
-        .delete-btn {
-            background-color: #e74c3c;
-            color: white;
-        }
-        .delete-btn:hover {
-            background-color: #c0392b;
         }
         .view-btn {
             background-color: #3498db;
@@ -327,6 +345,78 @@
         .add-lesson-btn:hover {
             background-color: #8e44ad;
         }
+        .rich-text-editor {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .toolbar {
+            background-color: #f5f5f5;
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .toolbar button {
+            background-color: white;
+            color: #333;
+            border: 1px solid #ddd;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 14px;
+            margin: 0;
+        }
+        .toolbar button:hover {
+            background-color: #f0f0f0;
+        }
+        .editor-content {
+            min-height: 100px;
+            padding: 10px;
+            outline: none;
+        }
+        .editor-content:focus {
+            border-color: #3498db;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            background-color: #2ecc71;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 2000;
+        }
+        .notification.error {
+            background-color: #e74c3c;
+        }
+        .notification.show {
+            opacity: 1;
+        }
+        .file-input {
+            display: none;
+        }
+        .editor-toggle {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 5px;
+        }
+        .editor-toggle-btn {
+            font-size: 12px;
+            padding: 3px 8px;
+            background-color: #f0f0f0;
+            color: #555;
+            border: 1px solid #ddd;
+        }
+        .editor-toggle-btn.active {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
@@ -334,866 +424,836 @@
     <button class="btn-retour" onclick="history.back()">
         <i class="fas fa-arrow-left"></i> Retour
     </button>
-    
+
     <div class="container">
         <h1>Fiche de Préparation de Cours</h1>
         
+        <div class="action-buttons">
+            <button id="saveBtn" class="save-btn">
+                <i class="fas fa-save"></i> Sauvegarder
+            </button>
+            <button id="exportJsonBtn" class="json-btn">
+                <i class="fas fa-file-export"></i> Exporter JSON
+            </button>
+            <button id="importJsonBtn" class="import-btn">
+                <i class="fas fa-file-import"></i> Importer JSON
+            </button>
+            <button id="deleteBtn" class="delete-btn">
+                <i class="fas fa-trash"></i> Supprimer
+            </button>
+            <input type="file" id="jsonFileInput" class="file-input" accept=".json">
+        </div>
+
         <div class="header-info">
-            <div>
-                <div class="form-group">
-                    <label for="teacherLastName">Nom de l'enseignant:</label>
-                    <input type="text" id="teacherLastName" required>
-                </div>
-                <div class="form-group">
-                    <label for="teacherFirstName">Prénom de l'enseignant:</label>
-                    <input type="text" id="teacherFirstName" required>
-                </div>
-                <div class="form-group">
-                    <label for="school">Établissement:</label>
-                    <input type="text" id="school" required>
-                </div>
+            <div class="form-group">
+                <label for="teacher">Enseignant</label>
+                <input type="text" id="teacher" name="teacher">
             </div>
-            <div>
-                <div class="form-group">
-                    <label for="class">Classe:</label>
-                    <select id="class" required>
-                        <option value="">-- Sélectionnez --</option>
-                        <option value="6eme">6ème</option>
-                        <option value="5eme">5ème</option>
-                        <option value="4eme">4ème</option>
-                        <option value="3eme">3ème</option>
-                        <option value="2nde">Seconde</option>
-                        <option value="1ere">Première</option>
-                        <option value="terminale">Terminale</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="discipline">Discipline:</label>
-                    <input type="text" id="discipline" required>
-                </div>
-                <div class="form-group">
-                    <label for="totalStudents">Effectif total:</label>
-                    <input type="number" id="totalStudents" min="1" required>
-                </div>
-                <div class="form-group">
-                    <label for="girls">Nombre de filles:</label>
-                    <input type="number" id="girls" min="0" required>
-                </div>
-                <div class="form-group">
-                    <label for="boys">Nombre de garçons:</label>
-                    <input type="number" id="boys" min="0" required>
-                </div>
+            <div class="form-group">
+                <label for="school">Établissement</label>
+                <input type="text" id="school" name="school">
+            </div>
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date">
+            </div>
+            <div class="form-group">
+                <label for="subject">Matière</label>
+                <input type="text" id="subject" name="subject">
+            </div>
+            <div class="form-group">
+                <label for="classLevel">Niveau de classe</label>
+                <input type="text" id="classLevel" name="classLevel">
+            </div>
+            <div class="form-group">
+                <label for="duration">Durée (minutes)</label>
+                <input type="number" id="duration" name="duration">
             </div>
         </div>
 
-        <h2>Prérequis</h2>
-        <div class="form-group">
-            <label for="prerequisites">Connaissances et compétences préalables requises:</label>
-            <textarea id="prerequisites" placeholder="Listez les prérequis nécessaires pour ce cours..."></textarea>
+        <h2>Objectifs pédagogiques</h2>
+        <div class="editor-toggle">
+            <button class="editor-toggle-btn" data-target="objectives">Basculer Éditeur</button>
         </div>
-
-        <h2>Situation Problème</h2>
-        <div class="form-group">
-            <label for="problemStatement">Énoncé de la situation problème:</label>
-            <textarea id="problemStatement" placeholder="Décrivez la situation problème qui servira de point de départ..."></textarea>
+        <div class="rich-text-editor" id="objectives-editor">
+            <div class="toolbar">
+                <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                <button type="button" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
+                <button type="button" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
+                <button type="button" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
+            </div>
+            <div class="editor-content" id="objectives-content" contenteditable="true"></div>
         </div>
+        <textarea id="objectives" name="objectives" style="display:none;"></textarea>
 
-        <h2>Solution de la Situation Problème</h2>
-        <div class="form-group">
-            <label for="problemSolution">Solution proposée:</label>
-            <textarea id="problemSolution" placeholder="Expliquez la solution à la situation problème..."></textarea>
+        <h2>Déroulement de la séance</h2>
+        <div class="editor-toggle">
+            <button class="editor-toggle-btn" data-target="procedure">Basculer Éditeur</button>
         </div>
+        <div class="rich-text-editor" id="procedure-editor">
+            <div class="toolbar">
+                <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                <button type="button" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
+                <button type="button" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
+                <button type="button" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
+            </div>
+            <div class="editor-content" id="procedure-content" contenteditable="true"></div>
+        </div>
+        <textarea id="procedure" name="procedure" style="display:none;"></textarea>
 
-        <h2>Activités d'Apprentissage</h2>
+        <h2>Activités</h2>
         <div id="activities">
             <div class="activity">
-                <div class="form-group">
-                    <label>Activité 1:</label>
-                    <textarea placeholder="Décrivez la première activité..."></textarea>
+                <div class="editor-toggle">
+                    <button class="editor-toggle-btn" data-target="activity1">Basculer Éditeur</button>
                 </div>
-                <div class="form-group">
-                    <label>Solution:</label>
-                    <textarea placeholder="Solution de l'activité..."></textarea>
+                <div class="rich-text-editor" id="activity1-editor">
+                    <div class="toolbar">
+                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                        <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                        <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                        <button type="button" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
+                        <button type="button" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
+                        <button type="button" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
+                    </div>
+                    <div class="editor-content" id="activity1-content" contenteditable="true"></div>
                 </div>
+                <textarea id="activity1" name="activity1" style="display:none;"></textarea>
             </div>
         </div>
-        <button onclick="addActivity()">
-            <i class="fas fa-plus"></i> Ajouter une activité
-        </button>
+        <button id="addActivityBtn"><i class="fas fa-plus"></i> Ajouter une activité</button>
 
-        <h2>Définitions, Propriétés et Théorèmes</h2>
-        <div class="form-group">
-            <label for="definitions">Éléments théoriques à retenir:</label>
-            <textarea id="definitions" placeholder="Listez et expliquez les définitions, propriétés ou théorèmes abordés..."></textarea>
-        </div>
-
-        <h2>Exemples</h2>
-        <div id="examples">
-            <div class="example">
-                <div class="form-group">
-                    <label>Exemple 1:</label>
-                    <textarea placeholder="Donnez un exemple illustratif..."></textarea>
-                </div>
-            </div>
-        </div>
-        <button onclick="addExample()">
-            <i class="fas fa-plus"></i> Ajouter un exemple
-        </button>
-
-        <h2>Exercices d'Application</h2>
+        <h2>Exercices</h2>
         <div id="exercises">
             <div class="exercise">
-                <div class="form-group">
-                    <label>Exercice 1:</label>
-                    <textarea placeholder="Énoncé de l'exercice..."></textarea>
+                <div class="editor-toggle">
+                    <button class="editor-toggle-btn" data-target="exercise1">Basculer Éditeur</button>
                 </div>
-                <div class="solution">
-                    <div class="form-group">
-                        <label>Solution:</label>
-                        <textarea placeholder="Solution de l'exercice..."></textarea>
+                <div class="rich-text-editor" id="exercise1-editor">
+                    <div class="toolbar">
+                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                        <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                        <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                        <button type="button" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
+                        <button type="button" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
+                        <button type="button" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
                     </div>
+                    <div class="editor-content" id="exercise1-content" contenteditable="true"></div>
                 </div>
-                <button class="toggle-solution" onclick="toggleSolution(this)">
-                    <i class="fas fa-eye"></i> Afficher/Masquer la solution
-                </button>
+                <textarea id="exercise1" name="exercise1" style="display:none;"></textarea>
             </div>
         </div>
-        <button onclick="addExercise()">
-            <i class="fas fa-plus"></i> Ajouter un exercice
-        </button>
+        <button id="addExerciseBtn"><i class="fas fa-plus"></i> Ajouter un exercice</button>
 
-        <h2>Récapitulatif</h2>
-        <div class="form-group">
-            <label for="summary">Synthèse de la leçon:</label>
-            <textarea id="summary" placeholder="Faites un résumé des points clés de la leçon..."></textarea>
+        <h2>Ressources</h2>
+        <div class="editor-toggle">
+            <button class="editor-toggle-btn" data-target="resources">Basculer Éditeur</button>
         </div>
+        <div class="rich-text-editor" id="resources-editor">
+            <div class="toolbar">
+                <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                <button type="button" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
+                <button type="button" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
+                <button type="button" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
+            </div>
+            <div class="editor-content" id="resources-content" contenteditable="true"></div>
+        </div>
+        <textarea id="resources" name="resources" style="display:none;"></textarea>
 
-        <div style="text-align: center; margin-top: 30px;">
-            <button class="save-btn" id="saveButton">
-                <i class="fas fa-save"></i> Enregistrer le cours
+        <h2>Évaluation</h2>
+        <div class="editor-toggle">
+            <button class="editor-toggle-btn" data-target="evaluation">Basculer Éditeur</button>
+        </div>
+        <div class="rich-text-editor" id="evaluation-editor">
+            <div class="toolbar">
+                <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                <button type="button" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
+                <button type="button" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
+                <button type="button" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
+            </div>
+            <div class="editor-content" id="evaluation-content" contenteditable="true"></div>
+        </div>
+        <textarea id="evaluation" name="evaluation" style="display:none;"></textarea>
+
+        <div class="action-buttons">
+            <button id="saveBtn2" class="save-btn">
+                <i class="fas fa-save"></i> Sauvegarder
             </button>
-            <button class="print-btn" onclick="window.print()">
-                <i class="fas fa-print"></i> Imprimer la fiche
+            <button id="exportJsonBtn2" class="json-btn">
+                <i class="fas fa-file-export"></i> Exporter JSON
+            </button>
+            <button id="importJsonBtn2" class="import-btn">
+                <i class="fas fa-file-import"></i> Importer JSON
+            </button>
+            <button id="deleteBtn2" class="delete-btn">
+                <i class="fas fa-trash"></i> Supprimer
             </button>
         </div>
 
         <div class="saved-lessons">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h2>Leçons Enregistrées</h2>
-                <div>
-                    <button class="refresh-btn" onclick="refreshLessons()">
-                        <i class="fas fa-sync-alt"></i> Rafraîchir
-                    </button>
-                    <button class="whatsapp-all-btn" onclick="shareAllLessonsViaWhatsApp()">
-                        <i class="fab fa-whatsapp"></i> Envoyer toutes
-                    </button>
-                </div>
-            </div>
-            
-            <button class="add-lesson-btn" onclick="showAddLessonForm()">
-                <i class="fas fa-plus-circle"></i> Ajouter une leçon directement
-            </button>
-
+            <h2>Leçons sauvegardées</h2>
             <div class="search-filter">
                 <div class="filter-group">
-                    <label for="searchInput">Rechercher</label>
-                    <input type="text" id="searchInput" placeholder="Discipline, enseignant, établissement..." oninput="filterLessons()">
+                    <label for="search">Rechercher</label>
+                    <input type="text" id="search" placeholder="Rechercher...">
                 </div>
                 <div class="filter-group">
-                    <label for="classFilter">Filtrer par classe</label>
-                    <select id="classFilter" onchange="filterLessons()">
-                        <option value="">Toutes les classes</option>
-                        <option value="6eme">6ème</option>
-                        <option value="5eme">5ème</option>
-                        <option value="4eme">4ème</option>
-                        <option value="3eme">3ème</option>
-                        <option value="2nde">Seconde</option>
-                        <option value="1ere">Première</option>
-                        <option value="terminale">Terminale</option>
+                    <label for="filterSubject">Filtrer par matière</label>
+                    <select id="filterSubject">
+                        <option value="">Toutes les matières</option>
                     </select>
                 </div>
                 <div class="filter-group">
-                    <label for="disciplineFilter">Filtrer par discipline</label>
-                    <select id="disciplineFilter" onchange="filterLessons()">
-                        <option value="">Toutes les disciplines</option>
-                    </select>
+                    <label for="filterDate">Filtrer par date</label>
+                    <input type="date" id="filterDate">
                 </div>
             </div>
             
-            <div class="stats" id="lessonStats">
-                <span>Aucune leçon enregistrée</span>
+            <div class="stats">
+                <span id="totalLessons">Total: 0 leçons</span>
+                <span id="recentLessons">Récentes: 0</span>
             </div>
             
             <div class="lesson-list" id="lessonList">
                 <div class="no-lessons">
-                    <i class="fas fa-book-open" style="font-size: 2em; margin-bottom: 10px;"></i>
-                    <p>Aucune leçon enregistrée</p>
-                    <button onclick="showHelp('first-lesson')" class="help-btn">
-                        <i class="fas fa-question-circle"></i> Comment créer une leçon ?
-                    </button>
+                    <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 15px;"></i>
+                    <p>Aucune leçon sauvegardée</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="lessonModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal()">&times;</span>
-            <div id="modalContent"></div>
-            <div class="modal-actions">
-                <button class="whatsapp-btn" id="modalWhatsappBtn">
-                    <i class="fab fa-whatsapp"></i> Envoyer via WhatsApp
-                </button>
-                <button onclick="closeModal()">
-                    <i class="fas fa-times"></i> Fermer
-                </button>
-            </div>
-        </div>
-    </div>
+    <div id="notification" class="notification"></div>
 
     <script>
-        // Variable pour stocker les leçons enregistrées
-        let savedLessons = [];
-        let currentEditingIndex = null;
-        
-        // Initialisation au chargement
+        // Variables globales
+        let currentLessonId = null;
+        let activitiesCount = 1;
+        let exercisesCount = 1;
+        let editorMode = {
+            'objectives': true,
+            'procedure': true,
+            'resources': true,
+            'evaluation': true,
+            'activity1': true,
+            'exercise1': true
+        };
+
+        // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
-            initializeApp();
-            document.getElementById('saveButton').addEventListener('click', saveCourse);
+            // Ajout des écouteurs d'événements
+            document.getElementById('saveBtn').addEventListener('click', saveLesson);
+            document.getElementById('saveBtn2').addEventListener('click', saveLesson);
+            document.getElementById('exportJsonBtn').addEventListener('click', exportJson);
+            document.getElementById('exportJsonBtn2').addEventListener('click', exportJson);
+            document.getElementById('importJsonBtn').addEventListener('click', () => document.getElementById('jsonFileInput').click());
+            document.getElementById('importJsonBtn2').addEventListener('click', () => document.getElementById('jsonFileInput').click());
+            document.getElementById('jsonFileInput').addEventListener('change', importJson);
+            document.getElementById('deleteBtn').addEventListener('click', confirmDelete);
+            document.getElementById('deleteBtn2').addEventListener('click', confirmDelete);
+            document.getElementById('addActivityBtn').addEventListener('click', addActivity);
+            document.getElementById('addExerciseBtn').addEventListener('click', addExercise);
+            document.getElementById('search').addEventListener('input', filterLessons);
+            document.getElementById('filterSubject').addEventListener('change', filterLessons);
+            document.getElementById('filterDate').addEventListener('change', filterLessons);
+
+            // Initialiser les éditeurs de texte enrichi
+            initRichTextEditors();
             
-            // Validation des nombres d'élèves
-            document.getElementById('totalStudents').addEventListener('change', validateStudents);
-            document.getElementById('girls').addEventListener('change', validateStudents);
-            document.getElementById('boys').addEventListener('change', validateStudents);
+            // Initialiser les boutons de basculement d'éditeur
+            initEditorToggleButtons();
+
+            // Charger les leçons sauvegardées
+            loadSavedLessons();
         });
 
-        function validateStudents() {
-            const total = parseInt(document.getElementById('totalStudents').value) || 0;
-            const girls = parseInt(document.getElementById('girls').value) || 0;
-            const boys = parseInt(document.getElementById('boys').value) || 0;
-            
-            if (girls + boys > total) {
-                alert('Le nombre de filles + garçons ne peut pas dépasser l\'effectif total !');
-                document.getElementById('totalStudents').value = girls + boys;
-            }
+        // Fonction pour initialiser les éditeurs de texte enrichi
+        function initRichTextEditors() {
+            // Ajouter les écouteurs d'événements aux boutons de la barre d'outils
+            document.querySelectorAll('.toolbar button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const command = this.dataset.command;
+                    document.execCommand(command, false, null);
+                    updateHiddenTextareas();
+                });
+            });
+
+            // Mettre à jour les textareas cachés lorsque le contenu change
+            document.querySelectorAll('.editor-content').forEach(editor => {
+                editor.addEventListener('input', updateHiddenTextareas);
+            });
         }
 
-        function saveCourse() {
-            console.log("Début de l'enregistrement...");
+        // Fonction pour initialiser les boutons de basculement d'éditeur
+        function initEditorToggleButtons() {
+            document.querySelectorAll('.editor-toggle-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const target = this.dataset.target;
+                    toggleEditorMode(target);
+                });
+            });
+        }
+
+        // Fonction pour basculer entre l'éditeur de texte enrichi et le textarea simple
+        function toggleEditorMode(target) {
+            const editorElement = document.getElementById(`${target}-editor`);
+            const textareaElement = document.getElementById(target);
+            const toggleButton = document.querySelector(`.editor-toggle-btn[data-target="${target}"]`);
             
-            // Récupération des données du formulaire
-            const courseData = {
-                teacher: {
-                    lastName: document.getElementById('teacherLastName').value.trim(),
-                    firstName: document.getElementById('teacherFirstName').value.trim()
-                },
-                school: document.getElementById('school').value.trim(),
-                class: document.getElementById('class').value,
-                discipline: document.getElementById('discipline').value.trim(),
-                students: {
-                    total: parseInt(document.getElementById('totalStudents').value) || 0,
-                    girls: parseInt(document.getElementById('girls').value) || 0,
-                    boys: parseInt(document.getElementById('boys').value) || 0
-                },
-                prerequisites: document.getElementById('prerequisites').value.trim(),
-                problemStatement: document.getElementById('problemStatement').value.trim(),
-                problemSolution: document.getElementById('problemSolution').value.trim(),
+            if (editorMode[target]) {
+                // Passer en mode textarea simple
+                editorElement.style.display = 'none';
+                textareaElement.style.display = 'block';
+                textareaElement.value = editorElement.querySelector('.editor-content').innerHTML;
+                toggleButton.textContent = 'Basculer Éditeur';
+                toggleButton.classList.remove('active');
+            } else {
+                // Passer en mode éditeur de texte enrichi
+                editorElement.style.display = 'block';
+                textareaElement.style.display = 'none';
+                editorElement.querySelector('.editor-content').innerHTML = textareaElement.value;
+                toggleButton.textContent = 'Basculer Texte Simple';
+                toggleButton.classList.add('active');
+            }
+            
+            editorMode[target] = !editorMode[target];
+        }
+
+        // Fonction pour mettre à jour les textareas cachés avec le contenu des éditeurs
+        function updateHiddenTextareas() {
+            document.querySelectorAll('.rich-text-editor').forEach(editor => {
+                const id = editor.id.replace('-editor', '');
+                const textarea = document.getElementById(id);
+                if (textarea) {
+                    textarea.value = editor.querySelector('.editor-content').innerHTML;
+                }
+            });
+        }
+
+        // Fonction pour afficher une notification
+        function showNotification(message, isError = false) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = isError ? 'notification error' : 'notification';
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Fonction pour récupérer les données du formulaire
+        function getFormData() {
+            // Mettre à jour les textareas cachés avant de récupérer les données
+            updateHiddenTextareas();
+
+            const formData = {
+                teacher: document.getElementById('teacher').value,
+                school: document.getElementById('school').value,
+                date: document.getElementById('date').value,
+                subject: document.getElementById('subject').value,
+                classLevel: document.getElementById('classLevel').value,
+                duration: document.getElementById('duration').value,
+                objectives: document.getElementById('objectives').value,
+                procedure: document.getElementById('procedure').value,
                 activities: [],
-                definitions: document.getElementById('definitions').value.trim(),
-                examples: [],
                 exercises: [],
-                summary: document.getElementById('summary').value.trim(),
-                date: new Date().toISOString(),
-                timestamp: Date.now()
+                resources: document.getElementById('resources').value,
+                evaluation: document.getElementById('evaluation').value,
+                lastModified: new Date().toISOString()
             };
 
-            // Validation des champs obligatoires
-            const requiredFields = [
-                courseData.teacher.lastName,
-                courseData.teacher.firstName,
-                courseData.school,
-                courseData.class,
-                courseData.discipline
-            ];
-
-            if (requiredFields.some(field => !field)) {
-                alert('Veuillez remplir tous les champs obligatoires (Nom, Prénom, Établissement, Classe, Discipline)');
-                return;
-            }
-
-            // Validation des nombres d'élèves
-            if (courseData.students.girls + courseData.students.boys > courseData.students.total) {
-                alert('Le nombre de filles + garçons ne peut pas dépasser l\'effectif total !');
-                return;
-            }
-
-            // Récupération des activités
-            document.querySelectorAll('#activities .activity').forEach((activity, index) => {
-                const inputs = activity.querySelectorAll('textarea');
-                if (inputs[0].value.trim()) {
-                    courseData.activities.push({
-                        number: index + 1,
-                        description: inputs[0].value.trim(),
-                        solution: inputs[1].value.trim()
-                    });
+            // Récupérer les activités
+            const activityElements = document.querySelectorAll('[id^="activity"]');
+            activityElements.forEach((activity, index) => {
+                if (activity.id.match(/^activity\d+$/) && activity.value.trim() !== '') {
+                    formData.activities.push(activity.value);
                 }
             });
 
-            // Récupération des exemples
-            document.querySelectorAll('#examples .example').forEach((example, index) => {
-                const content = example.querySelector('textarea').value.trim();
-                if (content) {
-                    courseData.examples.push({
-                        number: index + 1,
-                        content: content
-                    });
+            // Récupérer les exercices
+            const exerciseElements = document.querySelectorAll('[id^="exercise"]');
+            exerciseElements.forEach((exercise, index) => {
+                if (exercise.id.match(/^exercise\d+$/) && exercise.value.trim() !== '') {
+                    formData.exercises.push(exercise.value);
                 }
             });
 
-            // Récupération des exercices
-            document.querySelectorAll('#exercises .exercise').forEach((exercise, index) => {
-                const inputs = exercise.querySelectorAll('textarea');
-                if (inputs[0].value.trim()) {
-                    courseData.exercises.push({
-                        number: index + 1,
-                        statement: inputs[0].value.trim(),
-                        solution: inputs[1].value.trim()
-                    });
-                }
-            });
+            return formData;
+        }
 
-            // Enregistrement de la leçon
-            if (currentEditingIndex !== null) {
-                savedLessons[currentEditingIndex] = courseData; // Mise à jour
+        // Fonction pour remplir le formulaire avec des données
+        function setFormData(data) {
+            document.getElementById('teacher').value = data.teacher || '';
+            document.getElementById('school').value = data.school || '';
+            document.getElementById('date').value = data.date || '';
+            document.getElementById('subject').value = data.subject || '';
+            document.getElementById('classLevel').value = data.classLevel || '';
+            document.getElementById('duration').value = data.duration || '';
+            document.getElementById('objectives').value = data.objectives || '';
+            document.getElementById('procedure').value = data.procedure || '';
+            document.getElementById('resources').value = data.resources || '';
+            document.getElementById('evaluation').value = data.evaluation || '';
+
+            // Mettre à jour les éditeurs de texte enrichi
+            document.getElementById('objectives-content').innerHTML = data.objectives || '';
+            document.getElementById('procedure-content').innerHTML = data.procedure || '';
+            document.getElementById('resources-content').innerHTML = data.resources || '';
+            document.getElementById('evaluation-content').innerHTML = data.evaluation || '';
+
+            // Vider les activités et exercices existants
+            document.getElementById('activities').innerHTML = '';
+            document.getElementById('exercises').innerHTML = '';
+            activitiesCount = 0;
+            exercisesCount = 0;
+
+            // Ajouter les activités
+            if (data.activities && data.activities.length > 0) {
+                data.activities.forEach((activity, index) => {
+                    addActivity();
+                    document.getElementById(`activity${index + 1}`).value = activity;
+                    document.getElementById(`activity${index + 1}-content`).innerHTML = activity;
+                });
             } else {
-                savedLessons.push(courseData); // Nouvelle entrée
+                addActivity(); // Ajouter au moins une activité vide
             }
 
-            // Sauvegarde et feedback
-            saveToStorage();
-            alert('Leçon enregistrée avec succès !');
-            resetForm();
-            refreshLessons();
-        }
-
-        function resetForm() {
-            document.getElementById('teacherLastName').value = '';
-            document.getElementById('teacherFirstName').value = '';
-            document.getElementById('school').value = '';
-            document.getElementById('class').value = '';
-            document.getElementById('discipline').value = '';
-            document.getElementById('totalStudents').value = '';
-            document.getElementById('girls').value = '';
-            document.getElementById('boys').value = '';
-            document.getElementById('prerequisites').value = '';
-            document.getElementById('problemStatement').value = '';
-            document.getElementById('problemSolution').value = '';
-            document.getElementById('definitions').value = '';
-            document.getElementById('summary').value = '';
-            
-            // Réinitialisation des sections dynamiques
-            document.getElementById('activities').innerHTML = `
-                <div class="activity">
-                    <div class="form-group">
-                        <label>Activité 1:</label>
-                        <textarea placeholder="Décrivez la première activité..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Solution:</label>
-                        <textarea placeholder="Solution de l'activité..."></textarea>
-                    </div>
-                </div>
-            `;
-            
-            document.getElementById('examples').innerHTML = `
-                <div class="example">
-                    <div class="form-group">
-                        <label>Exemple 1:</label>
-                        <textarea placeholder="Donnez un exemple illustratif..."></textarea>
-                    </div>
-                </div>
-            `;
-            
-            document.getElementById('exercises').innerHTML = `
-                <div class="exercise">
-                    <div class="form-group">
-                        <label>Exercice 1:</label>
-                        <textarea placeholder="Énoncé de l'exercice..."></textarea>
-                    </div>
-                    <div class="solution">
-                        <div class="form-group">
-                            <label>Solution:</label>
-                            <textarea placeholder="Solution de l'exercice..."></textarea>
-                        </div>
-                    </div>
-                    <button class="toggle-solution" onclick="toggleSolution(this)">
-                        <i class="fas fa-eye"></i> Afficher/Masquer la solution
-                    </button>
-                </div>
-            `;
-            
-            currentEditingIndex = null;
-            document.querySelector('.save-btn').innerHTML = '<i class="fas fa-save"></i> Enregistrer le cours';
-        }
-
-        function saveToStorage() {
-            try {
-                const storageData = {
-                    version: '1.0',
-                    lastUpdated: new Date().toISOString(),
-                    lessons: savedLessons
-                };
-                localStorage.setItem('savedLessons', JSON.stringify(storageData));
-                console.log('Données sauvegardées:', storageData);
-            } catch (e) {
-                console.error('Erreur de sauvegarde:', e);
-                alert('Erreur lors de la sauvegarde des données');
+            // Ajouter les exercices
+            if (data.exercises && data.exercises.length > 0) {
+                data.exercises.forEach((exercise, index) => {
+                    addExercise();
+                    document.getElementById(`exercise${index + 1}`).value = exercise;
+                    document.getElementById(`exercise${index + 1}-content`).innerHTML = exercise;
+                });
+            } else {
+                addExercise(); // Ajouter au moins un exercice vide
             }
         }
 
-        function loadFromStorage() {
-            try {
-                const storedData = localStorage.getItem('savedLessons');
-                if (storedData) {
-                    const parsedData = JSON.parse(storedData);
-                    savedLessons = parsedData.lessons || [];
-                    console.log('Données chargées:', savedLessons);
-                }
-            } catch (e) {
-                console.error('Erreur de chargement:', e);
-                savedLessons = [];
-            }
-        }
-
-        function refreshLessons() {
-            loadFromStorage();
-            initFilters();
-            displaySavedLessons();
-            updateStats();
-        }
-
-        function initFilters() {
-            const disciplineFilter = document.getElementById('disciplineFilter');
-            const disciplines = new Set();
-            
-            savedLessons.forEach(lesson => {
-                if (lesson.discipline) {
-                    disciplines.add(lesson.discipline);
-                }
-            });
-            
-            disciplineFilter.innerHTML = '<option value="">Toutes les disciplines</option>';
-            disciplines.forEach(discipline => {
-                disciplineFilter.innerHTML += <option value="${discipline}">${discipline}</option>;
-            });
-        }
-
-        function displaySavedLessons(lessonsToDisplay = null) {
-            const lessons = lessonsToDisplay || savedLessons;
-            const lessonList = document.getElementById('lessonList');
-            
-            if (!lessons || lessons.length === 0) {
-                lessonList.innerHTML = `
-                    <div class="no-lessons">
-                        <i class="fas fa-book-open" style="font-size: 2em; margin-bottom: 10px;"></i>
-                        <p>Aucune leçon trouvée</p>
-                        <button onclick="showHelp('first-lesson')" class="help-btn">
-                            <i class="fas fa-question-circle"></i> Comment créer une leçon ?
-                        </button>
-                    </div>
-                `;
-                return;
-            }
-            
-            lessonList.innerHTML = lessons.map((lesson, index) => {
-                const date = new Date(lesson.date);
-                const isRecent = (new Date() - date) < 1000 * 60 * 60 * 24 * 7; // < 7 jours
-                
-                return `
-                    <div class="lesson-item ${isRecent ? 'recent' : ''}">
-                        <div class="lesson-header">
-                            <h3>${lesson.discipline || 'Sans titre'} - ${getClassLabel(lesson.class)}</h3>
-                            <span class="lesson-date">
-                                ${date.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })}
-                            </span>
-                        </div>
-                        <div class="lesson-meta">
-                            <span><i class="fas fa-user"></i> ${lesson.teacher.firstName || ''} ${lesson.teacher.lastName || ''}</span>
-                            <span><i class="fas fa-school"></i> ${lesson.school || ''}</span>
-                            <span><i class="fas fa-users"></i> ${lesson.students.total || 0} élèves</span>
-                        </div>
-                        <p class="lesson-summary">${lesson.summary?.substring(0, 120) || 'Aucun résumé'}...</p>
-                        
-                        <div class="lesson-actions">
-                            <button class="view-btn" onclick="viewLesson(${index})">
-                                <i class="fas fa-eye"></i> Voir
-                            </button>
-                            <button class="whatsapp-btn" onclick="shareViaWhatsApp(${index})">
-                                <i class="fab fa-whatsapp"></i> 
-                            </button>
-                            <button class="edit-btn" onclick="editLesson(${index})">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="delete-btn" onclick="deleteLesson(${index})">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function updateStats() {
-            const statsDiv = document.getElementById('lessonStats');
-            
-            if (!savedLessons || savedLessons.length === 0) {
-                statsDiv.innerHTML = '<span>Aucune leçon enregistrée</span>';
-                return;
-            }
-            
-            const disciplines = {};
-            savedLessons.forEach(lesson => {
-                if (!disciplines[lesson.discipline]) {
-                    disciplines[lesson.discipline] = 0;
-                }
-                disciplines[lesson.discipline]++;
-            });
-            
-            let statsHTML = <span>Total: ${savedLessons.length} leçon${savedLessons.length > 1 ? 's' : ''}</span>;
-            
-            for (const discipline in disciplines) {
-                statsHTML += <span>${discipline}: ${disciplines[discipline]}</span>;
-            }
-            
-            statsDiv.innerHTML = statsHTML;
-        }
-
-        function filterLessons() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const classFilter = document.getElementById('classFilter').value;
-            const disciplineFilter = document.getElementById('disciplineFilter').value;
-            
-            const filtered = savedLessons.filter(lesson => {
-                const matchesSearch = 
-                    (lesson.discipline && lesson.discipline.toLowerCase().includes(searchTerm)) ||
-                    (lesson.teacher.lastName && lesson.teacher.lastName.toLowerCase().includes(searchTerm)) ||
-                    (lesson.teacher.firstName && lesson.teacher.firstName.toLowerCase().includes(searchTerm)) ||
-                    (lesson.school && lesson.school.toLowerCase().includes(searchTerm)) ||
-                    (lesson.summary && lesson.summary.toLowerCase().includes(searchTerm));
-                
-                const matchesClass = classFilter === '' || lesson.class === classFilter;
-                const matchesDiscipline = disciplineFilter === '' || lesson.discipline === disciplineFilter;
-                
-                return matchesSearch && matchesClass && matchesDiscipline;
-            });
-            
-            displaySavedLessons(filtered);
-        }
-
+        // Fonction pour ajouter une activité
         function addActivity() {
+            activitiesCount++;
             const activitiesDiv = document.getElementById('activities');
-            const activityCount = activitiesDiv.children.length + 1;
-            
             const newActivity = document.createElement('div');
             newActivity.className = 'activity';
             newActivity.innerHTML = `
-                <div class="form-group">
-                    <label>Activité ${activityCount}:</label>
-                    <textarea placeholder="Décrivez l'activité..."></textarea>
+                <div class="editor-toggle">
+                    <button class="editor-toggle-btn" data-target="activity${activitiesCount}">Basculer Éditeur</button>
                 </div>
-                <div class="form-group">
-                    <label>Solution:</label>
-                    <textarea placeholder="Solution de l'activité..."></textarea>
+                <div class="rich-text-editor" id="activity${activitiesCount}-editor">
+                    <div class="toolbar">
+                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                        <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                        <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                        <button type="button" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
+                        <button type="button" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
+                        <button type="button" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
+                    </div>
+                    <div class="editor-content" id="activity${activitiesCount}-content" contenteditable="true"></div>
                 </div>
+                <textarea id="activity${activitiesCount}" name="activity${activitiesCount}" style="display:none;"></textarea>
             `;
-            
             activitiesDiv.appendChild(newActivity);
-        }
-        
-        function addExample() {
-            const examplesDiv = document.getElementById('examples');
-            const exampleCount = examplesDiv.children.length + 1;
             
-            const newExample = document.createElement('div');
-            newExample.className = 'example';
-            newExample.innerHTML = `
-                <div class="form-group">
-                    <label>Exemple ${exampleCount}:</label>
-                    <textarea placeholder="Donnez un exemple illustratif..."></textarea>
-                </div>
-            `;
+            // Initialiser le nouvel éditeur
+            initRichTextEditors();
+            initEditorToggleButtons();
             
-            examplesDiv.appendChild(newExample);
+            // Ajouter au mode éditeur
+            editorMode[`activity${activitiesCount}`] = true;
         }
-        
+
+        // Fonction pour ajouter un exercice
         function addExercise() {
+            exercisesCount++;
             const exercisesDiv = document.getElementById('exercises');
-            const exerciseCount = exercisesDiv.children.length + 1;
-            
             const newExercise = document.createElement('div');
             newExercise.className = 'exercise';
             newExercise.innerHTML = `
-                <div class="form-group">
-                    <label>Exercice ${exerciseCount}:</label>
-                    <textarea placeholder="Énoncé de l'exercice..."></textarea>
+                <div class="editor-toggle">
+                    <button class="editor-toggle-btn" data-target="exercise${exercisesCount}">Basculer Éditeur</button>
                 </div>
-                <div class="solution">
-                    <div class="form-group">
-                        <label>Solution:</label>
-                        <textarea placeholder="Solution de l'exercice..."></textarea>
+                <div class="rich-text-editor" id="exercise${exercisesCount}-editor">
+                    <div class="toolbar">
+                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                        <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                        <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                        <button type="button" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
+                        <button type="button" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
+                        <button type="button" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
                     </div>
+                    <div class="editor-content" id="exercise${exercisesCount}-content" contenteditable="true"></div>
                 </div>
-                <button class="toggle-solution" onclick="toggleSolution(this)">
-                    <i class="fas fa-eye"></i> Afficher/Masquer la solution
-                </button>
+                <textarea id="exercise${exercisesCount}" name="exercise${exercisesCount}" style="display:none;"></textarea>
             `;
-            
             exercisesDiv.appendChild(newExercise);
-        }
-        
-        function toggleSolution(button) {
-            const solutionDiv = button.previousElementSibling;
-            if (solutionDiv.style.display === 'block') {
-                solutionDiv.style.display = 'none';
-                button.innerHTML = '<i class="fas fa-eye"></i> Afficher la solution';
-            } else {
-                solutionDiv.style.display = 'block';
-                button.innerHTML = '<i class="fas fa-eye-slash"></i> Masquer la solution';
-            }
-        }
-        
-        function viewLesson(index) {
-            const lesson = savedLessons[index];
-            const modal = document.getElementById('lessonModal');
-            const modalContent = document.getElementById('modalContent');
-            const whatsappBtn = document.getElementById('modalWhatsappBtn');
             
-            let details = `
-                <h2>${lesson.discipline || 'Sans titre'} - ${getClassLabel(lesson.class) || 'N/A'}</h2>
-                <div class="lesson-meta">
-                    <p><strong>Enseignant:</strong> ${lesson.teacher.firstName || ''} ${lesson.teacher.lastName || ''}</p>
-                    <p><strong>Établissement:</strong> ${lesson.school || ''}</p>
-                    <p><strong>Date:</strong> ${new Date(lesson.date).toLocaleString('fr-FR')}</p>
-                    <p><strong>Effectif:</strong> ${lesson.students.total || 0} élèves (${lesson.students.girls || 0} filles, ${lesson.students.boys || 0} garçons)</p>
-                </div>
-                
-                <h3>Prérequis</h3>
-                <div class="activity">${formatText(lesson.prerequisites)}</div>
-                
-                <h3>Situation Problème</h3>
-                <div class="example">${formatText(lesson.problemStatement)}</div>
-                
-                <h3>Solution</h3>
-                <div class="exercise">${formatText(lesson.problemSolution)}</div>
-                
-                <h3>Activités d'Apprentissage</h3>
-            `;
-
-            lesson.activities.forEach(activity => {
-                details += `
-                    <div class="activity">
-                        <h4>Activité ${activity.number}</h4>
-                        <p>${formatText(activity.description)}</p>
-                        <h5>Solution:</h5>
-                        <div class="solution">${formatText(activity.solution)}</div>
-                    </div>
-                `;
-            });
-
-            details += `<h3>Définitions, Propriétés et Théorèmes</h3>
-                <div class="exercise">${formatText(lesson.definitions)}</div>
-                
-                <h3>Exemples</h3>`;
-
-            lesson.examples.forEach(example => {
-                details += `
-                    <div class="example">
-                        <h4>Exemple ${example.number}</h4>
-                        <p>${formatText(example.content)}</p>
-                    </div>
-                `;
-            });
-
-            details += <h3>Exercices d'Application</h3>;
-
-            lesson.exercises.forEach(exercise => {
-                details += `
-                    <div class="exercise">
-                        <h4>Exercice ${exercise.number}</h4>
-                        <p>${formatText(exercise.statement)}</p>
-                        <button class="toggle-solution" onclick="toggleSolutionInModal(this)">
-                            <i class="fas fa-eye"></i> Afficher la solution
-                        </button>
-                        <div class="solution" style="display:none;">
-                            <h5>Solution:</h5>
-                            <p>${formatText(exercise.solution)}</p>
-                        </div>
-                    </div>
-                `;
-            });
-
-            details += `<h3>Récapitulatif</h3>
-                <div class="summary">${formatText(lesson.summary)}</div>`;
-
-            modalContent.innerHTML = details;
-            whatsappBtn.onclick = function() { shareViaWhatsApp(index); };
-            modal.style.display = 'block';
-        }
-
-        function formatText(text) {
-            if (!text) return 'Non spécifié';
-            return text.replace(/\n/g, '<br>');
-        }
-
-        function toggleSolutionInModal(button) {
-            const solutionDiv = button.nextElementSibling;
-            if (solutionDiv.style.display === 'block') {
-                solutionDiv.style.display = 'none';
-                button.innerHTML = '<i class="fas fa-eye"></i> Afficher la solution';
-            } else {
-                solutionDiv.style.display = 'block';
-                button.innerHTML = '<i class="fas fa-eye-slash"></i> Masquer la solution';
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('lessonModal').style.display = 'none';
-        }
-
-        function deleteLesson(index) {
-            if (confirm('Voulez-vous vraiment supprimer cette leçon ?')) {
-                savedLessons.splice(index, 1);
-                saveToStorage();
-                initializeApp();
-            }
-        }
-
-        function getClassLabel(classValue) {
-            const classes = {
-                '6eme': '6ème',
-                '5eme': '5ème',
-                '4eme': '4ème',
-                '3eme': '3ème',
-                '2nde': 'Seconde',
-                '1ere': 'Première',
-                'terminale': 'Terminale'
-            };
-            return classes[classValue] || classValue;
-        }
-
-        function showHelp(topic) {
-            const helpMessages = {
-                'first-lesson': `Pour créer votre première leçon :
-                1. Remplissez les informations de base
-                2. Ajoutez des activités avec le bouton "+"
-                3. Cliquez sur "Enregistrer"`,
-                'sharing': Partagez les leçons via WhatsApp en cliquant sur l'icône 📱
-            };
+            // Initialiser le nouvel éditeur
+            initRichTextEditors();
+            initEditorToggleButtons();
             
-            alert(helpMessages[topic] || "Aide non disponible pour ce sujet");
+            // Ajouter au mode éditeur
+            editorMode[`exercise${exercisesCount}`] = true;
         }
 
-        function shareViaWhatsApp(index) {
-            const lesson = savedLessons[index];
-            sendWhatsAppMessage(formatLessonForSharing(lesson));
-        }
-
-        function shareAllLessonsViaWhatsApp() {
-            if (savedLessons.length === 0) {
-                alert("Aucune leçon à envoyer !");
+        // Fonction pour sauvegarder la leçon
+        function saveLesson() {
+            const formData = getFormData();
+            
+            // Vérifier les champs requis
+            if (!formData.subject || !formData.date) {
+                showNotification('Veuillez remplir au moins la matière et la date.', true);
                 return;
             }
 
-            let message = "📚 Toutes mes leçons enregistrées 📚\n\n";
-            
-            savedLessons.forEach((lesson, index) => {
-                message += *Leçon ${index + 1}: ${lesson.discipline || 'Sans titre'} - ${getClassLabel(lesson.class) || 'N/A'}*\n;
-                message += 👨‍🏫 Enseignant: ${lesson.teacher.firstName || ''} ${lesson.teacher.lastName || ''}\n;
-                message += 📅 Date: ${new Date(lesson.date).toLocaleDateString('fr-FR')}\n;
-                message += 📝 Résumé: ${lesson.summary ? lesson.summary.substring(0, 50) + (lesson.summary.length > 50 ? '...' : '') : ''}\n\n;
-            });
-
-            message += "\n*Détails complets disponibles dans l'application*";
-            sendWhatsAppMessage(message);
-        }
-
-        function formatLessonForSharing(lesson) {
-            let message = *${lesson.discipline || 'Sans titre'} - ${getClassLabel(lesson.class) || 'N/A'}*\n;
-            message += 👨‍🏫 Enseignant: ${lesson.teacher.firstName || ''} ${lesson.teacher.lastName || ''}\n;
-            message += 🏫 Établissement: ${lesson.school || ''}\n\n;
-            
-            message += *📚 Prérequis:*\n${lesson.prerequisites || 'Non spécifié'}\n\n;
-            message += *❓ Situation Problème:*\n${lesson.problemStatement || 'Non spécifié'}\n\n;
-            message += *✅ Solution:*\n${lesson.problemSolution || 'Non spécifié'}\n\n;
-            
-            if (lesson.activities && lesson.activities.length > 0) {
-                message += *🔄 Activités:*\n;
-                lesson.activities.forEach(activity => {
-                    message += - ${activity.description ? activity.description.substring(0, 50) + (activity.description.length > 50 ? '...' : '') : 'Activité'}\n;
-                });
-                message += \n;
+            // Générer un ID si c'est une nouvelle leçon
+            if (!currentLessonId) {
+                currentLessonId = Date.now().toString();
             }
-            
-            message += *📝 Récapitulatif:*\n${lesson.summary || 'Non spécifié'}\n\n;
-            
-            return message;
+
+            // Sauvegarder dans le localStorage
+            const savedLessons = JSON.parse(localStorage.getItem('savedLessons')) || {};
+            savedLessons[currentLessonId] = {
+                ...formData,
+                id: currentLessonId
+            };
+            localStorage.setItem('savedLessons', JSON.stringify(savedLessons));
+
+            showNotification('Leçon sauvegardée avec succès!');
+            loadSavedLessons();
         }
 
-        function sendWhatsAppMessage(message) {
-            const phoneNumber = '92871605';
-            const maxLength = 1000;
+        // Fonction pour exporter en JSON
+        function exportJson() {
+            const formData = getFormData();
+            const dataStr = JSON.stringify(formData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
             
-            if (message.length > maxLength) {
-                message = message.substring(0, maxLength) + '...\n\n*Message tronqué - voir les détails dans l\'application*';
-            }
+            const exportFileDefaultName = `fiche_cours_${formData.subject || 'sans_titre'}_${formData.date || ''}.json`;
             
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = https://wa.me/${phoneNumber}?text=${encodedMessage};
-            
-            window.open(whatsappUrl, '_blank');
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
         }
 
-        function showAddLessonForm() {
-            const lessonData = prompt("Collez ici les données JSON de la leçon à ajouter:");
-            if (lessonData) {
+        // Fonction pour importer un JSON
+        function importJson(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
                 try {
-                    const lesson = JSON.parse(lessonData);
-                    addLessonToDatabase(lesson);
-                } catch (e) {
-                    alert("Format JSON invalide ! Veuillez fournir des données valides.");
-                    console.error("Erreur de parsing JSON:", e);
+                    const jsonData = JSON.parse(e.target.result);
+                    setFormData(jsonData);
+                    
+                    // Réinitialiser l'ID pour créer une nouvelle leçon
+                    currentLessonId = null;
+                    
+                    showNotification('Fichier importé avec succès!');
+                } catch (error) {
+                    showNotification('Erreur lors de l\'import du fichier JSON.', true);
+                    console.error(error);
                 }
-            }
+            };
+            reader.readAsText(file);
+            
+            // Réinitialiser l'input file
+            event.target.value = '';
         }
 
-        function addLessonToDatabase(lesson) {
-            if (!lesson.discipline || !lesson.class) {
-                alert("La leçon doit avoir au moins une discipline et une classe définie");
+        // Fonction pour confirmer la suppression
+        function confirmDelete() {
+            if (!currentLessonId) {
+                showNotification('Aucune leçon à supprimer.', true);
                 return;
             }
 
-            if (!lesson.date) lesson.date = new Date().toISOString();
-            if (!lesson.timestamp) lesson.timestamp = new Date().getTime();
-            
-            savedLessons.push(lesson);
-            saveToStorage();
-            refreshLessons();
-            alert("Leçon ajoutée avec succès !");
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette leçon?')) {
+                deleteLesson();
+            }
         }
 
-        function initializeApp() {
-            loadFromStorage();
-            initFilters();
-            displaySavedLessons();
-            updateStats();
+        // Fonction pour supprimer une leçon
+        function deleteLesson() {
+            const savedLessons = JSON.parse(localStorage.getItem('savedLessons')) || {};
+            delete savedLessons[currentLessonId];
+            localStorage.setItem('savedLessons', JSON.stringify(savedLessons));
             
-            // Charger les dernières valeurs utilisées si disponibles
-            const lastTeacher = localStorage.getItem('lastTeacher');
-            if (lastTeacher) {
-                const teacher = JSON.parse(lastTeacher);
-                document.getElementById('teacherLastName').value = teacher.lastName || '';
-                document.getElementById('teacherFirstName').value = teacher.firstName || '';
+            // Réinitialiser le formulaire
+            document.querySelector('form').reset();
+            document.getElementById('activities').innerHTML = '';
+            document.getElementById('exercises').innerHTML = '';
+            activitiesCount = 0;
+            exercisesCount = 0;
+            addActivity();
+            addExercise();
+            currentLessonId = null;
+            
+            // Réinitialiser les éditeurs
+            document.querySelectorAll('.editor-content').forEach(editor => {
+                editor.innerHTML = '';
+            });
+            
+            showNotification('Leçon supprimée avec succès!');
+            loadSavedLessons();
+        }
+
+        // Fonction pour charger les leçons sauvegardées
+        function loadSavedLessons() {
+            const savedLessons = JSON.parse(localStorage.getItem('savedLessons')) || {};
+            const lessonList = document.getElementById('lessonList');
+            const filterSubject = document.getElementById('filterSubject');
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const subjectFilter = document.getElementById('filterSubject').value;
+            const dateFilter = document.getElementById('filterDate').value;
+            
+            // Mettre à jour les statistiques
+            document.getElementById('totalLessons').textContent = `Total: ${Object.keys(savedLessons).length} leçons`;
+            
+            // Compter les leçons récentes (moins de 7 jours)
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+            const recentCount = Object.values(savedLessons).filter(lesson => {
+                return new Date(lesson.lastModified) > oneWeekAgo;
+            }).length;
+            document.getElementById('recentLessons').textContent = `Récentes: ${recentCount}`;
+            
+            // Vider la liste
+            lessonList.innerHTML = '';
+            
+            // Mettre à jour les options de filtre par matière
+            const subjects = new Set();
+            Object.values(savedLessons).forEach(lesson => {
+                if (lesson.subject) subjects.add(lesson.subject);
+            });
+            
+            // Garder l'option actuelle sélectionnée
+            const currentSelected = filterSubject.value;
+            filterSubject.innerHTML = '<option value="">Toutes les matières</option>';
+            subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject;
+                option.textContent = subject;
+                filterSubject.appendChild(option);
+            });
+            filterSubject.value = currentSelected;
+            
+            // Filtrer et afficher les leçons
+            const filteredLessons = Object.values(savedLessons).filter(lesson => {
+                const matchesSearch = !searchTerm || 
+                    (lesson.subject && lesson.subject.toLowerCase().includes(searchTerm)) ||
+                    (lesson.teacher && lesson.teacher.toLowerCase().includes(searchTerm)) ||
+                    (lesson.classLevel && lesson.classLevel.toLowerCase().includes(searchTerm));
+                
+                const matchesSubject = !subjectFilter || lesson.subject === subjectFilter;
+                const matchesDate = !dateFilter || lesson.date === dateFilter;
+                
+                return matchesSearch && matchesSubject && matchesDate;
+            });
+            
+            if (filteredLessons.length === 0) {
+                lessonList.innerHTML = `
+                    <div class="no-lessons">
+                        <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 15px;"></i>
+                        <p>Aucune leçon correspondante</p>
+                    </div>
+                `;
+                return;
             }
+            
+            // Trier par date (la plus récente d'abord)
+            filteredLessons.sort((a, b) => new Date(b.lastModified) - new Date(a.lastModified));
+            
+            // Afficher les leçons
+            filteredLessons.forEach(lesson => {
+                const lessonDate = new Date(lesson.lastModified);
+                const isRecent = lessonDate > oneWeekAgo;
+                
+                const lessonItem = document.createElement('div');
+                lessonItem.className = isRecent ? 'lesson-item recent' : 'lesson-item';
+                lessonItem.innerHTML = `
+                    <div class="lesson-header">
+                        <h3>${lesson.subject || 'Sans titre'}</h3>
+                        <span class="lesson-date">${formatDate(lessonDate)}</span>
+                    </div>
+                    <div class="lesson-meta">
+                        <span><i class="fas fa-user"></i> ${lesson.teacher || 'Non spécifié'}</span>
+                        <span><i class="fas fa-graduation-cap"></i> ${lesson.classLevel || 'Non spécifié'}</span>
+                        <span><i class="fas fa-clock"></i> ${lesson.duration || '?'} min</span>
+                    </div>
+                    <div class="lesson-summary">
+                        ${truncateText(lesson.objectives, 100)}
+                    </div>
+                    <div class="lesson-actions">
+                        <button class="view-btn" onclick="loadLesson('${lesson.id}')">
+                            <i class="fas fa-eye"></i> Voir
+                        </button>
+                        <button class="edit-btn" onclick="editLesson('${lesson.id}')">
+                            <i class="fas fa-edit"></i> Modifier
+                        </button>
+                        <button class="delete-btn" onclick="deleteSavedLesson('${lesson.id}')">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                    </div>
+                `;
+                lessonList.appendChild(lessonItem);
+            });
+        }
+
+        // Fonction pour charger une leçon en mode visualisation
+        function loadLesson(lessonId) {
+            const savedLessons = JSON.parse(localStorage.getItem('savedLessons')) || {};
+            const lesson = savedLessons[lessonId];
+            
+            if (lesson) {
+                // Ouvrir dans une nouvelle fenêtre ou un modal pour visualisation
+                const lessonWindow = window.open('', '_blank');
+                lessonWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>${lesson.subject || 'Fiche de cours'}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; padding: 20px; }
+                            h1 { color: #2c3e50; }
+                            .section { margin-bottom: 20px; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>${lesson.subject || 'Fiche de cours'}</h1>
+                        <div class="section">
+                            <p><strong>Enseignant:</strong> ${lesson.teacher || 'Non spécifié'}</p>
+                            <p><strong>Établissement:</strong> ${lesson.school || 'Non spécifié'}</p>
+                            <p><strong>Date:</strong> ${lesson.date || 'Non spécifié'}</p>
+                            <p><strong>Niveau:</strong> ${lesson.classLevel || 'Non spécifié'}</p>
+                            <p><strong>Durée:</strong> ${lesson.duration || 'Non spécifié'} minutes</p>
+                        </div>
+                        <div class="section">
+                            <h2>Objectifs pédagogiques</h2>
+                            <div>${lesson.objectives || 'Aucun objectif spécifié'}</div>
+                        </div>
+                        <div class="section">
+                            <h2>Déroulement de la séance</h2>
+                            <div>${lesson.procedure || 'Aucune procédure spécifiée'}</div>
+                        </div>
+                        <div class="section">
+                            <h2>Activités</h2>
+                            ${lesson.activities && lesson.activities.length > 0 
+                                ? lesson.activities.map((act, i) => `<div><strong>Activité ${i+1}:</strong><div>${act}</div></div>`).join('') 
+                                : '<div>Aucune activité spécifiée</div>'}
+                        </div>
+                        <div class="section">
+                            <h2>Exercices</h2>
+                            ${lesson.exercises && lesson.exercises.length > 0 
+                                ? lesson.exercises.map((ex, i) => `<div><strong>Exercice ${i+1}:</strong><div>${ex}</div></div>`).join('') 
+                                : '<div>Aucun exercice spécifié</div>'}
+                        </div>
+                        <div class="section">
+                            <h2>Ressources</h2>
+                            <div>${lesson.resources || 'Aucune ressource spécifiée'}</div>
+                        </div>
+                        <div class="section">
+                            <h2>Évaluation</h2>
+                            <div>${lesson.evaluation || 'Aucun critère d\'évaluation spécifié'}</div>
+                        </div>
+                        <button onclick="window.print()">Imprimer</button>
+                    </body>
+                    </html>
+                `);
+            }
+        }
+
+        // Fonction pour modifier une leçon existante
+        function editLesson(lessonId) {
+            const savedLessons = JSON.parse(localStorage.getItem('savedLessons')) || {};
+            const lesson = savedLessons[lessonId];
+            
+            if (lesson) {
+                setFormData(lesson);
+                currentLessonId = lessonId;
+                showNotification('Leçon chargée pour modification');
+                
+                // Scroll to top
+                window.scrollTo(0, 0);
+            }
+        }
+
+        // Fonction pour supprimer une leçon sauvegardée
+        function deleteSavedLesson(lessonId) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette leçon?')) {
+                const savedLessons = JSON.parse(localStorage.getItem('savedLessons')) || {};
+                delete savedLessons[lessonId];
+                localStorage.setItem('savedLessons', JSON.stringify(savedLessons));
+                
+                // Si la leçon supprimée est celle actuellement chargée, vider le formulaire
+                if (currentLessonId === lessonId) {
+                    document.querySelector('form').reset();
+                    document.getElementById('activities').innerHTML = '';
+                    document.getElementById('exercises').innerHTML = '';
+                    activitiesCount = 0;
+                    exercisesCount = 0;
+                    addActivity();
+                    addExercise();
+                    currentLessonId = null;
+                    
+                    // Réinitialiser les éditeurs
+                    document.querySelectorAll('.editor-content').forEach(editor => {
+                        editor.innerHTML = '';
+                    });
+                }
+                
+                showNotification('Leçon supprimée avec succès!');
+                loadSavedLessons();
+            }
+        }
+
+        // Fonction pour filtrer les leçons
+        function filterLessons() {
+            loadSavedLessons();
+        }
+
+        // Fonctions utilitaires
+        function formatDate(date) {
+            if (!date) return 'Date non spécifiée';
+            const d = new Date(date);
+            return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+        }
+
+        function truncateText(text, maxLength) {
+            if (!text) return 'Aucune description';
+            // Supprimer les balises HTML pour la version tronquée
+            const div = document.createElement('div');
+            div.innerHTML = text;
+            const plainText = div.textContent || div.innerText || '';
+            
+            if (plainText.length <= maxLength) return plainText;
+            return plainText.substring(0, maxLength) + '...';
         }
     </script>
 </body>
