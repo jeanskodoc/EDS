@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion du Personnel Éducatif</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+        }
+        
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-section-title {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px 15px;
+        }
+        
+        .form-group {
+            flex: 1 0 300px;
+            margin: 0 10px 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-add {
+            background-color: var(--success-color);
+            margin-top: 10px;
+        }
+        
+        .btn-add:hover {
+            background-color: #219653;
+        }
+        
+        .btn-remove {
+            background-color: var(--accent-color);
+            padding: 8px 15px;
+            margin-top: 10px;
+        }
+        
+        .btn-remove:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-export {
+            background-color: var(--warning-color);
+        }
+        
+        .btn-export:hover {
+            background-color: #e67e22;
+        }
+        
+        .btn-delete {
+            background-color: var(--accent-color);
+        }
+        
+        .btn-delete:hover {
+            background-color: #c0392b;
+        }
+        
+        .dynamic-field {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .filters {
+            background-color: var(--light-color);
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .results-table th, .results-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .results-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .results-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .results-table tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .automatic-field {
+            background-color: #f0f7ff;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 4px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        
+        .notification.success {
+            background-color: var(--success-color);
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .notification.error {
+            background-color: var(--accent-color);
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        @media (max-width: 768px) {
+            .form-group {
+                flex: 1 0 100%;
+            }
+            
+            .filter-group {
+                min-width: 100%;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Gestion du Personnel Éducatif</h1>
+        </header>
+        
+        <div class="form-container">
+            <form id="personnelForm">
+                <!-- Section Informations Personnelles -->
+                <div class="form-section">
+                    <h2 class="form-section-title">Informations Personnelles</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nom">Nom *</label>
+                            <input type="text" id="nom" name="nom" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="prenoms">Prénoms *</label>
+                            <input type="text" id="prenoms" name="prenoms" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="date_naissance">Date de naissance *</label>
+                            <input type="date" id="date_naissance" name="date_naissance" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="lieu_naissance">Lieu de naissance *</label>
+                            <input type="text" id="lieu_naissance" name="lieu_naissance" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="groupe_ethnique">Groupe ethnique</label>
+                            <input type="text" id="groupe_ethnique" name="groupe_ethnique">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="fonction">Fonction *</label>
+                            <select id="fonction" name="fonction" required>
+                                <option value="">Sélectionnez une fonction</option>
+                                <option value="enseignant">Enseignant</option>
+                                <option value="surveillant">Surveillant</option>
+                                <option value="vigile">Vigile/Gardien</option>
+                                <option value="censeur">Censeur</option>
+                                <option value="directeur">Directeur</option>
+                                <option value="proviseur">Proviseur</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section Dates de Prise de Service -->
+                <div class="form-section">
+                    <h2 class="form-section-title">Dates de Prise de Service</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="date_engagement">Date d'engagement dans la fonction enseignante *</label>
+                            <input type="date" id="date_engagement" name="date_engagement" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="date_region">Date de prise de service dans la région *</label>
+                            <input type="date" id="date_region" name="date_region" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="date_inspection">Date de prise de service dans l'inspection</label>
+                            <input type="date" id="date_inspection" name="date_inspection">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="date_poste">Date de prise de service au poste actuel *</label>
+                            <input type="date" id="date_poste" name="date_poste" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group automatic-field">
+                            <label>Années de service dans la région</label>
+                            <input type="text" id="annees_region" readonly>
+                        </div>
+                        
+                        <div class="form-group automatic-field">
+                            <label>Années de service dans l'inspection</label>
+                            <input type="text" id="annees_inspection" readonly>
+                        </div>
+                        
+                        <div class="form-group automatic-field">
+                            <label>Années de service au poste actuel</label>
+                            <input type="text" id="annees_poste" readonly>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section Parcours Professionnel -->
+                <div class="form-section">
+                    <h2 class="form-section-title">Parcours Professionnel</h2>
+                    
+                    <div id="parcours-container">
+                        <div class="dynamic-field parcours-item">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Région</label>
+                                    <select name="parcours_region[]" class="parcours-region">
+                                        <option value="">Sélectionnez une région</option>
+                                        <option value="region1">Région 1</option>
+                                        <option value="region2">Région 2</option>
+                                        <option value="region3">Région 3</option>
+                                        <!-- Ajouter d'autres régions ici -->
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Inspection</label>
+                                    <select name="parcours_inspection[]" class="parcours-inspection">
+                                        <option value="">Sélectionnez une inspection</option>
+                                        <!-- Les options seront dynamiquement remplies en fonction de la région -->
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Établissement</label>
+                                    <select name="parcours_etablissement[]" class="parcours-etablissement">
+                                        <option value="">Sélectionnez un établissement</option>
+                                        <!-- Les options seront dynamiquement remplies en fonction de l'inspection -->
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Date de début</label>
+                                    <input type="date" name="parcours_debut[]">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Date de fin</label>
+                                    <input type="date" name="parcours_fin[]">
+                                </div>
+                                
+                                <div class="form-group automatic-field">
+                                    <label>Années dans cette affectation</label>
+                                    <input type="text" name="parcours_annees[]" readonly>
+                                </div>
+                            </div>
+                            
+                            <button type="button" class="btn-remove remove-parcours">Supprimer cette affectation</button>
+                        </div>
+                    </div>
+                    
+                    <button type="button" id="add-parcours" class="btn-add">Ajouter une affectation</button>
+                </div>
+                
+                <!-- Section Diplômes -->
+                <div class="form-section">
+                    <h2 class="form-section-title">Diplômes</h2>
+                    
+                    <div id="diplomes-container">
+                        <div class="dynamic-field diplome-item">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Type de diplôme</label>
+                                    <select name="diplome_type[]">
+                                        <option value="academique">Diplôme académique</option>
+                                        <option value="professionnel">Diplôme professionnel</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Intitulé du diplôme</label>
+                                    <input type="text" name="diplome_intitule[]">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Date d'obtention</label>
+                                    <input type="date" name="diplome_date[]">
+                                </div>
+                            </div>
+                            
+                            <button type="button" class="btn-remove remove-diplome">Supprimer ce diplôme</button>
+                        </div>
+                    </div>
+                    
+                    <button type="button" id="add-diplome" class="btn-add">Ajouter un diplôme</button>
+                </div>
+                
+                <!-- Section Enseignement -->
+                <div class="form-section">
+                    <h2 class="form-section-title">Enseignement</h2>
+                    
+                    <div id="enseignement-container">
+                        <div class="dynamic-field enseignement-item">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Type</label>
+                                    <select name="enseignement_type[]" class="enseignement-type">
+                                        <option value="dominante">Matière dominante</option>
+                                        <option value="sous-dominante">Matière sous-dominante</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Matière</label>
+                                    <input type="text" name="enseignement_matiere[]">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Classe(s)</label>
+                                    <input type="text" name="enseignement_classes[]" placeholder="Séparer par des virgules">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Volume horaire (heures/semaine)</label>
+                                    <input type="number" name="enseignement_volume[]" min="0" step="0.5">
+                                </div>
+                            </div>
+                            
+                            <button type="button" class="btn-remove remove-enseignement">Supprimer cette matière</button>
+                        </div>
+                    </div>
+                    
+                    <button type="button" id="add-enseignement" class="btn-add">Ajouter une matière</button>
+                    
+                    <div class="form-row">
+                        <div class="form-group automatic-field">
+                            <label>Volume horaire total par classe</label>
+                            <textarea id="volume_total" readonly rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section Date de Retraite -->
+                <div class="form-section">
+                    <h2 class="form-section-title">Retraite</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group automatic-field">
+                            <label>Date présumée de départ à la retraite (après 60 ans)</label>
+                            <input type="text" id="date_retraite" readonly>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Boutons de soumission -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <button type="submit" id="submit-btn">Enregistrer</button>
+                        <button type="reset" id="reset-btn" style="background-color: #95a5a6;">Réinitialiser</button>
+                    </div>
+                </div>
+            </form>
+            
+            <!-- Boutons d'actions sur les données -->
+            <div class="action-buttons">
+                <button type="button" id="save-local" class="btn-add">Sauvegarder dans la base locale</button>
+                <button type="button" id="export-json" class="btn-export">Exporter en JSON</button>
+                <button type="button" id="import-json" class="btn-export">Importer un JSON</button>
+                <button type="button" id="delete-all" class="btn-delete">Supprimer toutes les données</button>
+            </div>
+        </div>
+        
+        <!-- Section Filtres et Résultats -->
+        <div class="form-container">
+            <h2 class="form-section-title">Filtres et Recherche</h2>
+            
+            <div class="filters">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="filter-nom">Nom</label>
+                        <input type="text" id="filter-nom" placeholder="Filtrer par nom">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-fonction">Fonction</label>
+                        <select id="filter-fonction">
+                            <option value="">Toutes les fonctions</option>
+                            <option value="enseignant">Enseignant</option>
+                            <option value="surveillant">Surveillant</option>
+                            <option value="vigile">Vigile/Gardien</option>
+                            <option value="censeur">Censeur</option>
+                            <option value="directeur">Directeur</option>
+                            <option value="proviseur">Proviseur</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-matiere">Matière</label>
+                        <input type="text" id="filter-matiere" placeholder="Filtrer par matière">
+                    </div>
+                </div>
+                
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="filter-classe">Classe</label>
+                        <input type="text" id="filter-classe" placeholder="Filtrer par classe">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-region">Région</label>
+                        <select id="filter-region">
+                            <option value="">Toutes les régions</option>
+                            <option value="region1">Région 1</option>
+                            <option value="region2">Région 2</option>
+                            <option value="region3">Région 3</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <button type="button" id="apply-filters" style="margin-top: 25px;">Appliquer les filtres</button>
+                    </div>
+                </div>
+            </div>
+            
+            <h3 style="margin: 20px 0;">Résultats</h3>
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Nom & Prénoms</th>
+                        <th>Fonction</th>
+                        <th>Matière(s)</th>
+                        <th>Classe(s)</th>
+                        <th>Région</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="results-body">
+                    <tr>
+                        <td colspan="6" style="text-align: center;">Aucun résultat à afficher</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Données simulées pour les régions, inspections et établissements
+            const regionsData = {
+                'region1': ['Inspection A', 'Inspection B'],
+                'region2': ['Inspection C', 'Inspection D'],
+                'region3': ['Inspection E', 'Inspection F']
+            };
+            
+            const inspectionsData = {
+                'Inspection A': ['Lycée A1', 'Collège A2'],
+                'Inspection B': ['Lycée B1', 'Collège B2'],
+                'Inspection C': ['Lycée C1', 'Collège C2'],
+                'Inspection D': ['Lycée D1', 'Collège D2'],
+                'Inspection E': ['Lycée E1', 'Collège E2'],
+                'Inspection F': ['Lycée F1', 'Collège F2']
+            };
+            
+            // Initialiser la base de données locale
+            function initDatabase() {
+                if (!localStorage.getItem('personnelData')) {
+                    localStorage.setItem('personnelData', JSON.stringify([]));
+                }
+                refreshTable();
+            }
+            
+            // Afficher une notification
+            function showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+            
+            // Calcul automatique des années de service
+            function calculateYears(startDateField, resultField) {
+                const startDate = new Date(document.getElementById(startDateField).value);
+                if (!isNaN(startDate.getTime())) {
+                    const today = new Date();
+                    let years = today.getFullYear() - startDate.getFullYear();
+                    const monthDiff = today.getMonth() - startDate.getMonth();
+                    
+                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < startDate.getDate())) {
+                        years--;
+                    }
+                    
+                    document.getElementById(resultField).value = years + " ans";
+                } else {
+                    document.getElementById(resultField).value = "";
+                }
+            }
+            
+            // Calcul de la date de retraite
+            function calculateRetirementDate() {
+                const birthDate = new Date(document.getElementById('date_naissance').value);
+                if (!isNaN(birthDate.getTime())) {
+                    const retirementDate = new Date(birthDate);
+                    retirementDate.setFullYear(birthDate.getFullYear() + 60);
+                    document.getElementById('date_retraite').value = retirementDate.toLocaleDateString('fr-FR');
+                } else {
+                    document.getElementById('date_retraite').value = "";
+                }
+            }
+            
+            // Mise à jour des champs automatiques
+            function updateAutomaticFields() {
+                calculateYears('date_region', 'annees_region');
+                calculateYears('date_inspection', 'annees_inspection');
+                calculateYears('date_poste', 'annees_poste');
+                calculateRetirementDate();
+                
+                // Calcul des années pour chaque affectation
+                document.querySelectorAll('.parcours-item').forEach(item => {
+                    const startInput = item.querySelector('input[name="parcours_debut[]"]');
+                    const endInput = item.querySelector('input[name="parcours_fin[]"]');
+                    const resultInput = item.querySelector('input[name="parcours_annees[]"]');
+                    
+                    if (startInput && endInput && resultInput) {
+                        const startDate = new Date(startInput.value);
+                        const endDate = endInput.value ? new Date(endInput.value) : new Date();
+                        
+                        if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+                            let years = endDate.getFullYear() - startDate.getFullYear();
+                            const monthDiff = endDate.getMonth() - startDate.getMonth();
+                            
+                            if (monthDiff < 0 || (monthDiff === 0 && endDate.getDate() < startDate.getDate())) {
+                                years--;
+                            }
+                            
+                            resultInput.value = years + " ans";
+                        } else {
+                            resultInput.value = "";
+                        }
+                    }
+                });
+                
+                // Calcul du volume horaire total par classe
+                calculateTotalVolume();
+            }
+            
+            // Calcul du volume horaire total par classe
+            function calculateTotalVolume() {
+                const classesVolume = {};
+                
+                document.querySelectorAll('.enseignement-item').forEach(item => {
+                    const classesInput = item.querySelector('input[name="enseignement_classes[]"]');
+                    const volumeInput = item.querySelector('input[name="enseignement_volume[]"]');
+                    
+                    if (classesInput && volumeInput && classesInput.value && volumeInput.value) {
+                        const classes = classesInput.value.split(',').map(c => c.trim());
+                        const volume = parseFloat(volumeInput.value) || 0;
+                        
+                        classes.forEach(classe => {
+                            if (classe) {
+                                if (!classesVolume[classe]) {
+                                    classesVolume[classe] = 0;
+                                }
+                                classesVolume[classe] += volume;
+                            }
+                        });
+                    }
+                });
+                
+                let resultText = "";
+                for (const [classe, volume] of Object.entries(classesVolume)) {
+                    resultText += `${classe}: ${volume} h/semaine\n`;
+                }
+                
+                document.getElementById('volume_total').value = resultText || "Aucune donnée";
+            }
+            
+            // Mise à jour des inspections en fonction de la région sélectionnée
+            function updateInspections(regionSelect, inspectionSelect) {
+                const region = regionSelect.value;
+                inspectionSelect.innerHTML = '<option value="">Sélectionnez une inspection</option>';
+                
+                if (region && regionsData[region]) {
+                    regionsData[region].forEach(inspection => {
+                        const option = document.createElement('option');
+                        option.value = inspection;
+                        option.textContent = inspection;
+                        inspectionSelect.appendChild(option);
+                    });
+                }
+            }
+            
+            // Mise à jour des établissements en fonction de l'inspection sélectionnée
+            function updateEtablissements(inspectionSelect, etablissementSelect) {
+                const inspection = inspectionSelect.value;
+                etablissementSelect.innerHTML = '<option value="">Sélectionnez un établissement</option>';
+                
+                if (inspection && inspectionsData[inspection]) {
+                    inspectionsData[inspection].forEach(etablissement => {
+                        const option = document.createElement('option');
+                        option.value = etablissement;
+                        option.textContent = etablissement;
+                        etablissementSelect.appendChild(option);
+                    });
+                }
+            }
+            
+            // Récupérer les données du formulaire
+            function getFormData() {
+                const formData = {
+                    nom: document.getElementById('nom').value,
+                    prenoms: document.getElementById('prenoms').value,
+                    date_naissance: document.getElementById('date_naissance').value,
+                    lieu_naissance: document.getElementById('lieu_naissance').value,
+                    groupe_ethnique: document.getElementById('groupe_ethnique').value,
+                    fonction: document.getElementById('fonction').value,
+                    date_engagement: document.getElementById('date_engagement').value,
+                    date_region: document.getElementById('date_region').value,
+                    date_inspection: document.getElementById('date_inspection').value,
+                    date_poste: document.getElementById('date_poste').value,
+                    annees_region: document.getElementById('annees_region').value,
+                    annees_inspection: document.getElementById('annees_inspection').value,
+                    annees_poste: document.getElementById('annees_poste').value,
+                    date_retraite: document.getElementById('date_retraite').value,
+                    parcours: [],
+                    diplomes: [],
+                    enseignements: []
+                };
+                
+                // Récupérer les parcours
+                document.querySelectorAll('.parcours-item').forEach(item => {
+                    const region = item.querySelector('.parcours-region').value;
+                    const inspection = item.querySelector('.parcours-inspection').value;
+                    const etablissement = item.querySelector('.parcours-etablissement').value;
+                    const debut = item.querySelector('input[name="parcours_debut[]"]').value;
+                    const fin = item.querySelector('input[name="parcours_fin[]"]').value;
+                    const annees = item.querySelector('input[name="parcours_annees[]"]').value;
+                    
+                    if (region || inspection || etablissement || debut || fin) {
+                        formData.parcours.push({
+                            region, inspection, etablissement, debut, fin, annees
+                        });
+                    }
+                });
+                
+                // Récupérer les diplômes
+                document.querySelectorAll('.diplome-item').forEach(item => {
+                    const type = item.querySelector('select[name="diplome_type[]"]').value;
+                    const intitule = item.querySelector('input[name="diplome_intitule[]"]').value;
+                    const date = item.querySelector('input[name="diplome_date[]"]').value;
+                    
+                    if (type || intitule || date) {
+                        formData.diplomes.push({
+                            type, intitule, date
+                        });
+                    }
+                });
+                
+                // Récupérer les enseignements
+                document.querySelectorAll('.enseignement-item').forEach(item => {
+                    const type = item.querySelector('.enseignement-type').value;
+                    const matiere = item.querySelector('input[name="enseignement_matiere[]"]').value;
+                    const classes = item.querySelector('input[name="enseignement_classes[]"]').value;
+                    const volume = item.querySelector('input[name="enseignement_volume[]"]').value;
+                    
+                    if (type || matiere || classes || volume) {
+                        formData.enseignements.push({
+                            type, matiere, classes, volume
+                        });
+                    }
+                });
+                
+                return formData;
+            }
+            
+            // Vérifier si le formulaire est valide
+            function isFormValid() {
+                const requiredFields = [
+                    'nom', 'prenoms', 'date_naissance', 'lieu_naissance',
+                    'fonction', 'date_engagement', 'date_region', 'date_poste'
+                ];
+                
+                for (const field of requiredFields) {
+                    if (!document.getElementById(field).value) {
+                        return false;
+                    }
+                }
+                
+                return true;
+            }
+            
+            // Sauvegarder les données dans le localStorage
+            function saveToLocalStorage() {
+                if (!isFormValid()) {
+                    showNotification('Veuillez remplir tous les champs obligatoires', 'error');
+                    return;
+                }
+                
+                const formData = getFormData();
+                const personnelData = JSON.parse(localStorage.getItem('personnelData') || '[]');
+                
+                // Vérifier si cet enregistrement existe déjà
+                const existingIndex = personnelData.findIndex(item => 
+                    item.nom === formData.nom && 
+                    item.prenoms === formData.prenoms &&
+                    item.date_naissance === formData.date_naissance
+                );
+                
+                if (existingIndex !== -1) {
+                    // Mettre à jour l'enregistrement existant
+                    personnelData[existingIndex] = formData;
+                    showNotification('Données mises à jour avec succès', 'success');
+                } else {
+                    // Ajouter un nouvel enregistrement
+                    personnelData.push(formData);
+                    showNotification('Données enregistrées avec succès', 'success');
+                }
+                
+                localStorage.setItem('personnelData', JSON.stringify(personnelData));
+                refreshTable();
+            }
+            
+            // Exporter les données en JSON
+            function exportToJSON() {
+                const personnelData = JSON.parse(localStorage.getItem('personnelData') || '[]');
+                
+                if (personnelData.length === 0) {
+                    showNotification('Aucune donnée à exporter', 'error');
+                    return;
+                }
+                
+                const dataStr = JSON.stringify(personnelData, null, 2);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                
+                const exportFileDefaultName = 'personnel_educatif.json';
+                
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
+                
+                showNotification('Données exportées avec succès', 'success');
+            }
+            
+            // Importer des données depuis un fichier JSON
+            function importFromJSON(event) {
+                const file = event.target.files[0];
+                
+                if (!file) {
+                    return;
+                }
+                
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        
+                        if (Array.isArray(importedData)) {
+                            localStorage.setItem('personnelData', JSON.stringify(importedData));
+                            showNotification('Données importées avec succès', 'success');
+                            refreshTable();
+                        } else {
+                            showNotification('Format de fichier invalide', 'error');
+                        }
+                    } catch (error) {
+                        showNotification('Erreur lors de l\'importation du fichier', 'error');
+                    }
+                };
+                
+                reader.readAsText(file);
+            }
+            
+            // Supprimer toutes les données
+            function deleteAllData() {
+                if (confirm('Êtes-vous sûr de vouloir supprimer toutes les données ? Cette action est irréversible.')) {
+                    localStorage.setItem('personnelData', JSON.stringify([]));
+                    showNotification('Toutes les données ont été supprimées', 'success');
+                    refreshTable();
+                }
+            }
+            
+            // Rafraîchir le tableau des résultats
+            function refreshTable() {
+                const personnelData = JSON.parse(localStorage.getItem('personnelData') || '[]');
+                const resultsBody = document.getElementById('results-body');
+                
+                if (personnelData.length === 0) {
+                    resultsBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Aucun résultat à afficher</td></tr>';
+                    return;
+                }
+                
+                let tableContent = '';
+                
+                personnelData.forEach((person, index) => {
+                    const matieres = person.enseignements.map(e => e.matiere).filter(m => m).join(', ');
+                    const classes = person.enseignements.map(e => e.classes).filter(c => c).join(', ');
+                    
+                    tableContent += `
+                        <tr>
+                            <td>${person.nom} ${person.prenoms}</td>
+                            <td>${person.fonction}</td>
+                            <td>${matieres || '-'}</td>
+                            <td>${classes || '-'}</td>
+                            <td>${person.parcours.length > 0 ? person.parcours[0].region : '-'}</td>
+                            <td>
+                                <button style="padding: 5px 10px; margin-right: 5px;" onclick="editPerson(${index})">Modifier</button>
+                                <button style="padding: 5px 10px; background-color: var(--accent-color);" onclick="deletePerson(${index})">Supprimer</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                resultsBody.innerHTML = tableContent;
+            }
+            
+            // Éditer une personne
+            window.editPerson = function(index) {
+                const personnelData = JSON.parse(localStorage.getItem('personnelData') || '[]');
+                const person = personnelData[index];
+                
+                // Remplir le formulaire avec les données de la personne
+                document.getElementById('nom').value = person.nom || '';
+                document.getElementById('prenoms').value = person.prenoms || '';
+                document.getElementById('date_naissance').value = person.date_naissance || '';
+                document.getElementById('lieu_naissance').value = person.lieu_naissance || '';
+                document.getElementById('groupe_ethnique').value = person.groupe_ethnique || '';
+                document.getElementById('fonction').value = person.fonction || '';
+                document.getElementById('date_engagement').value = person.date_engagement || '';
+                document.getElementById('date_region').value = person.date_region || '';
+                document.getElementById('date_inspection').value = person.date_inspection || '';
+                document.getElementById('date_poste').value = person.date_poste || '';
+                
+                // Vider les conteneurs dynamiques
+                document.getElementById('parcours-container').innerHTML = '';
+                document.getElementById('diplomes-container').innerHTML = '';
+                document.getElementById('enseignement-container').innerHTML = '';
+                
+                // Ajouter les parcours
+                if (person.parcours && person.parcours.length > 0) {
+                    person.parcours.forEach((parcours, i) => {
+                        const newItem = document.querySelector('.parcours-item').cloneNode(true);
+                        
+                        if (i === 0) {
+                            document.getElementById('parcours-container').appendChild(newItem);
+                        } else {
+                            document.getElementById('parcours-container').appendChild(newItem);
+                        }
+                        
+                        newItem.querySelector('.parcours-region').value = parcours.region || '';
+                        newItem.querySelector('.parcours-inspection').value = parcours.inspection || '';
+                        newItem.querySelector('.parcours-etablissement').value = parcours.etablissement || '';
+                        newItem.querySelector('input[name="parcours_debut[]"]').value = parcours.debut || '';
+                        newItem.querySelector('input[name="parcours_fin[]"]').value = parcours.fin || '';
+                    });
+                } else {
+                    document.getElementById('parcours-container').innerHTML = document.querySelector('.parcours-item').outerHTML;
+                }
+                
+                // Ajouter les diplômes
+                if (person.diplomes && person.diplomes.length > 0) {
+                    person.diplomes.forEach((diplome, i) => {
+                        const newItem = document.querySelector('.diplome-item').cloneNode(true);
+                        
+                        if (i === 0) {
+                            document.getElementById('diplomes-container').appendChild(newItem);
+                        } else {
+                            document.getElementById('diplomes-container').appendChild(newItem);
+                        }
+                        
+                        newItem.querySelector('select[name="diplome_type[]"]').value = diplome.type || '';
+                        newItem.querySelector('input[name="diplome_intitule[]"]').value = diplome.intitule || '';
+                        newItem.querySelector('input[name="diplome_date[]"]').value = diplome.date || '';
+                    });
+                } else {
+                    document.getElementById('diplomes-container').innerHTML = document.querySelector('.diplome-item').outerHTML;
+                }
+                
+                // Ajouter les enseignements
+                if (person.enseignements && person.enseignements.length > 0) {
+                    person.enseignements.forEach((enseignement, i) => {
+                        const newItem = document.querySelector('.enseignement-item').cloneNode(true);
+                        
+                        if (i === 0) {
+                            document.getElementById('enseignement-container').appendChild(newItem);
+                        } else {
+                            document.getElementById('enseignement-container').appendChild(newItem);
+                        }
+                        
+                        newItem.querySelector('.enseignement-type').value = enseignement.type || '';
+                        newItem.querySelector('input[name="enseignement_matiere[]"]').value = enseignement.matiere || '';
+                        newItem.querySelector('input[name="enseignement_classes[]"]').value = enseignement.classes || '';
+                        newItem.querySelector('input[name="enseignement_volume[]"]').value = enseignement.volume || '';
+                    });
+                } else {
+                    document.getElementById('enseignement-container').innerHTML = document.querySelector('.enseignement-item').outerHTML;
+                }
+                
+                // Mettre à jour les champs automatiques
+                updateAutomaticFields();
+                
+                // Ajouter les événements de suppression
+                attachRemoveEvents();
+                
+                showNotification('Données chargées pour modification', 'success');
+            };
+            
+            // Supprimer une personne
+            window.deletePerson = function(index) {
+                if (confirm('Êtes-vous sûr de vouloir supprimer cet enregistrement ?')) {
+                    const personnelData = JSON.parse(localStorage.getItem('personnelData') || '[]');
+                    personnelData.splice(index, 1);
+                    localStorage.setItem('personnelData', JSON.stringify(personnelData));
+                    refreshTable();
+                    showNotification('Enregistrement supprimé avec succès', 'success');
+                }
+            };
+            
+            // Attacher les événements de suppression
+            function attachRemoveEvents() {
+                document.querySelectorAll('.remove-parcours').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        if (document.querySelectorAll('.parcours-item').length > 1) {
+                            btn.closest('.parcours-item').remove();
+                            updateAutomaticFields();
+                        }
+                    });
+                });
+                
+                document.querySelectorAll('.remove-diplome').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        if (document.querySelectorAll('.diplome-item').length > 1) {
+                            btn.closest('.diplome-item').remove();
+                        }
+                    });
+                });
+                
+                document.querySelectorAll('.remove-enseignement').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        if (document.querySelectorAll('.enseignement-item').length > 1) {
+                            btn.closest('.enseignement-item').remove();
+                            updateAutomaticFields();
+                        }
+                    });
+                });
+            }
+            
+            // Événements pour les champs de date
+            document.getElementById('date_region').addEventListener('change', () => updateAutomaticFields());
+            document.getElementById('date_inspection').addEventListener('change', () => updateAutomaticFields());
+            document.getElementById('date_poste').addEventListener('change', () => updateAutomaticFields());
+            document.getElementById('date_naissance').addEventListener('change', () => updateAutomaticFields());
+            document.getElementById('date_engagement').addEventListener('change', () => updateAutomaticFields());
+            
+            // Événements pour les champs dynamiques du parcours
+            document.addEventListener('change', function(e) {
+                if (e.target.classList.contains('parcours-region')) {
+                    const inspectionSelect = e.target.closest('.parcours-item').querySelector('.parcours-inspection');
+                    updateInspections(e.target, inspectionSelect);
+                }
+                
+                if (e.target.classList.contains('parcours-inspection')) {
+                    const etablissementSelect = e.target.closest('.parcours-item').querySelector('.parcours-etablissement');
+                    updateEtablissements(e.target, etablissementSelect);
+                }
+                
+                if (e.target.name && (e.target.name.includes('parcours_debut') || e.target.name.includes('parcours_fin'))) {
+                    updateAutomaticFields();
+                }
+                
+                if (e.target.name && e.target.name.includes('enseignement_')) {
+                    updateAutomaticFields();
+                }
+            });
+            
+            // Ajout d'une affectation
+            document.getElementById('add-parcours').addEventListener('click', function() {
+                const container = document.getElementById('parcours-container');
+                const newItem = container.querySelector('.parcours-item').cloneNode(true);
+                
+                // Réinitialiser les valeurs
+                newItem.querySelectorAll('input, select').forEach(field => {
+                    if (field.type !== 'button') field.value = '';
+                });
+                
+                container.appendChild(newItem);
+                
+                // Ajouter l'événement de suppression
+                newItem.querySelector('.remove-parcours').addEventListener('click', function() {
+                    if (document.querySelectorAll('.parcours-item').length > 1) {
+                        newItem.remove();
+                        updateAutomaticFields();
+                    }
+                });
+            });
+            
+            // Ajout d'un diplôme
+            document.getElementById('add-diplome').addEventListener('click', function() {
+                const container = document.getElementById('diplomes-container');
+                const newItem = container.querySelector('.diplome-item').cloneNode(true);
+                
+                // Réinitialiser les valeurs
+                newItem.querySelectorAll('input, select').forEach(field => {
+                    if (field.type !== 'button') field.value = '';
+                });
+                
+                container.appendChild(newItem);
+                
+                // Ajouter l'événement de suppression
+                newItem.querySelector('.remove-diplome').addEventListener('click', function() {
+                    if (document.querySelectorAll('.diplome-item').length > 1) {
+                        newItem.remove();
+                    }
+                });
+            });
+            
+            // Ajout d'une matière
+            document.getElementById('add-enseignement').addEventListener('click', function() {
+                const container = document.getElementById('enseignement-container');
+                const newItem = container.querySelector('.enseignement-item').cloneNode(true);
+                
+                // Réinitialiser les valeurs
+                newItem.querySelectorAll('input, select').forEach(field => {
+                    if (field.type !== 'button') field.value = '';
+                });
+                
+                container.appendChild(newItem);
+                
+                // Ajouter l'événement de suppression
+                newItem.querySelector('.remove-enseignement').addEventListener('click', function() {
+                    if (document.querySelectorAll('.enseignement-item').length > 1) {
+                        newItem.remove();
+                        updateAutomaticFields();
+                    }
+                });
+            });
+            
+            // Événements de suppression pour les éléments initiaux
+            function attachInitialRemoveEvents() {
+                document.querySelectorAll('.remove-parcours').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        if (document.querySelectorAll('.parcours-item').length > 1) {
+                            btn.closest('.parcours-item').remove();
+                            updateAutomaticFields();
+                        }
+                    });
+                });
+                
+                document.querySelectorAll('.remove-diplome').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        if (document.querySelectorAll('.diplome-item').length > 1) {
+                            btn.closest('.diplome-item').remove();
+                        }
+                    });
+                });
+                
+                document.querySelectorAll('.remove-enseignement').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        if (document.querySelectorAll('.enseignement-item').length > 1) {
+                            btn.closest('.enseignement-item').remove();
+                            updateAutomaticFields();
+                        }
+                    });
+                });
+            }
+            
+            // Soumission du formulaire
+            document.getElementById('personnelForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveToLocalStorage();
+            });
+            
+            // Application des filtres
+            document.getElementById('apply-filters').addEventListener('click', function() {
+                refreshTable();
+            });
+            
+            // Sauvegarder dans la base locale
+            document.getElementById('save-local').addEventListener('click', saveToLocalStorage);
+            
+            // Exporter en JSON
+            document.getElementById('export-json').addEventListener('click', exportToJSON);
+            
+            // Importer depuis JSON
+            document.getElementById('import-json').addEventListener('click', function() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                input.addEventListener('change', importFromJSON);
+                input.click();
+            });
+            
+            // Supprimer toutes les données
+            document.getElementById('delete-all').addEventListener('click', deleteAllData);
+            
+            // Initialisation
+            initDatabase();
+            updateAutomaticFields();
+            attachInitialRemoveEvents();
+        });
+    </script>
+</body>
+</html>
