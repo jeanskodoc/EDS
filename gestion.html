@@ -32,7 +32,7 @@
             color: #333;
         }
         
-        .form-section, .filter-section, .students-list {
+        .form-section, .filter-section, .students-list, .stats-section {
             margin-bottom: 30px;
             padding: 20px;
             border: 1px solid #ddd;
@@ -182,6 +182,46 @@
             background-color: #f44336;
         }
         
+        .stats-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .stats-box {
+            flex: 1;
+            min-width: 300px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stats-box h3 {
+            margin-bottom: 15px;
+            color: #333;
+            text-align: center;
+        }
+        
+        .stats-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .stats-item:last-child {
+            border-bottom: none;
+        }
+        
+        .stats-total {
+            font-weight: bold;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 2px solid #ddd;
+        }
+        
         @media (max-width: 768px) {
             .form-group {
                 flex: 1 0 100%;
@@ -196,6 +236,10 @@
             }
             
             .filter-controls > div {
+                min-width: 100%;
+            }
+            
+            .stats-box {
                 min-width: 100%;
             }
         }
@@ -311,6 +355,33 @@
                     <button type="reset" class="btn-danger">Annuler</button>
                 </div>
             </form>
+        </div>
+        
+        <!-- Statistiques -->
+        <div class="stats-section">
+            <h2>Statistiques des Élèves</h2>
+            <div class="stats-container">
+                <div class="stats-box">
+                    <h3>Effectif par Classe</h3>
+                    <div id="statsByClass">
+                        <!-- Les statistiques par classe seront ajoutées ici -->
+                    </div>
+                </div>
+                
+                <div class="stats-box">
+                    <h3>Effectif par Sexe</h3>
+                    <div id="statsByGender">
+                        <!-- Les statistiques par sexe seront ajoutées ici -->
+                    </div>
+                </div>
+                
+                <div class="stats-box">
+                    <h3>Effectif par Statut</h3>
+                    <div id="statsByStatus">
+                        <!-- Les statistiques par statut seront ajoutées ici -->
+                    </div>
+                </div>
+            </div>
         </div>
         
         <!-- Filtres et actions -->
@@ -444,21 +515,34 @@
             
             // Charger les étudiants au démarrage
             loadStudents();
+            updateStatistics();
+            
+            // Définir la date d'inscription à aujourd'hui par défaut
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('registrationDate').value = today;
         });
         
         // Calculer l'âge à partir de la date de naissance
         function calculateAge() {
-            const birthDate = new Date(document.getElementById('birthDate').value);
-            if (!isNaN(birthDate.getTime())) {
+            const birthDateInput = document.getElementById('birthDate');
+            const ageInput = document.getElementById('age');
+            
+            if (birthDateInput.value) {
+                const birthDate = new Date(birthDateInput.value);
                 const today = new Date();
+                
+                // Calculer l'âge
                 let age = today.getFullYear() - birthDate.getFullYear();
                 const monthDiff = today.getMonth() - birthDate.getMonth();
                 
+                // Ajuster si l'anniversaire n'est pas encore passé cette année
                 if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
                     age--;
                 }
                 
-                document.getElementById('age').value = age;
+                ageInput.value = age;
+            } else {
+                ageInput.value = '';
             }
         }
         
@@ -471,6 +555,9 @@
         
         // Sauvegarder un élève
         function saveStudent() {
+            // Recalculer l'âge avant sauvegarde
+            calculateAge();
+            
             const student = {
                 id: Date.now(), // Utiliser l'horodatage comme ID unique
                 lastName: document.getElementById('lastName').value,
@@ -488,13 +575,26 @@
                 parentContact: document.getElementById('parentContact').value
             };
             
+            // Validation des champs requis
+            if (!student.lastName || !student.firstName || !student.birthDate || 
+                !student.gender || !student.status || !student.class) {
+                showNotification('Veuillez remplir tous les champs obligatoires.', 'error');
+                return;
+            }
+            
             const students = JSON.parse(localStorage.getItem('students'));
             students.push(student);
             localStorage.setItem('students', JSON.stringify(students));
             
             showNotification('Élève enregistré avec succès!', 'success');
             document.getElementById('studentForm').reset();
+            
+            // Réinitialiser la date d'inscription à aujourd'hui
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('registrationDate').value = today;
+            
             loadStudents();
+            updateStatistics();
         }
         
         // Charger la liste des élèves
@@ -502,6 +602,13 @@
             const students = JSON.parse(localStorage.getItem('students'));
             const tableBody = document.getElementById('studentsTableBody');
             tableBody.innerHTML = '';
+            
+            if (students.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="10" style="text-align: center;">Aucun élève enregistré</td>`;
+                tableBody.appendChild(row);
+                return;
+            }
             
             students.forEach(student => {
                 const row = document.createElement('tr');
@@ -523,6 +630,58 @@
             });
         }
         
+        // Mettre à jour les statistiques
+        function updateStatistics() {
+            const students = JSON.parse(localStorage.getItem('students'));
+            
+            // Statistiques par classe
+            const statsByClass = {};
+            const classes = ["CP", "CE1", "CE2", "CM1", "CM2", "6ème", "5ème", "4ème", "3ème", "2nde", "1ère", "Terminale"];
+            
+            classes.forEach(classe => {
+                statsByClass[classe] = students.filter(student => student.class === classe).length;
+            });
+            
+            let classStatsHTML = '';
+            let totalByClass = 0;
+            
+            classes.forEach(classe => {
+                if (statsByClass[classe] > 0) {
+                    classStatsHTML += `<div class="stats-item">${classe}: <span>${statsByClass[classe]}</span></div>`;
+                    totalByClass += statsByClass[classe];
+                }
+            });
+            
+            classStatsHTML += `<div class="stats-total">Total: <span>${totalByClass}</span></div>`;
+            document.getElementById('statsByClass').innerHTML = classStatsHTML;
+            
+            // Statistiques par sexe
+            const statsByGender = {
+                'M': students.filter(student => student.gender === 'M').length,
+                'F': students.filter(student => student.gender === 'F').length
+            };
+            
+            const genderStatsHTML = `
+                <div class="stats-item">Masculin: <span>${statsByGender['M']}</span></div>
+                <div class="stats-item">Féminin: <span>${statsByGender['F']}</span></div>
+                <div class="stats-total">Total: <span>${statsByGender['M'] + statsByGender['F']}</span></div>
+            `;
+            document.getElementById('statsByGender').innerHTML = genderStatsHTML;
+            
+            // Statistiques par statut
+            const statsByStatus = {
+                'Nouveau': students.filter(student => student.status === 'Nouveau').length,
+                'Redoublant': students.filter(student => student.status === 'Redoublant').length
+            };
+            
+            const statusStatsHTML = `
+                <div class="stats-item">Nouveaux: <span>${statsByStatus['Nouveau']}</span></div>
+                <div class="stats-item">Redoublants: <span>${statsByStatus['Redoublant']}</span></div>
+                <div class="stats-total">Total: <span>${statsByStatus['Nouveau'] + statsByStatus['Redoublant']}</span></div>
+            `;
+            document.getElementById('statsByStatus').innerHTML = statusStatsHTML;
+        }
+        
         // Filtrer les élèves
         function filterStudents() {
             const searchName = document.getElementById('searchName').value.toLowerCase();
@@ -535,28 +694,39 @@
             const tableBody = document.getElementById('studentsTableBody');
             tableBody.innerHTML = '';
             
-            students.forEach(student => {
+            const filteredStudents = students.filter(student => {
                 // Appliquer les filtres
                 if (searchName && !`${student.lastName} ${student.firstName}`.toLowerCase().includes(searchName)) {
-                    return;
+                    return false;
                 }
                 
                 if (filterAge && student.age != filterAge) {
-                    return;
+                    return false;
                 }
                 
                 if (filterGender && student.gender !== filterGender) {
-                    return;
+                    return false;
                 }
                 
                 if (filterStatus && student.status !== filterStatus) {
-                    return;
+                    return false;
                 }
                 
                 if (filterClass && student.class !== filterClass) {
-                    return;
+                    return false;
                 }
                 
+                return true;
+            });
+            
+            if (filteredStudents.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="10" style="text-align: center;">Aucun élève ne correspond aux critères</td>`;
+                tableBody.appendChild(row);
+                return;
+            }
+            
+            filteredStudents.forEach(student => {
                 // Ajouter la ligne si l'élève correspond aux critères
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -584,6 +754,7 @@
                 students = students.filter(student => student.id !== id);
                 localStorage.setItem('students', JSON.stringify(students));
                 loadStudents();
+                updateStatistics();
                 showNotification('Élève supprimé avec succès!', 'success');
             }
         }
@@ -591,6 +762,11 @@
         // Générer des fichiers JSON
         function generateJsonFiles() {
             const students = JSON.parse(localStorage.getItem('students'));
+            
+            if (students.length === 0) {
+                showNotification('Aucun élève à exporter.', 'error');
+                return;
+            }
             
             // Créer un fichier JSON pour tous les élèves
             const allData = JSON.stringify(students, null, 2);
@@ -623,6 +799,12 @@
         // Exporter les données
         function exportData() {
             const students = JSON.parse(localStorage.getItem('students'));
+            
+            if (students.length === 0) {
+                showNotification('Aucun élève à exporter.', 'error');
+                return;
+            }
+            
             const data = JSON.stringify(students, null, 2);
             downloadFile(data, 'export_eleves.json', 'application/json');
             showNotification('Données exportées avec succès!', 'success');
@@ -643,6 +825,7 @@
                         const mergedStudents = [...currentStudents, ...importedData];
                         localStorage.setItem('students', JSON.stringify(mergedStudents));
                         loadStudents();
+                        updateStatistics();
                         showNotification('Données importées avec succès!', 'success');
                     } else {
                         showNotification('Le fichier importé n\'a pas le format correct.', 'error');
@@ -677,7 +860,9 @@
         function formatDate(dateString) {
             if (!dateString) return '';
             const date = new Date(dateString);
-            return date.toLocaleDateString('fr-FR');
+            // Gérer le décalage de fuseau horaire
+            const adjustedDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+            return adjustedDate.toLocaleDateString('fr-FR');
         }
         
         // Afficher une notification
