@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- Bibliothèque pour l'export PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Bibliothèque pour l'export Word -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/7.8.2/docx.js"></script>
     <style>
         :root {
             --primary-color: #3498db;
@@ -72,6 +76,7 @@
         
         input[type="text"], 
         input[type="number"], 
+        input[type="date"],
         textarea, 
         select {
             width: 100%;
@@ -146,6 +151,14 @@
         
         .btn-warning:hover {
             background: #e67e22;
+        }
+        
+        .btn-info {
+            background: #17a2b8;
+        }
+        
+        .btn-info:hover {
+            background: #138496;
         }
         
         .rich-text-editor {
@@ -244,13 +257,21 @@
         
         .media-preview {
             margin: 10px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         
-        .media-preview img, .media-preview video {
+        .media-preview img, .media-preview video, .media-preview audio {
             max-width: 300px;
             max-height: 200px;
             margin-right: 10px;
             margin-bottom: 10px;
+        }
+        
+        .media-preview audio {
+            width: 100%;
+            max-width: 400px;
         }
         
         .small-textarea {
@@ -464,6 +485,75 @@
         .file-input {
             display: none;
         }
+        
+        .situation-probleme {
+            background-color: #e8f4fc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .tableau-activites {
+            margin: 20px 0;
+        }
+        
+        .tableau-activites h3 {
+            margin-bottom: 10px;
+        }
+        
+        .exercice-maison {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .recapitulation {
+            background-color: #e8f6ef;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .export-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            
+            body, .container {
+                padding: 0;
+                margin: 0;
+                background: white;
+                box-shadow: none;
+            }
+            
+            .section {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+            
+            h1, h2, h3 {
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+            
+            table {
+                page-break-inside: auto;
+                break-inside: auto;
+            }
+            
+            tr {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+        }
     </style>
 </head>
 <body>
@@ -471,7 +561,7 @@
         <h1>Fiche de Préparation de Séance Pédagogique</h1>
         
         <!-- Boutons d'action principaux -->
-        <div class="form-group">
+        <div class="form-group no-print">
             <button class="btn btn-success" onclick="saveForm()"><i class="fas fa-save"></i> Sauvegarder</button>
             <button class="btn" onclick="exportJSON()"><i class="fas fa-file-export"></i> Exporter JSON</button>
             <button class="btn btn-warning" onclick="importJSON()"><i class="fas fa-file-import"></i> Importer JSON</button>
@@ -479,9 +569,26 @@
             <input type="file" id="jsonFileInput" class="file-input" accept=".json">
         </div>
         
+        <!-- Boutons d'exportation -->
+        <div class="export-buttons no-print">
+            <button class="btn btn-info" onclick="exportToPDF()"><i class="fas fa-file-pdf"></i> Exporter PDF</button>
+            <button class="btn btn-info" onclick="exportToWord()"><i class="fas fa-file-word"></i> Exporter Word</button>
+            <button class="btn" onclick="window.print()"><i class="fas fa-print"></i> Imprimer</button>
+        </div>
+        
         <!-- FICHE 1 - Informations générales -->
         <div class="section">
             <h2>Fiche 1 - Informations Générales</h2>
+            
+            <div class="form-group">
+                <label for="date_cours">Date du cours:</label>
+                <input type="date" id="date_cours" name="date_cours">
+            </div>
+            
+            <div class="form-group">
+                <label for="annee_scolaire">Année scolaire:</label>
+                <input type="text" id="annee_scolaire" name="annee_scolaire" placeholder="Ex: 2023-2024">
+            </div>
             
             <div class="form-group">
                 <label for="enseignant">Nom de l'enseignant:</label>
@@ -532,6 +639,7 @@
                             <div class="color-palette" id="competence-color-palette"></div>
                         </div>
                         <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                        <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
                         <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
                         <button type="button" onclick="openLatexModal('competence-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
                     </div>
@@ -560,6 +668,7 @@
                             <div class="color-palette" id="objectifs-color-palette"></div>
                         </div>
                         <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                        <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
                         <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
                         <button type="button" onclick="openLatexModal('objectifs-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
                     </div>
@@ -596,6 +705,7 @@
                             <div class="color-palette" id="prerequis-color-palette"></div>
                         </div>
                         <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                        <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
                         <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
                         <button type="button" onclick="openLatexModal('prerequis-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
                     </div>
@@ -621,6 +731,7 @@
                             <div class="color-palette" id="lexique-color-palette"></div>
                         </div>
                         <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                        <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
                         <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
                         <button type="button" onclick="openLatexModal('lexique-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
                     </div>
@@ -646,6 +757,7 @@
                             <div class="color-palette" id="references-color-palette"></div>
                         </div>
                         <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                        <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
                         <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
                         <button type="button" onclick="openLatexModal('references-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
                     </div>
@@ -656,9 +768,128 @@
             </div>
             
             <div class="form-group">
-                <label for="media1">Importer image ou vidéo:</label>
-                <input type="file" id="media1" name="media1" accept="image/*,video/*" onchange="previewMedia(this, 'mediaPreview1')">
+                <label for="media1">Importer image, audio ou vidéo:</label>
+                <input type="file" id="media1" name="media1" accept="image/*,video/*,audio/*" onchange="previewMedia(this, 'mediaPreview1')">
                 <div class="media-preview" id="mediaPreview1"></div>
+            </div>
+        </div>
+        
+        <!-- Situation problème -->
+        <div class="section situation-probleme">
+            <h2>Situation Problème</h2>
+            
+            <div class="form-group">
+                <label for="situation_enonce">Énoncé de la situation problème:</label>
+                <div class="editor-toggle">
+                    <button class="editor-toggle-btn" data-target="situation_enonce">Basculer Éditeur</button>
+                </div>
+                <div class="rich-text-editor" id="situation_enonce-editor">
+                    <div class="toolbar">
+                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                        <span class="divider"></span>
+                        <div class="color-picker">
+                            <button type="button" class="color-button" data-command="foreColor"></button>
+                            <div class="color-palette" id="situation_enonce-color-palette"></div>
+                        </div>
+                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                        <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
+                        <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
+                        <button type="button" onclick="openLatexModal('situation_enonce-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
+                    </div>
+                    <div class="editor-content" id="situation_enonce-content" contenteditable="true" onkeyup="updateCursorPosition('situation_enonce-content')" onclick="updateCursorPosition('situation_enonce-content')">Un client souhaite construire une piscine de forme rectangulaire de 8m de longueur, 4m de largeur et 1,5m de profondeur. Comment calculer le volume de béton nécessaire pour réaliser cette piscine?</div>
+                    <div class="cursor-position" id="situation_enonce-cursor-position">Position du curseur: 0</div>
+                </div>
+                <textarea id="situation_enonce" name="situation_enonce" style="display:none;">Un client souhaite construire une piscine de forme rectangulaire de 8m de longueur, 4m de largeur et 1,5m de profondeur. Comment calculer le volume de béton nécessaire pour réaliser cette piscine?</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="situation_solutions">Proposition de solutions:</label>
+                <div class="editor-toggle">
+                    <button class="editor-toggle-btn" data-target="situation_solutions">Basculer Éditeur</button>
+                </div>
+                <div class="rich-text-editor" id="situation_solutions-editor">
+                    <div class="toolbar">
+                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                        <span class="divider"></span>
+                        <div class="color-picker">
+                            <button type="button" class="color-button" data-command="foreColor"></button>
+                            <div class="color-palette" id="situation_solutions-color-palette"></div>
+                        </div>
+                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                        <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
+                        <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
+                        <button type="button" onclick="openLatexModal('situation_solutions-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
+                    </div>
+                    <div class="editor-content" id="situation_solutions-content" contenteditable="true" onkeyup="updateCursorPosition('situation_solutions-content')" onclick="updateCursorPosition('situation_solutions-content')">- Calculer le volume de la piscine: V = Longueur × Largeur × Profondeur<br>- Appliquer la formule: V = 8m × 4m × 1,5m = 48 m³</div>
+                    <div class="cursor-position" id="situation_solutions-cursor-position">Position du curseur: 0</div>
+                </div>
+                <textarea id="situation_solutions" name="situation_solutions" style="display:none;">- Calculer le volume de la piscine: V = Longueur × Largeur × Profondeur
+- Appliquer la formule: V = 8m × 4m × 1,5m = 48 m³</textarea>
+            </div>
+        </div>
+        
+        <!-- Tableau des activités -->
+        <div class="section tableau-activites">
+            <h2>Tableau des Activités</h2>
+            
+            <h3>Activités de l'Enseignant</h3>
+            <div class="form-group">
+                <div class="editor-toggle">
+                    <button class="editor-toggle-btn" data-target="activites_enseignant">Basculer Éditeur</button>
+                </div>
+                <div class="rich-text-editor" id="activites_enseignant-editor">
+                    <div class="toolbar">
+                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                        <span class="divider"></span>
+                        <div class="color-picker">
+                            <button type="button" class="color-button" data-command="foreColor"></button>
+                            <div class="color-palette" id="activites_enseignant-color-palette"></div>
+                        </div>
+                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                        <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
+                        <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
+                        <button type="button" onclick="openLatexModal('activites_enseignant-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
+                    </div>
+                    <div class="editor-content" id="activites_enseignant-content" contenteditable="true" onkeyup="updateCursorPosition('activites_enseignant-content')" onclick="updateCursorPosition('activites_enseignant-content')">- Présenter les différentes figures géométriques<br>- Expliquer les formules de calcul de surface et volume<br>- Guider les élèves dans la résolution d'exercices</div>
+                    <div class="cursor-position" id="activites_enseignant-cursor-position">Position du curseur: 0</div>
+                </div>
+                <textarea id="activites_enseignant" name="activites_enseignant" style="display:none;">- Présenter les différentes figures géométriques
+- Expliquer les formules de calcul de surface et volume
+- Guider les élèves dans la résolution d'exercices</textarea>
+            </div>
+            
+            <h3>Activités des Élèves</h3>
+            <div class="form-group">
+                <div class="editor-toggle">
+                    <button class="editor-toggle-btn" data-target="activites_eleves">Basculer Éditeur</button>
+                </div>
+                <div class="rich-text-editor" id="activites_eleves-editor">
+                    <div class="toolbar">
+                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                        <span class="divider"></span>
+                        <div class="color-picker">
+                            <button type="button" class="color-button" data-command="foreColor"></button>
+                            <div class="color-palette" id="activites_eleves-color-palette"></div>
+                        </div>
+                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                        <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
+                        <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
+                        <button type="button" onclick="openLatexModal('activites_eleves-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
+                    </div>
+                    <div class="editor-content" id="activites_eleves-content" contenteditable="true" onkeyup="updateCursorPosition('activites_eleves-content')" onclick="updateCursorPosition('activites_eleves-content')">- Identifier les différentes figures géométriques présentées<br>- Appliquer les formules pour résoudre les exercices proposés<br>- Participer activement aux discussions de groupe</div>
+                    <div class="cursor-position" id="activites_eleves-cursor-position">Position du curseur: 0</div>
+                </div>
+                <textarea id="activites_eleves" name="activites_eleves" style="display:none;">- Identifier les différentes figures géométriques présentées
+- Appliquer les formules pour résoudre les exercices proposés
+- Participer activement aux discussions de groupe</textarea>
             </div>
         </div>
         
@@ -754,8 +985,34 @@
             <button class="btn" onclick="addRow()">Ajouter une ligne</button>
             
             <div class="form-group">
-                <label for="media2">Importer image ou vidéo:</label>
-                <input type="file" id="media2" name="media2" accept="image/*,video/*" onchange="previewMedia(this, 'mediaPreview2')">
+                <label for="methode_conseillee">Méthode conseillée:</label>
+                <div class="editor-toggle">
+                    <button class="editor-toggle-btn" data-target="methode_conseillee">Basculer Éditeur</button>
+                </div>
+                <div class="rich-text-editor" id="methode_conseillee-editor">
+                    <div class="toolbar">
+                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                        <span class="divider"></span>
+                        <div class="color-picker">
+                            <button type="button" class="color-button" data-command="foreColor"></button>
+                            <div class="color-palette" id="methode_conseillee-color-palette"></div>
+                        </div>
+                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                        <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
+                        <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
+                        <button type="button" onclick="openLatexModal('methode_conseillee-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
+                    </div>
+                    <div class="editor-content" id="methode_conseillee-content" contenteditable="true" onkeyup="updateCursorPosition('methode_conseillee-content')" onclick="updateCursorPosition('methode_conseillee-content')">Méthode active et participative, avec démonstrations pratiques et exercices d'application.</div>
+                    <div class="cursor-position" id="methode_conseillee-cursor-position">Position du curseur: 0</div>
+                </div>
+                <textarea id="methode_conseillee" name="methode_conseillee" style="display:none;">Méthode active et participative, avec démonstrations pratiques et exercices d'application.</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="media2">Importer image, audio ou vidéo:</label>
+                <input type="file" id="media2" name="media2" accept="image/*,video/*,audio/*" onchange="previewMedia(this, 'mediaPreview2')">
                 <div class="media-preview" id="mediaPreview2"></div>
             </div>
         </div>
@@ -836,6 +1093,78 @@
             
             <button class="btn" onclick="addRow2()">Ajouter une ligne</button>
             
+            <!-- Exercices de maison -->
+            <div class="exercice-maison">
+                <h2>Exercices de Maison</h2>
+                
+                <div class="form-group">
+                    <label for="exercice_enonce">Énoncé des exercices:</label>
+                    <div class="editor-toggle">
+                        <button class="editor-toggle-btn" data-target="exercice_enonce">Basculer Éditeur</button>
+                    </div>
+                    <div class="rich-text-editor" id="exercice_enonce-editor">
+                        <div class="toolbar">
+                            <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                            <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                            <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                            <span class="divider"></span>
+                            <div class="color-picker">
+                                <button type="button" class="color-button" data-command="foreColor"></button>
+                                <div class="color-palette" id="exercice_enonce-color-palette"></div>
+                            </div>
+                            <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                            <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
+                            <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
+                            <button type="button" onclick="openLatexModal('exercice_enonce-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
+                        </div>
+                        <div class="editor-content" id="exercice_enonce-content" contenteditable="true" onkeyup="updateCursorPosition('exercice_enonce-content')" onclick="updateCursorPosition('exercice_enonce-content')">1. Calculer la surface d'un rectangle de 12m de longueur et 8m de largeur.<br>2. Calculer le volume d'un cube dont l'arête mesure 5m.<br>3. Un cylindre a un rayon de 3m et une hauteur de 7m. Calculer son volume.</div>
+                        <div class="cursor-position" id="exercice_enonce-cursor-position">Position du curseur: 0</div>
+                    </div>
+                    <textarea id="exercice_enonce" name="exercice_enonce" style="display:none;">1. Calculer la surface d'un rectangle de 12m de longueur et 8m de largeur.
+2. Calculer le volume d'un cube dont l'arête mesure 5m.
+3. Un cylindre a un rayon de 3m et une hauteur de 7m. Calculer son volume.</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="exercice_date_correction">Date de correction:</label>
+                    <input type="date" id="exercice_date_correction" name="exercice_date_correction">
+                </div>
+            </div>
+            
+            <!-- Récapitulation de la leçon -->
+            <div class="recapitulation">
+                <h2>Récapitulation de la Leçon</h2>
+                
+                <div class="form-group">
+                    <label for="recapitulation">Éléments à retenir:</label>
+                    <div class="editor-toggle">
+                        <button class="editor-toggle-btn" data-target="recapitulation">Basculer Éditeur</button>
+                    </div>
+                    <div class="rich-text-editor" id="recapitulation-editor">
+                        <div class="toolbar">
+                            <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                            <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                            <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                            <span class="divider"></span>
+                            <div class="color-picker">
+                                <button type="button" class="color-button" data-command="foreColor"></button>
+                                <div class="color-palette" id="recapitulation-color-palette"></div>
+                            </div>
+                            <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                            <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
+                            <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
+                            <button type="button" onclick="openLatexModal('recapitulation-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
+                        </div>
+                        <div class="editor-content" id="recapitulation-content" contenteditable="true" onkeyup="updateCursorPosition('recapitulation-content')" onclick="updateCursorPosition('recapitulation-content')">- Surface d'un rectangle: S = L × l<br>- Volume d'un cube: V = a³<br>- Volume d'un cylindre: V = π × r² × h<br>- Il est important de bien identifier la forme géométrique avant d'appliquer la formule appropriée.</div>
+                        <div class="cursor-position" id="recapitulation-cursor-position">Position du curseur: 0</div>
+                    </div>
+                    <textarea id="recapitulation" name="recapitulation" style="display:none;">- Surface d'un rectangle: S = L × l
+- Volume d'un cube: V = a³
+- Volume d'un cylindre: V = π × r² × h
+- Il est important de bien identifier la forme géométrique avant d'appliquer la formule appropriée.</textarea>
+                </div>
+            </div>
+            
             <div class="form-group">
                 <label for="evaluation">Notes d'évaluation:</label>
                 <div class="editor-toggle">
@@ -852,6 +1181,7 @@
                             <div class="color-palette" id="evaluation-color-palette"></div>
                         </div>
                         <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                        <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
                         <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
                         <button type="button" onclick="openLatexModal('evaluation-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
                     </div>
@@ -862,8 +1192,8 @@
             </div>
             
             <div class="form-group">
-                <label for="media3">Importer image ou vidéo:</label>
-                <input type="file" id="media3" name="media3" accept="image/*,video/*" onchange="previewMedia(this, 'mediaPreview3')">
+                <label for="media3">Importer image, audio ou vidéo:</label>
+                <input type="file" id="media3" name="media3" accept="image/*,video/*,audio/*" onchange="previewMedia(this, 'mediaPreview3')">
                 <div class="media-preview" id="mediaPreview3"></div>
             </div>
         </div>
@@ -940,7 +1270,14 @@
             'activite2': true,
             'activite3': true,
             'activite4': true,
-            'contenu1': true
+            'contenu1': true,
+            'situation_enonce': true,
+            'situation_solutions': true,
+            'activites_enseignant': true,
+            'activites_eleves': true,
+            'methode_conseillee': true,
+            'exercice_enonce': true,
+            'recapitulation': true
         };
         let currentEditorId = null;
         let currentCursorPosition = 0;
@@ -981,6 +1318,19 @@
             
             // Mettre à jour les filtres
             updateFilterOptions();
+            
+            // Définir la date du jour par défaut
+            const today = new Date().toISOString().substr(0, 10);
+            document.getElementById('date_cours').value = today;
+            
+            // Définir l'année scolaire par défaut
+            const currentYear = new Date().getFullYear();
+            document.getElementById('annee_scolaire').value = `${currentYear}-${currentYear + 1}`;
+            
+            // Définir la date de correction par défaut (3 jours après)
+            const correctionDate = new Date();
+            correctionDate.setDate(correctionDate.getDate() + 3);
+            document.getElementById('exercice_date_correction').value = correctionDate.toISOString().substr(0, 10);
         });
 
         // Fonction pour mettre à jour la position du curseur
@@ -1015,6 +1365,8 @@
                             toggleColorPicker(this.nextElementSibling);
                         } else if (command === 'insertImage') {
                             insertImage(this.closest('.rich-text-editor').querySelector('.editor-content'));
+                        } else if (command === 'insertAudio') {
+                            insertAudio(this.closest('.rich-text-editor').querySelector('.editor-content'));
                         } else if (command === 'insertVideo') {
                             insertVideo(this.closest('.rich-text-editor').querySelector('.editor-content'));
                         } else {
@@ -1132,20 +1484,59 @@
 
         // Fonction pour insérer une image
         function insertImage(editor) {
-            const url = prompt('Entrez l\'URL de l\'image:');
-            if (url) {
-                document.execCommand('insertHTML', false, `<img src="${url}" alt="Image" style="max-width: 100%; height: auto;">`);
-                updateTextareaFromEditor(editor.closest('.rich-text-editor'));
-            }
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        document.execCommand('insertHTML', false, `<img src="${event.target.result}" alt="Image" style="max-width: 100%; height: auto;">`);
+                        updateTextareaFromEditor(editor.closest('.rich-text-editor'));
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+
+        // Fonction pour insérer un audio
+        function insertAudio(editor) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'audio/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        document.execCommand('insertHTML', false, `<audio controls src="${event.target.result}" style="width: 100%; max-width: 400px;"></audio>`);
+                        updateTextareaFromEditor(editor.closest('.rich-text-editor'));
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
         }
 
         // Fonction pour insérer une vidéo
         function insertVideo(editor) {
-            const url = prompt('Entrez l\'URL de la vidéo (YouTube, Vimeo, etc.):');
-            if (url) {
-                document.execCommand('insertHTML', false, `<div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;"><iframe src="${url}" frameborder="0" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>`);
-                updateTextareaFromEditor(editor.closest('.rich-text-editor'));
-            }
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'video/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        document.execCommand('insertHTML', false, `<video controls src="${event.target.result}" style="max-width: 100%; height: auto;"></video>`);
+                        updateTextareaFromEditor(editor.closest('.rich-text-editor'));
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
         }
 
         // Fonction pour ouvrir le modal LaTeX
@@ -1198,7 +1589,7 @@
                     editor.innerHTML += latexHtml;
                 }
                 
-                // Forcer le rendu MathJax
+                // Forcer le rendur MathJax
                 MathJax.typesetPromise([editor]);
                 
                 // Mettre à jour le textarea correspondant
@@ -1319,6 +1710,12 @@
                     video.controls = true;
                     video.style.maxWidth = '300px';
                     preview.appendChild(video);
+                } else if (file.type.startsWith('audio/')) {
+                    const audio = document.createElement('audio');
+                    audio.src = url;
+                    audio.controls = true;
+                    audio.style.width = '100%';
+                    preview.appendChild(audio);
                 }
             }
         }
@@ -1327,6 +1724,8 @@
         function saveForm() {
             const lesson = {
                 id: currentLessonId || Date.now().toString(),
+                date_cours: document.getElementById('date_cours').value,
+                annee_scolaire: document.getElementById('annee_scolaire').value,
                 enseignant: document.getElementById('enseignant').value,
                 etablissement: document.getElementById('etablissement').value,
                 module: document.getElementById('module').value,
@@ -1340,6 +1739,14 @@
                 prerequis: document.getElementById('prerequis').value,
                 lexique: document.getElementById('lexique').value,
                 references: document.getElementById('references').value,
+                situation_enonce: document.getElementById('situation_enonce').value,
+                situation_solutions: document.getElementById('situation_solutions').value,
+                activites_enseignant: document.getElementById('activites_enseignant').value,
+                activites_eleves: document.getElementById('activites_eleves').value,
+                methode_conseillee: document.getElementById('methode_conseillee').value,
+                exercice_enonce: document.getElementById('exercice_enonce').value,
+                exercice_date_correction: document.getElementById('exercice_date_correction').value,
+                recapitulation: document.getElementById('recapitulation').value,
                 evaluation: document.getElementById('evaluation').value,
                 activite1: document.getElementById('activite1').value,
                 activite2: document.getElementById('activite2').value,
@@ -1385,6 +1792,8 @@
         // Fonction pour exporter en JSON
         function exportJSON() {
             const lesson = {
+                date_cours: document.getElementById('date_cours').value,
+                annee_scolaire: document.getElementById('annee_scolaire').value,
                 enseignant: document.getElementById('enseignant').value,
                 etablissement: document.getElementById('etablissement').value,
                 module: document.getElementById('module').value,
@@ -1398,6 +1807,14 @@
                 prerequis: document.getElementById('prerequis').value,
                 lexique: document.getElementById('lexique').value,
                 references: document.getElementById('references').value,
+                situation_enonce: document.getElementById('situation_enonce').value,
+                situation_solutions: document.getElementById('situation_solutions').value,
+                activites_enseignant: document.getElementById('activites_enseignant').value,
+                activites_eleves: document.getElementById('activites_eleves').value,
+                methode_conseillee: document.getElementById('methode_conseillee').value,
+                exercice_enonce: document.getElementById('exercice_enonce').value,
+                exercice_date_correction: document.getElementById('exercice_date_correction').value,
+                recapitulation: document.getElementById('recapitulation').value,
                 evaluation: document.getElementById('evaluation').value,
                 activite1: document.getElementById('activite1').value,
                 activite2: document.getElementById('activite2').value,
@@ -1406,17 +1823,17 @@
                 contenu1: document.getElementById('contenu1').value
             };
 
-            // Créer un blob et un lien de téléchargement
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(lesson, null, 2));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", `fiche-${lesson.titre || 'sans-titre'}.json`);
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
+            const dataStr = JSON.stringify(lesson, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
             
-            // Afficher une notification
-            showNotification('Fiche exportée en JSON');
+            const exportFileDefaultName = `fiche-pedagogique-${lesson.titre.replace(/\s+/g, '-').toLowerCase()}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            showNotification('Fiche exportée avec succès!');
         }
 
         // Fonction pour importer un JSON
@@ -1425,86 +1842,106 @@
         }
 
         // Gérer l'import de fichier JSON
-        document.getElementById('jsonFileInput').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const lesson = JSON.parse(e.target.result);
-                    
-                    // Remplir le formulaire avec les données importées
-                    document.getElementById('enseignant').value = lesson.enseignant || '';
-                    document.getElementById('etablissement').value = lesson.etablissement || '';
-                    document.getElementById('module').value = lesson.module || '';
-                    document.getElementById('classe').value = lesson.classe || '';
-                    document.getElementById('effectif').value = lesson.effectif || '';
-                    document.getElementById('titre').value = lesson.titre || '';
-                    
-                    // Remplir les champs de texte enrichi
-                    document.getElementById('competence-content').innerHTML = lesson.competence || '';
-                    document.getElementById('competence').value = lesson.competence || '';
-                    
-                    document.getElementById('objectifs-content').innerHTML = lesson.objectifs || '';
-                    document.getElementById('objectifs').value = lesson.objectifs || '';
-                    
-                    document.getElementById('prerequis-content').innerHTML = lesson.prerequis || '';
-                    document.getElementById('prerequis').value = lesson.prerequis || '';
-                    
-                    document.getElementById('lexique-content').innerHTML = lesson.lexique || '';
-                    document.getElementById('lexique').value = lesson.lexique || '';
-                    
-                    document.getElementById('references-content').innerHTML = lesson.references || '';
-                    document.getElementById('references').value = lesson.references || '';
-                    
-                    document.getElementById('evaluation-content').innerHTML = lesson.evaluation || '';
-                    document.getElementById('evaluation').value = lesson.evaluation || '';
-                    
-                    document.getElementById('activite1-content').innerHTML = lesson.activite1 || '';
-                    document.getElementById('activite1').value = lesson.activite1 || '';
-                    
-                    document.getElementById('activite2-content').innerHTML = lesson.activite2 || '';
-                    document.getElementById('activite2').value = lesson.activite2 || '';
-                    
-                    document.getElementById('activite3-content').innerHTML = lesson.activite3 || '';
-                    document.getElementById('activite3').value = lesson.activite3 || '';
-                    
-                    document.getElementById('activite4-content').innerHTML = lesson.activite4 || '';
-                    document.getElementById('activite4').value = lesson.activite4 || '';
-                    
-                    document.getElementById('contenu1-content').innerHTML = lesson.contenu1 || '';
-                    document.getElementById('contenu1').value = lesson.contenu1 || '';
-                    
-                    document.getElementById('duree_competence').value = lesson.duree_competence || '';
-                    document.getElementById('duree_seance').value = lesson.duree_seance || '';
-                    
-                    // Réinitialiser l'ID de la fiche actuelle (nouvelle fiche)
-                    currentLessonId = null;
-                    
-                    // Afficher une notification
-                    showNotification('Fiche importée avec succès');
-                    
-                } catch (error) {
-                    showNotification('Erreur lors de l\'import du fichier JSON', true);
-                    console.error('Erreur d\'import JSON:', error);
-                }
-            };
-            reader.readAsText(file);
-            
-            // Réinitialiser l'input file
-            event.target.value = '';
+        document.getElementById('jsonFileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    try {
+                        const lesson = JSON.parse(event.target.result);
+                        
+                        // Remplir le formulaire avec les données importées
+                        document.getElementById('date_cours').value = lesson.date_cours || '';
+                        document.getElementById('annee_scolaire').value = lesson.annee_scolaire || '';
+                        document.getElementById('enseignant').value = lesson.enseignant || '';
+                        document.getElementById('etablissement').value = lesson.etablissement || '';
+                        document.getElementById('module').value = lesson.module || '';
+                        document.getElementById('classe').value = lesson.classe || '';
+                        document.getElementById('effectif').value = lesson.effectif || '';
+                        document.getElementById('titre').value = lesson.titre || '';
+                        document.getElementById('competence').value = lesson.competence || '';
+                        document.getElementById('objectifs').value = lesson.objectifs || '';
+                        document.getElementById('duree_competence').value = lesson.duree_competence || '';
+                        document.getElementById('duree_seance').value = lesson.duree_seance || '';
+                        document.getElementById('prerequis').value = lesson.prerequis || '';
+                        document.getElementById('lexique').value = lesson.lexique || '';
+                        document.getElementById('references').value = lesson.references || '';
+                        document.getElementById('situation_enonce').value = lesson.situation_enonce || '';
+                        document.getElementById('situation_solutions').value = lesson.situation_solutions || '';
+                        document.getElementById('activites_enseignant').value = lesson.activites_enseignant || '';
+                        document.getElementById('activites_eleves').value = lesson.activites_eleves || '';
+                        document.getElementById('methode_conseillee').value = lesson.methode_conseillee || '';
+                        document.getElementById('exercice_enonce').value = lesson.exercice_enonce || '';
+                        document.getElementById('exercice_date_correction').value = lesson.exercice_date_correction || '';
+                        document.getElementById('recapitulation').value = lesson.recapitulation || '';
+                        document.getElementById('evaluation').value = lesson.evaluation || '';
+                        document.getElementById('activite1').value = lesson.activite1 || '';
+                        document.getElementById('activite2').value = lesson.activite2 || '';
+                        document.getElementById('activite3').value = lesson.activite3 || '';
+                        document.getElementById('activite4').value = lesson.activite4 || '';
+                        document.getElementById('contenu1').value = lesson.contenu1 || '';
+                        
+                        // Mettre à jour les éditeurs
+                        document.querySelectorAll('.editor-content').forEach(editor => {
+                            const targetId = editor.id.replace('-content', '');
+                            if (lesson[targetId]) {
+                                editor.innerHTML = lesson[targetId];
+                            }
+                        });
+                        
+                        showNotification('Fiche importée avec succès!');
+                    } catch (error) {
+                        showNotification('Erreur lors de l\'import du fichier JSON', 'error');
+                        console.error(error);
+                    }
+                };
+                reader.readAsText(file);
+            }
         });
+
+        // Fonction pour effacer le formulaire
+        function clearForm() {
+            if (confirm('Êtes-vous sûr de vouloir effacer toutes les données du formulaire?')) {
+                document.querySelectorAll('input:not([type="file"]), textarea').forEach(element => {
+                    element.value = '';
+                });
+                
+                document.querySelectorAll('.editor-content').forEach(editor => {
+                    editor.innerHTML = '';
+                });
+                
+                document.querySelectorAll('.media-preview').forEach(preview => {
+                    preview.innerHTML = '';
+                });
+                
+                currentLessonId = null;
+                
+                showNotification('Formulaire effacé!');
+            }
+        }
+
+        // Fonction pour afficher une notification
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification';
+            
+            if (type === 'error') {
+                notification.classList.add('error');
+            }
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
 
         // Fonction pour charger les fiches sauvegardées
         function loadSavedLessons() {
             const savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
             const lessonList = document.getElementById('lessonList');
             
-            // Mettre à jour les statistiques
-            document.getElementById('totalLessons').textContent = `Total: ${savedLessons.length} fiches`;
-            
-            // Afficher les fiches
             if (savedLessons.length === 0) {
                 lessonList.innerHTML = `
                     <div class="no-lessons">
@@ -1512,92 +1949,113 @@
                         <p>Aucune fiche sauvegardée</p>
                     </div>
                 `;
+                document.getElementById('totalLessons').textContent = 'Total: 0 fiches';
+                document.getElementById('filteredLessons').textContent = 'Filtrées: 0';
                 return;
             }
             
-            lessonList.innerHTML = '';
-            
+            let html = '';
             savedLessons.forEach(lesson => {
-                const lessonDate = new Date(lesson.createdAt);
-                const formattedDate = lessonDate.toLocaleDateString('fr-FR', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
+                const date = new Date(lesson.createdAt);
+                const formattedDate = date.toLocaleDateString('fr-FR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
                 });
                 
-                const lessonItem = document.createElement('div');
-                lessonItem.className = 'lesson-item';
-                lessonItem.dataset.id = lesson.id;
-                lessonItem.dataset.module = lesson.module;
-                lessonItem.dataset.date = lesson.createdAt.split('T')[0];
-                
-                // Créer un résumé du contenu (premières 150 caractères)
-                let summary = '';
-                if (lesson.objectifs) {
-                    summary = lesson.objectifs.replace(/<[^>]*>/g, '').substring(0, 150);
-                    if (lesson.objectifs.length > 150) summary += '...';
-                }
-                
-                lessonItem.innerHTML = `
-                    <div class="lesson-header">
-                        <h3>${lesson.titre || 'Sans titre'} - ${lesson.module || 'Matière non spécifiée'}</h3>
-                        <span class="lesson-date">${formattedDate}</span>
-                    </div>
-                    <div class="lesson-meta">
-                        <span><i class="fas fa-user"></i> ${lesson.enseignant || 'Non spécifié'}</span>
-                        <span><i class="fas fa-school"></i> ${lesson.etablissement || 'Non spécifié'}</span>
-                        <span><i class="fas fa-users"></i> ${lesson.effectif || '0'} élèves</span>
-                    </div>
-                    <div class="lesson-summary">${summary || 'Aucun contenu'}</div>
-                    <div class="lesson-actions">
-                        <button class="btn" onclick="loadLesson('${lesson.id}')">
-                            <i class="fas fa-edit"></i> Modifier
-                        </button>
-                        <button class="btn" onclick="exportSingleJSON('${lesson.id}')">
-                            <i class="fas fa-download"></i> Exporter
-                        </button>
-                        <button class="btn btn-danger" onclick="deleteLesson('${lesson.id}')">
-                            <i class="fas fa-trash"></i> Supprimer
-                        </button>
+                html += `
+                    <div class="lesson-item" data-id="${lesson.id}" data-module="${lesson.module}" data-date="${lesson.createdAt}">
+                        <div class="lesson-header">
+                            <h3>${lesson.titre}</h3>
+                            <span class="lesson-date">${formattedDate}</span>
+                        </div>
+                        <div class="lesson-meta">
+                            <span><i class="fas fa-user"></i> ${lesson.enseignant}</span>
+                            <span><i class="fas fa-graduation-cap"></i> ${lesson.classe}</span>
+                            <span><i class="fas fa-book"></i> ${lesson.module}</span>
+                        </div>
+                        <div class="lesson-summary">${lesson.competence.substring(0, 100)}...</div>
+                        <div class="lesson-actions">
+                            <button class="btn" onclick="loadLesson('${lesson.id}')"><i class="fas fa-edit"></i> Modifier</button>
+                            <button class="btn btn-danger" onclick="deleteLesson('${lesson.id}')"><i class="fas fa-trash"></i> Supprimer</button>
+                        </div>
                     </div>
                 `;
-                
-                lessonList.appendChild(lessonItem);
             });
             
-            // Appliquer les filtres
-            filterLessons();
+            lessonList.innerHTML = html;
+            document.getElementById('totalLessons').textContent = `Total: ${savedLessons.length} fiches`;
+            document.getElementById('filteredLessons').textContent = `Filtrées: ${savedLessons.length}`;
         }
 
-        // Fonction pour mettre à jour les options de filtre
-        function updateFilterOptions() {
+        // Fonction pour charger une fiche spécifique
+        function loadLesson(id) {
             const savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
-            const filterModule = document.getElementById('filterModule');
+            const lesson = savedLessons.find(l => l.id === id);
             
-            // Récupérer toutes les matières uniques
-            const modules = [...new Set(savedLessons.map(lesson => lesson.module).filter(Boolean))];
-            
-            // Sauvegarder la valeur actuelle
-            const currentValue = filterModule.value;
-            
-            // Mettre à jour les options
-            filterModule.innerHTML = '<option value="">Toutes les matières</option>';
-            modules.forEach(module => {
-                const option = document.createElement('option');
-                option.value = module;
-                option.textContent = module;
-                filterModule.appendChild(option);
-            });
-            
-            // Restaurer la valeur précédente si elle existe toujours
-            if (modules.includes(currentValue)) {
-                filterModule.value = currentValue;
+            if (lesson) {
+                document.getElementById('date_cours').value = lesson.date_cours || '';
+                document.getElementById('annee_scolaire').value = lesson.annee_scolaire || '';
+                document.getElementById('enseignant').value = lesson.enseignant || '';
+                document.getElementById('etablissement').value = lesson.etablissement || '';
+                document.getElementById('module').value = lesson.module || '';
+                document.getElementById('classe').value = lesson.classe || '';
+                document.getElementById('effectif').value = lesson.effectif || '';
+                document.getElementById('titre').value = lesson.titre || '';
+                document.getElementById('competence').value = lesson.competence || '';
+                document.getElementById('objectifs').value = lesson.objectifs || '';
+                document.getElementById('duree_competence').value = lesson.duree_competence || '';
+                document.getElementById('duree_seance').value = lesson.duree_seance || '';
+                document.getElementById('prerequis').value = lesson.prerequis || '';
+                document.getElementById('lexique').value = lesson.lexique || '';
+                document.getElementById('references').value = lesson.references || '';
+                document.getElementById('situation_enonce').value = lesson.situation_enonce || '';
+                document.getElementById('situation_solutions').value = lesson.situation_solutions || '';
+                document.getElementById('activites_enseignant').value = lesson.activites_enseignant || '';
+                document.getElementById('activites_eleves').value = lesson.activites_eleves || '';
+                document.getElementById('methode_conseillee').value = lesson.methode_conseillee || '';
+                document.getElementById('exercice_enonce').value = lesson.exercice_enonce || '';
+                document.getElementById('exercice_date_correction').value = lesson.exercice_date_correction || '';
+                document.getElementById('recapitulation').value = lesson.recapitulation || '';
+                document.getElementById('evaluation').value = lesson.evaluation || '';
+                document.getElementById('activite1').value = lesson.activite1 || '';
+                document.getElementById('activite2').value = lesson.activite2 || '';
+                document.getElementById('activite3').value = lesson.activite3 || '';
+                document.getElementById('activite4').value = lesson.activite4 || '';
+                document.getElementById('contenu1').value = lesson.contenu1 || '';
+                
+                // Mettre à jour les éditeurs
+                document.querySelectorAll('.editor-content').forEach(editor => {
+                    const targetId = editor.id.replace('-content', '');
+                    if (lesson[targetId]) {
+                        editor.innerHTML = lesson[targetId];
+                    }
+                });
+                
+                currentLessonId = lesson.id;
+                
+                showNotification('Fiche chargée avec succès!');
+                
+                // Scroll to top
+                window.scrollTo(0, 0);
+            }
+        }
+
+        // Fonction pour supprimer une fiche
+        function deleteLesson(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette fiche?')) {
+                let savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
+                savedLessons = savedLessons.filter(l => l.id !== id);
+                localStorage.setItem('savedLessons', JSON.stringify(savedLessons));
+                
+                loadSavedLessons();
+                showNotification('Fiche supprimée avec succès!');
             }
         }
 
         // Fonction pour filtrer les fiches
         function filterLessons() {
-            const searchText = document.getElementById('search').value.toLowerCase();
+            const searchTerm = document.getElementById('search').value.toLowerCase();
             const moduleFilter = document.getElementById('filterModule').value;
             const dateFilter = document.getElementById('filterDate').value;
             
@@ -1606,13 +2064,12 @@
             
             lessonItems.forEach(item => {
                 const title = item.querySelector('h3').textContent.toLowerCase();
-                const summary = item.querySelector('.lesson-summary').textContent.toLowerCase();
                 const module = item.dataset.module;
-                const date = item.dataset.date;
+                const date = item.dataset.date.substr(0, 10); // YYYY-MM-DD
                 
-                const matchesSearch = !searchText || title.includes(searchText) || summary.includes(searchText);
-                const matchesModule = !moduleFilter || module === moduleFilter;
-                const matchesDate = !dateFilter || date === dateFilter;
+                const matchesSearch = title.includes(searchTerm) || searchTerm === '';
+                const matchesModule = moduleFilter === '' || module === moduleFilter;
+                const matchesDate = dateFilter === '' || date === dateFilter;
                 
                 if (matchesSearch && matchesModule && matchesDate) {
                     item.style.display = 'block';
@@ -1622,173 +2079,260 @@
                 }
             });
             
-            // Mettre à jour le compteur de fiches filtrées
             document.getElementById('filteredLessons').textContent = `Filtrées: ${visibleCount}`;
+        }
+
+        // Fonction pour mettre à jour les options de filtre
+        function updateFilterOptions() {
+            const savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
+            const moduleSelect = document.getElementById('filterModule');
             
-            // Afficher un message si aucun résultat
-            if (visibleCount === 0 && lessonItems.length > 0) {
-                document.getElementById('lessonList').innerHTML = `
-                    <div class="no-lessons">
-                        <i class="fas fa-search" style="font-size: 48px; margin-bottom: 15px;"></i>
-                        <p>Aucune fiche ne correspond à vos critères de recherche</p>
-                    </div>
+            // Récupérer tous les modules uniques
+            const modules = [...new Set(savedLessons.map(lesson => lesson.module))];
+            
+            // Vider les options existantes (sauf la première)
+            while (moduleSelect.options.length > 1) {
+                moduleSelect.remove(1);
+            }
+            
+            // Ajouter les nouvelles options
+            modules.forEach(module => {
+                if (module) {
+                    const option = document.createElement('option');
+                    option.value = module;
+                    option.textContent = module;
+                    moduleSelect.appendChild(option);
+                }
+            });
+        }
+     // Fonction pour exporter en PDF
+        function exportToPDF() {
+            // Créer une copie du contenu à exporter
+            const content = document.querySelector('.container').cloneNode(true);
+            
+            // Supprimer les éléments qui ne doivent pas être imprimés
+            const noPrintElements = content.querySelectorAll('.no-print');
+            noPrintElements.forEach(el => el.remove());
+            
+            // Supprimer les boutons d'action dans les tableaux
+            const actionCells = content.querySelectorAll('td:last-child, th:last-child');
+            actionCells.forEach(cell => {
+                if (cell.textContent.trim() === 'Actions' || cell.querySelector('button')) {
+                    cell.remove();
+                }
+            });
+            
+            // Options pour html2pdf
+            const options = {
+                margin: 10,
+                filename: `fiche-pedagogique-${document.getElementById('titre').value.replace(/\s+/g, '-').toLowerCase()}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            // Générer le PDF
+            html2pdf().from(content).set(options).save();
+            
+            showNotification('PDF généré avec succès!');
+        }
+
+        // Fonction pour exporter en Word
+        function exportToWord() {
+            // Créer le contenu HTML pour le document Word
+            let content = `
+                <html xmlns:o="urn:schemas-microsoft-com:office:office" 
+                      xmlns:w="urn:schemas-microsoft-com:office:word" 
+                      xmlns="http://www.w3.org/TR/REC-html40">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>${document.getElementById('titre').value}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; }
+                        h1, h2, h3 { color: #2c3e50; }
+                        table { width: 100%; border-collapse: collapse; }
+                        th, td { border: 1px solid #ddd; padding: 8px; }
+                        th { background-color: #3498db; color: white; }
+                        .section { margin-bottom: 20px; padding: 15px; background-color: #f5f5f5; border-radius: 5px; }
+                    </style>
+                </head>
+                <body>
+                    <h1>Fiche de Préparation de Séance Pédagogique</h1>
+            `;
+            
+            // Ajouter les informations générales
+            content += `
+                <div class="section">
+                    <h2>Fiche 1 - Informations Générales</h2>
+                    <p><strong>Date du cours:</strong> ${document.getElementById('date_cours').value}</p>
+                    <p><strong>Année scolaire:</strong> ${document.getElementById('annee_scolaire').value}</p>
+                    <p><strong>Enseignant:</strong> ${document.getElementById('enseignant').value}</p>
+                    <p><strong>Établissement:</strong> ${document.getElementById('etablissement').value}</p>
+                    <p><strong>Module/Discipline:</strong> ${document.getElementById('module').value}</p>
+                    <p><strong>Classe:</strong> ${document.getElementById('classe').value}</p>
+                    <p><strong>Effectif:</strong> ${document.getElementById('effectif').value}</p>
+                    <p><strong>Titre de la leçon:</strong> ${document.getElementById('titre').value}</p>
+                    <p><strong>Compétence/Objectif général:</strong> ${document.getElementById('competence').value}</p>
+                    <p><strong>Objectifs spécifiques:</strong> ${document.getElementById('objectifs').value}</p>
+                    <p><strong>Durée de la compétence:</strong> ${document.getElementById('duree_competence').value}</p>
+                    <p><strong>Durée de la séance:</strong> ${document.getElementById('duree_seance').value}</p>
+                    <p><strong>Prérequis:</strong> ${document.getElementById('prerequis').value}</p>
+                    <p><strong>Lexique:</strong> ${document.getElementById('lexique').value}</p>
+                    <p><strong>Références bibliographiques:</strong> ${document.getElementById('references').value}</p>
+                </div>
+            `;
+            
+            // Ajouter la situation problème
+            content += `
+                <div class="section">
+                    <h2>Situation Problème</h2>
+                    <p><strong>Énoncé:</strong> ${document.getElementById('situation_enonce').value}</p>
+                    <p><strong>Proposition de solutions:</strong> ${document.getElementById('situation_solutions').value}</p>
+                </div>
+            `;
+            
+            // Ajouter le tableau des activités
+            content += `
+                <div class="section">
+                    <h2>Tableau des Activités</h2>
+                    <h3>Activités de l'Enseignant</h3>
+                    <p>${document.getElementById('activites_enseignant').value}</p>
+                    <h3>Activités des Élèves</h3>
+                    <p>${document.getElementById('activites_eleves').value}</p>
+                </div>
+            `;
+            
+            // Ajouter le déroulement de la séance
+            content += `
+                <div class="section">
+                    <h2>Fiche 2 - Déroulement de la Séance</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Etapes</th>
+                                <th>Phases</th>
+                                <th>Éléments de Contenu</th>
+                                <th>Méthodes pédagogiques</th>
+                                <th>Activités pédagogiques</th>
+                                <th>Indicateurs d'évaluation</th>
+                                <th>Durée</th>
+                                <th>Matériel didactique</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            // Récupérer les données du tableau
+            const rows = document.querySelectorAll('#deroulement-table tbody tr');
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                content += `
+                    <tr>
+                        <td>${cells[0].querySelector('input').value}</td>
+                        <td>${cells[1].querySelector('input').value}</td>
+                        <td>${cells[2].querySelector('input').value}</td>
+                        <td>${cells[3].querySelector('input').value}</td>
+                        <td>${cells[4].querySelector('textarea').value}</td>
+                        <td>${cells[5].querySelector('input').value}</td>
+                        <td>${cells[6].querySelector('input').value}</td>
+                        <td>${cells[7].querySelector('input').value}</td>
+                    </tr>
                 `;
-            }
-        }
-
-        // Fonction pour charger une fiche existante
-        function loadLesson(id) {
-            const savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
-            const lesson = savedLessons.find(l => l.id === id);
+            });
             
-            if (!lesson) {
-                showNotification('Fiche non trouvée', true);
-                return;
-            }
+            content += `
+                        </tbody>
+                    </table>
+                    <p><strong>Méthode conseillée:</strong> ${document.getElementById('methode_conseillee').value}</p>
+                </div>
+            `;
             
-            // Remplir le formulaire avec les données de la fiche
-            document.getElementById('enseignant').value = lesson.enseignant || '';
-            document.getElementById('etablissement').value = lesson.etablissement || '';
-            document.getElementById('module').value = lesson.module || '';
-            document.getElementById('classe').value = lesson.classe || '';
-            document.getElementById('effectif').value = lesson.effectif || '';
-            document.getElementById('titre').value = lesson.titre || '';
+            // Ajouter la suite du déroulement
+            content += `
+                <div class="section">
+                    <h2>Fiche 3 - Suite du Déroulement</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Étapes</th>
+                                <th>Phases</th>
+                                <th>Éléments de Contenu</th>
+                                <th>Méthodes pédagogiques</th>
+                                <th>Activités pédagogiques</th>
+                                <th>Indicateurs d'évaluation</th>
+                                <th>Durée</th>
+                                <th>Matériel didactique</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
             
-            // Remplir les champs de texte enrichi
-            document.getElementById('competence-content').innerHTML = lesson.competence || '';
-            document.getElementById('competence').value = lesson.competence || '';
+            // Récupérer les données du deuxième tableau
+            const rows2 = document.querySelectorAll('#suite-table tbody tr');
+            rows2.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                content += `
+                    <tr>
+                        <td>${cells[0].querySelector('input').value}</td>
+                        <td>${cells[1].querySelector('input').value}</td>
+                        <td>${cells[2].querySelector('input').value}</td>
+                        <td>${cells[3].querySelector('input').value}</td>
+                        <td>${cells[4].querySelector('textarea').value}</td>
+                        <td>${cells[5].querySelector('input').value}</td>
+                        <td>${cells[6].querySelector('input').value}</td>
+                        <td>${cells[7].querySelector('input').value}</td>
+                    </tr>
+                `;
+            });
             
-            document.getElementById('objectifs-content').innerHTML = lesson.objectifs || '';
-            document.getElementById('objectifs').value = lesson.objectifs || '';
+            content += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
             
-            document.getElementById('prerequis-content').innerHTML = lesson.prerequis || '';
-            document.getElementById('prerequis').value = lesson.prerequis || '';
+            // Ajouter les exercices de maison
+            content += `
+                <div class="section">
+                    <h2>Exercices de Maison</h2>
+                    <p><strong>Énoncé:</strong> ${document.getElementById('exercice_enonce').value}</p>
+                    <p><strong>Date de correction:</strong> ${document.getElementById('exercice_date_correction').value}</p>
+                </div>
+            `;
             
-            document.getElementById('lexique-content').innerHTML = lesson.lexique || '';
-            document.getElementById('lexique').value = lesson.lexique || '';
+            // Ajouter la récapitulation
+            content += `
+                <div class="section">
+                    <h2>Récapitulation de la Leçon</h2>
+                    <p>${document.getElementById('recapitulation').value}</p>
+                </div>
+            `;
             
-            document.getElementById('references-content').innerHTML = lesson.references || '';
-            document.getElementById('references').value = lesson.references || '';
+            // Ajouter les notes d'évaluation
+            content += `
+                <div class="section">
+                    <h2>Notes d'évaluation</h2>
+                    <p>${document.getElementById('evaluation').value}</p>
+                </div>
+            `;
             
-            document.getElementById('evaluation-content').innerHTML = lesson.evaluation || '';
-            document.getElementById('evaluation').value = lesson.evaluation || '';
+            content += `
+                </body>
+                </html>
+            `;
             
-            document.getElementById('activite1-content').innerHTML = lesson.activite1 || '';
-            document.getElementById('activite1').value = lesson.activite1 || '';
+            // Créer le blob et le lien de téléchargement
+            const blob = new Blob([content], {type: 'application/msword'});
+            const url = URL.createObjectURL(blob);
             
-            document.getElementById('activite2-content').innerHTML = lesson.activite2 || '';
-            document.getElementById('activite2').value = lesson.activite2 || '';
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `fiche-pedagogique-${document.getElementById('titre').value.replace(/\s+/g, '-').toLowerCase()}.doc`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
             
-            document.getElementById('activite3-content').innerHTML = lesson.activite3 || '';
-            document.getElementById('activite3').value = lesson.activite3 || '';
-            
-            document.getElementById('activite4-content').innerHTML = lesson.activite4 || '';
-            document.getElementById('activite4').value = lesson.activite4 || '';
-            
-            document.getElementById('contenu1-content').innerHTML = lesson.contenu1 || '';
-            document.getElementById('contenu1').value = lesson.contenu1 || '';
-            
-            document.getElementById('duree_competence').value = lesson.duree_competence || '';
-            document.getElementById('duree_seance').value = lesson.duree_seance || '';
-            
-            // Définir l'ID de la fiche actuelle
-            currentLessonId = id;
-            
-            // Faire défiler vers le haut du formulaire
-            window.scrollTo(0, 0);
-            
-            // Afficher une notification
-            showNotification('Fiche chargée pour modification');
-        }
-
-        // Fonction pour exporter une fiche spécifique en JSON
-        function exportSingleJSON(id) {
-            const savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
-            const lesson = savedLessons.find(l => l.id === id);
-            
-            if (!lesson) {
-                showNotification('Fiche non trouvée', true);
-                return;
-            }
-            
-            // Créer un blob et un lien de téléchargement
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(lesson, null, 2));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", `fiche-${lesson.titre || 'sans-titre'}.json`);
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
-            
-            // Afficher une notification
-            showNotification('Fiche exportée en JSON');
-        }
-
-        // Fonction pour supprimer une fiche
-        function deleteLesson(id) {
-            if (!confirm('Êtes-vous sûr de vouloir supprimer cette fiche ? Cette action est irréversible.')) {
-                return;
-            }
-            
-            const savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
-            const updatedLessons = savedLessons.filter(lesson => lesson.id !== id);
-            
-            localStorage.setItem('savedLessons', JSON.stringify(updatedLessons));
-            
-            // Si la fiche supprimée était celle en cours d'édition, réinitialiser le formulaire
-            if (currentLessonId === id) {
-                clearForm();
-            }
-            
-            // Recharger la liste des fiches
-            loadSavedLessons();
-            
-            // Mettre à jour les filtres
-            updateFilterOptions();
-            
-            // Afficher une notification
-            showNotification('Fiche supprimée avec succès');
-        }
-
-        // Fonction pour effacer le formulaire
-        function clearForm() {
-            if (confirm('Êtes-vous sûr de vouloir effacer toutes les données?')) {
-                document.querySelectorAll('input, textarea').forEach(element => {
-                    element.value = '';
-                });
-                document.querySelectorAll('.editor-content').forEach(editor => {
-                    editor.innerHTML = '';
-                });
-                
-                // Réinitialiser l'ID de la fiche actuelle
-                currentLessonId = null;
-            }
-        }
-
-        // Fonction pour afficher une notification
-        function showNotification(message, isError = false) {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.className = isError ? 'notification error show' : 'notification show';
-            
-            setTimeout(() => {
-                notification.className = 'notification';
-            }, 3000);
-        }
-
-        // Fermer les sélecteurs de couleur en cliquant en dehors
-        window.onclick = function(event) {
-            if (colorPickerVisible && !event.target.closest('.color-picker')) {
-                document.querySelectorAll('.color-palette').forEach(palette => {
-                    palette.style.display = 'none';
-                });
-                colorPickerVisible = false;
-            }
-            
-            // Fermer le modal LaTeX en cliquant à l'extérieur
-            if (event.target === document.getElementById('latexModal')) {
-                closeLatexModal();
-            }
+            showNotification('Document Word généré avec succès!');
         }
     </script>
 </body>
