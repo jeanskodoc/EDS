@@ -1,19 +1,4 @@
 <!DOCTYPE html>
-  <style>
-  .btn-retour {
-    padding: 8px 16px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .btn-retour:hover {
-    background-color: #e0e0e0;
-  }
-</style>
-
-<button class="btn-retour" onclick="history.back()">← Retour</button>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -295,6 +280,11 @@
                     
                     <div class="form-row">
                         <div class="form-group">
+                            <label for="matricule">Numéro Matricule *</label>
+                            <input type="text" id="matricule" name="matricule" required>
+                        </div>
+                        
+                        <div class="form-group">
                             <label for="nom">Nom *</label>
                             <input type="text" id="nom" name="nom" required>
                         </div>
@@ -558,6 +548,11 @@
             <div class="filters">
                 <div class="filter-row">
                     <div class="filter-group">
+                        <label for="filter-matricule">Matricule</label>
+                        <input type="text" id="filter-matricule" placeholder="Filtrer par matricule">
+                    </div>
+                    
+                    <div class="filter-group">
                         <label for="filter-nom">Nom</label>
                         <input type="text" id="filter-nom" placeholder="Filtrer par nom">
                     </div>
@@ -574,14 +569,14 @@
                             <option value="proviseur">Proviseur</option>
                         </select>
                     </div>
-                    
+                </div>
+                
+                <div class="filter-row">
                     <div class="filter-group">
                         <label for="filter-matiere">Matière</label>
                         <input type="text" id="filter-matiere" placeholder="Filtrer par matière">
                     </div>
-                </div>
-                
-                <div class="filter-row">
+                    
                     <div class="filter-group">
                         <label for="filter-classe">Classe</label>
                         <input type="text" id="filter-classe" placeholder="Filtrer par classe">
@@ -607,6 +602,7 @@
             <table class="results-table">
                 <thead>
                     <tr>
+                        <th>Matricule</th>
                         <th>Nom & Prénoms</th>
                         <th>Fonction</th>
                         <th>Matière(s)</th>
@@ -617,7 +613,7 @@
                 </thead>
                 <tbody id="results-body">
                     <tr>
-                        <td colspan="6" style="text-align: center;">Aucun résultat à afficher</td>
+                        <td colspan="7" style="text-align: center;">Aucun résultat à afficher</td>
                     </tr>
                 </tbody>
             </table>
@@ -660,6 +656,14 @@
                 setTimeout(() => {
                     notification.remove();
                 }, 3000);
+            }
+            
+            // Générer un matricule unique
+            function generateMatricule() {
+                const prefix = 'MAT';
+                const timestamp = new Date().getTime().toString().slice(-6);
+                const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+                return `${prefix}${timestamp}${random}`;
             }
             
             // Calcul automatique des années de service
@@ -792,6 +796,7 @@
             // Récupérer les données du formulaire
             function getFormData() {
                 const formData = {
+                    matricule: document.getElementById('matricule').value,
                     nom: document.getElementById('nom').value,
                     prenoms: document.getElementById('prenoms').value,
                     date_naissance: document.getElementById('date_naissance').value,
@@ -860,7 +865,7 @@
             // Vérifier si le formulaire est valide
             function isFormValid() {
                 const requiredFields = [
-                    'nom', 'prenoms', 'date_naissance', 'lieu_naissance',
+                    'matricule', 'nom', 'prenoms', 'date_naissance', 'lieu_naissance',
                     'fonction', 'date_engagement', 'date_region', 'date_poste'
                 ];
                 
@@ -884,11 +889,7 @@
                 const personnelData = JSON.parse(localStorage.getItem('personnelData') || '[]');
                 
                 // Vérifier si cet enregistrement existe déjà
-                const existingIndex = personnelData.findIndex(item => 
-                    item.nom === formData.nom && 
-                    item.prenoms === formData.prenoms &&
-                    item.date_naissance === formData.date_naissance
-                );
+                const existingIndex = personnelData.findIndex(item => item.matricule === formData.matricule);
                 
                 if (existingIndex !== -1) {
                     // Mettre à jour l'enregistrement existant
@@ -969,27 +970,78 @@
                 const personnelData = JSON.parse(localStorage.getItem('personnelData') || '[]');
                 const resultsBody = document.getElementById('results-body');
                 
-                if (personnelData.length === 0) {
-                    resultsBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Aucun résultat à afficher</td></tr>';
+                // Appliquer les filtres
+                const filterMatricule = document.getElementById('filter-matricule').value.toLowerCase();
+                const filterNom = document.getElementById('filter-nom').value.toLowerCase();
+                const filterFonction = document.getElementById('filter-fonction').value;
+                const filterMatiere = document.getElementById('filter-matiere').value.toLowerCase();
+                const filterClasse = document.getElementById('filter-classe').value.toLowerCase();
+                const filterRegion = document.getElementById('filter-region').value;
+                
+                const filteredData = personnelData.filter(person => {
+                    // Filtre par matricule
+                    if (filterMatricule && !person.matricule.toLowerCase().includes(filterMatricule)) {
+                        return false;
+                    }
+                    
+                    // Filtre par nom
+                    if (filterNom && !person.nom.toLowerCase().includes(filterNom) && !person.prenoms.toLowerCase().includes(filterNom)) {
+                        return false;
+                    }
+                    
+                    // Filtre par fonction
+                    if (filterFonction && person.fonction !== filterFonction) {
+                        return false;
+                    }
+                    
+                    // Filtre par matière
+                    if (filterMatiere) {
+                        const hasMatiere = person.enseignements.some(e => 
+                            e.matiere && e.matiere.toLowerCase().includes(filterMatiere)
+                        );
+                        if (!hasMatiere) return false;
+                    }
+                    
+                    // Filtre par classe
+                    if (filterClasse) {
+                        const hasClasse = person.enseignements.some(e => 
+                            e.classes && e.classes.toLowerCase().includes(filterClasse)
+                        );
+                        if (!hasClasse) return false;
+                    }
+                    
+                    // Filtre par région
+                    if (filterRegion) {
+                        const hasRegion = person.parcours.some(p => p.region === filterRegion);
+                        if (!hasRegion) return false;
+                    }
+                    
+                    return true;
+                });
+                
+                if (filteredData.length === 0) {
+                    resultsBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Aucun résultat à afficher</td></tr>';
                     return;
                 }
                 
                 let tableContent = '';
                 
-                personnelData.forEach((person, index) => {
+                filteredData.forEach((person, index) => {
                     const matieres = person.enseignements.map(e => e.matiere).filter(m => m).join(', ');
                     const classes = person.enseignements.map(e => e.classes).filter(c => c).join(', ');
+                    const region = person.parcours.length > 0 ? person.parcours[0].region : '-';
                     
                     tableContent += `
                         <tr>
+                            <td>${person.matricule}</td>
                             <td>${person.nom} ${person.prenoms}</td>
                             <td>${person.fonction}</td>
                             <td>${matieres || '-'}</td>
                             <td>${classes || '-'}</td>
-                            <td>${person.parcours.length > 0 ? person.parcours[0].region : '-'}</td>
+                            <td>${region}</td>
                             <td>
-                                <button style="padding: 5px 10px; margin-right: 5px;" onclick="editPerson(${index})">Modifier</button>
-                                <button style="padding: 5px 10px; background-color: var(--accent-color);" onclick="deletePerson(${index})">Supprimer</button>
+                                <button style="padding: 5px 10px; margin-right: 5px;" onclick="editPerson('${person.matricule}')">Modifier</button>
+                                <button style="padding: 5px 10px; background-color: var(--accent-color);" onclick="deletePerson('${person.matricule}')">Supprimer</button>
                             </td>
                         </tr>
                     `;
@@ -999,11 +1051,17 @@
             }
             
             // Éditer une personne
-            window.editPerson = function(index) {
+            window.editPerson = function(matricule) {
                 const personnelData = JSON.parse(localStorage.getItem('personnelData') || '[]');
-                const person = personnelData[index];
+                const person = personnelData.find(p => p.matricule === matricule);
+                
+                if (!person) {
+                    showNotification('Personne non trouvée', 'error');
+                    return;
+                }
                 
                 // Remplir le formulaire avec les données de la personne
+                document.getElementById('matricule').value = person.matricule || '';
                 document.getElementById('nom').value = person.nom || '';
                 document.getElementById('prenoms').value = person.prenoms || '';
                 document.getElementById('date_naissance').value = person.date_naissance || '';
@@ -1025,17 +1083,13 @@
                     person.parcours.forEach((parcours, i) => {
                         const newItem = document.querySelector('.parcours-item').cloneNode(true);
                         
-                        if (i === 0) {
-                            document.getElementById('parcours-container').appendChild(newItem);
-                        } else {
-                            document.getElementById('parcours-container').appendChild(newItem);
-                        }
-                        
                         newItem.querySelector('.parcours-region').value = parcours.region || '';
                         newItem.querySelector('.parcours-inspection').value = parcours.inspection || '';
                         newItem.querySelector('.parcours-etablissement').value = parcours.etablissement || '';
                         newItem.querySelector('input[name="parcours_debut[]"]').value = parcours.debut || '';
                         newItem.querySelector('input[name="parcours_fin[]"]').value = parcours.fin || '';
+                        
+                        document.getElementById('parcours-container').appendChild(newItem);
                     });
                 } else {
                     document.getElementById('parcours-container').innerHTML = document.querySelector('.parcours-item').outerHTML;
@@ -1046,15 +1100,11 @@
                     person.diplomes.forEach((diplome, i) => {
                         const newItem = document.querySelector('.diplome-item').cloneNode(true);
                         
-                        if (i === 0) {
-                            document.getElementById('diplomes-container').appendChild(newItem);
-                        } else {
-                            document.getElementById('diplomes-container').appendChild(newItem);
-                        }
-                        
                         newItem.querySelector('select[name="diplome_type[]"]').value = diplome.type || '';
                         newItem.querySelector('input[name="diplome_intitule[]"]').value = diplome.intitule || '';
                         newItem.querySelector('input[name="diplome_date[]"]').value = diplome.date || '';
+                        
+                        document.getElementById('diplomes-container').appendChild(newItem);
                     });
                 } else {
                     document.getElementById('diplomes-container').innerHTML = document.querySelector('.diplome-item').outerHTML;
@@ -1065,16 +1115,12 @@
                     person.enseignements.forEach((enseignement, i) => {
                         const newItem = document.querySelector('.enseignement-item').cloneNode(true);
                         
-                        if (i === 0) {
-                            document.getElementById('enseignement-container').appendChild(newItem);
-                        } else {
-                            document.getElementById('enseignement-container').appendChild(newItem);
-                        }
-                        
                         newItem.querySelector('.enseignement-type').value = enseignement.type || '';
                         newItem.querySelector('input[name="enseignement_matiere[]"]').value = enseignement.matiere || '';
                         newItem.querySelector('input[name="enseignement_classes[]"]').value = enseignement.classes || '';
                         newItem.querySelector('input[name="enseignement_volume[]"]').value = enseignement.volume || '';
+                        
+                        document.getElementById('enseignement-container').appendChild(newItem);
                     });
                 } else {
                     document.getElementById('enseignement-container').innerHTML = document.querySelector('.enseignement-item').outerHTML;
@@ -1090,11 +1136,11 @@
             };
             
             // Supprimer une personne
-            window.deletePerson = function(index) {
+            window.deletePerson = function(matricule) {
                 if (confirm('Êtes-vous sûr de vouloir supprimer cet enregistrement ?')) {
                     const personnelData = JSON.parse(localStorage.getItem('personnelData') || '[]');
-                    personnelData.splice(index, 1);
-                    localStorage.setItem('personnelData', JSON.stringify(personnelData));
+                    const updatedData = personnelData.filter(p => p.matricule !== matricule);
+                    localStorage.setItem('personnelData', JSON.stringify(updatedData));
                     refreshTable();
                     showNotification('Enregistrement supprimé avec succès', 'success');
                 }
@@ -1135,6 +1181,13 @@
             document.getElementById('date_poste').addEventListener('change', () => updateAutomaticFields());
             document.getElementById('date_naissance').addEventListener('change', () => updateAutomaticFields());
             document.getElementById('date_engagement').addEventListener('change', () => updateAutomaticFields());
+            
+            // Générer un matricule automatiquement si le champ est vide
+            document.getElementById('matricule').addEventListener('focus', function() {
+                if (!this.value) {
+                    this.value = generateMatricule();
+                }
+            });
             
             // Événements pour les champs dynamiques du parcours
             document.addEventListener('change', function(e) {
@@ -1281,6 +1334,9 @@
             initDatabase();
             updateAutomaticFields();
             attachInitialRemoveEvents();
+            
+            // Générer un matricule automatiquement au chargement de la page
+            document.getElementById('matricule').value = generateMatricule();
         });
     </script>
 </body>
