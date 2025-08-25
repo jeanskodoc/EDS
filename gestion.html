@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Élèves</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .form-section, .filter-section, .students-list {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        
+        h2 {
+            margin-bottom: 15px;
+            color: #444;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+        
+        .form-group {
+            flex: 1 0 300px;
+            margin: 0 10px 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #45a049;
+        }
+        
+        .btn-secondary {
+            background-color: #2196F3;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #0b7dda;
+        }
+        
+        .btn-danger {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+        
+        .filter-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .filter-controls > div {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+            position: sticky;
+            top: 0;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .action-btn {
+            padding: 6px 10px;
+            margin: 0 2px;
+            font-size: 14px;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        
+        .success {
+            background-color: #4CAF50;
+        }
+        
+        .error {
+            background-color: #f44336;
+        }
+        
+        @media (max-width: 768px) {
+            .form-group {
+                flex: 1 0 100%;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+            
+            .filter-controls > div {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gestion des Élèves</h1>
+        
+        <!-- Formulaire d'inscription -->
+        <div class="form-section">
+            <h2>Inscription d'un Élève</h2>
+            <form id="studentForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="lastName">Nom de l'élève *</label>
+                        <input type="text" id="lastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="firstName">Prénom de l'élève *</label>
+                        <input type="text" id="firstName" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="registrationDate">Date d'inscription *</label>
+                        <input type="date" id="registrationDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthDate">Date de naissance *</label>
+                        <input type="date" id="birthDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="birthPlace">Lieu de naissance *</label>
+                        <input type="text" id="birthPlace" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Âge</label>
+                        <input type="number" id="age" min="0" readonly>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="gender">Sexe *</label>
+                        <select id="gender" required>
+                            <option value="">Sélectionner</option>
+                            <option value="M">Masculin</option>
+                            <option value="F">Féminin</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Statut *</label>
+                        <select id="status" required>
+                            <option value="">Sélectionner</option>
+                            <option value="Nouveau">Nouveau</option>
+                            <option value="Redoublant">Redoublant</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="class">Classe *</label>
+                        <select id="class" required>
+                            <option value="">Sélectionner une classe</option>
+                            <option value="CP">CP</option>
+                            <option value="CE1">CE1</option>
+                            <option value="CE2">CE2</option>
+                            <option value="CM1">CM1</option>
+                            <option value="CM2">CM2</option>
+                            <option value="6ème">6ème</option>
+                            <option value="5ème">5ème</option>
+                            <option value="4ème">4ème</option>
+                            <option value="3ème">3ème</option>
+                            <option value="2nde">2nde</option>
+                            <option value="1ère">1ère</option>
+                            <option value="Terminale">Terminale</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 20px 0 15px; color: #555;">Informations du Parent/Tuteur</h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="parentLastName">Nom du parent/tuteur *</label>
+                        <input type="text" id="parentLastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="parentFirstName">Prénom du parent/tuteur *</label>
+                        <input type="text" id="parentFirstName" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="parentAddress">Adresse *</label>
+                        <input type="text" id="parentAddress" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="parentContact">Contact *</label>
+                        <input type="text" id="parentContact" required>
+                    </div>
+                </div>
+                
+                <div class="buttons">
+                    <button type="submit" class="btn-primary">Enregistrer</button>
+                    <button type="reset" class="btn-danger">Annuler</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Filtres et actions -->
+        <div class="filter-section">
+            <h2>Filtres et Actions</h2>
+            
+            <div class="filter-controls">
+                <div>
+                    <label for="searchName">Rechercher par nom/prénom</label>
+                    <input type="text" id="searchName" placeholder="Entrez un nom ou prénom">
+                </div>
+                <div>
+                    <label for="filterAge">Filtrer par âge</label>
+                    <select id="filterAge">
+                        <option value="">Tous les âges</option>
+                        <option value="5">5 ans</option>
+                        <option value="6">6 ans</option>
+                        <option value="7">7 ans</option>
+                        <option value="8">8 ans</option>
+                        <option value="9">9 ans</option>
+                        <option value="10">10 ans</option>
+                        <option value="11">11 ans</option>
+                        <option value="12">12 ans</option>
+                        <option value="13">13 ans</option>
+                        <option value="14">14 ans</option>
+                        <option value="15">15 ans</option>
+                        <option value="16">16 ans</option>
+                        <option value="17">17 ans</option>
+                        <option value="18">18 ans</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="filterGender">Filtrer par sexe</label>
+                    <select id="filterGender">
+                        <option value="">Tous</option>
+                        <option value="M">Masculin</option>
+                        <option value="F">Féminin</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="filterStatus">Filtrer par statut</label>
+                    <select id="filterStatus">
+                        <option value="">Tous</option>
+                        <option value="Nouveau">Nouveau</option>
+                        <option value="Redoublant">Redoublant</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="filterClass">Filtrer par classe</label>
+                    <select id="filterClass">
+                        <option value="">Toutes les classes</option>
+                        <option value="CP">CP</option>
+                        <option value="CE1">CE1</option>
+                        <option value="CE2">CE2</option>
+                        <option value="CM1">CM1</option>
+                        <option value="CM2">CM2</option>
+                        <option value="6ème">6ème</option>
+                        <option value="5ème">5ème</option>
+                        <option value="4ème">4ème</option>
+                        <option value="3ème">3ème</option>
+                        <option value="2nde">2nde</option>
+                        <option value="1ère">1ère</option>
+                        <option value="Terminale">Terminale</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="buttons">
+                <button id="generateJson" class="btn-secondary">Générer Fichiers JSON</button>
+                <button id="exportData" class="btn-secondary">Exporter les Données</button>
+                <button id="importData" class="btn-secondary">Importer des Données</button>
+                <input type="file" id="importFile" accept=".json" style="display: none;">
+            </div>
+        </div>
+        
+        <!-- Liste des élèves -->
+        <div class="students-list">
+            <h2>Liste des Élèves</h2>
+            <table id="studentsTable">
+                <thead>
+                    <tr>
+                        <th>Nom et Prénom</th>
+                        <th>Date d'inscription</th>
+                        <th>Date de naissance</th>
+                        <th>Âge</th>
+                        <th>Sexe</th>
+                        <th>Statut</th>
+                        <th>Classe</th>
+                        <th>Parent/Tuteur</th>
+                        <th>Contact</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="studentsTableBody">
+                    <!-- Les données seront ajoutées dynamiquement -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div id="notification" class="notification"></div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialiser la base de données
+            initDatabase();
+            
+            // Calculer l'âge automatiquement quand la date de naissance change
+            document.getElementById('birthDate').addEventListener('change', calculateAge);
+            
+            // Gérer la soumission du formulaire
+            document.getElementById('studentForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveStudent();
+            });
+            
+            // Configurer les événements de filtrage
+            document.getElementById('searchName').addEventListener('input', filterStudents);
+            document.getElementById('filterAge').addEventListener('change', filterStudents);
+            document.getElementById('filterGender').addEventListener('change', filterStudents);
+            document.getElementById('filterStatus').addEventListener('change', filterStudents);
+            document.getElementById('filterClass').addEventListener('change', filterStudents);
+            
+            // Configurer les boutons d'action
+            document.getElementById('generateJson').addEventListener('click', generateJsonFiles);
+            document.getElementById('exportData').addEventListener('click', exportData);
+            document.getElementById('importData').addEventListener('click', function() {
+                document.getElementById('importFile').click();
+            });
+            document.getElementById('importFile').addEventListener('change', importData);
+            
+            // Charger les étudiants au démarrage
+            loadStudents();
+        });
+        
+        // Calculer l'âge à partir de la date de naissance
+        function calculateAge() {
+            const birthDate = new Date(document.getElementById('birthDate').value);
+            if (!isNaN(birthDate.getTime())) {
+                const today = new Date();
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                
+                document.getElementById('age').value = age;
+            }
+        }
+        
+        // Initialiser la base de données
+        function initDatabase() {
+            if (!localStorage.getItem('students')) {
+                localStorage.setItem('students', JSON.stringify([]));
+            }
+        }
+        
+        // Sauvegarder un élève
+        function saveStudent() {
+            const student = {
+                id: Date.now(), // Utiliser l'horodatage comme ID unique
+                lastName: document.getElementById('lastName').value,
+                firstName: document.getElementById('firstName').value,
+                registrationDate: document.getElementById('registrationDate').value,
+                birthDate: document.getElementById('birthDate').value,
+                birthPlace: document.getElementById('birthPlace').value,
+                age: document.getElementById('age').value,
+                gender: document.getElementById('gender').value,
+                status: document.getElementById('status').value,
+                class: document.getElementById('class').value,
+                parentLastName: document.getElementById('parentLastName').value,
+                parentFirstName: document.getElementById('parentFirstName').value,
+                parentAddress: document.getElementById('parentAddress').value,
+                parentContact: document.getElementById('parentContact').value
+            };
+            
+            const students = JSON.parse(localStorage.getItem('students'));
+            students.push(student);
+            localStorage.setItem('students', JSON.stringify(students));
+            
+            showNotification('Élève enregistré avec succès!', 'success');
+            document.getElementById('studentForm').reset();
+            loadStudents();
+        }
+        
+        // Charger la liste des élèves
+        function loadStudents() {
+            const students = JSON.parse(localStorage.getItem('students'));
+            const tableBody = document.getElementById('studentsTableBody');
+            tableBody.innerHTML = '';
+            
+            students.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.lastName} ${student.firstName}</td>
+                    <td>${formatDate(student.registrationDate)}</td>
+                    <td>${formatDate(student.birthDate)} (${student.birthPlace})</td>
+                    <td>${student.age} ans</td>
+                    <td>${student.gender === 'M' ? 'Masculin' : 'Féminin'}</td>
+                    <td>${student.status}</td>
+                    <td>${student.class}</td>
+                    <td>${student.parentLastName} ${student.parentFirstName}<br><small>${student.parentAddress}</small></td>
+                    <td>${student.parentContact}</td>
+                    <td>
+                        <button class="btn-danger action-btn" onclick="deleteStudent(${student.id})">Supprimer</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Filtrer les élèves
+        function filterStudents() {
+            const searchName = document.getElementById('searchName').value.toLowerCase();
+            const filterAge = document.getElementById('filterAge').value;
+            const filterGender = document.getElementById('filterGender').value;
+            const filterStatus = document.getElementById('filterStatus').value;
+            const filterClass = document.getElementById('filterClass').value;
+            
+            const students = JSON.parse(localStorage.getItem('students'));
+            const tableBody = document.getElementById('studentsTableBody');
+            tableBody.innerHTML = '';
+            
+            students.forEach(student => {
+                // Appliquer les filtres
+                if (searchName && !`${student.lastName} ${student.firstName}`.toLowerCase().includes(searchName)) {
+                    return;
+                }
+                
+                if (filterAge && student.age != filterAge) {
+                    return;
+                }
+                
+                if (filterGender && student.gender !== filterGender) {
+                    return;
+                }
+                
+                if (filterStatus && student.status !== filterStatus) {
+                    return;
+                }
+                
+                if (filterClass && student.class !== filterClass) {
+                    return;
+                }
+                
+                // Ajouter la ligne si l'élève correspond aux critères
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.lastName} ${student.firstName}</td>
+                    <td>${formatDate(student.registrationDate)}</td>
+                    <td>${formatDate(student.birthDate)} (${student.birthPlace})</td>
+                    <td>${student.age} ans</td>
+                    <td>${student.gender === 'M' ? 'Masculin' : 'Féminin'}</td>
+                    <td>${student.status}</td>
+                    <td>${student.class}</td>
+                    <td>${student.parentLastName} ${student.parentFirstName}<br><small>${student.parentAddress}</small></td>
+                    <td>${student.parentContact}</td>
+                    <td>
+                        <button class="btn-danger action-btn" onclick="deleteStudent(${student.id})">Supprimer</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Supprimer un élève
+        function deleteStudent(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cet élève ?')) {
+                let students = JSON.parse(localStorage.getItem('students'));
+                students = students.filter(student => student.id !== id);
+                localStorage.setItem('students', JSON.stringify(students));
+                loadStudents();
+                showNotification('Élève supprimé avec succès!', 'success');
+            }
+        }
+        
+        // Générer des fichiers JSON
+        function generateJsonFiles() {
+            const students = JSON.parse(localStorage.getItem('students'));
+            
+            // Créer un fichier JSON pour tous les élèves
+            const allData = JSON.stringify(students, null, 2);
+            downloadFile(allData, 'tous_les_eleves.json', 'application/json');
+            
+            // Créer des fichiers séparés par statut
+            const nouveaux = students.filter(s => s.status === 'Nouveau');
+            const redoublants = students.filter(s => s.status === 'Redoublant');
+            
+            if (nouveaux.length > 0) {
+                downloadFile(JSON.stringify(nouveaux, null, 2), 'eleves_nouveaux.json', 'application/json');
+            }
+            
+            if (redoublants.length > 0) {
+                downloadFile(JSON.stringify(redoublants, null, 2), 'eleves_redoublants.json', 'application/json');
+            }
+            
+            // Créer des fichiers séparés par classe
+            const classes = [...new Set(students.map(s => s.class))];
+            classes.forEach(classe => {
+                const elevesClasse = students.filter(s => s.class === classe);
+                if (elevesClasse.length > 0) {
+                    downloadFile(JSON.stringify(elevesClasse, null, 2), `eleves_${classe}.json`, 'application/json');
+                }
+            });
+            
+            showNotification('Fichiers JSON générés avec succès!', 'success');
+        }
+        
+        // Exporter les données
+        function exportData() {
+            const students = JSON.parse(localStorage.getItem('students'));
+            const data = JSON.stringify(students, null, 2);
+            downloadFile(data, 'export_eleves.json', 'application/json');
+            showNotification('Données exportées avec succès!', 'success');
+        }
+        
+        // Importer des données
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    
+                    if (Array.isArray(importedData)) {
+                        const currentStudents = JSON.parse(localStorage.getItem('students'));
+                        const mergedStudents = [...currentStudents, ...importedData];
+                        localStorage.setItem('students', JSON.stringify(mergedStudents));
+                        loadStudents();
+                        showNotification('Données importées avec succès!', 'success');
+                    } else {
+                        showNotification('Le fichier importé n\'a pas le format correct.', 'error');
+                    }
+                } catch (error) {
+                    showNotification('Erreur lors de l\'importation du fichier.', 'error');
+                    console.error(error);
+                }
+            };
+            reader.readAsText(file);
+            
+            // Réinitialiser l'input file
+            event.target.value = '';
+        }
+        
+        // Télécharger un fichier
+        function downloadFile(data, filename, type) {
+            const blob = new Blob([data], { type: type });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 0);
+        }
+        
+        // Formater une date au format JJ/MM/AAAA
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR');
+        }
+        
+        // Afficher une notification
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.style.opacity = 1;
+            
+            setTimeout(() => {
+                notification.style.opacity = 0;
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
