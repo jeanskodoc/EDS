@@ -1232,3 +1232,1108 @@
             </div>
             
             <div class="lesson-list" id="lessonList">
+                <div class="no-lessons">
+                    <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 15px;"></i>
+                    <p>Aucune fiche sauvegardée</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour la saisie LaTeX -->
+    <div class="latex-modal" id="latexModal">
+        <div class="latex-modal-content">
+            <h3>Insérer une formule mathématique</h3>
+            <p>Saisissez votre formule LaTeX ci-dessous :</p>
+            <textarea class="latex-input" id="latexInput" placeholder="Ex: E = mc^2 ou \frac{a}{b}"></textarea>
+            <div class="latex-preview" id="latexPreview">Aperçu de la formule</div>
+            <div class="latex-modal-buttons">
+                <button class="btn" onclick="insertLatex()">Insérer à la position du curseur</button>
+                <button class="btn btn-danger" onclick="closeLatexModal()">Annuler</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // Variables globales
+        let colorPickerVisible = false;
+        let editorMode = {
+            'competence': true,
+            'objectifs': true,
+            'prerequis': true,
+            'lexique': true,
+            'references': true,
+            'evaluation': true,
+            'activite1': true,
+            'activite2': true,
+            'activite3': true,
+            'activite4': true,
+            'contenu1': true,
+            'situation_enonce': true,
+            'situation_solutions': true,
+            'activites_enseignant': true,
+            'activites_eleves': true,
+            'methode_conseillee': true,
+            'exercice_enonce': true,
+            'recapitulation': true
+        };
+        let currentEditorId = null;
+        let currentCursorPosition = 0;
+        let currentLessonId = null;
+
+        // Configuration de MathJax
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                renderActions: {
+                    addMenu: [0, '', '']
+                }
+            }
+        };
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialiser les éditeurs de texte enrichi
+            initRichTextEditors();
+            
+            // Initialiser les boutons de basculement d'éditeur
+            initEditorToggleButtons();
+            
+            // Initialiser les sélecteurs de couleur
+            initColorPickers();
+            
+            // Écouter les changements dans la zone de texte LaTeX
+            document.getElementById('latexInput').addEventListener('input', updateLatexPreview);
+            
+            // Charger les fiches sauvegardées
+            loadSavedLessons();
+            
+            // Mettre à jour les filtres
+            updateFilterOptions();
+            
+            // Définir la date du jour par défaut
+            const today = new Date().toISOString().substr(0, 10);
+            document.getElementById('date_cours').value = today;
+            
+            // Définir l'année scolaire par défaut
+            const currentYear = new Date().getFullYear();
+            document.getElementById('annee_scolaire').value = `${currentYear}-${currentYear + 1}`;
+            
+            // Définir la date de correction par défaut (3 jours après)
+            const correctionDate = new Date();
+            correctionDate.setDate(correctionDate.getDate() + 3);
+            document.getElementById('exercice_date_correction').value = correctionDate.toISOString().substr(0, 10);
+        });
+
+        // Fonction pour mettre à jour la position du curseur
+        function updateCursorPosition(editorId) {
+            const editor = document.getElementById(editorId);
+            const selection = window.getSelection();
+            
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const preCaretRange = range.cloneRange();
+                preCaretRange.selectNodeContents(editor);
+                preCaretRange.setEnd(range.endContainer, range.endOffset);
+                currentCursorPosition = preCaretRange.toString().length;
+                
+                // Mettre à jour l'affichage de la position
+                const positionElement = document.getElementById(`${editorId}-cursor-position`);
+                if (positionElement) {
+                    positionElement.textContent = `Position du curseur: ${currentCursorPosition}`;
+                }
+            }
+        }
+
+        // Fonction pour initialiser les éditeurs de texte enrichi
+        function initRichTextEditors() {
+            // Ajouter les écouteurs d'événements aux boutons de la barre d'outils
+            document.querySelectorAll('.toolbar button').forEach(button => {
+                if (!button.onclick) {
+                    button.addEventListener('click', function() {
+                        const command = this.dataset.command;
+                        
+                        if (command === 'foreColor') {
+                            toggleColorPicker(this.nextElementSibling);
+                        } else if (command === 'insertImage') {
+                            insertImage(this.closest('.rich-text-editor').querySelector('.editor-content'));
+                        } else if (command === 'insertAudio') {
+                            insertAudio(this.closest('.rich-text-editor').querySelector('.editor-content'));
+                        } else if (command === 'insertVideo') {
+                            insertVideo(this.closest('.rich-text-editor').querySelector('.editor-content'));
+                        } else {
+                            document.execCommand(command, false, null);
+                        }
+                        updateTextareaFromEditor(this.closest('.rich-text-editor'));
+                    });
+                }
+            });
+
+            // Ajouter les écouteurs d'événements pour la mise à jour des textarea
+            document.querySelectorAll('.editor-content').forEach(editor => {
+                editor.addEventListener('input', function() {
+                    updateTextareaFromEditor(this.closest('.rich-text-editor'));
+                    updateCursorPosition(this.id);
+                });
+                editor.addEventListener('blur', function() {
+                    updateTextareaFromEditor(this.closest('.rich-text-editor'));
+                });
+                editor.addEventListener('click', function() {
+                    updateCursorPosition(this.id);
+                });
+                editor.addEventListener('keyup', function() {
+                    updateCursorPosition(this.id);
+                });
+            });
+        }
+
+        // Fonction pour initialiser les boutons de basculement d'éditeur
+        function initEditorToggleButtons() {
+            document.querySelectorAll('.editor-toggle-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.dataset.target;
+                    toggleEditorMode(targetId);
+                });
+            });
+        }
+
+        // Fonction pour basculer entre l'éditeur riche et le textarea simple
+        function toggleEditorMode(targetId) {
+            const editorElement = document.getElementById(`${targetId}-editor`);
+            const textareaElement = document.getElementById(targetId);
+            
+            if (editorMode[targetId]) {
+                // Passer en mode textarea simple
+                editorElement.style.display = 'none';
+                textareaElement.style.display = 'block';
+                textareaElement.value = editorElement.querySelector('.editor-content').innerHTML;
+            } else {
+                // Passer en mode éditeur riche
+                editorElement.style.display = 'block';
+                textareaElement.style.display = 'none';
+                editorElement.querySelector('.editor-content').innerHTML = textareaElement.value;
+            }
+            
+            // Mettre à jour l'état
+            editorMode[targetId] = !editorMode[targetId];
+            
+            // Mettre à jour le texte du bouton
+            const button = document.querySelector(`.editor-toggle-btn[data-target="${targetId}"]`);
+            button.textContent = editorMode[targetId] ? 'Basculer en Texte Simple' : 'Basculer en Éditeur';
+            
+            // Mettre à jour la classe active
+            if (editorMode[targetId]) {
+                button.classList.add('active');
+            } else {
+                button.classList.remove('active');
+            }
+        }
+
+        // Fonction pour initialiser les sélecteurs de couleur
+        function initColorPickers() {
+            const colors = [
+                '#000000', '#434343', '#666666', '#999999', '#b7b7b7', '#cccccc', '#d9d9d9', '#efefef', '#f3f3f3', '#ffffff',
+                '#980000', '#ff0000', '#ff9900', '#ffff00', '#00ff00', '#00ffff', '#4a86e8', '#0000ff', '#9900ff', '#ff00ff',
+                '#e6b8af', '#f4cccc', '#fce5cd', '#fff2cc', '#d9ead3', '#d0e0e3', '#c9daf8', '#cfe2f3', '#d9d2e9', '#ead1dc',
+                '#dd7e6b', '#ea9999', '#f9cb9c', '#ffe599', '#b6d7a8', '#a2c4c9', '#a4c2f4', '#9fc5e8', '#b4a7d6', '#d5a6bd',
+                '#cc4125', '#e06666', '#f6b26b', '#ffd966', '#93c47d', '#76a5af', '#6d9eeb', '#6fa8dc', '#8e7cc3', '#c27ba0',
+                '#a61c00', '#cc0000', '#e69138', '#f1c232', '#6aa84f', '#45818e', '#3c78d8', '#3d85c6', '#674ea7', '#a64d79',
+                '#85200c', '#990000', '#b45f06', '#bf9000', '#38761d', '#134f5c', '#1155cc', '#0b5394', '#351c75', '#741b47',
+                '#5b0f00', '#660000', '#783f04', '#7f6000', '#274e13', '#0c343d', '#1c4587', '#073763', '#20124d', '#4c1130'
+            ];
+            
+            document.querySelectorAll('.color-palette').forEach(palette => {
+                colors.forEach(color => {
+                    const colorOption = document.createElement('div');
+                    colorOption.className = 'color-option';
+                    colorOption.style.backgroundColor = color;
+                    colorOption.addEventListener('click', function() {
+                        const editorContent = palette.closest('.rich-text-editor').querySelector('.editor-content');
+                        document.execCommand('foreColor', false, color);
+                        palette.style.display = 'none';
+                        colorPickerVisible = false;
+                        updateTextareaFromEditor(palette.closest('.rich-text-editor'));
+                    });
+                    palette.appendChild(colorOption);
+                });
+            });
+        }
+
+        // Fonction pour afficher/masquer le sélecteur de couleur
+        function toggleColorPicker(palette) {
+            if (colorPickerVisible && palette.style.display === 'block') {
+                palette.style.display = 'none';
+                colorPickerVisible = false;
+            } else {
+                // Masquer tous les autres sélecteurs de couleur
+                document.querySelectorAll('.color-palette').forEach(p => {
+                    p.style.display = 'none';
+                });
+                palette.style.display = 'block';
+                colorPickerVisible = true;
+            }
+        }
+
+        // Fonction pour insérer une image
+        function insertImage(editor) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        document.execCommand('insertHTML', false, `<img src="${event.target.result}" alt="Image" style="max-width: 100%; height: auto;">`);
+                        updateTextareaFromEditor(editor.closest('.rich-text-editor'));
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+
+        // Fonction pour insérer un audio
+        function insertAudio(editor) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'audio/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        document.execCommand('insertHTML', false, `<audio controls src="${event.target.result}" style="width: 100%; max-width: 400px;"></audio>`);
+                        updateTextareaFromEditor(editor.closest('.rich-text-editor'));
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+
+        // Fonction pour insérer une vidéo
+        function insertVideo(editor) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'video/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        document.execCommand('insertHTML', false, `<video controls src="${event.target.result}" style="max-width: 100%; height: auto;"></video>`);
+                        updateTextareaFromEditor(editor.closest('.rich-text-editor'));
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+
+        // Fonction pour ouvrir le modal LaTeX
+        function openLatexModal(editorId) {
+            currentEditorId = editorId;
+            document.getElementById('latexModal').style.display = 'flex';
+            document.getElementById('latexInput').value = '';
+            document.getElementById('latexPreview').innerHTML = 'Aperçu de la formule';
+            
+            // Mettre à jour la position du curseur avant d'ouvrir le modal
+            updateCursorPosition(editorId);
+        }
+
+        // Fonction pour fermer le modal LaTeX
+        function closeLatexModal() {
+            document.getElementById('latexModal').style.display = 'none';
+        }
+
+        // Fonction pour mettre à jour l'aperçu LaTeX
+        function updateLatexPreview() {
+            const latexCode = document.getElementById('latexInput').value;
+            if (latexCode) {
+                document.getElementById('latexPreview').innerHTML = `$$${latexCode}$$`;
+                MathJax.typesetPromise([document.getElementById('latexPreview')]);
+            } else {
+                document.getElementById('latexPreview').innerHTML = 'Aperçu de la formule';
+            }
+        }
+
+        // Fonction pour insérer du code LaTeX à la position du curseur
+        function insertLatex() {
+            const latexCode = document.getElementById('latexInput').value;
+            if (latexCode && currentEditorId) {
+                const editor = document.getElementById(currentEditorId);
+                const latexHtml = `$$${latexCode}$$`;
+                
+                // Sauvegarder le contenu actuel
+                const currentContent = editor.innerHTML;
+                
+                // Insérer à la position du curseur
+                if (currentCursorPosition >= 0) {
+                    const textBefore = currentContent.substring(0, currentCursorPosition);
+                    const textAfter = currentContent.substring(currentCursorPosition);
+                    editor.innerHTML = textBefore + latexHtml + textAfter;
+                    
+                    // Mettre à jour la position du curseur
+                    currentCursorPosition += latexHtml.length;
+                } else {
+                    // Insérer à la fin si la position n'est pas définie
+                    editor.innerHTML += latexHtml;
+                }
+                
+                // Forcer le rendur MathJax
+                MathJax.typesetPromise([editor]);
+                
+                // Mettre à jour le textarea correspondant
+                updateTextareaFromEditor(editor.parentElement);
+                
+                // Fermer le modal
+                closeLatexModal();
+                
+                // Afficher une notification
+                showNotification('Formule insérée avec succès!');
+            }
+        }
+
+        // Fonction pour mettre à jour le textarea à partir de l'éditeur
+        function updateTextareaFromEditor(editorElement) {
+            const editorId = editorElement.id;
+            const targetId = editorId.replace('-editor', '');
+            const textarea = document.getElementById(targetId);
+            if (textarea) {
+                textarea.value = editorElement.querySelector('.editor-content').innerHTML;
+            }
+        }
+
+        // Fonctions pour la gestion des tableaux
+        function addRow() {
+            const table = document.getElementById('deroulement-table').getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow();
+            
+            newRow.innerHTML = `
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td>
+                    <div class="editor-toggle">
+                        <button class="editor-toggle-btn" data-target="activiteNew">Basculer Éditeur</button>
+                    </div>
+                    <div class="rich-text-editor" id="activiteNew-editor">
+                        <div class="toolbar">
+                            <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                            <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                            <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                            <button type="button" onclick="openLatexModal('activiteNew-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
+                        </div>
+                        <div class="editor-content" id="activiteNew-content" contenteditable="true" onkeyup="updateCursorPosition('activiteNew-content')" onclick="updateCursorPosition('activiteNew-content')"></div>
+                        <div class="cursor-position" id="activiteNew-cursor-position">Position du curseur: 0</div>
+                    </div>
+                    <textarea id="activiteNew" name="activiteNew" style="display:none;"></textarea>
+                </td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><button class="btn-danger" onclick="removeRow(this)">X</button></td>
+            `;
+            
+            // Initialiser le nouvel éditeur
+            initRichTextEditors();
+            initEditorToggleButtons();
+        }
+
+        function addRow2() {
+            const table = document.getElementById('suite-table').getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow();
+            
+            newRow.innerHTML = `
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td>
+                    <div class="editor-toggle">
+                        <button class="editor-toggle-btn" data-target="activiteNew2">Basculer Éditeur</button>
+                    </div>
+                    <div class="rich-text-editor" id="activiteNew2-editor">
+                        <div class="toolbar">
+                            <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                            <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                            <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                            <button type="button" onclick="openLatexModal('activiteNew2-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
+                        </div>
+                        <div class="editor-content" id="activiteNew2-content" contenteditable="true" onkeyup="updateCursorPosition('activiteNew2-content')" onclick="updateCursorPosition('activiteNew2-content')"></div>
+                        <div class="cursor-position" id="activiteNew2-cursor-position">Position du curseur: 0</div>
+                    </div>
+                    <textarea id="activiteNew2" name="activiteNew2" style="display:none;"></textarea>
+                </td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td><button class="btn-danger" onclick="removeRow(this)">X</button></td>
+            `;
+            
+            // Initialiser le nouvel éditeur
+            initRichTextEditors();
+            initEditorToggleButtons();
+        }
+
+        function removeRow(button) {
+            const row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        }
+
+        // Fonctions pour la gestion des médias
+        function previewMedia(input, previewId) {
+            const preview = document.getElementById(previewId);
+            preview.innerHTML = '';
+            
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const url = URL.createObjectURL(file);
+                
+                if (file.type.startsWith('image/')) {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    preview.appendChild(img);
+                } else if (file.type.startsWith('video/')) {
+                    const video = document.createElement('video');
+                    video.src = url;
+                    video.controls = true;
+                    video.style.maxWidth = '300px';
+                    preview.appendChild(video);
+                } else if (file.type.startsWith('audio/')) {
+                    const audio = document.createElement('audio');
+                    audio.src = url;
+                    audio.controls = true;
+                    audio.style.width = '100%';
+                    preview.appendChild(audio);
+                }
+            }
+        }
+
+        // Fonction pour sauvegarder la fiche
+        function saveForm() {
+            const lesson = {
+                id: currentLessonId || Date.now().toString(),
+                date_cours: document.getElementById('date_cours').value,
+                annee_scolaire: document.getElementById('annee_scolaire').value,
+                enseignant: document.getElementById('enseignant').value,
+                etablissement: document.getElementById('etablissement').value,
+                module: document.getElementById('module').value,
+                classe: document.getElementById('classe').value,
+                effectif: document.getElementById('effectif').value,
+                titre: document.getElementById('titre').value,
+                competence: document.getElementById('competence').value,
+                objectifs: document.getElementById('objectifs').value,
+                duree_competence: document.getElementById('duree_competence').value,
+                duree_seance: document.getElementById('duree_seance').value,
+                prerequis: document.getElementById('prerequis').value,
+                lexique: document.getElementById('lexique').value,
+                references: document.getElementById('references').value,
+                situation_enonce: document.getElementById('situation_enonce').value,
+                situation_solutions: document.getElementById('situation_solutions').value,
+                activites_enseignant: document.getElementById('activites_enseignant').value,
+                activites_eleves: document.getElementById('activites_eleves').value,
+                methode_conseillee: document.getElementById('methode_conseillee').value,
+                exercice_enonce: document.getElementById('exercice_enonce').value,
+                exercice_date_correction: document.getElementById('exercice_date_correction').value,
+                recapitulation: document.getElementById('recapitulation').value,
+                evaluation: document.getElementById('evaluation').value,
+                activite1: document.getElementById('activite1').value,
+                activite2: document.getElementById('activite2').value,
+                activite3: document.getElementById('activite3').value,
+                activite4: document.getElementById('activite4').value,
+                contenu1: document.getElementById('contenu1').value,
+                createdAt: currentLessonId ? undefined : new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+
+            // Récupérer les fiches existantes
+            let savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
+            
+            if (currentLessonId) {
+                // Mettre à jour la fiche existante
+                const index = savedLessons.findIndex(l => l.id === currentLessonId);
+                if (index !== -1) {
+                    savedLessons[index] = lesson;
+                }
+            } else {
+                // Ajouter une nouvelle fiche
+                savedLessons.push(lesson);
+            }
+
+            // Sauvegarder dans le localStorage
+            localStorage.setItem('savedLessons', JSON.stringify(savedLessons));
+            
+            // Afficher une notification
+            showNotification('Fiche sauvegardée avec succès!');
+            
+            // Recharger la liste des fiches
+            loadSavedLessons();
+            
+            // Mettre à jour les filtres
+            updateFilterOptions();
+            
+            // Réinitialiser le formulaire si c'est une nouvelle fiche
+            if (!currentLessonId) {
+                currentLessonId = null;
+            }
+        }
+
+        // Fonction pour exporter en JSON
+        function exportJSON() {
+            const lesson = {
+                date_cours: document.getElementById('date_cours').value,
+                annee_scolaire: document.getElementById('annee_scolaire').value,
+                enseignant: document.getElementById('enseignant').value,
+                etablissement: document.getElementById('etablissement').value,
+                module: document.getElementById('module').value,
+                classe: document.getElementById('classe').value,
+                effectif: document.getElementById('effectif').value,
+                titre: document.getElementById('titre').value,
+                competence: document.getElementById('competence').value,
+                objectifs: document.getElementById('objectifs').value,
+                duree_competence: document.getElementById('duree_competence').value,
+                duree_seance: document.getElementById('duree_seance').value,
+                prerequis: document.getElementById('prerequis').value,
+                lexique: document.getElementById('lexique').value,
+                references: document.getElementById('references').value,
+                situation_enonce: document.getElementById('situation_enonce').value,
+                situation_solutions: document.getElementById('situation_solutions').value,
+                activites_enseignant: document.getElementById('activites_enseignant').value,
+                activites_eleves: document.getElementById('activites_eleves').value,
+                methode_conseillee: document.getElementById('methode_conseillee').value,
+                exercice_enonce: document.getElementById('exercice_enonce').value,
+                exercice_date_correction: document.getElementById('exercice_date_correction').value,
+                recapitulation: document.getElementById('recapitulation').value,
+                evaluation: document.getElementById('evaluation').value,
+                activite1: document.getElementById('activite1').value,
+                activite2: document.getElementById('activite2').value,
+                activite3: document.getElementById('activite3').value,
+                activite4: document.getElementById('activite4').value,
+                contenu1: document.getElementById('contenu1').value
+            };
+
+            const dataStr = JSON.stringify(lesson, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `fiche-pedagogique-${lesson.titre.replace(/\s+/g, '-').toLowerCase()}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            showNotification('Fiche exportée avec succès!');
+        }
+
+        // Fonction pour importer un JSON
+        function importJSON() {
+            document.getElementById('jsonFileInput').click();
+        }
+
+        // Gérer l'import de fichier JSON
+        document.getElementById('jsonFileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    try {
+                        const lesson = JSON.parse(event.target.result);
+                        
+                        // Remplir le formulaire avec les données importées
+                        document.getElementById('date_cours').value = lesson.date_cours || '';
+                        document.getElementById('annee_scolaire').value = lesson.annee_scolaire || '';
+                        document.getElementById('enseignant').value = lesson.enseignant || '';
+                        document.getElementById('etablissement').value = lesson.etablissement || '';
+                        document.getElementById('module').value = lesson.module || '';
+                        document.getElementById('classe').value = lesson.classe || '';
+                        document.getElementById('effectif').value = lesson.effectif || '';
+                        document.getElementById('titre').value = lesson.titre || '';
+                        document.getElementById('competence').value = lesson.competence || '';
+                        document.getElementById('objectifs').value = lesson.objectifs || '';
+                        document.getElementById('duree_competence').value = lesson.duree_competence || '';
+                        document.getElementById('duree_seance').value = lesson.duree_seance || '';
+                        document.getElementById('prerequis').value = lesson.prerequis || '';
+                        document.getElementById('lexique').value = lesson.lexique || '';
+                        document.getElementById('references').value = lesson.references || '';
+                        document.getElementById('situation_enonce').value = lesson.situation_enonce || '';
+                        document.getElementById('situation_solutions').value = lesson.situation_solutions || '';
+                        document.getElementById('activites_enseignant').value = lesson.activites_enseignant || '';
+                        document.getElementById('activites_eleves').value = lesson.activites_eleves || '';
+                        document.getElementById('methode_conseillee').value = lesson.methode_conseillee || '';
+                        document.getElementById('exercice_enonce').value = lesson.exercice_enonce || '';
+                        document.getElementById('exercice_date_correction').value = lesson.exercice_date_correction || '';
+                        document.getElementById('recapitulation').value = lesson.recapitulation || '';
+                        document.getElementById('evaluation').value = lesson.evaluation || '';
+                        document.getElementById('activite1').value = lesson.activite1 || '';
+                        document.getElementById('activite2').value = lesson.activite2 || '';
+                        document.getElementById('activite3').value = lesson.activite3 || '';
+                        document.getElementById('activite4').value = lesson.activite4 || '';
+                        document.getElementById('contenu1').value = lesson.contenu1 || '';
+                        
+                        // Mettre à jour les éditeurs
+                        document.querySelectorAll('.editor-content').forEach(editor => {
+                            const targetId = editor.id.replace('-content', '');
+                            if (lesson[targetId]) {
+                                editor.innerHTML = lesson[targetId];
+                            }
+                        });
+                        
+                        showNotification('Fiche importée avec succès!');
+                    } catch (error) {
+                        showNotification('Erreur lors de l\'import du fichier JSON', 'error');
+                        console.error(error);
+                    }
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        // Fonction pour effacer le formulaire
+        function clearForm() {
+            if (confirm('Êtes-vous sûr de vouloir effacer toutes les données du formulaire?')) {
+                document.querySelectorAll('input:not([type="file"]), textarea').forEach(element => {
+                    element.value = '';
+                });
+                
+                document.querySelectorAll('.editor-content').forEach(editor => {
+                    editor.innerHTML = '';
+                });
+                
+                document.querySelectorAll('.media-preview').forEach(preview => {
+                    preview.innerHTML = '';
+                });
+                
+                currentLessonId = null;
+                
+                showNotification('Formulaire effacé!');
+            }
+        }
+
+        // Fonction pour afficher une notification
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification';
+            
+            if (type === 'error') {
+                notification.classList.add('error');
+            }
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Fonction pour charger les fiches sauvegardées
+        function loadSavedLessons() {
+            const savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
+            const lessonList = document.getElementById('lessonList');
+            
+            if (savedLessons.length === 0) {
+                lessonList.innerHTML = `
+                    <div class="no-lessons">
+                        <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 15px;"></i>
+                        <p>Aucune fiche sauvegardée</p>
+                    </div>
+                `;
+                document.getElementById('totalLessons').textContent = 'Total: 0 fiches';
+                document.getElementById('filteredLessons').textContent = 'Filtrées: 0';
+                return;
+            }
+            
+            let html = '';
+            savedLessons.forEach(lesson => {
+                const date = new Date(lesson.createdAt);
+                const formattedDate = date.toLocaleDateString('fr-FR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+                
+                html += `
+                    <div class="lesson-item" data-id="${lesson.id}" data-module="${lesson.module}" data-date="${lesson.createdAt}">
+                        <div class="lesson-header">
+                            <h3>${lesson.titre}</h3>
+                            <span class="lesson-date">${formattedDate}</span>
+                        </div>
+                        <div class="lesson-meta">
+                            <span><i class="fas fa-user"></i> ${lesson.enseignant}</span>
+                            <span><i class="fas fa-graduation-cap"></i> ${lesson.classe}</span>
+                            <span><i class="fas fa-book"></i> ${lesson.module}</span>
+                        </div>
+                        <div class="lesson-summary">${lesson.competence.substring(0, 100)}...</div>
+                        <div class="lesson-actions">
+                            <button class="btn" onclick="loadLesson('${lesson.id}')"><i class="fas fa-edit"></i> Modifier</button>
+                            <button class="btn btn-danger" onclick="deleteLesson('${lesson.id}')"><i class="fas fa-trash"></i> Supprimer</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            lessonList.innerHTML = html;
+            document.getElementById('totalLessons').textContent = `Total: ${savedLessons.length} fiches`;
+            document.getElementById('filteredLessons').textContent = `Filtrées: ${savedLessons.length}`;
+        }
+
+        // Fonction pour charger une fiche spécifique
+        function loadLesson(id) {
+            const savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
+            const lesson = savedLessons.find(l => l.id === id);
+            
+            if (lesson) {
+                document.getElementById('date_cours').value = lesson.date_cours || '';
+                document.getElementById('annee_scolaire').value = lesson.annee_scolaire || '';
+                document.getElementById('enseignant').value = lesson.enseignant || '';
+                document.getElementById('etablissement').value = lesson.etablissement || '';
+                document.getElementById('module').value = lesson.module || '';
+                document.getElementById('classe').value = lesson.classe || '';
+                document.getElementById('effectif').value = lesson.effectif || '';
+                document.getElementById('titre').value = lesson.titre || '';
+                document.getElementById('competence').value = lesson.competence || '';
+                document.getElementById('objectifs').value = lesson.objectifs || '';
+                document.getElementById('duree_competence').value = lesson.duree_competence || '';
+                document.getElementById('duree_seance').value = lesson.duree_seance || '';
+                document.getElementById('prerequis').value = lesson.prerequis || '';
+                document.getElementById('lexique').value = lesson.lexique || '';
+                document.getElementById('references').value = lesson.references || '';
+                document.getElementById('situation_enonce').value = lesson.situation_enonce || '';
+                document.getElementById('situation_solutions').value = lesson.situation_solutions || '';
+                document.getElementById('activites_enseignant').value = lesson.activites_enseignant || '';
+                document.getElementById('activites_eleves').value = lesson.activites_eleves || '';
+                document.getElementById('methode_conseillee').value = lesson.methode_conseillee || '';
+                document.getElementById('exercice_enonce').value = lesson.exercice_enonce || '';
+                document.getElementById('exercice_date_correction').value = lesson.exercice_date_correction || '';
+                document.getElementById('recapitulation').value = lesson.recapitulation || '';
+                document.getElementById('evaluation').value = lesson.evaluation || '';
+                document.getElementById('activite1').value = lesson.activite1 || '';
+                document.getElementById('activite2').value = lesson.activite2 || '';
+                document.getElementById('activite3').value = lesson.activite3 || '';
+                document.getElementById('activite4').value = lesson.activite4 || '';
+                document.getElementById('contenu1').value = lesson.contenu1 || '';
+                
+                // Mettre à jour les éditeurs
+                document.querySelectorAll('.editor-content').forEach(editor => {
+                    const targetId = editor.id.replace('-content', '');
+                    if (lesson[targetId]) {
+                        editor.innerHTML = lesson[targetId];
+                    }
+                });
+                
+                currentLessonId = lesson.id;
+                
+                showNotification('Fiche chargée avec succès!');
+                
+                // Scroll to top
+                window.scrollTo(0, 0);
+            }
+        }
+
+        // Fonction pour supprimer une fiche
+        function deleteLesson(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette fiche?')) {
+                let savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
+                savedLessons = savedLessons.filter(l => l.id !== id);
+                localStorage.setItem('savedLessons', JSON.stringify(savedLessons));
+                
+                loadSavedLessons();
+                showNotification('Fiche supprimée avec succès!');
+            }
+        }
+
+        // Fonction pour filtrer les fiches
+        function filterLessons() {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const moduleFilter = document.getElementById('filterModule').value;
+            const dateFilter = document.getElementById('filterDate').value;
+            
+            const lessonItems = document.querySelectorAll('.lesson-item');
+            let visibleCount = 0;
+            
+            lessonItems.forEach(item => {
+                const title = item.querySelector('h3').textContent.toLowerCase();
+                const module = item.dataset.module;
+                const date = item.dataset.date.substr(0, 10); // YYYY-MM-DD
+                
+                const matchesSearch = title.includes(searchTerm) || searchTerm === '';
+                const matchesModule = moduleFilter === '' || module === moduleFilter;
+                const matchesDate = dateFilter === '' || date === dateFilter;
+                
+                if (matchesSearch && matchesModule && matchesDate) {
+                    item.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            document.getElementById('filteredLessons').textContent = `Filtrées: ${visibleCount}`;
+        }
+
+        // Fonction pour mettre à jour les options de filtre
+        function updateFilterOptions() {
+            const savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
+            const moduleSelect = document.getElementById('filterModule');
+            
+            // Récupérer tous les modules uniques
+            const modules = [...new Set(savedLessons.map(lesson => lesson.module))];
+            
+            // Vider les options existantes (sauf la première)
+            while (moduleSelect.options.length > 1) {
+                moduleSelect.remove(1);
+            }
+            
+            // Ajouter les nouvelles options
+            modules.forEach(module => {
+                if (module) {
+                    const option = document.createElement('option');
+                    option.value = module;
+                    option.textContent = module;
+                    moduleSelect.appendChild(option);
+                }
+            });
+        }
+     // Fonction pour exporter en PDF
+        function exportToPDF() {
+            // Créer une copie du contenu à exporter
+            const content = document.querySelector('.container').cloneNode(true);
+            
+            // Supprimer les éléments qui ne doivent pas être imprimés
+            const noPrintElements = content.querySelectorAll('.no-print');
+            noPrintElements.forEach(el => el.remove());
+            
+            // Supprimer les boutons d'action dans les tableaux
+            const actionCells = content.querySelectorAll('td:last-child, th:last-child');
+            actionCells.forEach(cell => {
+                if (cell.textContent.trim() === 'Actions' || cell.querySelector('button')) {
+                    cell.remove();
+                }
+            });
+            
+            // Options pour html2pdf
+            const options = {
+                margin: 10,
+                filename: `fiche-pedagogique-${document.getElementById('titre').value.replace(/\s+/g, '-').toLowerCase()}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            // Générer le PDF
+            html2pdf().from(content).set(options).save();
+            
+            showNotification('PDF généré avec succès!');
+        }
+
+        // Fonction pour exporter en Word
+        function exportToWord() {
+            // Créer le contenu HTML pour le document Word
+            let content = `
+                <html xmlns:o="urn:schemas-microsoft-com:office:office" 
+                      xmlns:w="urn:schemas-microsoft-com:office:word" 
+                      xmlns="http://www.w3.org/TR/REC-html40">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>${document.getElementById('titre').value}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; }
+                        h1, h2, h3 { color: #2c3e50; }
+                        table { width: 100%; border-collapse: collapse; }
+                        th, td { border: 1px solid #ddd; padding: 8px; }
+                        th { background-color: #3498db; color: white; }
+                        .section { margin-bottom: 20px; padding: 15px; background-color: #f5f5f5; border-radius: 5px; }
+                    </style>
+                </head>
+                <body>
+                    <h1>Fiche de Préparation de Séance Pédagogique</h1>
+            `;
+            
+            // Ajouter les informations générales
+            content += `
+                <div class="section">
+                    <h2>Fiche 1 - Informations Générales</h2>
+                    <p><strong>Date du cours:</strong> ${document.getElementById('date_cours').value}</p>
+                    <p><strong>Année scolaire:</strong> ${document.getElementById('annee_scolaire').value}</p>
+                    <p><strong>Enseignant:</strong> ${document.getElementById('enseignant').value}</p>
+                    <p><strong>Établissement:</strong> ${document.getElementById('etablissement').value}</p>
+                    <p><strong>Module/Discipline:</strong> ${document.getElementById('module').value}</p>
+                    <p><strong>Classe:</strong> ${document.getElementById('classe').value}</p>
+                    <p><strong>Effectif:</strong> ${document.getElementById('effectif').value}</p>
+                    <p><strong>Titre de la leçon:</strong> ${document.getElementById('titre').value}</p>
+                    <p><strong>Compétence/Objectif général:</strong> ${document.getElementById('competence').value}</p>
+                    <p><strong>Objectifs spécifiques:</strong> ${document.getElementById('objectifs').value}</p>
+                    <p><strong>Durée de la compétence:</strong> ${document.getElementById('duree_competence').value}</p>
+                    <p><strong>Durée de la séance:</strong> ${document.getElementById('duree_seance').value}</p>
+                    <p><strong>Prérequis:</strong> ${document.getElementById('prerequis').value}</p>
+                    <p><strong>Lexique:</strong> ${document.getElementById('lexique').value}</p>
+                    <p><strong>Références bibliographiques:</strong> ${document.getElementById('references').value}</p>
+                </div>
+            `;
+            
+            // Ajouter la situation problème
+            content += `
+                <div class="section">
+                    <h2>Situation Problème</h2>
+                    <p><strong>Énoncé:</strong> ${document.getElementById('situation_enonce').value}</p>
+                    <p><strong>Proposition de solutions:</strong> ${document.getElementById('situation_solutions').value}</p>
+                </div>
+            `;
+            
+            // Ajouter le tableau des activités
+            content += `
+                <div class="section">
+                    <h2>Tableau des Activités</h2>
+                    <h3>Activités de l'Enseignant</h3>
+                    <p>${document.getElementById('activites_enseignant').value}</p>
+                    <h3>Activités des Élèves</h3>
+                    <p>${document.getElementById('activites_eleves').value}</p>
+                </div>
+            `;
+            
+            // Ajouter le déroulement de la séance
+            content += `
+                <div class="section">
+                    <h2>Fiche 2 - Déroulement de la Séance</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Etapes</th>
+                                <th>Phases</th>
+                                <th>Éléments de Contenu</th>
+                                <th>Méthodes pédagogiques</th>
+                                <th>Activités pédagogiques</th>
+                                <th>Indicateurs d'évaluation</th>
+                                <th>Durée</th>
+                                <th>Matériel didactique</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            // Récupérer les données du tableau
+            const rows = document.querySelectorAll('#deroulement-table tbody tr');
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                content += `
+                    <tr>
+                        <td>${cells[0].querySelector('input').value}</td>
+                        <td>${cells[1].querySelector('input').value}</td>
+                        <td>${cells[2].querySelector('input').value}</td>
+                        <td>${cells[3].querySelector('input').value}</td>
+                        <td>${cells[4].querySelector('textarea').value}</td>
+                        <td>${cells[5].querySelector('input').value}</td>
+                        <td>${cells[6].querySelector('input').value}</td>
+                        <td>${cells[7].querySelector('input').value}</td>
+                    </tr>
+                `;
+            });
+            
+            content += `
+                        </tbody>
+                    </table>
+                    <p><strong>Méthode conseillée:</strong> ${document.getElementById('methode_conseillee').value}</p>
+                </div>
+            `;
+            
+            // Ajouter la suite du déroulement
+            content += `
+                <div class="section">
+                    <h2>Fiche 3 - Suite du Déroulement</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Étapes</th>
+                                <th>Phases</th>
+                                <th>Éléments de Contenu</th>
+                                <th>Méthodes pédagogiques</th>
+                                <th>Activités pédagogiques</th>
+                                <th>Indicateurs d'évaluation</th>
+                                <th>Durée</th>
+                                <th>Matériel didactique</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            // Récupérer les données du deuxième tableau
+            const rows2 = document.querySelectorAll('#suite-table tbody tr');
+            rows2.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                content += `
+                    <tr>
+                        <td>${cells[0].querySelector('input').value}</td>
+                        <td>${cells[1].querySelector('input').value}</td>
+                        <td>${cells[2].querySelector('input').value}</td>
+                        <td>${cells[3].querySelector('input').value}</td>
+                        <td>${cells[4].querySelector('textarea').value}</td>
+                        <td>${cells[5].querySelector('input').value}</td>
+                        <td>${cells[6].querySelector('input').value}</td>
+                        <td>${cells[7].querySelector('input').value}</td>
+                    </tr>
+                `;
+            });
+            
+            content += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            // Ajouter les exercices de maison
+            content += `
+                <div class="section">
+                    <h2>Exercices de Maison</h2>
+                    <p><strong>Énoncé:</strong> ${document.getElementById('exercice_enonce').value}</p>
+                    <p><strong>Date de correction:</strong> ${document.getElementById('exercice_date_correction').value}</p>
+                </div>
+            `;
+            
+            // Ajouter la récapitulation
+            content += `
+                <div class="section">
+                    <h2>Récapitulation de la Leçon</h2>
+                    <p>${document.getElementById('recapitulation').value}</p>
+                </div>
+            `;
+            
+            // Ajouter les notes d'évaluation
+            content += `
+                <div class="section">
+                    <h2>Notes d'évaluation</h2>
+                    <p>${document.getElementById('evaluation').value}</p>
+                </div>
+            `;
+            
+            content += `
+                </body>
+                </html>
+            `;
+            
+            // Créer le blob et le lien de téléchargement
+            const blob = new Blob([content], {type: 'application/msword'});
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `fiche-pedagogique-${document.getElementById('titre').value.replace(/\s+/g, '-').toLowerCase()}.doc`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showNotification('Document Word généré avec succès!');
+        }
+    </script>
+</body>
+</html>
