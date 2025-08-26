@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiche de Leçon - République Togolaise</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #006600;
+        }
+        .ministry {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .republic {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #006600;
+        }
+        .motto {
+            font-style: italic;
+            margin-bottom: 15px;
+            color: #555;
+        }
+        h1 {
+            color: #006600;
+            text-align: center;
+            margin: 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        h2 {
+            color: #006600;
+            margin: 25px 0 15px 0;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .form-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #006600;
+            border-radius: 4px;
+        }
+        .btn-container {
+            text-align: center;
+            margin: 30px 0 15px 0;
+        }
+        button {
+            background-color: #006600;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #004d00;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            color: #777;
+            font-size: 14px;
+        }
+        
+        /* Styles pour la barre d'outils d'édition */
+        .toolbar {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+            padding: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            flex-wrap: wrap;
+        }
+        .toolbar button {
+            padding: 6px 10px;
+            font-size: 14px;
+            margin: 2px;
+            background: #ddd;
+            color: #333;
+        }
+        .toolbar button:hover {
+            background: #ccc;
+        }
+        .color-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1px solid #999;
+        }
+        .blue { background-color: blue; }
+        .red { background-color: red; }
+        .black { background-color: black; }
+        .green { background-color: green; }
+        
+        /* Styles pour les champs d'upload */
+        .upload-container {
+            margin: 10px 0;
+            padding: 10px;
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .upload-btn {
+            background: #006600;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .preview {
+            margin-top: 10px;
+            max-width: 100%;
+        }
+        .preview img, .preview video, .preview audio {
+            max-width: 100%;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        /* Styles pour les informations supplémentaires */
+        .school-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .info-group {
+            margin-bottom: 15px;
+        }
+        .info-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .stat-box {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+            background: #f9f9f9;
+        }
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #006600;
+        }
+        
+        /* Styles pour les zones de texte enrichi */
+        .rich-text-area {
+            min-height: 100px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .rich-text-area:focus {
+            outline: none;
+            border-color: #006600;
+        }
+        
+        /* Nouveaux styles pour l'importation */
+        .import-export-container {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f0f8ff;
+            border-radius: 8px;
+            border: 1px solid #cce5ff;
+        }
+        .import-export-title {
+            font-size: 18px;
+            color: #006600;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .import-export-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        @media print {
+            button, .toolbar, .upload-container, .import-export-container {
+                display: none;
+            }
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form id="lessonForm">
+            <!-- En-tête pour la République Togolaise -->
+            <div class="header">
+                <div class="ministry">MINISTÈRE DES ENSEIGNEMENTS PRIMAIRE, SECONDAIRE, TECHNIQUE ET DE L'ARTISANAT</div>
+                <div class="ministry">DIRECTION DE LA FORMATION CONTINUE</div>
+                <div class="republic">RÉPUBLIQUE TOGOLAISE</div>
+                <div class="motto">Travail - Liberté - Patrie</div>
+                <h1>FICHE DE LEÇON - ENSEIGNEMENT SECONDAIRE</h1>
+            </div>
+
+            <!-- Section Import/Export -->
+            <div class="import-export-container">
+                <h2 class="import-export-title"><i class="fas fa-file-import"></i> Importer/Exporter</h2>
+                <div class="import-export-buttons">
+                    <button type="button" onclick="importJSON()"><i class="fas fa-file-import"></i> Importer JSON</button>
+                    <button type="button" onclick="saveForm()"><i class="fas fa-save"></i> Exporter JSON</button>
+                    <button type="button" onclick="clearForm()"><i class="fas fa-trash"></i> Effacer tout</button>
+                </div>
+                <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
+            </div>
+
+            <!-- Informations supplémentaires -->
+            <div class="form-section">
+                <h2><i class="fas fa-info-circle"></i> Informations complémentaires</h2>
+                <div class="school-info">
+                    <div class="info-group">
+                        <label for="school_name">Nom de l'établissement:</label>
+                        <input type="text" id="school_name" name="school_name">
+                    </div>
+                    <div class="info-group">
+                        <label for="teacher_name">Nom de l'enseignant:</label>
+                        <input type="text" id="teacher_name" name="teacher_name">
+                    </div>
+                    <div class="info-group">
+                        <label for="class_name">Classe:</label>
+                        <input type="text" id="class_name" name="class_name" placeholder="Ex: 5ème A">
+                    </div>
+                    <div class="info-group">
+                        <label for="school_year">Année scolaire:</label>
+                        <input type="text" id="school_year" name="school_year" placeholder="Ex: 2023-2024">
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 20px;">Effectif de la classe</h3>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <label>Garçons</label>
+                        <div class="stat-value"><input type="number" name="boys_count" min="0" style="width: 60px;"></div>
+                    </div>
+                    <div class="stat-box">
+                        <label>Filles</label>
+                        <div class="stat-value"><input type="number" name="girls_count" min="0" style="width: 60px;"></div>
+                    </div>
+                    <div class="stat-box">
+                        <label>Total</label>
+                        <div class="stat-value" id="total_count">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <label>Nouveaux/Nouvelles</label>
+                        <div class="stat-value"><input type="number" name="new_students" min="0" style="width: 60px;"></div>
+                    </div>
+                    <div class="stat-box">
+                        <label>Redoublant(e)s</label>
+                        <div class="stat-value"><input type="number" name="repeat_students" min="0" style="width: 60px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informations de base -->
+            <div class="form-section">
+                <h2><i class="fas fa-book"></i> Informations générales</h2>
+                
+                <!-- Barre d'outils d'édition -->
+                <div class="toolbar">
+                    <button type="button" onclick="formatText('bold')"><i class="fas fa-bold"></i></button>
+                    <button type="button" onclick="formatText('italic')"><i class="fas fa-italic"></i></button>
+                    <button type="button" onclick="formatText('underline')"><i class="fas fa-underline"></i></button>
+                    <button type="button" class="color-btn blue" onclick="setColor('blue')"></button>
+                    <button type="button" class="color-btn red" onclick="setColor('red')"></button>
+                    <button type="button" class="color-btn black" onclick="setColor('black')"></button>
+                    <button type="button" class="color-btn green" onclick="setColor('green')"></button>
+                    <button type="button" onclick="insertMath()"><i class="fas fa-square-root-alt"></i> Formule</button>
+                    <button type="button" onclick="insertImage()"><i class="fas fa-image"></i> Image</button>
+                    <button type="button" onclick="insertMedia('audio')"><i class="fas fa-volume-up"></i> Audio</button>
+                    <button type="button" onclick="insertMedia('video')"><i class="fas fa-video"></i> Vidéo</button>
+                </div>
+                
+                <table>
+                    <tr>
+                        <td width="20%">Discipline:</td>
+                        <td><div class="rich-text-area" contenteditable="true" id="discipline"></div></td>
+                    </tr>
+                    <tr>
+                        <td>Classe(s):</td>
+                        <td><div class="rich-text-area" contenteditable="true" id="class"></div></td>
+                    </tr>
+                    <tr>
+                        <td>Thème/Activité:</td>
+                        <td><div class="rich-text-area" contenteditable="true" id="theme"></div></td>
+                    </tr>
+                    <tr>
+                        <td>Titre de la leçon:</td>
+                        <td><div class="rich-text-area" contenteditable="true" id="lesson_title"></div></td>
+                    </tr>
+                    <tr>
+                        <td>Séance:</td>
+                        <td><div class="rich-text-area" contenteditable="true" id="session"></div></td>
+                    </tr>
+                    <tr>
+                        <td>Durée:</td>
+                        <td><div class="rich-text-area" contenteditable="true" id="duration"></div></td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Habiletés et contenus -->
+            <div class="form-section">
+                <h2><i class="fas fa-table"></i> Tableau des habiletés et des contenus</h2>
+                
+                <!-- Barre d'outils d'édition -->
+                <div class="toolbar">
+                    <button type="button" onclick="formatText('bold')"><i class="fas fa-bold"></i></button>
+                    <button type="button" onclick="formatText('italic')"><i class="fas fa-italic"></i></button>
+                    <button type="button" onclick="formatText('underline')"><i class="fas fa-underline"></i></button>
+                    <button type="button" class="color-btn blue" onclick="setColor('blue')"></button>
+                    <button type="button" class="color-btn red" onclick="setColor('red')"></button>
+                    <button type="button" class="color-btn black" onclick="setColor('black')"></button>
+                    <button type="button" class="color-btn green" onclick="setColor('green')"></button>
+                    <button type="button" onclick="insertMath()"><i class="fas fa-square-root-alt"></i> Formule</button>
+                    <button type="button" onclick="insertImage()"><i class="fas fa-image"></i> Image</button>
+                </div>
+                
+                <table>
+                    <tr>
+                        <th width="50%">Habiletés</th>
+                        <th width="50%">Contenus</th>
+                    </tr>
+                    <tr>
+                        <td><div class="rich-text-area" contenteditable="true" id="skill1"></div></td>
+                        <td><div class="rich-text-area" contenteditable="true" id="content1"></div></td>
+                    </tr>
+                    <tr>
+                        <td><div class="rich-text-area" contenteditable="true" id="skill2"></div></td>
+                        <td><div class="rich-text-area" contenteditable="true" id="content2"></div></td>
+                    </tr>
+                    <tr>
+                        <td><div class="rich-text-area" contenteditable="true" id="skill3"></div></td>
+                        <td><div class="rich-text-area" contenteditable="true" id="content3"></div></td>
+                    </tr>
+                    <tr>
+                        <td><div class="rich-text-area" contenteditable="true" id="skill4"></div></td>
+                        <td><div class="rich-text-area" contenteditable="true" id="content4"></div></td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Situation d'apprentissage -->
+            <div class="form-section">
+                <h2><i class="fas fa-graduation-cap"></i> Situation d'apprentissage</h2>
+                <div class="toolbar">
+                    <button type="button" onclick="formatText('bold')"><i class="fas fa-bold"></i></button>
+                    <button type="button" onclick="formatText('italic')"><i class="fas fa-italic"></i></button>
+                    <button type="button" onclick="formatText('underline')"><i class="fas fa-underline"></i></button>
+                    <button type="button" class="color-btn blue" onclick="setColor('blue')"></button>
+                    <button type="button" class="color-btn red" onclick="setColor('red')"></button>
+                    <button type="button" class="color-btn black" onclick="setColor('black')"></button>
+                    <button type="button" class="color-btn green" onclick="setColor('green')"></button>
+                    <button type="button" onclick="insertMath()"><i class="fas fa-square-root-alt"></i> Formule</button>
+                    <button type="button" onclick="insertImage()"><i class="fas fa-image"></i> Image</button>
+                    <button type="button" onclick="insertMedia('audio')"><i class="fas fa-volume-up"></i> Audio</button>
+                    <button type="button" onclick="insertMedia('video')"><i class="fas fa-video"></i> Vidéo</button>
+                </div>
+                <div class="rich-text-area" contenteditable="true" id="learning_situation"></div>
+            </div>
+
+            <!-- Supports et bibliographie -->
+            <div class="form-section">
+                <h2><i class="fas fa-book-open"></i> Supports didactiques et bibliographie</h2>
+                
+                <!-- Barre d'outils d'édition -->
+                <div class="toolbar">
+                    <button type="button" onclick="formatText('bold')"><i class="fas fa-bold"></i></button>
+                    <button type="button" onclick="formatText('italic')"><i class="fas fa-italic"></i></button>
+                    <button type="button" onclick="formatText('underline')"><i class="fas fa-underline"></i></button>
+                    <button type="button" class="color-btn blue" onclick="setColor('blue')"></button>
+                    <button type="button" class="color-btn red" onclick="setColor('red')"></button>
+                    <button type="button" class="color-btn black" onclick="setColor('black')"></button>
+                    <button type="button" class="color-btn green" onclick="setColor('green')"></button>
+                    <button type="button" onclick="insertMath()"><i class="fas fa-square-root-alt"></i> Formule</button>
+                </div>
+                
+                <table>
+                    <tr>
+                        <th width="50%">Supports didactiques</th>
+                        <th>Bibliographie</th>
+                    </tr>
+                    <tr>
+                        <td><div class="rich-text-area" contenteditable="true" id="teaching_materials"></div></td>
+                        <td><div class="rich-text-area" contenteditable="true" id="bibliography"></div></td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Déroulement de la leçon -->
+            <div class="form-section">
+                <h2><i class="fas fa-chalkboard-teacher"></i> Déroulement de la leçon</h2>
+                
+                <!-- Barre d'outils d'édition -->
+                <div class="toolbar">
+                    <button type="button" onclick="formatText('bold')"><i class="fas fa-bold"></i></button>
+                    <button type="button" onclick="formatText('italic')"><i class="fas fa-italic"></i></button>
+                    <button type="button" onclick="formatText('underline')"><i class="fas fa-underline"></i></button>
+                    <button type="button" class="color-btn blue" onclick="setColor('blue')"></button>
+                    <button type="button" class="color-btn red" onclick="setColor('red')"></button>
+                    <button type="button" class="color-btn black" onclick="setColor('black')"></button>
+                    <button type="button" class="color-btn green" onclick="setColor('green')"></button>
+                    <button type="button" onclick="insertMath()"><i class="fas fa-square-root-alt"></i> Formule</button>
+                    <button type="button" onclick="insertImage()"><i class="fas fa-image"></i> Image</button>
+                </div>
+                
+                <table>
+                    <tr>
+                        <th width="20%">Moments didactiques/Durée</th>
+                        <th width="20%">Stratégies pédagogiques</th>
+                        <th width="20%">Activités de l'Enseignant</th>
+                        <th width="20%">Activités des élèves</th>
+                        <th width="20%">Trace écrite</th>
+                    </tr>
+                    <tr>
+                        <td><div class="rich-text-area" contenteditable="true">Présentation</div></td>
+                        <td><div class="rich-text-area" contenteditable="true" id="strategy1"></div></td>
+                        <td><div class="rich-text-area" contenteditable="true" id="teacher1"></div></td>
+                        <td><div class="rich-text-area" contenteditable="true" id="student1"></div></td>
+                        <td><div class="rich-text-area" contenteditable="true" id="trace1"></div></td>
+                    </tr>
+                    <tr>
+                        <td><div class="rich-text-area" contenteditable="true">Développement</div></td>
+                        <td><div class="rich-text-area" contenteditable="true" id="strategy2"></div></td>
+                        <td><div class="rich-text-area" contenteditable="true" id="teacher2"></div></td>
+                        <td><div class="rich-text-area" contenteditable="true" id="student2"></div></td>
+                        <td><div class="rich-text-area" contenteditable="true" id="trace2"></div></td>
+                    </tr>
+                    <tr>
+                        <td><div class="rich-text-area" contenteditable="true">Évaluation</div></td>
+                        <td><div class="rich-text-area" contenteditable="true" id="strategy3"></div></td>
+                        <td><div class="rich-text-area" contenteditable="true" id="teacher3"></div></td>
+                        <td><div class="rich-text-area" contenteditable="true" id="student3"></div></td>
+                        <td><div class="rich-text-area" contenteditable="true" id="trace3"></div></td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Observations -->
+            <div class="form-section">
+                <h2><i class="fas fa-clipboard-list"></i> Observations</h2>
+                
+                <!-- Barre d'outils d'édition -->
+                <div class="toolbar">
+                    <button type="button" onclick="formatText('bold')"><i class="fas fa-bold"></i></button>
+                    <button type="button" onclick="formatText('italic')"><i class="fas fa-italic"></i></button>
+                    <button type="button" onclick="formatText('underline')"><i class="fas fa-underline"></i></button>
+                    <button type="button" class="color-btn blue" onclick="setColor('blue')"></button>
+                    <button type="button" class="color-btn red" onclick="setColor('red')"></button>
+                    <button type="button" class="color-btn black" onclick="setColor('black')"></button>
+                    <button type="button" class="color-btn green" onclick="setColor('green')"></button>
+                    <button type="button" onclick="insertMath()"><i class="fas fa-square-root-alt"></i> Formule</button>
+                    <button type="button" onclick="insertImage()"><i class="fas fa-image"></i> Image</button>
+                </div>
+                
+                <div class="rich-text-area" contenteditable="true" id="observations"></div>
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="btn-container">
+                <button type="button" onclick="saveForm()"><i class="fas fa-save"></i> Enregistrer</button>
+                <button type="button" onclick="window.print()"><i class="fas fa-print"></i> Imprimer</button>
+                <button type="reset"><i class="fas fa-redo"></i> Réinitialiser</button>
+            </div>
+        </form>
+
+        <div class="footer">
+            Formulaire de Fiche de Leçon - République Togolaise © 2023
+        </div>
+    </div>
+
+    <script>
+        let currentColor = 'black';
+        let activeEditable = null;
+        
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Calcul automatique du total d'élèves
+            document.querySelectorAll('input[type="number"]').forEach(input => {
+                input.addEventListener('input', calculateTotal);
+            });
+            
+            // Gestion de l'édition de texte
+            document.querySelectorAll('.rich-text-area').forEach(editable => {
+                editable.addEventListener('focus', function() {
+                    activeEditable = this;
+                });
+            });
+            
+            // Charger les données sauvegardées
+            loadSavedData();
+            
+            // Configurer l'écouteur d'événements pour l'importation
+            document.getElementById('jsonFileInput').addEventListener('change', handleFileSelect);
+        });
+        
+        // Calcul du total d'élèves
+        function calculateTotal() {
+            const boys = parseInt(document.querySelector('input[name="boys_count"]').value) || 0;
+            const girls = parseInt(document.querySelector('input[name="girls_count"]').value) || 0;
+            document.getElementById('total_count').textContent = boys + girls;
+        }
+        
+        // Formatage du texte
+        function formatText(command) {
+            if (!activeEditable) return;
+            document.execCommand(command, false, null);
+            activeEditable.focus();
+        }
+        
+        // Définition de la couleur
+        function setColor(color) {
+            currentColor = color;
+            if (!activeEditable) return;
+            document.execCommand('styleWithCSS', false, true);
+            document.execCommand('foreColor', false, color);
+            activeEditable.focus();
+        }
+        
+        // Insertion de formules mathématiques
+        function insertMath() {
+            if (!activeEditable) return;
+            const formula = prompt('Entrez votre formule mathématique (en syntaxe LaTeX):', 'E = mc^2');
+            if (formula) {
+                const mathElement = document.createElement('span');
+                mathElement.textContent = `\\(${formula}\\)`;
+                activeEditable.appendChild(mathElement);
+                MathJax.typeset();
+            }
+        }
+        
+        // Insertion d'images
+        function insertImage() {
+            if (!activeEditable) return;
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const img = document.createElement('img');
+                        img.src = event.target.result;
+                        img.style.maxWidth = '100%';
+                        activeEditable.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+        
+        // Insertion de médias (audio/vidéo)
+        function insertMedia(type) {
+            if (!activeEditable) return;
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = type === 'audio' ? 'audio/*' : 'video/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const media = document.createElement(type);
+                        media.src = event.target.result;
+                        media.controls = true;
+                        media.style.maxWidth = '100%';
+                        activeEditable.appendChild(media);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+        
+        // Sauvegarde des données
+        function saveForm() {
+            const formData = {};
+            
+            // Récupérer les données des champs standards
+            document.querySelectorAll('input').forEach(field => {
+                if (field.name) {
+                    formData[field.name] = field.value;
+                }
+            });
+            
+            // Récupérer le contenu des zones éditables
+            document.querySelectorAll('.rich-text-area').forEach(editable => {
+                if (editable.id) {
+                    formData[editable.id] = editable.innerHTML;
+                }
+            });
+            
+            // Sauvegarder dans le stockage local
+            localStorage.setItem('lessonPlanData', JSON.stringify(formData));
+            
+            // Télécharger en tant que fichier JSON
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(formData, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "fiche_leçon.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+            
+            alert('Fiche de leçon enregistrée avec succès!');
+        }
+        
+        // Chargement des données sauvegardées
+        function loadSavedData() {
+            const savedData = localStorage.getItem('lessonPlanData');
+            if (savedData) {
+                try {
+                    const data = JSON.parse(savedData);
+                    populateForm(data);
+                } catch (e) {
+                    console.error("Erreur lors du chargement des données sauvegardées:", e);
+                }
+            }
+        }
+        
+        // Fonction pour importer un fichier JSON
+        function importJSON() {
+            document.getElementById('jsonFileInput').click();
+        }
+        
+        // Gérer la sélection de fichier
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const jsonData = JSON.parse(e.target.result);
+                    populateForm(jsonData);
+                    // Sauvegarder les données importées dans le stockage local
+                    localStorage.setItem('lessonPlanData', JSON.stringify(jsonData));
+                    alert('Fichier importé avec succès!');
+                } catch (error) {
+                    alert('Erreur lors de l\'importation du fichier: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+            
+            // Réinitialiser l'input pour permettre la sélection du même fichier à nouveau
+            event.target.value = '';
+        }
+        
+        // Remplir le formulaire avec les données JSON
+        function populateForm(data) {
+            // Remplir les champs standards
+            for (const key in data) {
+                const field = document.querySelector(`[name="${key}"]`);
+                if (field) {
+                    field.value = data[key];
+                }
+            }
+            
+            // Remplir les zones éditables
+            document.querySelectorAll('.rich-text-area').forEach(editable => {
+                if (editable.id && data[editable.id]) {
+                    editable.innerHTML = data[editable.id];
+                }
+            });
+            
+            // Recalculer le total
+            calculateTotal();
+            
+            // Mettre à jour les formules mathématiques
+            MathJax.typeset();
+        }
+        
+        // Effacer tout le formulaire
+        function clearForm() {
+            if (confirm('Êtes-vous sûr de vouloir effacer toutes les données du formulaire?')) {
+                // Réinitialiser les champs standards
+                document.querySelectorAll('input').forEach(field => {
+                    field.value = '';
+                });
+                
+                // Réinitialiser les zones éditables
+                document.querySelectorAll('.rich-text-area').forEach(editable => {
+                    editable.innerHTML = '';
+                });
+                
+                // Réinitialiser le total
+                document.getElementById('total_count').textContent = '0';
+                
+                // Effacer le stockage local
+                localStorage.removeItem('lessonPlanData');
+                
+                alert('Formulaire effacé avec succès!');
+            }
+        }
+    </script>
+</body>
+</html>
