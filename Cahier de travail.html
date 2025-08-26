@@ -319,6 +319,12 @@
     .view-btn:hover {
       background-color: #8e44ad;
     }
+    .export-btn {
+      background-color: #f39c12;
+    }
+    .export-btn:hover {
+      background-color: #e67e22;
+    }
     .file-input {
       display: none;
     }
@@ -379,6 +385,42 @@
     .btn-retour:hover {
       background-color: #e0e0e0;
     }
+    /* Styles pour la modal d'aperçu */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 800px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
@@ -411,11 +453,12 @@
     <!-- Nouvelle Leçon Tab -->
     <div id="lesson" class="tab-content active">
       <div class="import-container">
-        <h2>Importer des données</h2>
+        <h2>Importer/Exporter des données</h2>
         <label for="jsonFile" class="file-input-label">Choisir un fichier JSON</label>
         <input type="file" id="jsonFile" accept=".json" class="file-input" onchange="importJSON(this.files)">
-        <button onclick="document.getElementById('jsonFile').click()">Importer JSON</button>
-        <p><small>Importez un fichier JSON généré par le formulaire pour pré-remplir les champs.</small></p>
+        <button class="import-btn" onclick="document.getElementById('jsonFile').click()">Importer JSON</button>
+        <button class="export-btn" onclick="exportJSON()">Exporter JSON</button>
+        <p><small>Importez ou exportez un fichier JSON pour sauvegarder ou charger vos données.</small></p>
       </div>
 
       <div class="section">
@@ -640,6 +683,14 @@
     </div>
   </div>
 
+  <!-- Modal pour l'aperçu et les alertes -->
+  <div id="previewModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
   <script>
     // Variables globales
     let lessons = JSON.parse(localStorage.getItem('teacherLessons')) || [];
@@ -845,7 +896,7 @@
       document.getElementById(tabId).classList.add('active');
 
       // Activer le bouton de l'onglet
-      document.querySelector(`.tab[onclick="openTab('${tabId}')"]`).classList.add('active');
+      document.querySelector(.tab[onclick="openTab('${tabId}')"]).classList.add('active');
 
       // Si c'est l'onglet de présence, charger les élèves
       if (tabId === 'attendance') {
@@ -937,10 +988,43 @@
       }
 
       if (dueDate) {
-        previewHTML += `<p><strong>À rendre pour le:</strong> ${formatDate(dueDate)}</p>`;
+        previewHTML += <p><strong>À rendre pour le:</strong> ${formatDate(dueDate)}</p>;
       }
 
-      alert(previewHTML, 'Aperçu de la Leçon');
+      showModal(previewHTML, 'Aperçu de la Leçon');
+    }
+
+    // Fonction pour exporter les données en JSON
+    function exportJSON() {
+      const lessonData = {
+        date: document.getElementById('lessonDate').value,
+        subject: document.getElementById('subject').value,
+        class: document.getElementById('class').value,
+        title: document.getElementById('lessonTitle').value,
+        content: document.getElementById('lessonContent').innerHTML,
+        homework: document.getElementById('homework').innerHTML,
+        dueDate: document.getElementById('dueDate').value
+      };
+
+      // Créer un blob avec les données JSON
+      const dataStr = JSON.stringify(lessonData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+
+      // Créer un lien de téléchargement
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(dataBlob);
+      
+      // Générer un nom de fichier avec la date et le titre
+      const date = new Date().toISOString().slice(0, 10);
+      const title = lessonData.title ? lessonData.title.replace(/\s+/g, '_') : 'leçon';
+      link.download = leçon_${date}_${title}.json;
+      
+      // Simuler un clic sur le lien pour déclencher le téléchargement
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      alert('Fichier JSON exporté avec succès!');
     }
 
     // Fonction pour importer un fichier JSON
@@ -963,9 +1047,9 @@
           if (data.homework) document.getElementById('homework').innerHTML = data.homework;
           if (data.dueDate) document.getElementById('dueDate').value = data.dueDate;
           
-          alert('Données importées avec succès!', 'Importation JSON');
+          alert('Données importées avec succès!');
         } catch (error) {
-          alert('Erreur lors de l\'importation du fichier JSON: ' + error.message, 'Erreur');
+          alert('Erreur lors de l\'importation du fichier JSON: ' + error.message);
         }
       };
       
@@ -1043,7 +1127,7 @@
       };
 
       students[classLevel].forEach(student => {
-        const status = document.querySelector(`input[name="${student.name.replace(/\s+/g, '-')}"]:checked`).value;
+        const status = document.querySelector(input[name="${student.name.replace(/\s+/g, '-')}"]:checked).value;
         attendanceData.students.push({
           name: student.name,
           gender: student.gender,
@@ -1162,7 +1246,7 @@
 
       detailsHTML += '</table>';
 
-      alert(detailsHTML, 'Détails de présence');
+      showModal(detailsHTML, 'Détails de présence');
     }
 
     function deleteAttendanceRecord(recordId) {
@@ -1224,8 +1308,8 @@
           <h4>${lesson.title}</h4>
           <p><strong>Contenu du cours:</strong></p>
           <div class="lesson-content">${lesson.content}</div>
-          ${lesson.homework ? `<p><strong>Devoirs:</strong></p><div class="lesson-content">${lesson.homework}</div>` : ''}
-          ${lesson.dueDate ? `<p><strong>À rendre pour le:</strong> ${formatDate(lesson.dueDate)}</p>` : ''}
+          ${lesson.homework ? <p><strong>Devoirs:</strong></p><div class="lesson-content">${lesson.homework}</div> : ''}
+          ${lesson.dueDate ? <p><strong>À rendre pour le:</strong> ${formatDate(lesson.dueDate)}</p> : ''}
           <button onclick="editLesson(${lesson.id})">Modifier</button>
           <button onclick="deleteLesson(${lesson.id})">Supprimer</button>
         `;
@@ -1292,26 +1376,26 @@
       let message = "📚 Résumé des leçons enregistrées:\n\n";
 
       filteredLessons.forEach(lesson => {
-        message += `📅 ${formatDate(lesson.date)}\n`;
-        message += `🏫 ${getClassName(lesson.class)} - ${getSubjectName(lesson.subject)}\n`;
-        message += `📖 ${lesson.title}\n`;
+        message += 📅 ${formatDate(lesson.date)}\n;
+        message += 🏫 ${getClassName(lesson.class)} - ${getSubjectName(lesson.subject)}\n;
+        message += 📖 ${lesson.title}\n;
 
         // Convertir le HTML en texte brut pour WhatsApp
         const contentDiv = document.createElement('div');
         contentDiv.innerHTML = lesson.content;
         const plainContent = contentDiv.textContent || contentDiv.innerText || '';
 
-        message += `📝 ${plainContent.substring(0, 100)}${plainContent.length > 100 ? '...' : ''}\n`;
+        message += 📝 ${plainContent.substring(0, 100)}${plainContent.length > 100 ? '...' : ''}\n;
 
         if (lesson.homework) {
           const homeworkDiv = document.createElement('div');
           homeworkDiv.innerHTML = lesson.homework;
           const plainHomework = homeworkDiv.textContent || homeworkDiv.innerText || '';
 
-          message += `📌 Devoirs: ${plainHomework.substring(0, 100)}${plainHomework.length > 100 ? '...' : ''}\n`;
+          message += 📌 Devoirs: ${plainHomework.substring(0, 100)}${plainHomework.length > 100 ? '...' : ''}\n;
         }
         if (lesson.dueDate) {
-          message += `⏰ À rendre pour le: ${formatDate(lesson.dueDate)}\n`;
+          message += ⏰ À rendre pour le: ${formatDate(lesson.dueDate)}\n;
         }
         message += "\n――――――――――\n\n";
       });
@@ -1323,7 +1407,7 @@
       const phoneNumber = "92871605";
 
       // Créer le lien WhatsApp
-      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+      const whatsappUrl = https://wa.me/${phoneNumber}?text=${encodedMessage};
 
       // Ouvrir dans un nouvel onglet
       window.open(whatsappUrl, '_blank');
@@ -1373,28 +1457,33 @@
     }
 
     function alert(message, title = 'Information') {
-      const alertBox = document.createElement('div');
-      alertBox.style.position = 'fixed';
-      alertBox.style.top = '50%';
-      alertBox.style.left = '50%';
-      alertBox.style.transform = 'translate(-50%, -50%)';
-      alertBox.style.backgroundColor = 'white';
-      alertBox.style.padding = '20px';
-      alertBox.style.borderRadius = '5px';
-      alertBox.style.boxShadow = '0 0 10px rgba(0,0,0,0.3)';
-      alertBox.style.zIndex = '1000';
-      alertBox.style.maxWidth = '80%';
-      alertBox.style.maxHeight = '80%';
-      alertBox.style.overflow = 'auto';
-
-      alertBox.innerHTML = `
-        <h2 style="margin-top: 0;">${title}</h2>
-        <div>${message}</div>
-        <button style="margin-top: 15px; padding: 5px 10px;" onclick="this.parentElement.remove()">Fermer</button>
-      `;
-
-      document.body.appendChild(alertBox);
+      showModal(message, title);
     }
+
+    function showModal(content, title = 'Information') {
+      const modal = document.getElementById('previewModal');
+      const modalContent = document.getElementById('modalContent');
+      
+      modalContent.innerHTML = `
+        <h2>${title}</h2>
+        <div>${content}</div>
+        <button style="margin-top: 15px; padding: 5px 10px;" onclick="closeModal()">Fermer</button>
+      `;
+      
+      modal.style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('previewModal').style.display = 'none';
+    }
+
+    // Fermer la modal en cliquant en dehors
+    window.onclick = function(event) {
+      const modal = document.getElementById('previewModal');
+      if (event.target == modal) {
+        closeModal();
+      }
+    };
 
     // Fonctions pour la saisie intelligente
     function initAutocomplete() {
