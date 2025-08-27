@@ -3,18 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Générateur de Fichier JSON pour Bulletins</title>
+    <title>Gestion Scolaire - Togo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #3498db;
-            --secondary: #2c3e50;
-            --success: #2ecc71;
-            --warning: #f39c12;
-            --danger: #e74c3c;
-            --light: #ecf0f1;
-            --dark: #34495e;
-        }
-        
         * {
             box-sizing: border-box;
             margin: 0;
@@ -23,674 +14,1241 @@
         }
         
         body {
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             padding: 20px;
+            min-height: 100vh;
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             background: white;
             border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             overflow: hidden;
         }
         
         header {
-            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            background: #006400;
             color: white;
-            padding: 25px;
+            padding: 20px;
             text-align: center;
         }
         
+        .logo-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: #daa520;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #006400;
+        }
+        
+        .school-info {
+            text-align: center;
+            flex-grow: 1;
+            padding: 0 20px;
+        }
+        
         h1 {
+            font-size: 24px;
             margin-bottom: 10px;
-            font-size: 2.2em;
         }
         
-        .subtitle {
-            font-size: 1.2em;
-            opacity: 0.9;
+        h2 {
+            font-size: 20px;
+            color: #006400;
+            margin: 20px 0 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #006400;
         }
         
-        .main-content {
-            padding: 30px;
+        h3 {
+            font-size: 18px;
+            color: #006400;
+            margin: 15px 0 10px;
         }
         
-        .card {
-            background: white;
-            border-radius: 8px;
+        .form-section {
             padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            border: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px 15px;
         }
         
         .form-group {
-            margin-bottom: 20px;
+            flex: 1;
+            min-width: 200px;
+            padding: 0 10px;
+            margin-bottom: 15px;
         }
         
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             font-weight: 600;
-            color: var(--secondary);
+            color: #333;
         }
         
-        input, textarea, select {
+        input, select, textarea {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 5px;
             font-size: 16px;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #006400;
+            box-shadow: 0 0 5px rgba(0, 100, 0, 0.3);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+            font-weight: 600;
         }
         
         .btn {
-            padding: 12px 24px;
-            background-color: var(--primary);
+            background: #006400;
             color: white;
             border: none;
-            border-radius: 4px;
+            padding: 12px 20px;
+            border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s;
-            display: inline-block;
-            margin: 5px;
+            font-weight: 600;
+            transition: background 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
         .btn:hover {
-            background-color: #2980b9;
+            background: #004d00;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 14px;
         }
         
         .btn-success {
-            background-color: var(--success);
+            background: #28a745;
         }
         
         .btn-success:hover {
-            background-color: #27ae60;
+            background: #218838;
         }
         
         .btn-danger {
-            background-color: var(--danger);
+            background: #dc3545;
         }
         
         .btn-danger:hover {
-            background-color: #c0392b;
+            background: #c82333;
         }
         
-        .dynamic-section {
-            border: 1px dashed #ccc;
+        .btn-info {
+            background: #17a2b8;
+        }
+        
+        .btn-info:hover {
+            background: #138496;
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .discipline-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .discipline-name {
+            flex: 2;
+            min-width: 150px;
+        }
+        
+        .discipline-field {
+            flex: 1;
+            min-width: 80px;
+            margin: 0 5px;
+        }
+        
+        .remove-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .add-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 0;
+            font-weight: 600;
+        }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            gap: 15px;
+            margin: 10px 0;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .results-section {
+            background: #f8f9fa;
             padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-            background-color: #f9f9f9;
+            border-radius: 5px;
+            margin: 15px 0;
         }
         
-        .section-header {
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .result-item {
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border-left: 4px solid #006400;
+        }
+        
+        .result-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #006400;
+        }
+        
+        .student-list {
+            margin: 20px 0;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .student-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
         }
         
-        .json-preview {
-            background-color: #2c3e50;
-            color: #ecf0f1;
+        .student-item:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .student-info {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .student-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
             padding: 20px;
-            border-radius: 4px;
-            margin-top: 20px;
-            font-family: monospace;
-            white-space: pre-wrap;
-            max-height: 400px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
             overflow-y: auto;
         }
         
-        .alert {
-            padding: 15px;
-            border-radius: 4px;
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
+        }
+        
+        .close {
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid #006400;
+            font-weight: bold;
+        }
+        
+        .tab-content {
             display: none;
         }
         
-        .alert-success {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-            border: 1px solid #a5d6a7;
+        .tab-content.active {
+            display: block;
         }
         
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: #7f8c8d;
-        }
-        
-        .evaluation-item {
-            background-color: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            padding: 15px;
-            margin-bottom: 10px;
-        }
-        
-        .btn-retour {
-            padding: 8px 16px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-        
-        .btn-retour:hover {
-            background-color: #e0e0e0;
+        @media (max-width: 768px) {
+            .form-group {
+                min-width: 100%;
+            }
+            
+            .grid-3, .results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .discipline-field {
+                min-width: 60px;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .student-info {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .student-actions {
+                flex-direction: column;
+                gap: 5px;
+            }
         }
     </style>
 </head>
 <body>
-    <button class="btn-retour" onclick="history.back()">← Retour</button>
-    
     <div class="container">
         <header>
-            <h1>Générateur de Fichier JSON</h1>
-            <p class="subtitle">Créez des fichiers JSON au format bulletins scolaires</p>
-        </header>
-        
-        <div class="main-content">
-            <div class="alert alert-success" id="successAlert"></div>
-            
-            <div class="card">
-                <h2>Sélection de l'élève</h2>
-                <div class="form-group">
-                    <label for="eleveSelect">Sélectionner un élève</label>
-                    <select id="eleveSelect">
-                        <option value="">-- Sélectionner un élève --</option>
-                    </select>
+            <div class="logo-section">
+                <div class="logo">RTT</div>
+                <div class="school-info">
+                    <h1>RÉPUBLIQUE TOGOLAISE</h1>
+                    <p>Travail - Liberté - Patrie</p>
+                    <p>Ministère des Enseignements Primaire, Secondaire et Technique</p>
+                    <p>Inspection de l'Enseignement Secondaire Général - Kara</p>
                 </div>
-                
-                <div id="eleveInfo">
-                    <div class="form-group">
-                        <label for="nom">Nom</label>
-                        <input type="text" id="nom" placeholder="Dupont">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="prenom">Prénom</label>
-                        <input type="text" id="prenom" placeholder="Jean">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="classe">Classe</label>
-                        <input type="text" id="classe" placeholder="Terminale S">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="dateNaissance">Date de naissance</label>
-                        <input type="text" id="dateNaissance" placeholder="01/01/2005">
-                    </div>
-                </div>
+                <div class="logo">DRE</div>
             </div>
-            
-            <div class="card">
-                <div class="section-header">
-                    <h2>Matières</h2>
-                    <button class="btn" id="addMatiere">+ Ajouter une matière</button>
-                </div>
-                
-                <div id="matieresContainer">
-                    <div class="dynamic-section matiere">
+        </header>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab(0)">Gestion de la Classe</div>
+            <div class="tab" onclick="switchTab(1)">Saisie des Notes</div>
+            <div class="tab" onclick="switchTab(2)">Résultats</div>
+        </div>
+
+        <form id="bulletinForm">
+            <!-- Onglet 1: Gestion de la classe -->
+            <div class="tab-content active">
+                <div class="form-section">
+                    <h2>Informations de la Classe</h2>
+                    <div class="form-row">
                         <div class="form-group">
-                            <label>Nom de la matière</label>
-                            <select class="matiere-nom">
-                                <option value="">-- Sélectionner une matière --</option>
+                            <label for="niveau">Niveau d'enseignement</label>
+                            <select id="niveau" required onchange="updateMatieres()">
+                                <option value="">Sélectionner un niveau</option>
+                                <option value="college">Collège</option>
+                                <option value="lycee">Lycée</option>
                             </select>
                         </div>
-                        
                         <div class="form-group">
-                            <label>Moyenne</label>
-                            <input type="number" step="0.1" class="matiere-moyenne" placeholder="15.5">
+                            <label for="classe">Classe</label>
+                            <select id="classe" required onchange="updateMatieres()">
+                                <option value="">Sélectionner une classe</option>
+                                <option value="6e">6ème</option>
+                                <option value="5e">5ème</option>
+                                <option value="4e">4ème</option>
+                                <option value="3e">3ème</option>
+                                <option value="2nd">Seconde</option>
+                                <option value="1ere">Première</option>
+                                <option value="tle">Terminale</option>
+                            </select>
                         </div>
-                        
                         <div class="form-group">
-                            <label>Moyenne de la classe</label>
-                            <input type="number" step="0.1" class="matiere-moyenne-classe" placeholder="12.8">
+                            <label for="serie">Série (Lycée)</label>
+                            <select id="serie" onchange="updateMatieres()">
+                                <option value="">Sélectionner une série</option>
+                                <option value="A">Série A</option>
+                                <option value="C">Série C</option>
+                                <option value="D">Série D</option>
+                                <option value="E">Série E</option>
+                            </select>
                         </div>
-                        
+                    </div>
+                    <div class="form-row">
                         <div class="form-group">
-                            <label>Appréciation</label>
-                            <textarea class="matiere-appreciation" placeholder="Très bon travail"></textarea>
+                            <label for="inspection">Inspection de l'Enseignement</label>
+                            <input type="text" id="inspection" value="IESG-KARA" readonly>
                         </div>
-                        
-                        <div class="section-header">
-                            <h3>Évaluations</h3>
-                            <button class="btn btn-success add-evaluation">+ Ajouter une évaluation</button>
+                        <div class="form-group">
+                            <label for="direction">Direction Régionale</label>
+                            <input type="text" id="direction" value="DRE-KARA" readonly>
                         </div>
-                        
-                        <div class="evaluations-container">
-                            <div class="evaluation-item">
-                                <div class="form-group">
-                                    <label>Nom de l'évaluation</label>
-                                    <input type="text" class="evaluation-nom" placeholder="Contrôle 1">
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label>Note</label>
-                                    <input type="number" step="0.1" class="evaluation-note" placeholder="16">
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label>Date</label>
-                                    <input type="text" class="evaluation-date" placeholder="10/09/2023">
-                                </div>
-                                
-                                <button class="btn btn-danger remove-evaluation">Supprimer</button>
-                            </div>
+                        <div class="form-group">
+                            <label for="anneeScolaire">Année Scolaire</label>
+                            <input type="text" id="anneeScolaire" placeholder="Ex: 2023-2024" required>
                         </div>
-                        
-                        <button class="btn btn-danger remove-matiere">Supprimer cette matière</button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="periode">Période</label>
+                            <select id="periode" required>
+                                <option value="">Sélectionner une période</option>
+                                <option value="1">1er Trimestre</option>
+                                <option value="2">2ème Trimestre</option>
+                                <option value="3">3ème Trimestre</option>
+                                <option value="4">1er Semestre</option>
+                                <option value="5">2ème Semestre</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dateEdition">Date d'édition</label>
+                            <input type="date" id="dateEdition" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Information de l'Établissement</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="etablissement">Nom de l'Établissement</label>
+                            <input type="text" id="etablissement" placeholder="Ex: Lycée de Kara" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="codeEtablissement">Code Établissement</label>
+                            <input type="text" id="codeEtablissement" placeholder="Ex: 000123">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="statut">Statut</label>
+                            <select id="statut">
+                                <option value="Public">Public</option>
+                                <option value="Privé">Privé</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ville">Ville</label>
+                            <input type="text" id="ville" value="KARA">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Gestion des Élèves</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nomEleve">Nom</label>
+                            <input type="text" id="nomEleve" placeholder="Nom de l'élève">
+                        </div>
+                        <div class="form-group">
+                            <label for="prenomEleve">Prénom</label>
+                            <input type="text" id="prenomEleve" placeholder="Prénom de l'élève">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="matricule">Matricule</label>
+                            <input type="text" id="matricule" placeholder="Matricule de l'élève">
+                        </div>
+                        <div class="form-group">
+                            <label for="effectif">Effectif de la classe</label>
+                            <input type="number" id="effectif" min="1" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-success" onclick="ajouterEleve()">
+                                <i class="fas fa-plus"></i> Ajouter un élève
+                            </button>
+                        </div>
+                    </div>
+
+                    <h3>Liste des élèves</h3>
+                    <div class="student-list" id="listeEleves">
+                        <!-- Les élèves seront ajoutés ici dynamiquement -->
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <button type="button" class="btn" onclick="chargerMatieresParDefaut()">
+                            <i class="fas fa-book"></i> Charger les matières par défaut
+                        </button>
                     </div>
                 </div>
             </div>
-            
-            <div class="card">
-                <h2>Appréciations générales</h2>
-                <div class="form-group">
-                    <label for="appreciationGenerale">Appréciation générale</label>
-                    <textarea id="appreciationGenerale" placeholder="Élève sérieux et appliqué."></textarea>
+
+            <!-- Onglet 2: Saisie des notes -->
+            <div class="tab-content">
+                <div class="form-section">
+                    <h2>Saisie des Notes</h2>
+                    
+                    <div id="disciplinesContainer">
+                        <!-- En-tête du tableau -->
+                        <div class="discipline-row" style="font-weight: bold;">
+                            <div class="discipline-name">Discipline</div>
+                            <div class="discipline-field">Coefficient</div>
+                            <div class="discipline-field">Note compo</div>
+                            <div class="discipline-field">Moy classe</div>
+                            <div class="discipline-field">Moyenne/20</div>
+                            <div class="discipline-field">Rang</div>
+                            <div class="discipline-field">Enseignant</div>
+                            <div style="width: 40px;">Action</div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="add-btn" id="addDiscipline">
+                        <i class="fas fa-plus"></i> Ajouter une discipline
+                    </button>
+                </div>
+
+                <div class="form-section">
+                    <h2>Saisie pour tous les élèves</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="eleveSelect">Sélectionner un élève</label>
+                            <select id="eleveSelect" onchange="chargerNotesEleve()">
+                                <option value="">Sélectionner un élève</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-info" onclick="appliquerNotesClasse()">
+                                <i class="fas fa-users"></i> Appliquer à toute la classe
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            
-            <div class="card">
-                <button class="btn btn-success" id="generateJson">Générer le JSON</button>
-                <button class="btn" id="downloadJson">Télécharger le fichier JSON</button>
-                <button class="btn btn-danger" id="resetForm">Réinitialiser le formulaire</button>
-            </div>
-            
-            <div class="card">
-                <h2>Prévisualisation du JSON</h2>
-                <div class="json-preview" id="jsonPreview">
-                    <div class="empty-state">Le JSON apparaîtra ici après génération</div>
+
+            <!-- Onglet 3: Résultats -->
+            <div class="tab-content">
+                <div class="form-section">
+                    <h2>Résultats de la Classe</h2>
+                    
+                    <div class="results-section">
+                        <h3>Statistiques de la classe</h3>
+                        <div class="results-grid">
+                            <div class="result-item">
+                                <label>Moyenne de la classe</label>
+                                <div class="result-value" id="moyenneClasse">0.00</div>
+                            </div>
+                            <div class="result-item">
+                                <label>Moyenne la plus élevée</label>
+                                <div class="result-value" id="moyenneMax">0.00</div>
+                            </div>
+                            <div class="result-item">
+                                <label>Moyenne la plus basse</label>
+                                <div class="result-value" id="moyenneMin">0.00</div>
+                            </div>
+                            <div class="result-item">
+                                <label>Nombre d'élèves</label>
+                                <div class="result-value" id="nbEleves">0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Classement des élèves</h3>
+                    <table id="tableauClassement">
+                        <thead>
+                            <tr>
+                                <th>Rang</th>
+                                <th>Nom et Prénom</th>
+                                <th>Moyenne</th>
+                                <th>Mention</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Le classement sera généré ici -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
+
+            <div class="actions">
+                <button type="button" class="btn btn-success" id="saveBtn">
+                    <i class="fas fa-save"></i> Enregistrer la classe
+                </button>
+                <button type="button" class="btn btn-info" id="calculateBtn">
+                    <i class="fas fa-calculator"></i> Calculer les résultats
+                </button>
+                <button type="button" class="btn" id="exportBtn">
+                    <i class="fas fa-download"></i> Exporter en JSON
+                </button>
+                <button type="reset" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Réinitialiser
+                </button>
+            </div>
+        </form>
+
+        <footer>
+            <p>Direction Régionale de l'Education - Kara &copy; 2023</p>
+            <p>Système de Gestion des Bulletins Scolaires</p>
+        </footer>
     </div>
 
     <script>
-        // Base de données des élèves
-        const elevesDatabase = [
-            { id: 1, nom: "Dupont", prenom: "Jean", classe: "Terminale S", dateNaissance: "15/03/2005" },
-            { id: 2, nom: "Martin", prenom: "Léa", classe: "Terminale S", dateNaissance: "22/07/2005" },
-            { id: 3, nom: "Bernard", prenom: "Hugo", classe: "Terminale ES", dateNaissance: "03/11/2005" },
-            { id: 4, nom: "Petit", prenom: "Emma", classe: "Terminale ES", dateNaissance: "18/05/2005" },
-            { id: 5, nom: "Moreau", prenom: "Lucas", classe: "Terminale L", dateNaissance: "29/01/2005" },
-            { id: 6, nom: "Durand", prenom: "Chloé", classe: "Terminale L", dateNaissance: "12/09/2005" },
-            { id: 7, nom: "Dubois", prenom: "Thomas", classe: "1ère S", dateNaissance: "07/04/2006" },
-            { id: 8, nom: "Richard", prenom: "Manon", classe: "1ère S", dateNaissance: "24/12/2006" },
-            { id: 9, nom: "Garcia", prenom: "Noé", classe: "1ère ES", dateNaissance: "30/08/2006" },
-            { id: 10, nom: "Robert", prenom: "Sarah", classe: "1ère ES", dateNaissance: "14/02/2006" },
-            { id: 11, nom: "Laurent", prenom: "Jules", classe: "1ère L", dateNaissance: "09/06/2006" },
-            { id: 12, nom: "Michel", prenom: "Inès", classe: "1ère L", dateNaissance: "27/10/2006" },
-            { id: 13, nom: "Girard", prenom: "Raphaël", classe: "2nde", dateNaissance: "05/03/2007" },
-            { id: 14, nom: "Blanc", prenom: "Louise", classe: "2nde", dateNaissance: "19/07/2007" },
-            { id: 15, nom: "François", prenom: "Victor", classe: "2nde", dateNaissance: "11/11/2007" }
-        ];
+        // Données de l'application
+        let classeData = {
+            informations: {},
+            eleves: [],
+            matieres: [],
+            notes: {}
+        };
 
-        // Base de données des matières
-        const matieresDatabase = [
-            "Mathématiques",
-            "Français",
-            "Histoire-Géographie",
-            "SVT",
-            "Physique-Chimie",
-            "Anglais",
-            "Espagnol",
-            "Allemand",
-            "Philosophie",
-            "Éducation Physique et Sportive",
-            "Sciences Économiques et Sociales",
-            "Spécialité Numérique et Sciences Informatiques",
-            "Spécialité Humanités, Littérature et Philosophie",
-            "Spécialité Langues, Littératures et Cultures Étrangères",
-            "Spécialité Sciences de l'Ingénieur",
-            "Enseignement Scientifique",
-            "Histoire des Arts",
-            "Musique"
-        ];
+        // Base de données des matières par niveau et série
+        const matieresParNiveau = {
+            college: {
+                "6e": [
+                    { nom: "Français", coef: 3, type: "lettres" },
+                    { nom: "Mathématiques", coef: 3, type: "sciences" },
+                    { nom: "Histoire-Géographie", coef: 2, type: "lettres" },
+                    { nom: "SVT", coef: 2, type: "sciences" },
+                    { nom: "Physique-Chimie", coef: 2, type: "sciences" },
+                    { nom: "Anglais", coef: 2, type: "lettres" },
+                    { nom: "EPS", coef: 1, type: "autres" }
+                ],
+                "5e": [
+                    { nom: "Français", coef: 3, type: "lettres" },
+                    { nom: "Mathématiques", coef: 3, type: "sciences" },
+                    { nom: "Histoire-Géographie", coef: 2, type: "lettres" },
+                    { nom: "SVT", coef: 2, type: "sciences" },
+                    { nom: "Physique-Chimie", coef: 2, type: "sciences" },
+                    { nom: "Anglais", coef: 2, type: "lettres" },
+                    { nom: "Espagnol", coef: 1, type: "lettres" },
+                    { nom: "EPS", coef: 1, type: "autres" }
+                ],
+                "4e": [
+                    { nom: "Français", coef: 3, type: "lettres" },
+                    { nom: "Mathématiques", coef: 3, type: "sciences" },
+                    { nom: "Histoire-Géographie", coef: 2, type: "lettres" },
+                    { nom: "SVT", coef: 2, type: "sciences" },
+                    { nom: "Physique-Chimie", coef: 2, type: "sciences" },
+                    { nom: "Anglais", coef: 2, type: "lettres" },
+                    { nom: "Espagnol", coef: 1, type: "lettres" },
+                    { nom: "EPS", coef: 1, type: "autres" }
+                ],
+                "3e": [
+                    { nom: "Français", coef: 3, type: "lettres" },
+                    { nom: "Mathématiques", coef: 3, type: "sciences" },
+                    { nom: "Histoire-Géographie", coef: 2, type: "lettres" },
+                    { nom: "SVT", coef: 2, type: "sciences" },
+                    { nom: "Physique-Chimie", coef: 2, type: "sciences" },
+                    { nom: "Anglais", coef: 2, type: "lettres" },
+                    { nom: "Espagnol", coef: 1, type: "lettres" },
+                    { nom: "EPS", coef: 1, type: "autres" }
+                ]
+            },
+            lycee: {
+                "2nd": {
+                    "default": [
+                        { nom: "Français", coef: 3, type: "lettres" },
+                        { nom: "Mathématiques", coef: 3, type: "sciences" },
+                        { nom: "Histoire-Géographie", coef: 2, type: "lettres" },
+                        { nom: "SVT", coef: 2, type: "sciences" },
+                        { nom: "Physique-Chimie", coef: 2, type: "sciences" },
+                        { nom: "Anglais", coef: 2, type: "lettres" },
+                        { nom: "Espagnol", coef: 1, type: "lettres" },
+                        { nom: "EPS", coef: 1, type: "autres" },
+                        { nom: "Philosophie", coef: 1, type: "lettres" }
+                    ]
+                },
+                "1ere": {
+                    "A": [
+                        { nom: "Français", coef: 4, type: "lettres" },
+                        { nom: "Philosophie", coef: 3, type: "lettres" },
+                        { nom: "Histoire-Géographie", coef: 3, type: "lettres" },
+                        { nom: "Anglais", coef: 2, type: "lettres" },
+                        { nom: "Espagnol", coef: 2, type: "lettres" },
+                        { nom: "Mathématiques", coef: 2, type: "sciences" },
+                        { nom: "SVT", coef: 2, type: "sciences" },
+                        { nom: "EPS", coef: 1, type: "autres" }
+                    ],
+                    "C": [
+                        { nom: "Mathématiques", coef: 5, type: "sciences" },
+                        { nom: "Physique-Chimie", coef: 4, type: "sciences" },
+                        { nom: "Français", coef: 3, type: "lettres" },
+                        { nom: "Philosophie", coef: 2, type: "lettres" },
+                        { nom: "Anglais", coef: 2, type: "lettres" },
+                        { nom: "SVT", coef: 2, type: "sciences" },
+                        { nom: "EPS", coef: 1, type: "autres" }
+                    ],
+                    "D": [
+                        { nom: "Mathématiques", coef: 4, type: "sciences" },
+                        { nom: "SVT", coef: 4, type: "sciences" },
+                        { nom: "Physique-Chimie", coef: 3, type: "sciences" },
+                        { nom: "Français", coef: 3, type: "lettres" },
+                        { nom: "Philosophie", coef: 2, type: "lettres" },
+                        { nom: "Anglais", coef: 2, type: "lettres" },
+                        { nom: "EPS", coef: 1, type: "autres" }
+                    ],
+                    "E": [
+                        { nom: "Mathématiques", coef: 5, type: "sciences" },
+                        { nom: "Physique-Chimie", coef: 4, type: "sciences" },
+                        { nom: "Français", coef: 3, type: "lettres" },
+                        { nom: "Philosophie", coef: 2, type: "lettres" },
+                        { nom: "Anglais", coef: 2, type: "lettres" },
+                        { nom: "EPS", coef: 1, type: "autres" }
+                    ]
+                },
+                "tle": {
+                    "A": [
+                        { nom: "Philosophie", coef: 4, type: "lettres" },
+                        { nom: "Français", coef: 4, type: "lettres" },
+                        { nom: "Histoire-Géographie", coef: 3, type: "lettres" },
+                        { nom: "Anglais", coef: 2, type: "lettres" },
+                        { nom: "Espagnol", coef: 2, type: "lettres" },
+                        { nom: "Mathématiques", coef: 2, type: "sciences" },
+                        { nom: "EPS", coef: 1, type: "autres" }
+                    ],
+                    "C": [
+                        { nom: "Mathématiques", coef: 6, type: "sciences" },
+                        { nom: "Physique-Chimie", coef: 5, type: "sciences" },
+                        { nom: "Philosophie", coef: 3, type: "lettres" },
+                        { nom: "Français", coef: 3, type: "lettres" },
+                        { nom: "Anglais", coef: 2, type: "lettres" },
+                        { nom: "EPS", coef: 1, type: "autres" }
+                    ],
+                    "D": [
+                        { nom: "Mathématiques", coef: 5, type: "sciences" },
+                        { nom: "SVT", coef: 5, type: "sciences" },
+                        { nom: "Physique-Chimie", coef: 4, type: "sciences" },
+                        { nom: "Philosophie", coef: 3, type: "lettres" },
+                        { nom: "Français", coef: 3, type: "lettres" },
+                        { nom: "Anglais", coef: 2, type: "lettres" },
+                        { nom: "EPS", coef: 1, type: "autres" }
+                    ],
+                    "E": [
+                        { nom: "Mathématiques", coef: 6, type: "sciences" },
+                        { nom: "Physique-Chimie", coef: 5, type: "sciences" },
+                        { nom: "Philosophie", coef: 3, type: "lettres" },
+                        { nom: "Français", coef: 3, type: "lettres" },
+                        { nom: "Anglais", coef: 2, type: "lettres" },
+                        { nom: "EPS", coef: 1, type: "autres" }
+                    ]
+                }
+            }
+        };
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Références aux éléments DOM
-            const eleveSelect = document.getElementById('eleveSelect');
-            const nomInput = document.getElementById('nom');
-            const prenomInput = document.getElementById('prenom');
-            const classeInput = document.getElementById('classe');
-            const dateNaissanceInput = document.getElementById('dateNaissance');
-            const addMatiereBtn = document.getElementById('addMatiere');
-            const matieresContainer = document.getElementById('matieresContainer');
-            const generateJsonBtn = document.getElementById('generateJson');
-            const downloadJsonBtn = document.getElementById('downloadJson');
-            const resetFormBtn = document.getElementById('resetForm');
-            const jsonPreview = document.getElementById('jsonPreview');
-            const successAlert = document.getElementById('successAlert');
+            // Définir la date du jour comme valeur par défaut
+            const today = new Date().toISOString().substr(0, 10);
+            document.getElementById('dateEdition').value = today;
             
-            // Remplir le sélecteur d'élèves
-            elevesDatabase.forEach(eleve => {
-                const option = document.createElement('option');
-                option.value = eleve.id;
-                option.textContent = `${eleve.nom} ${eleve.prenom} - ${eleve.classe}`;
-                eleveSelect.appendChild(option);
+            // Gérer l'ajout de nouvelles disciplines
+            document.getElementById('addDiscipline').addEventListener('click', addDisciplineRow);
+            
+            // Événements des boutons
+            document.getElementById('saveBtn').addEventListener('click', enregistrerClasse);
+            document.getElementById('calculateBtn').addEventListener('click', calculerResultats);
+            document.getElementById('exportBtn').addEventListener('click', exporterJSON);
+            
+            // Charger les données sauvegardées si elles existent
+            chargerDonneesSauvegardees();
+        });
+        
+        function switchTab(index) {
+            // Masquer tous les onglets
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
             });
             
-            // Remplir le sélecteur de matières de la première matière
-            const firstMatiereSelect = matieresContainer.querySelector('.matiere-nom');
-            matieresDatabase.forEach(matiere => {
-                const option = document.createElement('option');
-                option.value = matiere;
-                option.textContent = matiere;
-                firstMatiereSelect.appendChild(option);
+            // Désactiver tous les onglets
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
             });
             
-            // Événement de changement d'élève
-            eleveSelect.addEventListener('change', function() {
-                const selectedId = parseInt(this.value);
-                const selectedEleve = elevesDatabase.find(eleve => eleve.id === selectedId);
-                
-                if (selectedEleve) {
-                    nomInput.value = selectedEleve.nom;
-                    prenomInput.value = selectedEleve.prenom;
-                    classeInput.value = selectedEleve.classe;
-                    dateNaissanceInput.value = selectedEleve.dateNaissance;
-                } else {
-                    nomInput.value = '';
-                    prenomInput.value = '';
-                    classeInput.value = '';
-                    dateNaissanceInput.value = '';
-                }
-            });
+            // Activer l'onglet sélectionné
+            document.querySelectorAll('.tab-content')[index].classList.add('active');
+            document.querySelectorAll('.tab')[index].classList.add('active');
+        }
+        
+        function updateMatieres() {
+            const niveau = document.getElementById('niveau').value;
+            const classe = document.getElementById('classe').value;
+            const serie = document.getElementById('serie').value;
             
-            // Compteur pour les nouvelles matières et évaluations
-            let matiereCount = 1;
+            if (niveau && classe) {
+                document.getElementById('addDiscipline').style.display = 'none';
+            } else {
+                document.getElementById('addDiscipline').style.display = 'block';
+            }
+        }
+        
+        function ajouterEleve() {
+            const nom = document.getElementById('nomEleve').value;
+            const prenom = document.getElementById('prenomEleve').value;
+            const matricule = document.getElementById('matricule').value;
             
-            // Ajouter une matière
-            addMatiereBtn.addEventListener('click', function() {
-                matiereCount++;
-                const newMatiere = createMatiereElement();
-                matieresContainer.appendChild(newMatiere);
-                attachMatiereEventListeners(newMatiere);
-            });
-            
-            // Créer un élément matière
-            function createMatiereElement() {
-                const matiereElement = document.createElement('div');
-                matiereElement.className = 'dynamic-section matiere';
-                matiereElement.innerHTML = `
-                    <div class="form-group">
-                        <label>Nom de la matière</label>
-                        <select class="matiere-nom">
-                            <option value="">-- Sélectionner une matière --</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Moyenne</label>
-                        <input type="number" step="0.1" class="matiere-moyenne" placeholder="15.5">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Moyenne de la classe</label>
-                        <input type="number" step="0.1" class="matiere-moyenne-classe" placeholder="12.8">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Appréciation</label>
-                        <textarea class="matiere-appreciation" placeholder="Très bon travail"></textarea>
-                    </div>
-                    
-                    <div class="section-header">
-                        <h3>Évaluations</h3>
-                        <button class="btn btn-success add-evaluation">+ Ajouter une évaluation</button>
-                    </div>
-                    
-                    <div class="evaluations-container">
-                        <div class="evaluation-item">
-                            <div class="form-group">
-                                <label>Nom de l'évaluation</label>
-                                <input type="text" class="evaluation-nom" placeholder="Contrôle 1">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Note</label>
-                                <input type="number" step="0.1" class="evaluation-note" placeholder="16">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Date</label>
-                                <input type="text" class="evaluation-date" placeholder="10/09/2023">
-                            </div>
-                            
-                            <button class="btn btn-danger remove-evaluation">Supprimer</button>
-                        </div>
-                    </div>
-                    
-                    <button class="btn btn-danger remove-matiere">Supprimer cette matière</button>
-                `;
-                
-                // Remplir le sélecteur de matières
-                const matiereSelect = matiereElement.querySelector('.matiere-nom');
-                matieresDatabase.forEach(matiere => {
-                    const option = document.createElement('option');
-                    option.value = matiere;
-                    option.textContent = matiere;
-                    matiereSelect.appendChild(option);
-                });
-                
-                return matiereElement;
+            if (!nom || !prenom) {
+                alert("Veuillez saisir au moins le nom et le prénom de l'élève.");
+                return;
             }
             
-            // Attacher les écouteurs d'événements pour une matière
-            function attachMatiereEventListeners(matiereElement) {
-                // Bouton pour ajouter une évaluation
-                const addEvaluationBtn = matiereElement.querySelector('.add-evaluation');
-                addEvaluationBtn.addEventListener('click', function() {
-                    const evaluationsContainer = matiereElement.querySelector('.evaluations-container');
-                    const newEvaluation = createEvaluationElement();
-                    evaluationsContainer.appendChild(newEvaluation);
-                    attachEvaluationEventListeners(newEvaluation);
-                });
-                
-                // Bouton pour supprimer la matière
-                const removeMatiereBtn = matiereElement.querySelector('.remove-matiere');
-                removeMatiereBtn.addEventListener('click', function() {
-                    if (matieresContainer.children.length > 1) {
-                        matiereElement.remove();
-                    } else {
-                        alert('Vous devez avoir au moins une matière.');
-                    }
-                });
-                
-                // Attacher les écouteurs pour les évaluations existantes
-                const evaluationItems = matiereElement.querySelectorAll('.evaluation-item');
-                evaluationItems.forEach(evaluation => {
-                    attachEvaluationEventListeners(evaluation);
-                });
-            }
+            // Ajouter l'élève à la liste
+            const eleve = {
+                id: Date.now(), // ID unique
+                nom: nom,
+                prenom: prenom,
+                matricule: matricule
+            };
             
-            // Créer un élément évaluation
-            function createEvaluationElement() {
-                const evaluationElement = document.createElement('div');
-                evaluationElement.className = 'evaluation-item';
-                evaluationElement.innerHTML = `
-                    <div class="form-group">
-                        <label>Nom de l'évaluation</label>
-                        <input type="text" class="evaluation-nom" placeholder="Contrôle 1">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Note</label>
-                        <input type="number" step="0.1" class="evaluation-note" placeholder="16">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Date</label>
-                        <input type="text" class="evaluation-date" placeholder="10/09/2023">
-                    </div>
-                    
-                    <button class="btn btn-danger remove-evaluation">Supprimer</button>
-                `;
-                
-                return evaluationElement;
-            }
+            classeData.eleves.push(eleve);
             
-            // Attacher les écouteurs d'événements pour une évaluation
-            function attachEvaluationEventListeners(evaluationElement) {
-                const removeEvaluationBtn = evaluationElement.querySelector('.remove-evaluation');
-                removeEvaluationBtn.addEventListener('click', function() {
-                    const evaluationsContainer = evaluationElement.parentElement;
-                    if (evaluationsContainer.children.length > 1) {
-                        evaluationElement.remove();
-                    } else {
-                        alert('Vous devez avoir au moins une évaluation.');
-                    }
-                });
-            }
+            // Mettre à jour l'affichage
+            afficherListeEleves();
             
-            // Attacher les écouteurs initiaux
-            const initialMatieres = matieresContainer.querySelectorAll('.matiere');
-            initialMatieres.forEach(matiere => {
-                attachMatiereEventListeners(matiere);
-            });
-            
-            // Générer le JSON
-            generateJsonBtn.addEventListener('click', function() {
-                const jsonData = generateJsonData();
-                const jsonString = JSON.stringify(jsonData, null, 2);
-                jsonPreview.innerHTML = `<pre>${jsonString}</pre>`;
-                successAlert.textContent = 'JSON généré avec succès!';
-                successAlert.style.display = 'block';
-                setTimeout(() => {
-                    successAlert.style.display = 'none';
-                }, 3000);
-            });
-            
-            // Générer les données JSON
-            function generateJsonData() {
-                // Informations de l'élève
-                const eleve = {
-                    nom: document.getElementById('nom').value || 'Dupont',
-                    prenom: document.getElementById('prenom').value || 'Jean',
-                    classe: document.getElementById('classe').value || 'Terminale S',
-                    dateNaissance: document.getElementById('dateNaissance').value || '01/01/2005',
-                    matieres: [],
-                    appreciations: {
-                        generale: document.getElementById('appreciationGenerale').value || 'Élève sérieux et appliqué.'
-                    }
-                };
-                
-                // Récupérer les matières
-                const matiereElements = matieresContainer.querySelectorAll('.matiere');
-                matiereElements.forEach(matiereElement => {
-                    const matiereNom = matiereElement.querySelector('.matiere-nom').value;
-                    if (!matiereNom) return; // Ignorer les matières sans nom
-                    
-                    const matiere = {
-                        nom: matiereNom,
-                        moyenne: parseFloat(matiereElement.querySelector('.matiere-moyenne').value) || 0,
-                        moyenneClasse: parseFloat(matiereElement.querySelector('.matiere-moyenne-classe').value) || 0,
-                        appreciation: matiereElement.querySelector('.matiere-appreciation').value || '',
-                        evaluations: []
-                    };
-                    
-                    // Récupérer les évaluations
-                    const evaluationElements = matiereElement.querySelectorAll('.evaluation-item');
-                    evaluationElements.forEach(evaluationElement => {
-                        const evaluationNom = evaluationElement.querySelector('.evaluation-nom').value;
-                        const evaluationNote = parseFloat(evaluationElement.querySelector('.evaluation-note').value);
-                        
-                        if (evaluationNom && !isNaN(evaluationNote)) {
-                            const evaluation = {
-                                nom: evaluationNom,
-                                note: evaluationNote,
-                                date: evaluationElement.querySelector('.evaluation-date').value || ''
-                            };
-                            matiere.evaluations.push(evaluation);
-                        }
-                    });
-                    
-                    eleve.matieres.push(matiere);
-                });
-                
-                return {
-                    eleves: [eleve]
-                };
-            }
-            
-            // Télécharger le JSON
-            downloadJsonBtn.addEventListener('click', function() {
-                const jsonData = generateJsonData();
-                const jsonString = JSON.stringify(jsonData, null, 2);
-                const blob = new Blob([jsonString], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'bulletins.json';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                
-                successAlert.textContent = 'Fichier JSON téléchargé avec succès!';
-                successAlert.style.display = 'block';
-                setTimeout(() => {
-                    successAlert.style.display = 'none';
-                }, 3000);
-            });
+            // Mettre à jour le sélecteur d'élèves
+            mettreAJourSelectEleves();
             
             // Réinitialiser le formulaire
-            resetFormBtn.addEventListener('click', function() {
-                if (confirm('Êtes-vous sûr de vouloir réinitialiser le formulaire? Toutes les données seront perdues.')) {
-                    eleveSelect.value = '';
-                    nomInput.value = '';
-                    prenomInput.value = '';
-                    classeInput.value = '';
-                    dateNaissanceInput.value = '';
-                    document.getElementById('appreciationGenerale').value = '';
+            document.getElementById('nomEleve').value = '';
+            document.getElementById('prenomEleve').value = '';
+            document.getElementById('matricule').value = '';
+        }
+        
+        function afficherListeEleves() {
+            const liste = document.getElementById('listeEleves');
+            liste.innerHTML = '';
+            
+            classeData.eleves.forEach(eleve => {
+                const div = document.createElement('div');
+                div.className = 'student-item';
+                div.innerHTML = `
+                    <div class="student-info">
+                        <span>${eleve.nom} ${eleve.prenom}</span>
+                        <span>${eleve.matricule ? 'Matricule: ' + eleve.matricule : ''}</span>
+                    </div>
+                    <div class="student-actions">
+                        <button class="btn btn-sm btn-danger" onclick="supprimerEleve(${eleve.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                liste.appendChild(div);
+            });
+            
+            // Mettre à jour le compteur d'élèves
+            document.getElementById('effectif').value = classeData.eleves.length;
+            document.getElementById('nbEleves').textContent = classeData.eleves.length;
+        }
+        
+        function supprimerEleve(id) {
+            if (confirm("Voulez-vous vraiment supprimer cet élève ?")) {
+                classeData.eleves = classeData.eleves.filter(eleve => eleve.id !== id);
+                afficherListeEleves();
+                mettreAJourSelectEleves();
+            }
+        }
+        
+        function mettreAJourSelectEleves() {
+            const select = document.getElementById('eleveSelect');
+            select.innerHTML = '<option value="">Sélectionner un élève</option>';
+            
+            classeData.eleves.forEach(eleve => {
+                const option = document.createElement('option');
+                option.value = eleve.id;
+                option.textContent = `${eleve.nom} ${eleve.prenom}`;
+                select.appendChild(option);
+            });
+        }
+        
+        function chargerMatieresParDefaut() {
+            const niveau = document.getElementById('niveau').value;
+            const classe = document.getElementById('classe').value;
+            const serie = document.getElementById('serie').value;
+            
+            if (!niveau || !classe) {
+                alert("Veuillez d'abord sélectionner le niveau et la classe.");
+                return;
+            }
+            
+            // Vider le conteneur des disciplines (sauf l'en-tête)
+            const container = document.getElementById('disciplinesContainer');
+            while (container.children.length > 1) {
+                container.removeChild(container.lastChild);
+            }
+            
+            let matieres = [];
+            
+            if (niveau === 'college') {
+                matieres = matieresParNiveau.college[classe] || [];
+            } else if (niveau === 'lycee') {
+                if (classe === '2nd') {
+                    matieres = matieresParNiveau.lycee[classe].default || [];
+                } else {
+                    matieres = matieresParNiveau.lycee[classe][serie] || [];
+                }
+            }
+            
+            // Ajouter les matières au formulaire
+            matieres.forEach(matiere => {
+                addDisciplineRow(matiere.nom, matiere.coef, matiere.type);
+            });
+            
+            // Sauvegarder les matières dans les données de la classe
+            classeData.matieres = matieres;
+        }
+        
+        function addDisciplineRow(nom = '', coef = 1, type = 'autres') {
+            const container = document.getElementById('disciplinesContainer');
+            const row = document.createElement('div');
+            row.className = 'discipline-row';
+            row.innerHTML = `
+                <div class="discipline-name">
+                    <input type="text" value="${nom}" placeholder="Nom de la discipline" class="nom-discipline">
+                </div>
+                <div class="discipline-field">
+                    <input type="number" min="1" value="${coef}" class="coef-input">
+                </div>
+                <div class="discipline-field">
+                    <input type="number" step="0.01" min="0" max="20" placeholder="Note compo" class="note-compo">
+                </div>
+                <div class="discipline-field">
+                    <input type="number" step="0.01" min="0" max="20" placeholder="Moy classe" class="moy-classe">
+                </div>
+                <div class="discipline-field">
+                    <input type="number" step="0.01" min="0" max="20" placeholder="Moy/20" class="moy-eleve">
+                </div>
+                <div class="discipline-field">
+                    <input type="text" placeholder="Rang" class="rang-input">
+                </div>
+                <div class="discipline-field">
+                    <input type="text" placeholder="Enseignant" class="enseignant-input">
+                </div>
+                <div>
+                    <button type="button" class="remove-btn">×</button>
+                </div>
+            `;
+            
+            row.querySelector('.remove-btn').addEventListener('click', function() {
+                container.removeChild(row);
+            });
+            
+            container.appendChild(row);
+        }
+        
+        function enregistrerClasse() {
+            // Récupérer les informations de base
+            classeData.informations = {
+                inspection: document.getElementById('inspection').value,
+                direction: document.getElementById('direction').value,
+                anneeScolaire: document.getElementById('anneeScolaire').value,
+                periode: document.getElementById('periode').value,
+                dateEdition: document.getElementById('dateEdition').value,
+                etablissement: document.getElementById('etablissement').value,
+                codeEtablissement: document.getElementById('codeEtablissement').value,
+                statut: document.getElementById('statut').value,
+                ville: document.getElementById('ville').value,
+                niveau: document.getElementById('niveau').value,
+                classe: document.getElementById('classe').value,
+                serie: document.getElementById('serie').value,
+                effectif: document.getElementById('effectif').value
+            };
+            
+            // Récupérer les matières
+            const matieres = [];
+            const rows = document.querySelectorAll('.discipline-row');
+            
+            rows.forEach((row, index) => {
+                if (index > 0) { // Ignorer l'en-tête
+                    const nom = row.querySelector('.nom-discipline').value;
+                    const coef = parseFloat(row.querySelector('.coef-input').value) || 0;
+                    const noteCompo = parseFloat(row.querySelector('.note-compo').value) || 0;
+                    const moyClasse = parseFloat(row.querySelector('.moy-classe').value) || 0;
+                    const moyEleve = parseFloat(row.querySelector('.moy-eleve').value) || 0;
+                    const rang = row.querySelector('.rang-input').value;
+                    const enseignant = row.querySelector('.enseignant-input').value;
                     
-                    // Garder seulement la première matière
-                    while (matieresContainer.children.length > 1) {
-                        matieresContainer.removeChild(matieresContainer.lastChild);
+                    if (nom) {
+                        matieres.push({
+                            nom: nom,
+                            coef: coef,
+                            noteCompo: noteCompo,
+                            moyClasse: moyClasse,
+                            moyEleve: moyEleve,
+                            rang: rang,
+                            enseignant: enseignant
+                        });
                     }
-                    
-                    // Réinitialiser la première matière
-                    const firstMatiere = matieresContainer.querySelector('.matiere');
-                    firstMatiere.querySelector('.matiere-nom').value = '';
-                    firstMatiere.querySelector('.matiere-moyenne').value = '';
-                    firstMatiere.querySelector('.matiere-moyenne-classe').value = '';
-                    firstMatiere.querySelector('.matiere-appreciation').value = '';
-                    
-                    // Garder seulement la première évaluation
-                    const evaluationsContainer = firstMatiere.querySelector('.evaluations-container');
-                    while (evaluationsContainer.children.length > 1) {
-                        evaluationsContainer.removeChild(evaluationsContainer.lastChild);
-                    }
-                    
-                    // Réinitialiser la première évaluation
-                    const firstEvaluation = evaluationsContainer.querySelector('.evaluation-item');
-                    firstEvaluation.querySelector('.evaluation-nom').value = '';
-                    firstEvaluation.querySelector('.evaluation-note').value = '';
-                    firstEvaluation.querySelector('.evaluation-date').value = '';
-                    
-                    jsonPreview.innerHTML = '<div class="empty-state">Le JSON apparaîtra ici après génération</div>';
-                    
-                    successAlert.textContent = 'Formulaire réinitialisé avec succès!';
-                    successAlert.style.display = 'block';
-                    setTimeout(() => {
-                        successAlert.style.display = 'none';
-                    }, 3000);
                 }
             });
-        });
+            
+            classeData.matieres = matieres;
+            
+            // Enregistrer dans le localStorage
+            localStorage.setItem('classeData', JSON.stringify(classeData));
+            
+            alert('Données enregistrées avec succès !');
+        }
+        
+        function chargerDonneesSauvegardees() {
+            const savedData = localStorage.getItem('classeData');
+            if (savedData) {
+                classeData = JSON.parse(savedData);
+                
+                // Charger les informations de base
+                if (classeData.informations) {
+                    document.getElementById('inspection').value = classeData.informations.inspection || '';
+                    document.getElementById('direction').value = classeData.informations.direction || '';
+                    document.getElementById('anneeScolaire').value = classeData.informations.anneeScolaire || '';
+                    document.getElementById('periode').value = classeData.informations.periode || '';
+                    document.getElementById('dateEdition').value = classeData.informations.dateEdition || '';
+                    document.getElementById('etablissement').value = classeData.informations.etablissement || '';
+                    document.getElementById('codeEtablissement').value = classeData.informations.codeEtablissement || '';
+                    document.getElementById('statut').value = classeData.informations.statut || '';
+                    document.getElementById('ville').value = classeData.informations.ville || '';
+                    document.getElementById('niveau').value = classeData.informations.niveau || '';
+                    document.getElementById('classe').value = classeData.informations.classe || '';
+                    document.getElementById('serie').value = classeData.informations.serie || '';
+                    document.getElementById('effectif').value = classeData.informations.effectif || '';
+                }
+                
+                // Charger les élèves
+                if (classeData.eleves && classeData.eleves.length > 0) {
+                    afficherListeEleves();
+                    mettreAJourSelectEleves();
+                }
+                
+                // Charger les matières
+                if (classeData.matieres && classeData.matieres.length > 0) {
+                    const container = document.getElementById('disciplinesContainer');
+                    while (container.children.length > 1) {
+                        container.removeChild(container.lastChild);
+                    }
+                    
+                    classeData.matieres.forEach(matiere => {
+                        addDisciplineRow(
+                            matiere.nom, 
+                            matiere.coef, 
+                            matiere.type
+                        );
+                    });
+                }
+            }
+        }
+        
+        function calculerResultats() {
+            // Calculer les moyennes pour chaque élève
+            classeData.eleves.forEach(eleve => {
+                if (classeData.notes[eleve.id]) {
+                    let totalPoints = 0;
+                    let totalCoef = 0;
+                    
+                    classeData.notes[eleve.id].forEach(note => {
+                        totalPoints += note.moyenne * note.coef;
+                        totalCoef += note.coef;
+                    });
+                    
+                    eleve.moyenne = totalCoef > 0 ? (totalPoints / totalCoef).toFixed(2) : 0;
+                } else {
+                    eleve.moyenne = 0;
+                }
+            });
+            
+            // Trier les élèves par moyenne (décroissant)
+            classeData.eleves.sort((a, b) => b.moyenne - a.moyenne);
+            
+            // Attribuer les rangs
+            classeData.eleves.forEach((eleve, index) => {
+                eleve.rang = index + 1;
+                
+                // Déterminer la mention
+                if (eleve.moyenne >= 16) {
+                    eleve.mention = "Excellent";
+                } else if (eleve.moyenne >= 14) {
+                    eleve.mention = "Très Bien";
+                } else if (eleve.moyenne >= 12) {
+                    eleve.mention = "Bien";
+                } else if (eleve.moyenne >= 10) {
+                    eleve.mention = "Assez Bien";
+                } else if (eleve.moyenne >= 8) {
+                    eleve.mention = "Passable";
+                } else {
+                    eleve.mention = "Insuffisant";
+                }
+            });
+            
+            // Calculer les statistiques de la classe
+            let moyenneClasse = 0;
+            let moyenneMax = 0;
+            let moyenneMin = 20;
+            
+            if (classeData.eleves.length > 0) {
+                let totalMoyennes = 0;
+                
+                classeData.eleves.forEach(eleve => {
+                    totalMoyennes += parseFloat(eleve.moyenne);
+                    if (eleve.moyenne > moyenneMax) moyenneMax = eleve.moyenne;
+                    if (eleve.moyenne < moyenneMin) moyenneMin = eleve.moyenne;
+                });
+                
+                moyenneClasse = (totalMoyennes / classeData.eleves.length).toFixed(2);
+            }
+            
+            // Afficher les résultats
+            document.getElementById('moyenneClasse').textContent = moyenneClasse;
+            document.getElementById('moyenneMax').textContent = moyenneMax;
+            document.getElementById('moyenneMin').textContent = moyenneMin;
+            document.getElementById('nbEleves').textContent = classeData.eleves.length;
+            
+            // Afficher le classement
+            const tbody = document.querySelector('#tableauClassement tbody');
+            tbody.innerHTML = '';
+            
+            classeData.eleves.forEach(eleve => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${eleve.rang}</td>
+                    <td>${eleve.nom} ${eleve.prenom}</td>
+                    <td>${eleve.moyenne}</td>
+                    <td>${eleve.mention}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            
+            // Passer à l'onglet des résultats
+            switchTab(2);
+        }
+        
+        function exporterJSON() {
+            // Préparer les données à exporter
+            const dataToExport = {
+                informations: classeData.informations,
+                eleves: classeData.eleves,
+                matieres: classeData.matieres,
+                notes: classeData.notes
+            };
+            
+            // Convertir en JSON
+            const jsonData = JSON.stringify(dataToExport, null, 2);
+            
+            // Créer un blob et un lien de téléchargement
+            const blob = new Blob([jsonData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `classe_${classeData.informations.classe}_${classeData.informations.periode}.json`;
+            document.body.appendChild(a);
+            a.click();
+            
+            // Nettoyer
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+        }
+        
+        function chargerNotesEleve() {
+            const eleveId = document.getElementById('eleveSelect').value;
+            // Implémenter le chargement des notes de l'élève sélectionné
+        }
+        
+        function appliquerNotesClasse() {
+            // Implémenter l'application des notes à toute la classe
+        }
     </script>
 </body>
 </html>
