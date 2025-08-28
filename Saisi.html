@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion Scolaire - Togo</title>
+    <title>Système de Gestion Scolaire - Togo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -384,12 +384,339 @@
             display: block;
         }
         
+        /* Styles du bulletin */
+        .bulletin-container {
+            width: 21cm;
+            min-height: 29.7cm;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 1.5cm;
+            position: relative;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+        }
+        
+        .ministry {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .direction {
+            font-size: 13px;
+            margin: 5px 0;
+        }
+        
+        .title {
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: underline;
+            margin: 10px 0;
+        }
+        
+        .republic {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        
+        .motto {
+            font-size: 12px;
+            font-style: italic;
+        }
+        
+        .school-year {
+            font-size: 13px;
+            margin: 5px 0;
+        }
+        
+        .school-info {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            font-size: 12px;
+        }
+        
+        .student-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+            font-size: 12px;
+        }
+        
+        .info-item {
+            margin-bottom: 5px;
+        }
+        
+        .info-label {
+            font-weight: bold;
+        }
+        
+        .discipline-name {
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .summary {
+            font-weight: bold;
+            background-color: #e6e6e6;
+        }
+        
+        .bilan {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+            font-size: 12px;
+        }
+        
+        .bilan-section {
+            border: 1px solid #000;
+            padding: 10px;
+        }
+        
+        .bilan-title {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+            text-decoration: underline;
+        }
+        
+        .mentions {
+            margin: 20px 0;
+            font-size: 12px;
+        }
+        
+        .mentions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .mentions-section {
+            border: 1px solid #000;
+            padding: 10px;
+        }
+        
+        .mentions-title {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .appreciation {
+            margin: 20px 0;
+            font-size: 12px;
+        }
+        
+        .appreciation-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .recap {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+            font-size: 12px;
+        }
+        
+        .recap-section {
+            border: 1px solid #000;
+            padding: 10px;
+        }
+        
+        .recap-title {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .signatures {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            font-size: 12px;
+        }
+        
+        .signature {
+            text-align: center;
+            width: 45%;
+        }
+        
+        .signature-line {
+            border-top: 1px solid #000;
+            margin-top: 40px;
+            padding-top: 5px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 10px;
+            border-top: 1px solid #000;
+            padding-top: 5px;
+        }
+        
+        .checkbox {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 1px solid #000;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        
+        .checked {
+            background-color: #000;
+        }
+        
+        /* Styles pour les notes des élèves */
+        .student-grades {
+            margin-top: 20px;
+        }
+        
+        .student-grade-row {
+            display: flex;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f0f8ff;
+            border-radius: 5px;
+            align-items: center;
+        }
+        
+        .student-grade-name {
+            flex: 2;
+            margin-right: 10px;
+        }
+        
+        .student-grade-input {
+            flex: 1;
+            margin-right: 10px;
+        }
+        
+        .calc-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+        
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .results-table th, .results-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        
+        .results-table th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .highlight {
+            background-color: #fffacd;
+            font-weight: bold;
+        }
+        
+        .rank-cell {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .subject-notes {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .note-input {
+            width: 60px;
+        }
+        
+        .subject-average {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-left: 10px;
+        }
+        
+        .automatic-calculation {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .calculation-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .calculation-info i {
+            color: #4caf50;
+            font-size: 20px;
+        }
+        
+        /* Nouveaux styles pour les informations supplémentaires */
+        .student-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .student-detail-group {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #006400;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .stat-card {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            border-left: 4px solid #006400;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #006400;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+        
         @media (max-width: 768px) {
             .form-group {
                 min-width: 100%;
             }
             
-            .grid-3, .results-grid {
+            .grid-3, .results-grid, .stats-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -409,6 +736,51 @@
             .student-actions {
                 flex-direction: column;
                 gap: 5px;
+            }
+            
+            .bulletin-container {
+                width: 100%;
+                padding: 1cm;
+            }
+            
+            .student-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .bilan, .recap, .mentions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .student-details {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                padding: 0;
+            }
+            
+            .bulletin-container {
+                box-shadow: none;
+                padding: 1cm;
+                width: 100%;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            .bulletin {
+                display: block !important;
+                border: none;
+                padding: 0;
             }
         }
     </style>
@@ -431,7 +803,9 @@
         <div class="tabs">
             <div class="tab active" onclick="switchTab(0)">Gestion de la Classe</div>
             <div class="tab" onclick="switchTab(1)">Saisie des Notes</div>
-            <div class="tab" onclick="switchTab(2)">Résultats</div>
+            <div class="tab" onclick="switchTab(2)">Notes des Élèves</div>
+            <div class="tab" onclick="switchTab(3)">Résultats</div>
+            <div class="tab" onclick="switchTab(4)">Aperçu Bulletin</div>
         </div>
 
         <form id="bulletinForm">
@@ -550,8 +924,35 @@
                             <input type="text" id="matricule" placeholder="Matricule de l'élève">
                         </div>
                         <div class="form-group">
+                            <label for="sexe">Sexe</label>
+                            <select id="sexe">
+                                <option value="">Sélectionner</option>
+                                <option value="M">Masculin</option>
+                                <option value="F">Féminin</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dateNaissance">Date de naissance</label>
+                            <input type="date" id="dateNaissance">
+                        </div>
+                        <div class="form-group">
+                            <label for="lieuNaissance">Lieu de naissance</label>
+                            <input type="text" id="lieuNaissance" placeholder="Lieu de naissance">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="statutEleve">Statut de l'élève</label>
+                            <select id="statutEleve">
+                                <option value="Nouveau">Nouveau/Nouvelle</option>
+                                <option value="Redoublant">Redoublant(e)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="effectif">Effectif de la classe</label>
-                            <input type="number" id="effectif" min="1" required>
+                            <input type="number" id="effectif" min="1" required onchange="updateStudentGrades()">
                         </div>
                     </div>
                     <div class="form-row">
@@ -582,15 +983,23 @@
                 <div class="form-section">
                     <h2>Saisie des Notes</h2>
                     
+                    <div class="automatic-calculation">
+                        <div class="calculation-info">
+                            <i class="fas fa-calculator"></i>
+                            <span>Le calcul des moyennes et des rangs se fait automatiquement à chaque modification</span>
+                        </div>
+                        <p>Les moyennes sont calculées selon la formule : (Note 1 + Note 2) / 2</p>
+                        <p>Les rangs sont déterminés automatiquement en fonction des moyennes générales</p>
+                    </div>
+                    
                     <div id="disciplinesContainer">
                         <!-- En-tête du tableau -->
                         <div class="discipline-row" style="font-weight: bold;">
                             <div class="discipline-name">Discipline</div>
                             <div class="discipline-field">Coefficient</div>
-                            <div class="discipline-field">Note compo</div>
-                            <div class="discipline-field">Moy classe</div>
-                            <div class="discipline-field">Moyenne/20</div>
-                            <div class="discipline-field">Rang</div>
+                            <div class="discipline-field">Note 1</div>
+                            <div class="discipline-field">Note 2</div>
+                            <div class="discipline-field">Moyenne</div>
                             <div class="discipline-field">Enseignant</div>
                             <div style="width: 40px;">Action</div>
                         </div>
@@ -602,7 +1011,7 @@
                 </div>
 
                 <div class="form-section">
-                    <h2>Saisie pour tous les élèves</h2>
+                    <h2>Saisie pour un élève spécifique</h2>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="eleveSelect">Sélectionner un élève</label>
@@ -611,40 +1020,88 @@
                             </select>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Onglet 3: Notes des élèves -->
+            <div class="tab-content">
+                <div class="form-section">
+                    <h2>Notes des Élèves de la Classe</h2>
+                    
+                    <div class="automatic-calculation">
+                        <div class="calculation-info">
+                            <i class="fas fa-robot"></i>
+                            <span>Le système calcule automatiquement les moyennes et les rangs</span>
+                        </div>
+                        <p>Modifiez les notes pour voir les calculs se mettre à jour en temps réel</p>
+                    </div>
+                    
+                    <div id="studentGradesContainer" class="student-grades">
+                        <!-- Les notes des élèves seront générées ici -->
+                    </div>
+                    
+                    <h3>Résultats de la Classe</h3>
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>Matière</th>
+                                <th>Moyenne Classe</th>
+                                <th>Note Min</th>
+                                <th>Note Max</th>
+                            </tr>
+                        </thead>
+                        <tbody id="classResults">
+                            <!-- Les résultats par matière seront affichés ici -->
+                        </tbody>
+                    </table>
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <button type="button" class="btn btn-info" onclick="appliquerNotesClasse()">
-                                <i class="fas fa-users"></i> Appliquer à toute la classe
-                            </button>
+                            <label for="totalAbsences">Total d'heures d'absence</label>
+                            <input type="number" id="totalAbsences" min="0" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="justifiedAbsences">Heures justifiées</label>
+                            <input type="number" id="justifiedAbsences" min="0" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="unjustifiedAbsences">Heures non justifiées</label>
+                            <input type="number" id="unjustifiedAbsences" min="0" value="0">
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Onglet 3: Résultats -->
+            <!-- Onglet 4: Résultats -->
             <div class="tab-content">
                 <div class="form-section">
                     <h2>Résultats de la Classe</h2>
                     
+                    <div class="automatic-calculation">
+                        <div class="calculation-info">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Résultats calculés automatiquement à partir des notes saisies</span>
+                        </div>
+                    </div>
+                    
                     <div class="results-section">
                         <h3>Statistiques de la classe</h3>
-                        <div class="results-grid">
-                            <div class="result-item">
-                                <label>Moyenne de la classe</label>
-                                <div class="result-value" id="moyenneClasse">0.00</div>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value" id="moyenneClasse">0.00</div>
+                                <div class="stat-label">Moyenne de la classe</div>
                             </div>
-                            <div class="result-item">
-                                <label>Moyenne la plus élevée</label>
-                                <div class="result-value" id="moyenneMax">0.00</div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="moyenneMax">0.00</div>
+                                <div class="stat-label">Moyenne la plus élevée</div>
                             </div>
-                            <div class="result-item">
-                                <label>Moyenne la plus basse</label>
-                                <div class="result-value" id="moyenneMin">0.00</div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="moyenneMin">0.00</div>
+                                <div class="stat-label">Moyenne la plus basse</div>
                             </div>
-                            <div class="result-item">
-                                <label>Nombre d'élèves</label>
-                                <div class="result-value" id="nbEleves">0</div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="nbEleves">0</div>
+                                <div class="stat-label">Nombre d'élèves</div>
                             </div>
                         </div>
                     </div>
@@ -666,588 +1123,896 @@
                 </div>
             </div>
 
+            <!-- Onglet 5: Aperçu Bulletin -->
+            <div class="tab-content">
+                <div class="form-section">
+                    <h2>Aperçu du Bulletin</h2>
+                    
+                    <div class="actions">
+                        <button type="button" class="btn" onclick="genererBulletin()">
+                            <i class="fas fa-sync"></i> Générer le bulletin
+                        </button>
+                        <button type="button" class="btn btn-info" onclick="printBulletin()">
+                            <i class="fas fa-print"></i> Imprimer le bulletin
+                        </button>
+                    </div>
+                    
+                    <div id="bulletinPreview" class="bulletin-container">
+                        <!-- L'aperçu du bulletin sera généré ici -->
+                    </div>
+                </div>
+            </div>
+
             <div class="actions">
-                <button type="button" class="btn btn-success" id="saveBtn">
-                    <i class="fas fa-save"></i> Enregistrer la classe
+                <button type="button" class="btn btn-success" onclick="saveData()">
+                    <i class="fas fa-save"></i> Sauvegarder
                 </button>
-                <button type="button" class="btn btn-info" id="calculateBtn">
+                <button type="button" class="btn btn-secondary" onclick="loadData()">
+                    <i class="fas fa-folder-open"></i> Charger
+                </button>
+                <button type="button" class="btn btn-info" onclick="calculateAll()">
                     <i class="fas fa-calculator"></i> Calculer les résultats
                 </button>
-                <button type="button" class="btn" id="exportBtn">
-                    <i class="fas fa-download"></i> Exporter en JSON
-                </button>
-                <button type="reset" class="btn btn-secondary">
-                    <i class="fas fa-times"></i> Réinitialiser
+                <button type="reset" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Réinitialiser
                 </button>
             </div>
         </form>
 
         <footer>
-            <p>Direction Régionale de l'Education - Kara &copy; 2023</p>
-            <p>Système de Gestion des Bulletins Scolaires</p>
+            <p>Ministère des Enseignements Primaire, Secondaire et Technique - République Togolaise</p>
+            <p>© 2023 - Tous droits réservés</p>
         </footer>
     </div>
 
     <script>
-        // Données de l'application
-        let classeData = {
-            informations: {},
-            eleves: [],
-            matieres: [],
-            notes: {}
-        };
+        // Variables globales
+        let eleves = [];
+        let disciplines = [];
+        let notes = {};
+        let classement = [];
+        let currentStudentId = null;
 
-        // Base de données des matières par niveau et série
-        const matieresParNiveau = {
-            college: {
-                "6e": [
-                    { nom: "Français", coef: 3, type: "lettres" },
-                    { nom: "Mathématiques", coef: 3, type: "sciences" },
-                    { nom: "Histoire-Géographie", coef: 2, type: "lettres" },
-                    { nom: "SVT", coef: 2, type: "sciences" },
-                    { nom: "Physique-Chimie", coef: 2, type: "sciences" },
-                    { nom: "Anglais", coef: 2, type: "lettres" },
-                    { nom: "EPS", coef: 1, type: "autres" }
-                ],
-                "5e": [
-                    { nom: "Français", coef: 3, type: "lettres" },
-                    { nom: "Mathématiques", coef: 3, type: "sciences" },
-                    { nom: "Histoire-Géographie", coef: 2, type: "lettres" },
-                    { nom: "SVT", coef: 2, type: "sciences" },
-                    { nom: "Physique-Chimie", coef: 2, type: "sciences" },
-                    { nom: "Anglais", coef: 2, type: "lettres" },
-                    { nom: "Espagnol", coef: 1, type: "lettres" },
-                    { nom: "EPS", coef: 1, type: "autres" }
-                ],
-                "4e": [
-                    { nom: "Français", coef: 3, type: "lettres" },
-                    { nom: "Mathématiques", coef: 3, type: "sciences" },
-                    { nom: "Histoire-Géographie", coef: 2, type: "lettres" },
-                    { nom: "SVT", coef: 2, type: "sciences" },
-                    { nom: "Physique-Chimie", coef: 2, type: "sciences" },
-                    { nom: "Anglais", coef: 2, type: "lettres" },
-                    { nom: "Espagnol", coef: 1, type: "lettres" },
-                    { nom: "EPS", coef: 1, type: "autres" }
-                ],
-                "3e": [
-                    { nom: "Français", coef: 3, type: "lettres" },
-                    { nom: "Mathématiques", coef: 3, type: "sciences" },
-                    { nom: "Histoire-Géographie", coef: 2, type: "lettres" },
-                    { nom: "SVT", coef: 2, type: "sciences" },
-                    { nom: "Physique-Chimie", coef: 2, type: "sciences" },
-                    { nom: "Anglais", coef: 2, type: "lettres" },
-                    { nom: "Espagnol", coef: 1, type: "lettres" },
-                    { nom: "EPS", coef: 1, type: "autres" }
-                ]
-            },
-            lycee: {
-                "2nd": {
-                    "default": [
-                        { nom: "Français", coef: 3, type: "lettres" },
-                        { nom: "Mathématiques", coef: 3, type: "sciences" },
-                        { nom: "Histoire-Géographie", coef: 2, type: "lettres" },
-                        { nom: "SVT", coef: 2, type: "sciences" },
-                        { nom: "Physique-Chimie", coef: 2, type: "sciences" },
-                        { nom: "Anglais", coef: 2, type: "lettres" },
-                        { nom: "Espagnol", coef: 1, type: "lettres" },
-                        { nom: "EPS", coef: 1, type: "autres" },
-                        { nom: "Philosophie", coef: 1, type: "lettres" }
-                    ]
-                },
-                "1ere": {
-                    "A": [
-                        { nom: "Français", coef: 4, type: "lettres" },
-                        { nom: "Philosophie", coef: 3, type: "lettres" },
-                        { nom: "Histoire-Géographie", coef: 3, type: "lettres" },
-                        { nom: "Anglais", coef: 2, type: "lettres" },
-                        { nom: "Espagnol", coef: 2, type: "lettres" },
-                        { nom: "Mathématiques", coef: 2, type: "sciences" },
-                        { nom: "SVT", coef: 2, type: "sciences" },
-                        { nom: "EPS", coef: 1, type: "autres" }
-                    ],
-                    "C": [
-                        { nom: "Mathématiques", coef: 5, type: "sciences" },
-                        { nom: "Physique-Chimie", coef: 4, type: "sciences" },
-                        { nom: "Français", coef: 3, type: "lettres" },
-                        { nom: "Philosophie", coef: 2, type: "lettres" },
-                        { nom: "Anglais", coef: 2, type: "lettres" },
-                        { nom: "SVT", coef: 2, type: "sciences" },
-                        { nom: "EPS", coef: 1, type: "autres" }
-                    ],
-                    "D": [
-                        { nom: "Mathématiques", coef: 4, type: "sciences" },
-                        { nom: "SVT", coef: 4, type: "sciences" },
-                        { nom: "Physique-Chimie", coef: 3, type: "sciences" },
-                        { nom: "Français", coef: 3, type: "lettres" },
-                        { nom: "Philosophie", coef: 2, type: "lettres" },
-                        { nom: "Anglais", coef: 2, type: "lettres" },
-                        { nom: "EPS", coef: 1, type: "autres" }
-                    ],
-                    "E": [
-                        { nom: "Mathématiques", coef: 5, type: "sciences" },
-                        { nom: "Physique-Chimie", coef: 4, type: "sciences" },
-                        { nom: "Français", coef: 3, type: "lettres" },
-                        { nom: "Philosophie", coef: 2, type: "lettres" },
-                        { nom: "Anglais", coef: 2, type: "lettres" },
-                        { nom: "EPS", coef: 1, type: "autres" }
-                    ]
-                },
-                "tle": {
-                    "A": [
-                        { nom: "Philosophie", coef: 4, type: "lettres" },
-                        { nom: "Français", coef: 4, type: "lettres" },
-                        { nom: "Histoire-Géographie", coef: 3, type: "lettres" },
-                        { nom: "Anglais", coef: 2, type: "lettres" },
-                        { nom: "Espagnol", coef: 2, type: "lettres" },
-                        { nom: "Mathématiques", coef: 2, type: "sciences" },
-                        { nom: "EPS", coef: 1, type: "autres" }
-                    ],
-                    "C": [
-                        { nom: "Mathématiques", coef: 6, type: "sciences" },
-                        { nom: "Physique-Chimie", coef: 5, type: "sciences" },
-                        { nom: "Philosophie", coef: 3, type: "lettres" },
-                        { nom: "Français", coef: 3, type: "lettres" },
-                        { nom: "Anglais", coef: 2, type: "lettres" },
-                        { nom: "EPS", coef: 1, type: "autres" }
-                    ],
-                    "D": [
-                        { nom: "Mathématiques", coef: 5, type: "sciences" },
-                        { nom: "SVT", coef: 5, type: "sciences" },
-                        { nom: "Physique-Chimie", coef: 4, type: "sciences" },
-                        { nom: "Philosophie", coef: 3, type: "lettres" },
-                        { nom: "Français", coef: 3, type: "lettres" },
-                        { nom: "Anglais", coef: 2, type: "lettres" },
-                        { nom: "EPS", coef: 1, type: "autres" }
-                    ],
-                    "E": [
-                        { nom: "Mathématiques", coef: 6, type: "sciences" },
-                        { nom: "Physique-Chimie", coef: 5, type: "sciences" },
-                        { nom: "Philosophie", coef: 3, type: "lettres" },
-                        { nom: "Français", coef: 3, type: "lettres" },
-                        { nom: "Anglais", coef: 2, type: "lettres" },
-                        { nom: "EPS", coef: 1, type: "autres" }
-                    ]
-                }
-            }
-        };
-
+        // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
-            // Définir la date du jour comme valeur par défaut
-            const today = new Date().toISOString().substr(0, 10);
-            document.getElementById('dateEdition').value = today;
-            
-            // Gérer l'ajout de nouvelles disciplines
-            document.getElementById('addDiscipline').addEventListener('click', addDisciplineRow);
-            
-            // Événements des boutons
-            document.getElementById('saveBtn').addEventListener('click', enregistrerClasse);
-            document.getElementById('calculateBtn').addEventListener('click', calculerResultats);
-            document.getElementById('exportBtn').addEventListener('click', exporterJSON);
+            // Initialiser la date d'édition à aujourd'hui
+            document.getElementById('dateEdition').valueAsDate = new Date();
             
             // Charger les données sauvegardées si elles existent
-            chargerDonneesSauvegardees();
+            loadData();
+            
+            // Mettre à jour les matières en fonction du niveau sélectionné
+            updateMatieres();
+            
+            // Ajouter des écouteurs d'événements pour les champs de notes
+            document.addEventListener('input', function(e) {
+                if (e.target.classList.contains('note-input')) {
+                    calculateStudentAverage(e.target.dataset.studentId);
+                    calculateClassResults();
+                }
+            });
         });
-        
-        function switchTab(index) {
-            // Masquer tous les onglets
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
+
+        // Fonction pour sauvegarder les données
+        function saveData() {
+            const data = {
+                eleves: eleves,
+                disciplines: disciplines,
+                notes: notes,
+                classement: classement,
+                classe: document.getElementById('classe').value,
+                niveau: document.getElementById('niveau').value,
+                serie: document.getElementById('serie').value,
+                anneeScolaire: document.getElementById('anneeScolaire').value,
+                periode: document.getElementById('periode').value,
+                etablissement: document.getElementById('etablissement').value,
+                codeEtablissement: document.getElementById('codeEtablissement').value
+            };
             
-            // Désactiver tous les onglets
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Activer l'onglet sélectionné
-            document.querySelectorAll('.tab-content')[index].classList.add('active');
-            document.querySelectorAll('.tab')[index].classList.add('active');
+            localStorage.setItem('bulletinData', JSON.stringify(data));
+            alert('Données sauvegardées avec succès!');
         }
-        
-        function updateMatieres() {
-            const niveau = document.getElementById('niveau').value;
-            const classe = document.getElementById('classe').value;
-            const serie = document.getElementById('serie').value;
-            
-            if (niveau && classe) {
-                document.getElementById('addDiscipline').style.display = 'none';
+
+        // Fonction pour charger les données
+        function loadData() {
+            const savedData = localStorage.getItem('bulletinData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                
+                eleves = data.eleves || [];
+                disciplines = data.disciplines || [];
+                notes = data.notes || {};
+                classement = data.classement || [];
+                
+                // Mettre à jour les champs du formulaire
+                if (data.classe) document.getElementById('classe').value = data.classe;
+                if (data.niveau) document.getElementById('niveau').value = data.niveau;
+                if (data.serie) document.getElementById('serie').value = data.serie;
+                if (data.anneeScolaire) document.getElementById('anneeScolaire').value = data.anneeScolaire;
+                if (data.periode) document.getElementById('periode').value = data.periode;
+                if (data.etablissement) document.getElementById('etablissement').value = data.etablissement;
+                if (data.codeEtablissement) document.getElementById('codeEtablissement').value = data.codeEtablissement;
+                
+                // Mettre à jour l'affichage
+                updateEleveList();
+                updateDisciplines();
+                updateStudentGrades();
+                calculateAll();
+                
+                alert('Données chargées avec succès!');
             } else {
-                document.getElementById('addDiscipline').style.display = 'block';
+                alert('Aucune donnée sauvegardée trouvée.');
             }
         }
-        
+
+        // Fonction pour ajouter un élève
         function ajouterEleve() {
-            const nom = document.getElementById('nomEleve').value;
-            const prenom = document.getElementById('prenomEleve').value;
-            const matricule = document.getElementById('matricule').value;
+            const nom = document.getElementById('nomEleve').value.trim();
+            const prenom = document.getElementById('prenomEleve').value.trim();
+            const matricule = document.getElementById('matricule').value.trim();
+            const sexe = document.getElementById('sexe').value;
+            const dateNaissance = document.getElementById('dateNaissance').value;
+            const lieuNaissance = document.getElementById('lieuNaissance').value.trim();
+            const statutEleve = document.getElementById('statutEleve').value;
             
             if (!nom || !prenom) {
-                alert("Veuillez saisir au moins le nom et le prénom de l'élève.");
+                alert('Veuillez saisir le nom et le prénom de l\'élève.');
                 return;
             }
             
-            // Ajouter l'élève à la liste
+            const id = Date.now().toString();
             const eleve = {
-                id: Date.now(), // ID unique
+                id: id,
                 nom: nom,
                 prenom: prenom,
-                matricule: matricule
+                matricule: matricule,
+                sexe: sexe,
+                dateNaissance: dateNaissance,
+                lieuNaissance: lieuNaissance,
+                statutEleve: statutEleve,
+                classe: document.getElementById('classe').value
             };
             
-            classeData.eleves.push(eleve);
+            eleves.push(eleve);
+            notes[id] = {};
             
-            // Mettre à jour l'affichage
-            afficherListeEleves();
-            
-            // Mettre à jour le sélecteur d'élèves
-            mettreAJourSelectEleves();
-            
-            // Réinitialiser le formulaire
+            // Réinitialiser les champs
             document.getElementById('nomEleve').value = '';
             document.getElementById('prenomEleve').value = '';
             document.getElementById('matricule').value = '';
-        }
-        
-        function afficherListeEleves() {
-            const liste = document.getElementById('listeEleves');
-            liste.innerHTML = '';
+            document.getElementById('sexe').value = '';
+            document.getElementById('dateNaissance').value = '';
+            document.getElementById('lieuNaissance').value = '';
+            document.getElementById('statutEleve').value = 'Nouveau';
             
-            classeData.eleves.forEach(eleve => {
+            // Mettre à jour l'affichage
+            updateEleveList();
+            updateEleveSelect();
+            updateStudentGrades();
+            
+            // Recalculer les résultats
+            calculateAll();
+        }
+
+        // Fonction pour mettre à jour la liste des élèves
+        function updateEleveList() {
+            const listeEleves = document.getElementById('listeEleves');
+            listeEleves.innerHTML = '';
+            
+            eleves.forEach(eleve => {
                 const div = document.createElement('div');
                 div.className = 'student-item';
                 div.innerHTML = `
                     <div class="student-info">
                         <span>${eleve.nom} ${eleve.prenom}</span>
-                        <span>${eleve.matricule ? 'Matricule: ' + eleve.matricule : ''}</span>
+                        <span>${eleve.matricule ? '(' + eleve.matricule + ')' : ''}</span>
+                        <span>${eleve.sexe ? eleve.sexe === 'M' ? '(M)' : '(F)' : ''}</span>
                     </div>
                     <div class="student-actions">
-                        <button class="btn btn-sm btn-danger" onclick="supprimerEleve(${eleve.id})">
-                            <i class="fas fa-trash"></i>
+                        <button type="button" class="btn btn-sm btn-info" onclick="chargerNotesEleve('${eleve.id}')">
+                            <i class="fas fa-edit"></i> Notes
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="supprimerEleve('${eleve.id}')">
+                            <i class="fas fa-trash"></i> Supprimer
                         </button>
                     </div>
                 `;
-                liste.appendChild(div);
+                listeEleves.appendChild(div);
             });
-            
-            // Mettre à jour le compteur d'élèves
-            document.getElementById('effectif').value = classeData.eleves.length;
-            document.getElementById('nbEleves').textContent = classeData.eleves.length;
         }
-        
+
+        // Fonction pour supprimer un élève
         function supprimerEleve(id) {
-            if (confirm("Voulez-vous vraiment supprimer cet élève ?")) {
-                classeData.eleves = classeData.eleves.filter(eleve => eleve.id !== id);
-                afficherListeEleves();
-                mettreAJourSelectEleves();
+            if (confirm('Êtes-vous sûr de vouloir supprimer cet élève ?')) {
+                eleves = eleves.filter(e => e.id !== id);
+                delete notes[id];
+                
+                updateEleveList();
+                updateEleveSelect();
+                updateStudentGrades();
+                calculateAll();
             }
         }
-        
-        function mettreAJourSelectEleves() {
-            const select = document.getElementById('eleveSelect');
-            select.innerHTML = '<option value="">Sélectionner un élève</option>';
+
+        // Fonction pour mettre à jour le sélecteur d'élèves
+        function updateEleveSelect() {
+            const eleveSelect = document.getElementById('eleveSelect');
+            eleveSelect.innerHTML = '<option value="">Sélectionner un élève</option>';
             
-            classeData.eleves.forEach(eleve => {
+            eleves.forEach(eleve => {
                 const option = document.createElement('option');
                 option.value = eleve.id;
                 option.textContent = `${eleve.nom} ${eleve.prenom}`;
-                select.appendChild(option);
+                eleveSelect.appendChild(option);
             });
         }
-        
-        function chargerMatieresParDefaut() {
-            const niveau = document.getElementById('niveau').value;
-            const classe = document.getElementById('classe').value;
-            const serie = document.getElementById('serie').value;
-            
-            if (!niveau || !classe) {
-                alert("Veuillez d'abord sélectionner le niveau et la classe.");
-                return;
+
+        // Fonction pour charger les notes d'un élève
+        function chargerNotesEleve(id = null) {
+            if (!id) {
+                id = document.getElementById('eleveSelect').value;
             }
             
-            // Vider le conteneur des disciplines (sauf l'en-tête)
-            const container = document.getElementById('disciplinesContainer');
-            while (container.children.length > 1) {
-                container.removeChild(container.lastChild);
+            if (!id) return;
+            
+            currentStudentId = id;
+            
+            // Mettre à jour le sélecteur d'élèves
+            document.getElementById('eleveSelect').value = id;
+            
+            // Charger les notes de l'élève
+            if (!notes[id]) {
+                notes[id] = {};
             }
             
-            let matieres = [];
-            
-            if (niveau === 'college') {
-                matieres = matieresParNiveau.college[classe] || [];
-            } else if (niveau === 'lycee') {
-                if (classe === '2nd') {
-                    matieres = matieresParNiveau.lycee[classe].default || [];
-                } else {
-                    matieres = matieresParNiveau.lycee[classe][serie] || [];
+            // Mettre à jour les champs de notes
+            disciplines.forEach(discipline => {
+                const note1Input = document.querySelector(`.note-input[data-student-id="${id}"][data-discipline="${discipline.nom}"][data-type="note1"]`);
+                const note2Input = document.querySelector(`.note-input[data-student-id="${id}"][data-discipline="${discipline.nom}"][data-type="note2"]`);
+                
+                if (note1Input && notes[id][discipline.nom]) {
+                    note1Input.value = notes[id][discipline.nom].note1 || '';
                 }
-            }
-            
-            // Ajouter les matières au formulaire
-            matieres.forEach(matiere => {
-                addDisciplineRow(matiere.nom, matiere.coef, matiere.type);
+                
+                if (note2Input && notes[id][discipline.nom]) {
+                    note2Input.value = notes[id][discipline.nom].note2 || '';
+                }
             });
             
-            // Sauvegarder les matières dans les données de la classe
-            classeData.matieres = matieres;
+            // Calculer la moyenne de l'élève
+            calculateStudentAverage(id);
         }
-        
-        function addDisciplineRow(nom = '', coef = 1, type = 'autres') {
-            const container = document.getElementById('disciplinesContainer');
-            const row = document.createElement('div');
-            row.className = 'discipline-row';
-            row.innerHTML = `
-                <div class="discipline-name">
-                    <input type="text" value="${nom}" placeholder="Nom de la discipline" class="nom-discipline">
-                </div>
-                <div class="discipline-field">
-                    <input type="number" min="1" value="${coef}" class="coef-input">
-                </div>
-                <div class="discipline-field">
-                    <input type="number" step="0.01" min="0" max="20" placeholder="Note compo" class="note-compo">
-                </div>
-                <div class="discipline-field">
-                    <input type="number" step="0.01" min="0" max="20" placeholder="Moy classe" class="moy-classe">
-                </div>
-                <div class="discipline-field">
-                    <input type="number" step="0.01" min="0" max="20" placeholder="Moy/20" class="moy-eleve">
-                </div>
-                <div class="discipline-field">
-                    <input type="text" placeholder="Rang" class="rang-input">
-                </div>
-                <div class="discipline-field">
-                    <input type="text" placeholder="Enseignant" class="enseignant-input">
-                </div>
-                <div>
-                    <button type="button" class="remove-btn">×</button>
-                </div>
-            `;
+
+        // Fonction pour calculer la moyenne d'un élève
+        function calculateStudentAverage(studentId) {
+            if (!notes[studentId]) return 0;
             
-            row.querySelector('.remove-btn').addEventListener('click', function() {
-                container.removeChild(row);
-            });
+            let totalPoints = 0;
+            let totalCoefficients = 0;
             
-            container.appendChild(row);
-        }
-        
-        function enregistrerClasse() {
-            // Récupérer les informations de base
-            classeData.informations = {
-                inspection: document.getElementById('inspection').value,
-                direction: document.getElementById('direction').value,
-                anneeScolaire: document.getElementById('anneeScolaire').value,
-                periode: document.getElementById('periode').value,
-                dateEdition: document.getElementById('dateEdition').value,
-                etablissement: document.getElementById('etablissement').value,
-                codeEtablissement: document.getElementById('codeEtablissement').value,
-                statut: document.getElementById('statut').value,
-                ville: document.getElementById('ville').value,
-                niveau: document.getElementById('niveau').value,
-                classe: document.getElementById('classe').value,
-                serie: document.getElementById('serie').value,
-                effectif: document.getElementById('effectif').value
-            };
-            
-            // Récupérer les matières
-            const matieres = [];
-            const rows = document.querySelectorAll('.discipline-row');
-            
-            rows.forEach((row, index) => {
-                if (index > 0) { // Ignorer l'en-tête
-                    const nom = row.querySelector('.nom-discipline').value;
-                    const coef = parseFloat(row.querySelector('.coef-input').value) || 0;
-                    const noteCompo = parseFloat(row.querySelector('.note-compo').value) || 0;
-                    const moyClasse = parseFloat(row.querySelector('.moy-classe').value) || 0;
-                    const moyEleve = parseFloat(row.querySelector('.moy-eleve').value) || 0;
-                    const rang = row.querySelector('.rang-input').value;
-                    const enseignant = row.querySelector('.enseignant-input').value;
+            disciplines.forEach(discipline => {
+                if (notes[studentId][discipline.nom]) {
+                    const note1 = parseFloat(notes[studentId][discipline.nom].note1) || 0;
+                    const note2 = parseFloat(notes[studentId][discipline.nom].note2) || 0;
+                    const coefficient = parseFloat(discipline.coefficient) || 1;
                     
-                    if (nom) {
-                        matieres.push({
-                            nom: nom,
-                            coef: coef,
-                            noteCompo: noteCompo,
-                            moyClasse: moyClasse,
-                            moyEleve: moyEleve,
-                            rang: rang,
-                            enseignant: enseignant
-                        });
+                    // Calculer la moyenne de la discipline
+                    const moyenneDiscipline = (note1 + note2) / 2;
+                    
+                    // Ajouter au total pondéré
+                    totalPoints += moyenneDiscipline * coefficient;
+                    totalCoefficients += coefficient;
+                    
+                    // Mettre à jour l'affichage de la moyenne de la discipline
+                    const moyenneElement = document.querySelector(`.student-average[data-student-id="${studentId}"][data-discipline="${discipline.nom}"]`);
+                    if (moyenneElement) {
+                        moyenneElement.textContent = moyenneDiscipline.toFixed(2);
                     }
                 }
             });
             
-            classeData.matieres = matieres;
+            // Calculer la moyenne générale
+            const moyenneGenerale = totalCoefficients > 0 ? totalPoints / totalCoefficients : 0;
             
-            // Enregistrer dans le localStorage
-            localStorage.setItem('classeData', JSON.stringify(classeData));
-            
-            alert('Données enregistrées avec succès !');
-        }
-        
-        function chargerDonneesSauvegardees() {
-            const savedData = localStorage.getItem('classeData');
-            if (savedData) {
-                classeData = JSON.parse(savedData);
-                
-                // Charger les informations de base
-                if (classeData.informations) {
-                    document.getElementById('inspection').value = classeData.informations.inspection || '';
-                    document.getElementById('direction').value = classeData.informations.direction || '';
-                    document.getElementById('anneeScolaire').value = classeData.informations.anneeScolaire || '';
-                    document.getElementById('periode').value = classeData.informations.periode || '';
-                    document.getElementById('dateEdition').value = classeData.informations.dateEdition || '';
-                    document.getElementById('etablissement').value = classeData.informations.etablissement || '';
-                    document.getElementById('codeEtablissement').value = classeData.informations.codeEtablissement || '';
-                    document.getElementById('statut').value = classeData.informations.statut || '';
-                    document.getElementById('ville').value = classeData.informations.ville || '';
-                    document.getElementById('niveau').value = classeData.informations.niveau || '';
-                    document.getElementById('classe').value = classeData.informations.classe || '';
-                    document.getElementById('serie').value = classeData.informations.serie || '';
-                    document.getElementById('effectif').value = classeData.informations.effectif || '';
-                }
-                
-                // Charger les élèves
-                if (classeData.eleves && classeData.eleves.length > 0) {
-                    afficherListeEleves();
-                    mettreAJourSelectEleves();
-                }
-                
-                // Charger les matières
-                if (classeData.matieres && classeData.matieres.length > 0) {
-                    const container = document.getElementById('disciplinesContainer');
-                    while (container.children.length > 1) {
-                        container.removeChild(container.lastChild);
-                    }
-                    
-                    classeData.matieres.forEach(matiere => {
-                        addDisciplineRow(
-                            matiere.nom, 
-                            matiere.coef, 
-                            matiere.type
-                        );
-                    });
-                }
+            // Mettre à jour l'affichage de la moyenne générale
+            const moyenneGeneraleElement = document.querySelector(`.student-total-average[data-student-id="${studentId}"]`);
+            if (moyenneGeneraleElement) {
+                moyenneGeneraleElement.textContent = moyenneGenerale.toFixed(2);
             }
+            
+            // Mettre à jour les données
+            if (!notes[studentId]) notes[studentId] = {};
+            notes[studentId].moyenneGenerale = moyenneGenerale;
+            
+            return moyenneGenerale;
         }
-        
-        function calculerResultats() {
-            // Calculer les moyennes pour chaque élève
-            classeData.eleves.forEach(eleve => {
-                if (classeData.notes[eleve.id]) {
-                    let totalPoints = 0;
-                    let totalCoef = 0;
-                    
-                    classeData.notes[eleve.id].forEach(note => {
-                        totalPoints += note.moyenne * note.coef;
-                        totalCoef += note.coef;
-                    });
-                    
-                    eleve.moyenne = totalCoef > 0 ? (totalPoints / totalCoef).toFixed(2) : 0;
-                } else {
-                    eleve.moyenne = 0;
-                }
+
+        // Fonction pour calculer tous les résultats
+        function calculateAll() {
+            // Calculer les moyennes de tous les élèves
+            eleves.forEach(eleve => {
+                calculateStudentAverage(eleve.id);
             });
             
-            // Trier les élèves par moyenne (décroissant)
-            classeData.eleves.sort((a, b) => b.moyenne - a.moyenne);
+            // Calculer le classement
+            calculateRanking();
             
-            // Attribuer les rangs
-            classeData.eleves.forEach((eleve, index) => {
-                eleve.rang = index + 1;
+            // Calculer les résultats de la classe
+            calculateClassResults();
+            
+            // Générer le bulletin
+            genererBulletin();
+        }
+
+        // Fonction pour calculer le classement
+        function calculateRanking() {
+            // Préparer les données pour le classement
+            classement = eleves.map(eleve => {
+                return {
+                    id: eleve.id,
+                    nom: eleve.nom,
+                    prenom: eleve.prenom,
+                    moyenne: notes[eleve.id]?.moyenneGenerale || 0
+                };
+            });
+            
+            // Trier par moyenne décroissante
+            classement.sort((a, b) => b.moyenne - a.moyenne);
+            
+            // Assigner les rangs (gérer les ex-aequo)
+            let rang = 1;
+            for (let i = 0; i < classement.length; i++) {
+                if (i > 0 && classement[i].moyenne < classement[i-1].moyenne) {
+                    rang = i + 1;
+                }
+                classement[i].rang = rang;
                 
                 // Déterminer la mention
-                if (eleve.moyenne >= 16) {
-                    eleve.mention = "Excellent";
-                } else if (eleve.moyenne >= 14) {
-                    eleve.mention = "Très Bien";
-                } else if (eleve.moyenne >= 12) {
-                    eleve.mention = "Bien";
-                } else if (eleve.moyenne >= 10) {
-                    eleve.mention = "Assez Bien";
-                } else if (eleve.moyenne >= 8) {
-                    eleve.mention = "Passable";
-                } else {
-                    eleve.mention = "Insuffisant";
-                }
-            });
-            
-            // Calculer les statistiques de la classe
-            let moyenneClasse = 0;
-            let moyenneMax = 0;
-            let moyenneMin = 20;
-            
-            if (classeData.eleves.length > 0) {
-                let totalMoyennes = 0;
-                
-                classeData.eleves.forEach(eleve => {
-                    totalMoyennes += parseFloat(eleve.moyenne);
-                    if (eleve.moyenne > moyenneMax) moyenneMax = eleve.moyenne;
-                    if (eleve.moyenne < moyenneMin) moyenneMin = eleve.moyenne;
-                });
-                
-                moyenneClasse = (totalMoyennes / classeData.eleves.length).toFixed(2);
+                classement[i].mention = getMention(classement[i].moyenne);
             }
             
-            // Afficher les résultats
-            document.getElementById('moyenneClasse').textContent = moyenneClasse;
-            document.getElementById('moyenneMax').textContent = moyenneMax;
-            document.getElementById('moyenneMin').textContent = moyenneMin;
-            document.getElementById('nbEleves').textContent = classeData.eleves.length;
-            
-            // Afficher le classement
+            // Mettre à jour l'affichage du classement
+            updateRankingDisplay();
+        }
+
+        // Fonction pour déterminer la mention
+        function getMention(moyenne) {
+            if (moyenne >= 16) return 'Excellent';
+            if (moyenne >= 14) return 'Très Bien';
+            if (moyenne >= 12) return 'Bien';
+            if (moyenne >= 10) return 'Assez Bien';
+            if (moyenne >= 8) return 'Passable';
+            return 'Insuffisant';
+        }
+
+        // Fonction pour mettre à jour l'affichage du classement
+        function updateRankingDisplay() {
             const tbody = document.querySelector('#tableauClassement tbody');
             tbody.innerHTML = '';
             
-            classeData.eleves.forEach(eleve => {
+            classement.forEach(eleve => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${eleve.rang}</td>
+                    <td class="rank-cell">${eleve.rang}</td>
                     <td>${eleve.nom} ${eleve.prenom}</td>
-                    <td>${eleve.moyenne}</td>
+                    <td>${eleve.moyenne.toFixed(2)}</td>
                     <td>${eleve.mention}</td>
                 `;
                 tbody.appendChild(tr);
             });
-            
-            // Passer à l'onglet des résultats
-            switchTab(2);
         }
-        
-        function exporterJSON() {
-            // Préparer les données à exporter
-            const dataToExport = {
-                informations: classeData.informations,
-                eleves: classeData.eleves,
-                matieres: classeData.matieres,
-                notes: classeData.notes
-            };
+
+        // Fonction pour calculer les résultats de la classe
+        function calculateClassResults() {
+            // Calculer les statistiques par matière
+            const results = {};
             
-            // Convertir en JSON
-            const jsonData = JSON.stringify(dataToExport, null, 2);
+            disciplines.forEach(discipline => {
+                results[discipline.nom] = {
+                    total: 0,
+                    count: 0,
+                    min: 20,
+                    max: 0
+                };
+                
+                eleves.forEach(eleve => {
+                    if (notes[eleve.id] && notes[eleve.id][discipline.nom]) {
+                        const note1 = parseFloat(notes[eleve.id][discipline.nom].note1) || 0;
+                        const note2 = parseFloat(notes[eleve.id][discipline.nom].note2) || 0;
+                        const moyenne = (note1 + note2) / 2;
+                        
+                        results[discipline.nom].total += moyenne;
+                        results[discipline.nom].count++;
+                        
+                        if (moyenne < results[discipline.nom].min) results[discipline.nom].min = moyenne;
+                        if (moyenne > results[discipline.nom].max) results[discipline.nom].max = moyenne;
+                    }
+                });
+            });
             
-            // Créer un blob et un lien de téléchargement
-            const blob = new Blob([jsonData], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
+            // Mettre à jour l'affichage des résultats par matière
+            const classResults = document.getElementById('classResults');
+            classResults.innerHTML = '';
             
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `classe_${classeData.informations.classe}_${classeData.informations.periode}.json`;
-            document.body.appendChild(a);
-            a.click();
+            disciplines.forEach(discipline => {
+                const result = results[discipline.nom];
+                const moyenneClasse = result.count > 0 ? result.total / result.count : 0;
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${discipline.nom}</td>
+                    <td>${moyenneClasse.toFixed(2)}</td>
+                    <td>${result.min.toFixed(2)}</td>
+                    <td>${result.max.toFixed(2)}</td>
+                `;
+                classResults.appendChild(tr);
+            });
             
-            // Nettoyer
-            setTimeout(() => {
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }, 100);
+            // Calculer les statistiques générales de la classe
+            let totalMoyenne = 0;
+            let minMoyenne = 20;
+            let maxMoyenne = 0;
+            
+            eleves.forEach(eleve => {
+                const moyenne = notes[eleve.id]?.moyenneGenerale || 0;
+                totalMoyenne += moyenne;
+                
+                if (moyenne < minMoyenne) minMoyenne = moyenne;
+                if (moyenne > maxMoyenne) maxMoyenne = moyenne;
+            });
+            
+            const moyenneClasse = eleves.length > 0 ? totalMoyenne / eleves.length : 0;
+            
+            // Mettre à jour l'affichage des statistiques générales
+            document.getElementById('moyenneClasse').textContent = moyenneClasse.toFixed(2);
+            document.getElementById('moyenneMin').textContent = minMoyenne.toFixed(2);
+            document.getElementById('moyenneMax').textContent = maxMoyenne.toFixed(2);
+            document.getElementById('nbEleves').textContent = eleves.length;
         }
-        
-        function chargerNotesEleve() {
-            const eleveId = document.getElementById('eleveSelect').value;
-            // Implémenter le chargement des notes de l'élève sélectionné
+
+        // Fonction pour mettre à jour les matières en fonction du niveau et de la classe
+        function updateMatieres() {
+            const niveau = document.getElementById('niveau').value;
+            const classe = document.getElementById('classe').value;
+            const serie = document.getElementById('serie').value;
+            
+            // Réinitialiser les disciplines
+            disciplines = [];
+            
+            // Définir les matières par défaut selon le niveau
+            if (niveau === 'college') {
+                disciplines = [
+                    { nom: 'Français', coefficient: 4 },
+                    { nom: 'Mathématiques', coefficient: 3 },
+                    { nom: 'Histoire-Géographie', coefficient: 2 },
+                    { nom: 'SVT', coefficient: 2 },
+                    { nom: 'Physique-Chimie', coefficient: 2 },
+                    { nom: 'Anglais', coefficient: 2 },
+                    { nom: 'EPS', coefficient: 1 },
+                    { nom: 'Arts Plastiques', coefficient: 1 }
+                ];
+            } else if (niveau === 'lycee') {
+                // Matières communes pour tous les lycéens
+                disciplines = [
+                    { nom: 'Français', coefficient: 3 },
+                    { nom: 'Philosophie', coefficient: 3 },
+                    { nom: 'Histoire-Géographie', coefficient: 2 },
+                    { nom: 'LV1 (Anglais)', coefficient: 2 },
+                    { nom: 'LV2 (Espagnol/Allemand)', coefficient: 2 },
+                    { nom: 'EPS', coefficient: 1 },
+                    { nom: 'Enseignement Moral et Civique', coefficient: 1 }
+                ];
+                
+                // Ajouter les matières spécifiques selon la série
+                if (serie === 'A') {
+                    disciplines.push(
+                        { nom: 'Littérature', coefficient: 4 },
+                        { nom: 'Langues Anciennes', coefficient: 3 }
+                    );
+                } else if (serie === 'C') {
+                    disciplines.push(
+                        { nom: 'Mathématiques', coefficient: 5 },
+                        { nom: 'Physique-Chimie', coefficient: 4 }
+                    );
+                } else if (serie === 'D') {
+                    disciplines.push(
+                        { nom: 'Mathématiques', coefficient: 4 },
+                        { nom: 'SVT', coefficient: 4 }
+                    );
+                } else if (serie === 'E') {
+                    disciplines.push(
+                        { nom: 'Mathématiques', coefficient: 5 },
+                        { nom: 'Technologie', coefficient: 4 }
+                    );
+                }
+            }
+            
+            // Mettre à jour l'affichage des disciplines
+            updateDisciplines();
+            
+            // Mettre à jour les notes des élèves
+            updateStudentGrades();
         }
-        
-        function appliquerNotesClasse() {
-            // Implémenter l'application des notes à toute la classe
+
+        // Fonction pour charger les matières par défaut
+        function chargerMatieresParDefaut() {
+            updateMatieres();
+            alert('Matières chargées avec succès!');
+        }
+
+        // Fonction pour mettre à jour l'affichage des disciplines
+        function updateDisciplines() {
+            const container = document.getElementById('disciplinesContainer');
+            
+            // Garder l'en-tête
+            const header = container.firstElementChild;
+            container.innerHTML = '';
+            container.appendChild(header);
+            
+            // Ajouter les disciplines
+            disciplines.forEach((discipline, index) => {
+                const row = document.createElement('div');
+                row.className = 'discipline-row';
+                row.innerHTML = `
+                    <div class="discipline-name">
+                        <input type="text" value="${discipline.nom}" placeholder="Nom de la discipline" 
+                               onchange="updateDisciplineName(${index}, this.value)">
+                    </div>
+                    <div class="discipline-field">
+                        <input type="number" value="${discipline.coefficient}" min="1" step="1" 
+                               onchange="updateDisciplineCoefficient(${index}, this.value)" class="coefficient-input">
+                    </div>
+                    <div class="discipline-field">
+                        <input type="number" min="0" max="20" step="0.5" 
+                               onchange="updateNote('${currentStudentId}', '${discipline.nom}', 'note1', this.value)"
+                               class="note-input" data-discipline="${discipline.nom}" data-type="note1">
+                    </div>
+                    <div class="discipline-field">
+                        <input type="number" min="0" max="20" step="0.5" 
+                               onchange="updateNote('${currentStudentId}', '${discipline.nom}', 'note2', this.value)"
+                               class="note-input" data-discipline="${discipline.nom}" data-type="note2">
+                    </div>
+                    <div class="discipline-field">
+                        <span class="discipline-average">-</span>
+                    </div>
+                    <div class="discipline-field">
+                        <input type="text" placeholder="Nom enseignant">
+                    </div>
+                    <div>
+                        <button type="button" class="remove-btn" onclick="removeDiscipline(${index})">×</button>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        // Fonction pour mettre à jour le nom d'une discipline
+        function updateDisciplineName(index, newName) {
+            if (index >= 0 && index < disciplines.length) {
+                disciplines[index].nom = newName;
+                updateStudentGrades();
+            }
+        }
+
+        // Fonction pour mettre à jour le coefficient d'une discipline
+        function updateDisciplineCoefficient(index, newCoefficient) {
+            if (index >= 0 && index < disciplines.length) {
+                disciplines[index].coefficient = parseFloat(newCoefficient) || 1;
+                calculateAll();
+            }
+        }
+
+        // Fonction pour supprimer une discipline
+        function removeDiscipline(index) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette discipline ?')) {
+                disciplines.splice(index, 1);
+                updateDisciplines();
+                updateStudentGrades();
+                calculateAll();
+            }
+        }
+
+        // Fonction pour ajouter une discipline
+        document.getElementById('addDiscipline').addEventListener('click', function() {
+            disciplines.push({ nom: 'Nouvelle Discipline', coefficient: 1 });
+            updateDisciplines();
+        });
+
+        // Fonction pour mettre à jour une note
+        function updateNote(studentId, discipline, type, value) {
+            if (!studentId) return;
+            
+            if (!notes[studentId]) notes[studentId] = {};
+            if (!notes[studentId][discipline]) notes[studentId][discipline] = {};
+            
+            notes[studentId][discipline][type] = value;
+            
+            // Calculer la moyenne de l'élève
+            calculateStudentAverage(studentId);
+            
+            // Recalculer le classement et les résultats de la classe
+            calculateRanking();
+            calculateClassResults();
+        }
+
+        // Fonction pour mettre à jour les notes des élèves
+        function updateStudentGrades() {
+            const container = document.getElementById('studentGradesContainer');
+            container.innerHTML = '';
+            
+            // Créer le tableau des notes
+            const table = document.createElement('table');
+            table.className = 'results-table';
+            
+            // En-tête du tableau
+            let headerHTML = `
+                <thead>
+                    <tr>
+                        <th rowspan="2">Nom et Prénom</th>
+                        <th colspan="3">Disciplines</th>
+                        <th rowspan="2">Moyenne</th>
+                        <th rowspan="2">Rang</th>
+                    </tr>
+                    <tr>
+            `;
+            
+            disciplines.forEach(discipline => {
+                headerHTML += `<th>${discipline.nom} (coef. ${discipline.coefficient})</th>`;
+            });
+            
+            headerHTML += '</tr></thead>';
+            
+            table.innerHTML = headerHTML;
+            
+            // Corps du tableau
+            const tbody = document.createElement('tbody');
+            
+            eleves.forEach(eleve => {
+                const tr = document.createElement('tr');
+                
+                // Colonne Nom et Prénom
+                let rowHTML = `<td>${eleve.nom} ${eleve.prenom}</td>`;
+                
+                // Colonnes des disciplines
+                disciplines.forEach(discipline => {
+                    rowHTML += `
+                        <td class="subject-notes">
+                            <input type="number" min="0" max="20" step="0.5" 
+                                   class="note-input" 
+                                   data-student-id="${eleve.id}" 
+                                   data-discipline="${discipline.nom}" 
+                                   data-type="note1"
+                                   value="${notes[eleve.id] && notes[eleve.id][discipline.nom] ? notes[eleve.id][discipline.nom].note1 || '' : ''}"
+                                   placeholder="Note 1">
+                            <input type="number" min="0" max="20" step="0.5" 
+                                   class="note-input" 
+                                   data-student-id="${eleve.id}" 
+                                   data-discipline="${discipline.nom}" 
+                                   data-type="note2"
+                                   value="${notes[eleve.id] && notes[eleve.id][discipline.nom] ? notes[eleve.id][discipline.nom].note2 || '' : ''}"
+                                   placeholder="Note 2">
+                            <span class="subject-average">
+                                ${notes[eleve.id] && notes[eleve.id][discipline.nom] ? 
+                                  ((parseFloat(notes[eleve.id][discipline.nom].note1 || 0) + parseFloat(notes[eleve.id][discipline.nom].note2 || 0)) / 2).toFixed(2) : '-'}
+                            </span>
+                        </td>
+                    `;
+                });
+                
+                // Colonne Moyenne
+                rowHTML += `
+                    <td class="highlight student-total-average" data-student-id="${eleve.id}">
+                        ${notes[eleve.id]?.moyenneGenerale ? notes[eleve.id].moyenneGenerale.toFixed(2) : '-'}
+                    </td>
+                `;
+                
+                // Colonne Rang
+                const eleveClassement = classement.find(e => e.id === eleve.id);
+                rowHTML += `
+                    <td class="rank-cell">
+                        ${eleveClassement ? eleveClassement.rang : '-'}
+                    </td>
+                `;
+                
+                tr.innerHTML = rowHTML;
+                tbody.appendChild(tr);
+            });
+            
+            table.appendChild(tbody);
+            container.appendChild(table);
+        }
+
+        // Fonction pour générer le bulletin
+        function genererBulletin() {
+            const bulletinPreview = document.getElementById('bulletinPreview');
+            const anneeScolaire = document.getElementById('anneeScolaire').value;
+            const periode = document.getElementById('periode').value;
+            const etablissement = document.getElementById('etablissement').value;
+            const codeEtablissement = document.getElementById('codeEtablissement').value;
+            const dateEdition = document.getElementById('dateEdition').value;
+            
+            // Obtenir l'élève sélectionné pour le bulletin (premier de la liste par défaut)
+            let eleve = eleves.length > 0 ? eleves[0] : null;
+            
+            if (!eleve) {
+                bulletinPreview.innerHTML = '<p>Aucun élève trouvé. Veuillez ajouter des élèves d\'abord.</p>';
+                return;
+            }
+            
+            // Générer le bulletin
+            bulletinPreview.innerHTML = `
+                <div class="header">
+                    <div class="republic">RÉPUBLIQUE TOGOLAISE</div>
+                    <div class="motto">Travail - Liberté - Patrie</div>
+                    <div class="ministry">Ministère des Enseignements Primaire, Secondaire et Technique</div>
+                    <div class="direction">Direction Régionale de l'Éducation - Kara</div>
+                    <div class="title">BULLETIN SCOLAIRE</div>
+                    <div class="school-year">Année Scolaire: ${anneeScolaire} - ${getPeriodeText(periode)}</div>
+                </div>
+                
+                <div class="school-info">
+                    <div>
+                        <div class="info-item"><span class="info-label">Établissement:</span> ${etablissement}</div>
+                        <div class="info-item"><span class="info-label">Code:</span> ${codeEtablissement}</div>
+                        <div class="info-item"><span class="info-label">Statut:</span> ${document.getElementById('statut').value}</div>
+                    </div>
+                    <div>
+                        <div class="info-item"><span class="info-label">Classe:</span> ${document.getElementById('classe').value}</div>
+                        <div class="info-item"><span class="info-label">Effectif:</span> ${eleves.length}</div>
+                        <div class="info-item"><span class="info-label">Date d'édition:</span> ${new Date(dateEdition).toLocaleDateString('fr-FR')}</div>
+                    </div>
+                </div>
+                
+                <div class="student-info">
+                    <div>
+                        <div class="info-item"><span class="info-label">Nom et Prénom:</span> ${eleve.nom} ${eleve.prenom}</div>
+                        <div class="info-item"><span class="info-label">Matricule:</span> ${eleve.matricule || 'Non précisé'}</div>
+                        <div class="info-item"><span class="info-label">Sexe:</span> ${eleve.sexe === 'M' ? 'Masculin' : 'Féminin'}</div>
+                    </div>
+                    <div>
+                        <div class="info-item"><span class="info-label">Né(e) le:</span> ${eleve.dateNaissance ? new Date(eleve.dateNaissance).toLocaleDateString('fr-FR') : 'Non précisé'}</div>
+                        <div class="info-item"><span class="info-label">À:</span> ${eleve.lieuNaissance || 'Non précisé'}</div>
+                        <div class="info-item"><span class="info-label">Statut:</span> ${eleve.statutEleve === 'Nouveau' ? 'Nouveau/Nouvelle' : 'Redoublant(e)'}</div>
+                    </div>
+                    <div>
+                        <div class="info-item"><span class="info-label">Rang:</span> ${classement.find(e => e.id === eleve.id)?.rang || '-'}</div>
+                        <div class="info-item"><span class="info-label">Moyenne:</span> ${notes[eleve.id]?.moyenneGenerale?.toFixed(2) || '0.00'}</div>
+                        <div class="info-item"><span class="info-label">Mention:</span> ${getMention(notes[eleve.id]?.moyenneGenerale || 0)}</div>
+                    </div>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>DISCIPLINES</th>
+                            <th>Coeff.</th>
+                            <th>Note 1</th>
+                            <th>Note 2</th>
+                            <th>Moyenne</th>
+                            <th>Appréciation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${disciplines.map(discipline => {
+                            const noteData = notes[eleve.id] && notes[eleve.id][discipline.nom];
+                            const note1 = noteData ? parseFloat(noteData.note1) || 0 : 0;
+                            const note2 = noteData ? parseFloat(noteData.note2) || 0 : 0;
+                            const moyenne = (note1 + note2) / 2;
+                            
+                            return `
+                                <tr>
+                                    <td class="discipline-name">${discipline.nom}</td>
+                                    <td>${discipline.coefficient}</td>
+                                    <td>${note1 > 0 ? note1.toFixed(2) : '-'}</td>
+                                    <td>${note2 > 0 ? note2.toFixed(2) : '-'}</td>
+                                    <td>${moyenne > 0 ? moyenne.toFixed(2) : '-'}</td>
+                                    <td>${getAppreciation(moyenne)}</td>
+                                </tr>
+                            `;
+                        }).join('')}
+                        <tr class="summary">
+                            <td colspan="4">MOYENNE GÉNÉRALE</td>
+                            <td>${notes[eleve.id]?.moyenneGenerale?.toFixed(2) || '0.00'}</td>
+                            <td>${getMention(notes[eleve.id]?.moyenneGenerale || 0)}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="bilan">
+                    <div class="bilan-section">
+                        <div class="bilan-title">BILAN PÉDAGOGIQUE</div>
+                        <div class="info-item"><span class="info-label">Moyenne min. de la classe:</span> ${document.getElementById('moyenneMin').textContent}</div>
+                        <div class="info-item"><span class="info-label">Moyenne max. de la classe:</span> ${document.getElementById('moyenneMax').textContent}</div>
+                        <div class="info-item"><span class="info-label">Moyenne de la classe:</span> ${document.getElementById('moyenneClasse').textContent}</div>
+                    </div>
+                    
+                    <div class="bilan-section">
+                        <div class="bilan-title">ABSENCES</div>
+                        <div class="info-item"><span class="info-label">Total d'heures d'absences:</span> ${document.getElementById('totalAbsences').value}</div>
+                        <div class="info-item"><span class="info-label">Heures justifiées:</span> ${document.getElementById('justifiedAbsences').value}</div>
+                        <div class="info-item"><span class="info-label">Heures non justifiées:</span> ${document.getElementById('unjustifiedAbsences').value}</div>
+                    </div>
+                    
+                    <div class="bilan-section">
+                        <div class="bilan-title">DÉCISION DU CONSEIL DE CLASSE</div>
+                        <div class="checkbox-item"><div class="checkbox"></div> Admis(e)</div>
+                        <div class="checkbox-item"><div class="checkbox"></div> Ajourné(e)</div>
+                        <div class="checkbox-item"><div class="checkbox"></div> Redouble</div>
+                    </div>
+                </div>
+                
+                <div class="appreciation">
+                    <div class="appreciation-title">APPRÉCIATION GÉNÉRALE</div>
+                    <div>${getAppreciation(notes[eleve.id]?.moyenneGenerale || 0)}</div>
+                </div>
+                
+                <div class="signatures">
+                    <div class="signature">
+                        <div>Le Directeur</div>
+                        <div class="signature-line"></div>
+                    </div>
+                    <div class="signature">
+                        <div>Le Professeur Principal</div>
+                        <div class="signature-line"></div>
+                    </div>
+                </div>
+                
+                <div class="footer">
+                    Ce bulletin est établi conformément aux textes en vigueur et doit être conservé pour toute réclamation.
+                </div>
+            `;
+        }
+
+        // Fonction pour obtenir le texte de la période
+        function getPeriodeText(periode) {
+            switch(periode) {
+                case '1': return '1er Trimestre';
+                case '2': return '2ème Trimestre';
+                case '3': return '3ème Trimestre';
+                case '4': return '1er Semestre';
+                case '5': return '2ème Semestre';
+                default: return 'Période non spécifiée';
+            }
+        }
+
+        // Fonction pour obtenir l'appréciation
+        function getAppreciation(note) {
+            if (note >= 16) return 'Excellent';
+            if (note >= 14) return 'Très Bien';
+            if (note >= 12) return 'Bien';
+            if (note >= 10) return 'Assez Bien';
+            if (note >= 8) return 'Passable';
+            return 'Insuffisant';
+        }
+
+        // Fonction pour imprimer le bulletin
+        function printBulletin() {
+            window.print();
+        }
+
+        // Fonction pour changer d'onglet
+        function switchTab(tabIndex) {
+            // Masquer tous les onglets
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Désactiver tous les onglets
+            const tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach(tab => tab.classList.remove('active'));
+            
+            // Activer l'onglet sélectionné
+            tabs[tabIndex].classList.add('active');
+            tabButtons[tabIndex].classList.add('active');
+            
+            // Si on passe à l'onglet des résultats, recalculer
+            if (tabIndex === 3) {
+                calculateAll();
+            }
+            
+            // Si on passe à l'onglet du bulletin, générer l'aperçu
+            if (tabIndex === 4) {
+                genererBulletin();
+            }
         }
     </script>
 </body>
