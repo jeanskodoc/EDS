@@ -1,20 +1,5 @@
 <!DOCTYPE html>
 <html lang="fr">
-     <style>
-  .btn-retour {
-    padding: 8px 16px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .btn-retour:hover {
-    background-color: #e0e0e0;
-  }
-</style>
-
-<button class="btn-retour" onclick="history.back()">← Retour</button>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -242,8 +227,136 @@
             border-color: #006600;
         }
         
+        .btn-retour {
+            padding: 8px 16px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .btn-retour:hover {
+            background-color: #e0e0e0;
+        }
+        
+        /* Styles pour la visualisation des fiches */
+        .view-container {
+            display: none;
+            margin-top: 20px;
+        }
+        .filter-section {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .filter-group {
+            margin-bottom: 10px;
+        }
+        .filter-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .filter-group select, .filter-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            transition: transform 0.3s;
+            border-left: 4px solid #006600;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .card-header {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #006600;
+            margin-bottom: 5px;
+        }
+        .card-details {
+            font-size: 14px;
+            color: #666;
+        }
+        .card-content {
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        .card-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .view-btn {
+            background-color: #006600;
+            color: white;
+        }
+        .delete-btn {
+            background-color: #cc0000;
+            color: white;
+        }
+        .no-results {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            font-style: italic;
+            grid-column: 1 / -1;
+        }
+        
+        /* Navigation tabs */
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        .tab.active {
+            background: white;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+        }
+        
         @media print {
-            button, .toolbar, .upload-container {
+            button, .toolbar, .upload-container, .btn-retour, .tabs, .view-container {
                 display: none;
             }
             body {
@@ -258,275 +371,328 @@
     </style>
 </head>
 <body>
+    <button class="btn-retour" onclick="history.back()">← Retour</button>
+    
     <div class="container">
-        <form id="lessonForm">
-            <!-- En-tête pour la République Togolaise -->
-            <div class="header">
-                <div class="ministry">MINISTÈRE DES ENSEIGNEMENTS PRIMAIRE, SECONDAIRE, TECHNIQUE ET DE L'ARTISANAT</div>
-                <div class="ministry">DIRECTION DE LA FORMATION CONTINUE</div>
-                <div class="republic">RÉPUBLIQUE TOGOLAISE</div>
-                <div class="motto">Travail - Liberté - Patrie</div>
-                <h1>FICHE DE LEÇON - ENSEIGNEMENT SECONDAIRE</h1>
-            </div>
+        <!-- Navigation tabs -->
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('form')">Créer une fiche</div>
+            <div class="tab" onclick="showTab('view')">Voir les fiches enregistrées</div>
+        </div>
+        
+        <!-- Formulaire de création de fiche -->
+        <div id="form-container">
+            <form id="lessonForm">
+                <!-- En-tête pour la République Togolaise -->
+                <div class="header">
+                    <div class="ministry">MINISTÈRE DES ENSEIGNEMENTS PRIMAIRE, SECONDAIRE, TECHNIQUE ET DE L'ARTISANAT</div>
+                    <div class="ministry">DIRECTION DE LA FORMATION CONTINUE</div>
+                    <div class="republic">RÉPUBLIQUE TOGOLAISE</div>
+                    <div class="motto">Travail - Liberté - Patrie</div>
+                    <h1>FICHE DE LEÇON - ENSEIGNEMENT SECONDAIRE</h1>
+                </div>
 
-            <!-- Informations supplémentaires -->
-            <div class="form-section">
-                <h2><i class="fas fa-info-circle"></i> Informations complémentaires</h2>
-                <div class="school-info">
-                    <div class="info-group">
-                        <label for="school_name">Nom de l'établissement:</label>
-                        <input type="text" id="school_name" name="school_name">
+                <!-- Informations supplémentaires -->
+                <div class="form-section">
+                    <h2><i class="fas fa-info-circle"></i> Informations complémentaires</h2>
+                    <div class="school-info">
+                        <div class="info-group">
+                            <label for="school_name">Nom de l'établissement:</label>
+                            <input type="text" id="school_name" name="school_name">
+                        </div>
+                        <div class="info-group">
+                            <label for="teacher_name">Nom de l'enseignant:</label>
+                            <input type="text" id="teacher_name" name="teacher_name">
+                        </div>
+                        <div class="info-group">
+                            <label for="class_name">Classe:</label>
+                            <input type="text" id="class_name" name="class_name" placeholder="Ex: 5ème A">
+                        </div>
+                        <div class="info-group">
+                            <label for="school_year">Année scolaire:</label>
+                            <input type="text" id="school_year" name="school_year" placeholder="Ex: 2023-2024">
+                        </div>
                     </div>
-                    <div class="info-group">
-                        <label for="teacher_name">Nom de l'enseignant:</label>
-                        <input type="text" id="teacher_name" name="teacher_name">
-                    </div>
-                    <div class="info-group">
-                        <label for="class_name">Classe:</label>
-                        <input type="text" id="class_name" name="class_name" placeholder="Ex: 5ème A">
-                    </div>
-                    <div class="info-group">
-                        <label for="school_year">Année scolaire:</label>
-                        <input type="text" id="school_year" name="school_year" placeholder="Ex: 2023-2024">
+                    
+                    <h3 style="margin-top: 20px;">Effectif de la classe</h3>
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <label>Garçons</label>
+                            <div class="stat-value"><input type="number" name="boys_count" min="0" style="width: 60px;"></div>
+                        </div>
+                        <div class="stat-box">
+                            <label>Filles</label>
+                            <div class="stat-value"><input type="number" name="girls_count" min="0" style="width: 60px;"></div>
+                        </div>
+                        <div class="stat-box">
+                            <label>Total</label>
+                            <div class="stat-value" id="total_count">0</div>
+                        </div>
+                        <div class="stat-box">
+                            <label>Nouveaux/Nouvelles</label>
+                            <div class="stat-value"><input type="number" name="new_students" min="0" style="width: 60px;"></div>
+                        </div>
+                        <div class="stat-box">
+                            <label>Redoublant(e)s</label>
+                            <div class="stat-value"><input type="number" name="repeat_students" min="0" style="width: 60px;"></div>
+                        </div>
                     </div>
                 </div>
-                
-                <h3 style="margin-top: 20px;">Effectif de la classe</h3>
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <label>Garçons</label>
-                        <div class="stat-value"><input type="number" name="boys_count" min="0" style="width: 60px;"></div>
+
+                <!-- Informations de base -->
+                <div class="form-section">
+                    <h2><i class="fas fa-book"></i> Informations générales</h2>
+                    
+                    <!-- Barre d'outils d'édition -->
+                    <div class="toolbar">
+                        <button type="button" onclick="formatText('bold')"><i class="fas fa-bold"></i></button>
+                        <button type="button" onclick="formatText('italic')"><i class="fas fa-italic"></i></button>
+                        <button type="button" onclick="formatText('underline')"><i class="fas fa-underline"></i></button>
+                        <button type="button" class="color-btn blue" onclick="setColor('blue')"></button>
+                        <button type="button" class="color-btn red" onclick="setColor('red')"></button>
+                        <button type="button" class="color-btn black" onclick="setColor('black')"></button>
+                        <button type="button" class="color-btn green" onclick="setColor('green')"></button>
+                        <button type="button" onclick="insertMath()"><i class="fas fa-square-root-alt"></i> Formule</button>
+                        <button type="button" onclick="insertImage()"><i class="fas fa-image"></i> Image</button>
+                        <button type="button" onclick="insertMedia('audio')"><i class="fas fa-volume-up"></i> Audio</button>
+                        <button type="button" onclick="insertMedia('video')"><i class="fas fa-video"></i> Vidéo</button>
                     </div>
-                    <div class="stat-box">
-                        <label>Filles</label>
-                        <div class="stat-value"><input type="number" name="girls_count" min="0" style="width: 60px;"></div>
+                    
+                    <table>
+                        <tr>
+                            <td width="20%">Discipline:</td>
+                            <td><div class="rich-text-area" contenteditable="true" id="discipline"></div></td>
+                        </tr>
+                        <tr>
+                            <td>Classe(s):</td>
+                            <td><div class="rich-text-area" contenteditable="true" id="class"></div></td>
+                        </tr>
+                        <tr>
+                            <td>Thème/Activité:</td>
+                            <td><div class="rich-text-area" contenteditable="true" id="theme"></div></td>
+                        </tr>
+                        <tr>
+                            <td>Titre de la leçon:</td>
+                            <td><div class="rich-text-area" contenteditable="true" id="lesson_title"></div></td>
+                        </tr>
+                        <tr>
+                            <td>Séance:</td>
+                            <td><div class="rich-text-area" contenteditable="true" id="session"></div></td>
+                        </tr>
+                        <tr>
+                            <td>Durée:</td>
+                            <td><div class="rich-text-area" contenteditable="true" id="duration"></div></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Habiletés et contenus -->
+                <div class="form-section">
+                    <h2><i class="fas fa-table"></i> Tableau des habiletés et des contenus</h2>
+                    
+                    <!-- Barre d'outils d'édition -->
+                    <div class="toolbar">
+                        <button type="button" onclick="formatText('bold')"><i class="fas fa-bold"></i></button>
+                        <button type="button" onclick="formatText('italic')"><i class="fas fa-italic"></i></button>
+                        <button type="button" onclick="formatText('underline')"><i class="fas fa-underline"></i></button>
+                        <button type="button" class="color-btn blue" onclick="setColor('blue')"></button>
+                        <button type="button" class="color-btn red" onclick="setColor('red')"></button>
+                        <button type="button" class="color-btn black" onclick="setColor('black')"></button>
+                        <button type="button" class="color-btn green" onclick="setColor('green')"></button>
+                        <button type="button" onclick="insertMath()"><i class="fas fa-square-root-alt"></i> Formule</button>
+                        <button type="button" onclick="insertImage()"><i class="fas fa-image"></i> Image</button>
                     </div>
-                    <div class="stat-box">
-                        <label>Total</label>
-                        <div class="stat-value" id="total_count">0</div>
+                    
+                    <table>
+                        <tr>
+                            <th width="50%">Habiletés</th>
+                            <th width="50%">Contenus</th>
+                        </tr>
+                        <tr>
+                            <td><div class="rich-text-area" contenteditable="true" id="skill1"></div></td>
+                            <td><div class="rich-text-area" contenteditable="true" id="content1"></div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="rich-text-area" contenteditable="true" id="skill2"></div></td>
+                            <td><div class="rich-text-area" contenteditable="true" id="content2"></div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="rich-text-area" contenteditable="true" id="skill3"></div></td>
+                            <td><div class="rich-text-area" contenteditable="true" id="content3"></div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="rich-text-area" contenteditable="true" id="skill4"></div></td>
+                            <td><div class="rich-text-area" contenteditable="true" id="content4"></div></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Situation d'apprentissage -->
+                <div class="form-section">
+                    <h2><i class="fas fa-graduation-cap"></i> Situation d'apprentissage</h2>
+                    <div class="toolbar">
+                        <button type="button" onclick="formatText('bold')"><i class="fas fa-bold"></i></button>
+                        <button type="button" onclick="formatText('italic')"><i class="fas fa-italic"></i></button>
+                        <button type="button" onclick="formatText('underline')"><i class="fas fa-underline"></i></button>
+                        <button type="button" class="color-btn blue" onclick="setColor('blue')"></button>
+                        <button type="button" class="color-btn red" onclick="setColor('red')"></button>
+                        <button type="button" class="color-btn black" onclick="setColor('black')"></button>
+                        <button type="button" class="color-btn green" onclick="setColor('green')"></button>
+                        <button type="button" onclick="insertMath()"><i class="fas fa-square-root-alt"></i> Formule</button>
+                        <button type="button" onclick="insertImage()"><i class="fas fa-image"></i> Image</button>
+                        <button type="button" onclick="insertMedia('audio')"><i class="fas fa-volume-up"></i> Audio</button>
+                        <button type="button" onclick="insertMedia('video')"><i class="fas fa-video"></i> Vidéo</button>
                     </div>
-                    <div class="stat-box">
-                        <label>Nouveaux/Nouvelles</label>
-                        <div class="stat-value"><input type="number" name="new_students" min="0" style="width: 60px;"></div>
+                    <div class="rich-text-area" contenteditable="true" id="learning_situation"></div>
+                </div>
+
+                <!-- Supports et bibliographie -->
+                <div class="form-section">
+                    <h2><i class="fas fa-book-open"></i> Supports didactiques et bibliographie</h2>
+                    
+                    <!-- Barre d'outils d'édition -->
+                    <div class="toolbar">
+                        <button type="button" onclick="formatText('bold')"><i class="fas fa-bold"></i></button>
+                        <button type="button" onclick="formatText('italic')"><i class="fas fa-italic"></i></button>
+                        <button type="button" onclick="formatText('underline')"><i class="fas fa-underline"></i></button>
+                        <button type="button" class="color-btn blue" onclick="setColor('blue')"></button>
+                        <button type="button" class="color-btn red" onclick="setColor('red')"></button>
+                        <button type="button" class="color-btn black" onclick="setColor('black')"></button>
+                        <button type="button" class="color-btn green" onclick="setColor('green')"></button>
+                        <button type="button" onclick="insertMath()"><i class="fas fa-square-root-alt"></i> Formule</button>
                     </div>
-                    <div class="stat-box">
-                        <label>Redoublant(e)s</label>
-                        <div class="stat-value"><input type="number" name="repeat_students" min="0" style="width: 60px;"></div>
+                    
+                    <table>
+                        <tr>
+                            <th width="50%">Supports didactiques</th>
+                            <th>Bibliographie</th>
+                        </tr>
+                        <tr>
+                            <td><div class="rich-text-area" contenteditable="true" id="teaching_materials"></div></td>
+                            <td><div class="rich-text-area" contenteditable="true" id="bibliography"></div></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Déroulement de la leçon -->
+                <div class="form-section">
+                    <h2><i class="fas fa-chalkboard-teacher"></i> Déroulement de la leçon</h2>
+                    
+                    <!-- Barre d'outils d'édition -->
+                    <div class="toolbar">
+                        <button type="button" onclick="formatText('bold')"><i class="fas fa-bold"></i></button>
+                        <button type="button" onclick="formatText('italic')"><i class="fas fa-italic"></i></button>
+                        <button type="button" onclick="formatText('underline')"><i class="fas fa-underline"></i></button>
+                        <button type="button" class="color-btn blue" onclick="setColor('blue')"></button>
+                        <button type="button" class="color-btn red" onclick="setColor('red')"></button>
+                        <button type="button" class="color-btn black" onclick="setColor('black')"></button>
+                        <button type="button" class="color-btn green" onclick="setColor('green')"></button>
+                        <button type="button" onclick="insertMath()"><i class="fas fa-square-root-alt"></i> Formule</button>
+                        <button type="button" onclick="insertImage()"><i class="fas fa-image"></i> Image</button>
+                    </div>
+                    
+                    <table>
+                        <tr>
+                            <th width="20%">Moments didactiques/Durée</th>
+                            <th width="20%">Stratégies pédagogiques</th>
+                            <th width="20%">Activités de l'Enseignant</th>
+                            <th width="20%">Activités des élèves</th>
+                            <th width="20%">Trace écrite</th>
+                        </tr>
+                        <tr>
+                            <td><div class="rich-text-area" contenteditable="true">Présentation</div></td>
+                            <td><div class="rich-text-area" contenteditable="true" id="strategy1"></div></td>
+                            <td><div class="rich-text-area" contenteditable="true" id="teacher1"></div></td>
+                            <td><div class="rich-text-area" contenteditable="true" id="student1"></div></td>
+                            <td><div class="rich-text-area" contenteditable="true" id="trace1"></div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="rich-text-area" contenteditable="true">Développement</div></td>
+                            <td><div class="rich-text-area" contenteditable="true" id="strategy2"></div></td>
+                            <td><div class="rich-text-area" contenteditable="true" id="teacher2"></div></td>
+                            <td><div class="rich-text-area" contenteditable="true" id="student2"></div></td>
+                            <td><div class="rich-text-area" contenteditable="true" id="trace2"></div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="rich-text-area" contenteditable="true">Évaluation</div></td>
+                            <td><div class="rich-text-area" contenteditable="true" id="strategy3"></div></td>
+                            <td><div class="rich-text-area" contenteditable="true" id="teacher3"></div></td>
+                            <td><div class="rich-text-area" contenteditable="true" id="student3"></div></td>
+                            <td><div class="rich-text-area" contenteditable="true" id="trace3"></div></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Observations -->
+                <div class="form-section">
+                    <h2><i class="fas fa-clipboard-list"></i> Observations</h2>
+                    
+                    <!-- Barre d'outils d'édition -->
+                    <div class="toolbar">
+                        <button type="button" onclick="formatText('bold')"><i class="fas fa-bold"></i></button>
+                        <button type="button" onclick="formatText('italic')"><i class="fas fa-italic"></i></button>
+                        <button type="button" onclick="formatText('underline')"><i class="fas fa-underline"></i></button>
+                        <button type="button" class="color-btn blue" onclick="setColor('blue')"></button>
+                        <button type="button" class="color-btn red" onclick="setColor('red')"></button>
+                        <button type="button" class="color-btn black" onclick="setColor('black')"></button>
+                        <button type="button" class="color-btn green" onclick="setColor('green')"></button>
+                        <button type="button" onclick="insertMath()"><i class="fas fa-square-root-alt"></i> Formule</button>
+                        <button type="button" onclick="insertImage()"><i class="fas fa-image"></i> Image</button>
+                    </div>
+                    
+                    <div class="rich-text-area" contenteditable="true" id="observations"></div>
+                </div>
+
+                <!-- Boutons d'action -->
+                <div class="btn-container">
+                    <button type="button" onclick="saveForm()"><i class="fas fa-save"></i> Enregistrer</button>
+                    <button type="button" onclick="exportToJson()"><i class="fas fa-download"></i> Exporter JSON</button>
+                    <button type="button" onclick="window.print()"><i class="fas fa-print"></i> Imprimer</button>
+                    <button type="reset"><i class="fas fa-redo"></i> Réinitialiser</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Visualisation des fiches enregistrées -->
+        <div id="view-container" class="view-container">
+            <h2>Fiches enregistrées</h2>
+            
+            <div class="filter-section">
+                <h3>Filtrer les fiches</h3>
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label for="filter-class">Classe:</label>
+                        <select id="filter-class">
+                            <option value="">Toutes les classes</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-theme">Thème:</label>
+                        <select id="filter-theme">
+                            <option value="">Tous les thèmes</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-lesson">Leçon:</label>
+                        <select id="filter-lesson">
+                            <option value="">Toutes les leçons</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-teacher">Enseignant:</label>
+                        <select id="filter-teacher">
+                            <option value="">Tous les enseignants</option>
+                        </select>
                     </div>
                 </div>
+                <button onclick="applyFilters()"><i class="fas fa-filter"></i> Appliquer les filtres</button>
+                <button onclick="clearFilters()" style="background-color: #666;"><i class="fas fa-times"></i> Effacer les filtres</button>
             </div>
-
-            <!-- Informations de base -->
-            <div class="form-section">
-                <h2><i class="fas fa-book"></i> Informations générales</h2>
-                
-                <!-- Barre d'outils d'édition -->
-                <div class="toolbar">
-                    <button type="button" onclick="formatText('bold')"><i class="fas fa-bold"></i></button>
-                    <button type="button" onclick="formatText('italic')"><i class="fas fa-italic"></i></button>
-                    <button type="button" onclick="formatText('underline')"><i class="fas fa-underline"></i></button>
-                    <button type="button" class="color-btn blue" onclick="setColor('blue')"></button>
-                    <button type="button" class="color-btn red" onclick="setColor('red')"></button>
-                    <button type="button" class="color-btn black" onclick="setColor('black')"></button>
-                    <button type="button" class="color-btn green" onclick="setColor('green')"></button>
-                    <button type="button" onclick="insertMath()"><i class="fas fa-square-root-alt"></i> Formule</button>
-                    <button type="button" onclick="insertImage()"><i class="fas fa-image"></i> Image</button>
-                    <button type="button" onclick="insertMedia('audio')"><i class="fas fa-volume-up"></i> Audio</button>
-                    <button type="button" onclick="insertMedia('video')"><i class="fas fa-video"></i> Vidéo</button>
-                </div>
-                
-                <table>
-                    <tr>
-                        <td width="20%">Discipline:</td>
-                        <td><div class="rich-text-area" contenteditable="true" id="discipline"></div></td>
-                    </tr>
-                    <tr>
-                        <td>Classe(s):</td>
-                        <td><div class="rich-text-area" contenteditable="true" id="class"></div></td>
-                    </tr>
-                    <tr>
-                        <td>Thème/Activité:</td>
-                        <td><div class="rich-text-area" contenteditable="true" id="theme"></div></td>
-                    </tr>
-                    <tr>
-                        <td>Titre de la leçon:</td>
-                        <td><div class="rich-text-area" contenteditable="true" id="lesson_title"></div></td>
-                    </tr>
-                    <tr>
-                        <td>Séance:</td>
-                        <td><div class="rich-text-area" contenteditable="true" id="session"></div></td>
-                    </tr>
-                    <tr>
-                        <td>Durée:</td>
-                        <td><div class="rich-text-area" contenteditable="true" id="duration"></div></td>
-                    </tr>
-                </table>
+            
+            <div id="cards-container" class="cards-container">
+                <!-- Les fiches seront affichées ici dynamiquement -->
             </div>
-
-            <!-- Habiletés et contenus -->
-            <div class="form-section">
-                <h2><i class="fas fa-table"></i> Tableau des habiletés et des contenus</h2>
-                
-                <!-- Barre d'outils d'édition -->
-                <div class="toolbar">
-                    <button type="button" onclick="formatText('bold')"><i class="fas fa-bold"></i></button>
-                    <button type="button" onclick="formatText('italic')"><i class="fas fa-italic"></i></button>
-                    <button type="button" onclick="formatText('underline')"><i class="fas fa-underline"></i></button>
-                    <button type="button" class="color-btn blue" onclick="setColor('blue')"></button>
-                    <button type="button" class="color-btn red" onclick="setColor('red')"></button>
-                    <button type="button" class="color-btn black" onclick="setColor('black')"></button>
-                    <button type="button" class="color-btn green" onclick="setColor('green')"></button>
-                    <button type="button" onclick="insertMath()"><i class="fas fa-square-root-alt"></i> Formule</button>
-                    <button type="button" onclick="insertImage()"><i class="fas fa-image"></i> Image</button>
-                </div>
-                
-                <table>
-                    <tr>
-                        <th width="50%">Habiletés</th>
-                        <th width="50%">Contenus</th>
-                    </tr>
-                    <tr>
-                        <td><div class="rich-text-area" contenteditable="true" id="skill1"></div></td>
-                        <td><div class="rich-text-area" contenteditable="true" id="content1"></div></td>
-                    </tr>
-                    <tr>
-                        <td><div class="rich-text-area" contenteditable="true" id="skill2"></div></td>
-                        <td><div class="rich-text-area" contenteditable="true" id="content2"></div></td>
-                    </tr>
-                    <tr>
-                        <td><div class="rich-text-area" contenteditable="true" id="skill3"></div></td>
-                        <td><div class="rich-text-area" contenteditable="true" id="content3"></div></td>
-                    </tr>
-                    <tr>
-                        <td><div class="rich-text-area" contenteditable="true" id="skill4"></div></td>
-                        <td><div class="rich-text-area" contenteditable="true" id="content4"></div></td>
-                    </tr>
-                </table>
-            </div>
-
-            <!-- Situation d'apprentissage -->
-            <div class="form-section">
-                <h2><i class="fas fa-graduation-cap"></i> Situation d'apprentissage</h2>
-                <div class="toolbar">
-                    <button type="button" onclick="formatText('bold')"><i class="fas fa-bold"></i></button>
-                    <button type="button" onclick="formatText('italic')"><i class="fas fa-italic"></i></button>
-                    <button type="button" onclick="formatText('underline')"><i class="fas fa-underline"></i></button>
-                    <button type="button" class="color-btn blue" onclick="setColor('blue')"></button>
-                    <button type="button" class="color-btn red" onclick="setColor('red')"></button>
-                    <button type="button" class="color-btn black" onclick="setColor('black')"></button>
-                    <button type="button" class="color-btn green" onclick="setColor('green')"></button>
-                    <button type="button" onclick="insertMath()"><i class="fas fa-square-root-alt"></i> Formule</button>
-                    <button type="button" onclick="insertImage()"><i class="fas fa-image"></i> Image</button>
-                    <button type="button" onclick="insertMedia('audio')"><i class="fas fa-volume-up"></i> Audio</button>
-                    <button type="button" onclick="insertMedia('video')"><i class="fas fa-video"></i> Vidéo</button>
-                </div>
-                <div class="rich-text-area" contenteditable="true" id="learning_situation"></div>
-            </div>
-
-            <!-- Supports et bibliographie -->
-            <div class="form-section">
-                <h2><i class="fas fa-book-open"></i> Supports didactiques et bibliographie</h2>
-                
-                <!-- Barre d'outils d'édition -->
-                <div class="toolbar">
-                    <button type="button" onclick="formatText('bold')"><i class="fas fa-bold"></i></button>
-                    <button type="button" onclick="formatText('italic')"><i class="fas fa-italic"></i></button>
-                    <button type="button" onclick="formatText('underline')"><i class="fas fa-underline"></i></button>
-                    <button type="button" class="color-btn blue" onclick="setColor('blue')"></button>
-                    <button type="button" class="color-btn red" onclick="setColor('red')"></button>
-                    <button type="button" class="color-btn black" onclick="setColor('black')"></button>
-                    <button type="button" class="color-btn green" onclick="setColor('green')"></button>
-                    <button type="button" onclick="insertMath()"><i class="fas fa-square-root-alt"></i> Formule</button>
-                </div>
-                
-                <table>
-                    <tr>
-                        <th width="50%">Supports didactiques</th>
-                        <th>Bibliographie</th>
-                    </tr>
-                    <tr>
-                        <td><div class="rich-text-area" contenteditable="true" id="teaching_materials"></div></td>
-                        <td><div class="rich-text-area" contenteditable="true" id="bibliography"></div></td>
-                    </tr>
-                </table>
-            </div>
-
-            <!-- Déroulement de la leçon -->
-            <div class="form-section">
-                <h2><i class="fas fa-chalkboard-teacher"></i> Déroulement de la leçon</h2>
-                
-                <!-- Barre d'outils d'édition -->
-                <div class="toolbar">
-                    <button type="button" onclick="formatText('bold')"><i class="fas fa-bold"></i></button>
-                    <button type="button" onclick="formatText('italic')"><i class="fas fa-italic"></i></button>
-                    <button type="button" onclick="formatText('underline')"><i class="fas fa-underline"></i></button>
-                    <button type="button" class="color-btn blue" onclick="setColor('blue')"></button>
-                    <button type="button" class="color-btn red" onclick="setColor('red')"></button>
-                    <button type="button" class="color-btn black" onclick="setColor('black')"></button>
-                    <button type="button" class="color-btn green" onclick="setColor('green')"></button>
-                    <button type="button" onclick="insertMath()"><i class="fas fa-square-root-alt"></i> Formule</button>
-                    <button type="button" onclick="insertImage()"><i class="fas fa-image"></i> Image</button>
-                </div>
-                
-                <table>
-                    <tr>
-                        <th width="20%">Moments didactiques/Durée</th>
-                        <th width="20%">Stratégies pédagogiques</th>
-                        <th width="20%">Activités de l'Enseignant</th>
-                        <th width="20%">Activités des élèves</th>
-                        <th width="20%">Trace écrite</th>
-                    </tr>
-                    <tr>
-                        <td><div class="rich-text-area" contenteditable="true">Présentation</div></td>
-                        <td><div class="rich-text-area" contenteditable="true" id="strategy1"></div></td>
-                        <td><div class="rich-text-area" contenteditable="true" id="teacher1"></div></td>
-                        <td><div class="rich-text-area" contenteditable="true" id="student1"></div></td>
-                        <td><div class="rich-text-area" contenteditable="true" id="trace1"></div></td>
-                    </tr>
-                    <tr>
-                        <td><div class="rich-text-area" contenteditable="true">Développement</div></td>
-                        <td><div class="rich-text-area" contenteditable="true" id="strategy2"></div></td>
-                        <td><div class="rich-text-area" contenteditable="true" id="teacher2"></div></td>
-                        <td><div class="rich-text-area" contenteditable="true" id="student2"></div></td>
-                        <td><div class="rich-text-area" contenteditable="true" id="trace2"></div></td>
-                    </tr>
-                    <tr>
-                        <td><div class="rich-text-area" contenteditable="true">Évaluation</div></td>
-                        <td><div class="rich-text-area" contenteditable="true" id="strategy3"></div></td>
-                        <td><div class="rich-text-area" contenteditable="true" id="teacher3"></div></td>
-                        <td><div class="rich-text-area" contenteditable="true" id="student3"></div></td>
-                        <td><div class="rich-text-area" contenteditable="true" id="trace3"></div></td>
-                    </tr>
-                </table>
-            </div>
-
-            <!-- Observations -->
-            <div class="form-section">
-                <h2><i class="fas fa-clipboard-list"></i> Observations</h2>
-                
-                <!-- Barre d'outils d'édition -->
-                <div class="toolbar">
-                    <button type="button" onclick="formatText('bold')"><i class="fas fa-bold"></i></button>
-                    <button type="button" onclick="formatText('italic')"><i class="fas fa-italic"></i></button>
-                    <button type="button" onclick="formatText('underline')"><i class="fas fa-underline"></i></button>
-                    <button type="button" class="color-btn blue" onclick="setColor('blue')"></button>
-                    <button type="button" class="color-btn red" onclick="setColor('red')"></button>
-                    <button type="button" class="color-btn black" onclick="setColor('black')"></button>
-                    <button type="button" class="color-btn green" onclick="setColor('green')"></button>
-                    <button type="button" onclick="insertMath()"><i class="fas fa-square-root-alt"></i> Formule</button>
-                    <button type="button" onclick="insertImage()"><i class="fas fa-image"></i> Image</button>
-                </div>
-                
-                <div class="rich-text-area" contenteditable="true" id="observations"></div>
-            </div>
-
-            <!-- Boutons d'action -->
-            <div class="btn-container">
-                <button type="button" onclick="saveForm()"><i class="fas fa-save"></i> Enregistrer</button>
-                <button type="button" onclick="window.print()"><i class="fas fa-print"></i> Imprimer</button>
-                <button type="reset"><i class="fas fa-redo"></i> Réinitialiser</button>
-            </div>
-        </form>
+        </div>
 
         <div class="footer">
             Formulaire de Fiche de Leçon - République Togolaise © 2023
@@ -536,6 +702,7 @@
     <script>
         let currentColor = 'black';
         let activeEditable = null;
+        let allLessonPlans = [];
         
         // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
@@ -553,7 +720,31 @@
             
             // Charger les données sauvegardées
             loadSavedData();
+            
+            // Charger les fiches enregistrées
+            loadAllLessonPlans();
+            populateFilterOptions();
         });
+        
+        // Afficher l'onglet sélectionné
+        function showTab(tabName) {
+            if (tabName === 'form') {
+                document.getElementById('form-container').style.display = 'block';
+                document.getElementById('view-container').style.display = 'none';
+                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.querySelectorAll('.tab')[1].classList.remove('active');
+            } else {
+                document.getElementById('form-container').style.display = 'none';
+                document.getElementById('view-container').style.display = 'block';
+                document.querySelectorAll('.tab')[0].classList.remove('active');
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                
+                // Recharger les fiches et les filtres
+                loadAllLessonPlans();
+                populateFilterOptions();
+                applyFilters();
+            }
+        }
         
         // Calcul du total d'élèves
         function calculateTotal() {
@@ -635,8 +826,24 @@
             input.click();
         }
         
-        // Sauvegarde des données
-        function saveForm() {
+        // Fonction pour exporter en JSON
+        function exportToJson() {
+            const formData = collectFormData();
+            
+            // Télécharger en tant que fichier JSON
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(formData, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "fiche_leçon.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+            
+            alert('Fiche de leçon exportée avec succès!');
+        }
+        
+        // Collecter les données du formulaire
+        function collectFormData() {
             const formData = {};
             
             // Récupérer les données des champs standards
@@ -653,17 +860,27 @@
                 }
             });
             
-            // Sauvegarder dans le stockage local
-            localStorage.setItem('lessonPlanData', JSON.stringify(formData));
+            // Ajouter un timestamp
+            formData.timestamp = new Date().toISOString();
             
-            // Télécharger en tant que fichier JSON
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(formData, null, 2));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "fiche_leçon.json");
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
+            return formData;
+        }
+        
+        // Sauvegarde des données
+        function saveForm() {
+            const formData = collectFormData();
+            
+            // Récupérer les fiches existantes
+            let allPlans = JSON.parse(localStorage.getItem('allLessonPlans')) || [];
+            
+            // Ajouter la nouvelle fiche
+            allPlans.push(formData);
+            
+            // Sauvegarder dans le stockage local
+            localStorage.setItem('allLessonPlans', JSON.stringify(allPlans));
+            
+            // Sauvegarder également la fiche actuelle
+            localStorage.setItem('lessonPlanData', JSON.stringify(formData));
             
             alert('Fiche de leçon enregistrée avec succès!');
         }
@@ -694,6 +911,276 @@
                 
                 // Mettre à jour les formules mathématiques
                 MathJax.typeset();
+            }
+        }
+        
+        // Charger toutes les fiches enregistrées
+        function loadAllLessonPlans() {
+            allLessonPlans = JSON.parse(localStorage.getItem('allLessonPlans')) || [];
+        }
+        
+        // Remplir les options des filtres
+        function populateFilterOptions() {
+            const classFilter = document.getElementById('filter-class');
+            const themeFilter = document.getElementById('filter-theme');
+            const lessonFilter = document.getElementById('filter-lesson');
+            const teacherFilter = document.getElementById('filter-teacher');
+            
+            // Réinitialiser les filtres (garder l'option par défaut)
+            classFilter.innerHTML = '<option value="">Toutes les classes</option>';
+            themeFilter.innerHTML = '<option value="">Tous les thèmes</option>';
+            lessonFilter.innerHTML = '<option value="">Toutes les leçons</option>';
+            teacherFilter.innerHTML = '<option value="">Tous les enseignants</option>';
+            
+            // Ensembles pour stocker les valeurs uniques
+            const classes = new Set();
+            const themes = new Set();
+            const lessons = new Set();
+            const teachers = new Set();
+            
+            // Récupérer toutes les valeurs uniques
+            allLessonPlans.forEach(plan => {
+                if (plan.class_name) classes.add(plan.class_name);
+                if (plan.theme) themes.add(plan.theme);
+                if (plan.lesson_title) lessons.add(plan.lesson_title);
+                if (plan.teacher_name) teachers.add(plan.teacher_name);
+            });
+            
+            // Ajouter les options aux filtres
+            classes.forEach(c => {
+                const option = document.createElement('option');
+                option.value = c;
+                option.textContent = c;
+                classFilter.appendChild(option);
+            });
+            
+            themes.forEach(t => {
+                const option = document.createElement('option');
+                option.value = t;
+                option.textContent = t;
+                themeFilter.appendChild(option);
+            });
+            
+            lessons.forEach(l => {
+                const option = document.createElement('option');
+                option.value = l;
+                option.textContent = l;
+                lessonFilter.appendChild(option);
+            });
+            
+            teachers.forEach(t => {
+                const option = document.createElement('option');
+                option.value = t;
+                option.textContent = t;
+                teacherFilter.appendChild(option);
+            });
+        }
+        
+        // Appliquer les filtres
+        function applyFilters() {
+            const classFilter = document.getElementById('filter-class').value;
+            const themeFilter = document.getElementById('filter-theme').value;
+            const lessonFilter = document.getElementById('filter-lesson').value;
+            const teacherFilter = document.getElementById('filter-teacher').value;
+            
+            // Filtrer les fiches
+            const filteredPlans = allLessonPlans.filter(plan => {
+                return (!classFilter || plan.class_name === classFilter) &&
+                       (!themeFilter || plan.theme === themeFilter) &&
+                       (!lessonFilter || plan.lesson_title === lessonFilter) &&
+                       (!teacherFilter || plan.teacher_name === teacherFilter);
+            });
+            
+            // Afficher les fiches filtrées
+            displayLessonPlans(filteredPlans);
+        }
+        
+        // Effacer les filtres
+        function clearFilters() {
+            document.getElementById('filter-class').value = '';
+            document.getElementById('filter-theme').value = '';
+            document.getElementById('filter-lesson').value = '';
+            document.getElementById('filter-teacher').value = '';
+            
+            // Afficher toutes les fiches
+            displayLessonPlans(allLessonPlans);
+        }
+        
+        // Afficher les fiches dans le conteneur
+        function displayLessonPlans(plans) {
+            const container = document.getElementById('cards-container');
+            container.innerHTML = '';
+            
+            if (plans.length === 0) {
+                container.innerHTML = '<div class="no-results">Aucune fiche ne correspond aux critères de filtrage.</div>';
+                return;
+            }
+            
+            plans.forEach((plan, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                
+                // Extraire le texte des champs de contenu riche
+                const disciplineText = extractTextFromHtml(plan.discipline || '');
+                const classText = extractTextFromHtml(plan.class || '');
+                const themeText = extractTextFromHtml(plan.theme || '');
+                const lessonTitleText = extractTextFromHtml(plan.lesson_title || '');
+                
+                card.innerHTML = `
+                    <div class="card-header">
+                        <div class="card-title">${lessonTitleText || 'Sans titre'}</div>
+                        <div class="card-details">
+                            <div>Discipline: ${disciplineText || 'Non spécifié'}</div>
+                            <div>Classe: ${classText || 'Non spécifié'}</div>
+                            <div>Thème: ${themeText || 'Non spécifié'}</div>
+                            <div>Enseignant: ${plan.teacher_name || 'Non spécifié'}</div>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <p><strong>Établissement:</strong> ${plan.school_name || 'Non spécifié'}</p>
+                        <p><strong>Année scolaire:</strong> ${plan.school_year || 'Non spécifié'}</p>
+                    </div>
+                    <div class="card-actions">
+                        <button class="card-btn view-btn" onclick="viewLessonPlan(${index})"><i class="fas fa-eye"></i> Voir</button>
+                        <button class="card-btn delete-btn" onclick="deleteLessonPlan(${index})"><i class="fas fa-trash"></i> Supprimer</button>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+        
+        // Extraire le texte d'un contenu HTML
+        function extractTextFromHtml(html) {
+            const div = document.createElement('div');
+            div.innerHTML = html;
+            return div.textContent || div.innerText || '';
+        }
+        
+        // Voir une fiche détaillée
+        function viewLessonPlan(index) {
+            const plan = allLessonPlans[index];
+            
+            // Ouvrir une nouvelle fenêtre ou onglet avec la fiche
+            const newWindow = window.open('', '_blank');
+            newWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Fiche de Leçon - ${plan.lesson_title || 'Sans titre'}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        .header { text-align: center; margin-bottom: 20px; }
+                        .section { margin-bottom: 20px; }
+                        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+                        th, td { border: 1px solid #ddd; padding: 8px; }
+                        th { background-color: #f2f2f2; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>Fiche de Leçon</h1>
+                        <h2>${plan.lesson_title || 'Sans titre'}</h2>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>Informations générales</h3>
+                        <p><strong>Enseignant:</strong> ${plan.teacher_name || 'Non spécifié'}</p>
+                        <p><strong>Établissement:</strong> ${plan.school_name || 'Non spécifié'}</p>
+                        <p><strong>Classe:</strong> ${plan.class_name || 'Non spécifié'}</p>
+                        <p><strong>Année scolaire:</strong> ${plan.school_year || 'Non spécifié'}</p>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>Détails de la leçon</h3>
+                        <p><strong>Discipline:</strong> ${plan.discipline || 'Non spécifié'}</p>
+                        <p><strong>Thème:</strong> ${plan.theme || 'Non spécifié'}</p>
+                        <p><strong>Titre:</strong> ${plan.lesson_title || 'Non spécifié'}</p>
+                        <p><strong>Séance:</strong> ${plan.session || 'Non spécifié'}</p>
+                        <p><strong>Durée:</strong> ${plan.duration || 'Non spécifié'}</p>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>Habiletés et contenus</h3>
+                        <table>
+                            <tr><th>Habiletés</th><th>Contenus</th></tr>
+                            <tr><td>${plan.skill1 || ''}</td><td>${plan.content1 || ''}</td></tr>
+                            <tr><td>${plan.skill2 || ''}</td><td>${plan.content2 || ''}</td></tr>
+                            <tr><td>${plan.skill3 || ''}</td><td>${plan.content3 || ''}</td></tr>
+                            <tr><td>${plan.skill4 || ''}</td><td>${plan.content4 || ''}</td></tr>
+                        </table>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>Situation d'apprentissage</h3>
+                        <div>${plan.learning_situation || ''}</div>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>Supports et bibliographie</h3>
+                        <table>
+                            <tr><th>Supports didactiques</th><th>Bibliographie</th></tr>
+                            <tr><td>${plan.teaching_materials || ''}</td><td>${plan.bibliography || ''}</td></tr>
+                        </table>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>Déroulement de la leçon</h3>
+                        <table>
+                            <tr>
+                                <th>Moments didactiques/Durée</th>
+                                <th>Stratégies pédagogiques</th>
+                                <th>Activités de l'Enseignant</th>
+                                <th>Activités des élèves</th>
+                                <th>Trace écrite</th>
+                            </tr>
+                            <tr>
+                                <td>Présentation</td>
+                                <td>${plan.strategy1 || ''}</td>
+                                <td>${plan.teacher1 || ''}</td>
+                                <td>${plan.student1 || ''}</td>
+                                <td>${plan.trace1 || ''}</td>
+                            </tr>
+                            <tr>
+                                <td>Développement</td>
+                                <td>${plan.strategy2 || ''}</td>
+                                <td>${plan.teacher2 || ''}</td>
+                                <td>${plan.student2 || ''}</td>
+                                <td>${plan.trace2 || ''}</td>
+                            </tr>
+                            <tr>
+                                <td>Évaluation</td>
+                                <td>${plan.strategy3 || ''}</td>
+                                <td>${plan.teacher3 || ''}</td>
+                                <td>${plan.student3 || ''}</td>
+                                <td>${plan.trace3 || ''}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>Observations</h3>
+                        <div>${plan.observations || ''}</div>
+                    </div>
+                    
+                    <button onclick="window.print()" style="margin-top: 20px; padding: 10px 15px;">Imprimer</button>
+                </body>
+                </html>
+            `);
+            newWindow.document.close();
+        }
+        
+        // Supprimer une fiche
+        function deleteLessonPlan(index) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette fiche ?')) {
+                allLessonPlans.splice(index, 1);
+                localStorage.setItem('allLessonPlans', JSON.stringify(allLessonPlans));
+                
+                // Recharger l'affichage
+                populateFilterOptions();
+                applyFilters();
+                
+                alert('Fiche supprimée avec succès!');
             }
         }
     </script>
