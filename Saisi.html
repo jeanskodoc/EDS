@@ -2392,7 +2392,6 @@
                             <th>Note 2</th>
                             <th>Moyenne</th>
                             <th>Appréciation</th>
-                            <th>Enseignant</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -2410,7 +2409,6 @@
                                     <td>${note2 > 0 ? note2.toFixed(2) : '-'}</td>
                                     <td>${moyenne > 0 ? moyenne.toFixed(2) : '-'}</td>
                                     <td>${getAppreciation(moyenne)}</td>
-                                     <td>${Enseignant.nom}</td>
                                 </tr>
                             `;
                         }).join('')}
