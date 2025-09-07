@@ -75,6 +75,8 @@
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
         }
         
         .preview-panel {
@@ -170,10 +172,19 @@
             background: #2980b9;
         }
         
+        .btn-purple {
+            background: #9b59b6;
+        }
+        
+        .btn-purple:hover {
+            background: #8e44ad;
+        }
+        
         .action-buttons {
             display: flex;
             gap: 10px;
             margin-top: 20px;
+            flex-wrap: wrap;
         }
         
         .section-buttons {
@@ -185,6 +196,8 @@
         
         .content-blocks {
             margin-top: 20px;
+            flex-grow: 1;
+            overflow-y: auto;
         }
         
         .content-block {
@@ -398,6 +411,64 @@
             box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.3);
         }
         
+        .data-management {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .filter-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .saved-lessons {
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        
+        .lesson-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .lesson-item:last-child {
+            border-bottom: none;
+        }
+        
+        .lesson-info {
+            flex-grow: 1;
+        }
+        
+        .lesson-title-small {
+            font-weight: 500;
+        }
+        
+        .lesson-meta {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .lesson-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
         @media (max-width: 992px) {
             .container {
                 grid-template-columns: 1fr;
@@ -405,6 +476,10 @@
             
             .section-buttons {
                 grid-template-columns: 1fr;
+            }
+            
+            .filter-row {
+                flex-direction: column;
             }
         }
     </style>
@@ -435,6 +510,11 @@
             </div>
             
             <div class="form-group">
+                <label for="discipline">Discipline</label>
+                <input type="text" id="discipline" placeholder="Ex: Géométrie">
+            </div>
+            
+            <div class="form-group">
                 <label for="class-name">Classe/Niveau</label>
                 <input type="text" id="class-name" placeholder="Ex: Seconde 7">
             </div>
@@ -447,6 +527,11 @@
             <div class="form-group">
                 <label for="lesson-duration">Durée de la leçon</label>
                 <input type="text" id="lesson-duration" placeholder="Ex: 4 heures">
+            </div>
+            
+            <div class="form-group">
+                <label for="lesson-date">Date de la leçon</label>
+                <input type="date" id="lesson-date">
             </div>
             
             <h3 class="panel-title"><i class="fas fa-plus-circle"></i> Ajouter des sections</h3>
@@ -495,9 +580,56 @@
                 <button class="btn-danger" onclick="resetLesson()">
                     <i class="fas fa-trash"></i> Tout effacer
                 </button>
+                <button class="btn-purple" onclick="saveToLocalStorage()">
+                    <i class="fas fa-save"></i> Enregistrer
+                </button>
+                <button class="btn-info" onclick="exportToJson()">
+                    <i class="fas fa-file-export"></i> Exporter JSON
+                </button>
+                <button class="btn-warning" onclick="importFromJson()">
+                    <i class="fas fa-file-import"></i> Importer JSON
+                </button>
                 <button class="btn-success" onclick="generatePDF()">
                     <i class="fas fa-file-pdf"></i> Générer PDF
                 </button>
+            </div>
+            
+            <div class="data-management">
+                <h3 class="panel-title"><i class="fas fa-filter"></i> Filtres de recherche</h3>
+                
+                <div class="filter-section">
+                    <div class="filter-row">
+                        <div class="form-group">
+                            <label for="filter-subject">Matière</label>
+                            <select id="filter-subject">
+                                <option value="">Toutes les matières</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filter-discipline">Discipline</label>
+                            <select id="filter-discipline">
+                                <option value="">Toutes les disciplines</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-row">
+                        <div class="form-group">
+                            <label for="filter-date">Date</label>
+                            <input type="date" id="filter-date">
+                        </div>
+                        <button class="btn-info" onclick="loadFilteredLessons()">
+                            <i class="fas fa-search"></i> Filtrer
+                        </button>
+                        <button class="btn-warning" onclick="clearFilters()">
+                            <i class="fas fa-times"></i> Effacer
+                        </button>
+                    </div>
+                </div>
+                
+                <h3 class="panel-title"><i class="fas fa-history"></i> Leçons enregistrées</h3>
+                <div class="saved-lessons" id="saved-lessons">
+                    <!-- Les leçons enregistrées apparaîtront ici -->
+                </div>
             </div>
         </div>
         
@@ -523,6 +655,10 @@
                             <i class="fas fa-clock"></i>
                             <span id="preview-duration">Durée: [Durée]</span>
                         </div>
+                        <div class="info-item">
+                            <i class="fas fa-calendar"></i>
+                            <span id="preview-date">Date: [Date]</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -538,12 +674,18 @@
         document.getElementById('school-name').value = 'Lycée Louis Pasteur';
         document.getElementById('teacher-name').value = 'Dupont Jean';
         document.getElementById('subject').value = 'Mathématiques';
+        document.getElementById('discipline').value = 'Géométrie';
         document.getElementById('class-name').value = 'Seconde 7';
         document.getElementById('lesson-title').value = 'Théorèmes de Pythagore et de Thalès';
         document.getElementById('lesson-duration').value = '4 heures';
+        document.getElementById('lesson-date').valueAsDate = new Date();
         
         // Mise à jour de l'aperçu
         updatePreview();
+        
+        // Charger les leçons enregistrées
+        loadSavedLessons();
+        updateFilterOptions();
         
         // Fonction pour mettre à jour l'aperçu
         function updatePreview() {
@@ -553,6 +695,19 @@
             document.getElementById('preview-teacher').textContent = 'Enseignant: ' + document.getElementById('teacher-name').value;
             document.getElementById('preview-class').textContent = 'Classe: ' + document.getElementById('class-name').value;
             document.getElementById('preview-duration').textContent = 'Durée: ' + document.getElementById('lesson-duration').value;
+            
+            const lessonDate = document.getElementById('lesson-date').value;
+            if (lessonDate) {
+                const formattedDate = new Date(lessonDate).toLocaleDateString('fr-FR', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                document.getElementById('preview-date').textContent = 'Date: ' + formattedDate;
+            } else {
+                document.getElementById('preview-date').textContent = 'Date: Non spécifiée';
+            }
         }
         
         // Écouteurs d'événements pour la mise à jour en temps réel
@@ -562,6 +717,7 @@
         document.getElementById('class-name').addEventListener('input', updatePreview);
         document.getElementById('lesson-title').addEventListener('input', updatePreview);
         document.getElementById('lesson-duration').addEventListener('input', updatePreview);
+        document.getElementById('lesson-date').addEventListener('input', updatePreview);
         
         // Compteur pour les IDs des blocs
         let blockCount = 0;
@@ -940,6 +1096,397 @@
                 // Téléchargement du PDF
                 doc.save('fiche-leçon.pdf');
             });
+        }
+        
+        // Fonction pour enregistrer dans le stockage local
+        function saveToLocalStorage() {
+            const lessonData = collectLessonData();
+            
+            // Générer un ID unique pour cette leçon
+            const timestamp = new Date().getTime();
+            const lessonId = `lesson_${timestamp}`;
+            
+            // Enregistrer dans le localStorage
+            localStorage.setItem(lessonId, JSON.stringify(lessonData));
+            
+            alert('Leçon enregistrée avec succès!');
+            
+            // Mettre à jour la liste des leçons
+            loadSavedLessons();
+            updateFilterOptions();
+        }
+        
+        // Fonction pour collecter toutes les données de la leçon
+        function collectLessonData() {
+            const lessonData = {
+                school: document.getElementById('school-name').value,
+                teacher: document.getElementById('teacher-name').value,
+                subject: document.getElementById('subject').value,
+                discipline: document.getElementById('discipline').value,
+                className: document.getElementById('class-name').value,
+                title: document.getElementById('lesson-title').value,
+                duration: document.getElementById('lesson-duration').value,
+                date: document.getElementById('lesson-date').value,
+                content: []
+            };
+            
+            // Collecter tous les blocs de contenu
+            const blocks = document.getElementById('content-blocks').children;
+            for (let i = 0; i < blocks.length; i++) {
+                const block = blocks[i];
+                const blockId = block.id;
+                const type = getBlockType(blockId);
+                
+                let blockData = {
+                    type: type,
+                    content: document.getElementById(`editor-${blockId}`).innerHTML
+                };
+                
+                if (type === 'homework') {
+                    const dueDateInput = document.getElementById(`${blockId}-due-date`);
+                    blockData.dueDate = dueDateInput ? dueDateInput.value : '';
+                }
+                
+                if (type === 'image') {
+                    const imagePreview = document.getElementById(`${blockId}-image-preview`);
+                    blockData.imageData = imagePreview.src;
+                    blockData.caption = document.getElementById(`${blockId}-image-caption`).value;
+                }
+                
+                lessonData.content.push(blockData);
+            }
+            
+            return lessonData;
+        }
+        
+        // Fonction pour charger les leçons enregistrées
+        function loadSavedLessons() {
+            const savedLessonsContainer = document.getElementById('saved-lessons');
+            savedLessonsContainer.innerHTML = '';
+            
+            let hasLessons = false;
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('lesson_')) {
+                    hasLessons = true;
+                    const lessonData = JSON.parse(localStorage.getItem(key));
+                    
+                    const lessonElement = document.createElement('div');
+                    lessonElement.className = 'lesson-item';
+                    
+                    const formattedDate = lessonData.date ? new Date(lessonData.date).toLocaleDateString('fr-FR') : 'Date non spécifiée';
+                    
+                    lessonElement.innerHTML = `
+                        <div class="lesson-info">
+                            <div class="lesson-title-small">${lessonData.title}</div>
+                            <div class="lesson-meta">${lessonData.subject} - ${lessonData.discipline} - ${formattedDate}</div>
+                        </div>
+                        <div class="lesson-actions">
+                            <button class="btn-info" title="Charger" onclick="loadLesson('${key}')">
+                                <i class="fas fa-load"></i>
+                            </button>
+                            <button class="btn-danger" title="Supprimer" onclick="deleteLesson('${key}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    savedLessonsContainer.appendChild(lessonElement);
+                }
+            }
+            
+            if (!hasLessons) {
+                savedLessonsContainer.innerHTML = '<p>Aucune leçon enregistrée.</p>';
+            }
+        }
+        
+        // Fonction pour charger une leçon spécifique
+        function loadLesson(lessonId) {
+            if (confirm('Charger cette leçon? Le contenu actuel sera perdu.')) {
+                const lessonData = JSON.parse(localStorage.getItem(lessonId));
+                
+                // Remplir les champs de base
+                document.getElementById('school-name').value = lessonData.school || '';
+                document.getElementById('teacher-name').value = lessonData.teacher || '';
+                document.getElementById('subject').value = lessonData.subject || '';
+                document.getElementById('discipline').value = lessonData.discipline || '';
+                document.getElementById('class-name').value = lessonData.className || '';
+                document.getElementById('lesson-title').value = lessonData.title || '';
+                document.getElementById('lesson-duration').value = lessonData.duration || '';
+                document.getElementById('lesson-date').value = lessonData.date || '';
+                
+                // Effacer le contenu actuel
+                document.getElementById('content-blocks').innerHTML = '';
+                document.getElementById('preview-content').innerHTML = '';
+                blockCount = 0;
+                
+                // Charger le contenu
+                if (lessonData.content && lessonData.content.length > 0) {
+                    lessonData.content.forEach(blockData => {
+                        if (blockData.type === 'image') {
+                            addImageSection();
+                            const currentBlockId = `block-${blockCount}`;
+                            
+                            // Mettre à jour l'image
+                            if (blockData.imageData) {
+                                const imagePreview = document.getElementById(`${currentBlockId}-image-preview`);
+                                imagePreview.src = blockData.imageData;
+                                imagePreview.style.display = 'block';
+                            }
+                            
+                            // Mettre à jour la légende
+                            if (blockData.caption) {
+                                document.getElementById(`${currentBlockId}-image-caption`).value = blockData.caption;
+                            }
+                            
+                            // Mettre à jour l'aperçu
+                            updateImagePreview(currentBlockId, blockData.imageData, blockData.caption);
+                        } else {
+                            addSection(blockData.type);
+                            const currentBlockId = `block-${blockCount}`;
+                            
+                            // Mettre à jour le contenu
+                            const editor = document.getElementById(`editor-${currentBlockId}`);
+                            if (editor && blockData.content) {
+                                editor.innerHTML = blockData.content;
+                            }
+                            
+                            // Mettre à jour la date de ramassage pour les devoirs
+                            if (blockData.type === 'homework' && blockData.dueDate) {
+                                document.getElementById(`${currentBlockId}-due-date`).value = blockData.dueDate;
+                            }
+                            
+                            // Mettre à jour l'aperçu
+                            updateContent(currentBlockId, blockData.type);
+                        }
+                    });
+                }
+                
+                // Mettre à jour l'aperçu général
+                updatePreview();
+            }
+        }
+        
+        // Fonction pour supprimer une leçon
+        function deleteLesson(lessonId) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette leçon?')) {
+                localStorage.removeItem(lessonId);
+                loadSavedLessons();
+                updateFilterOptions();
+            }
+        }
+        
+        // Fonction pour exporter en JSON
+        function exportToJson() {
+            const lessonData = collectLessonData();
+            const dataStr = JSON.stringify(lessonData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `${lessonData.subject}_${lessonData.title}.json`.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+        
+        // Fonction pour importer depuis JSON
+        function importFromJson() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = e => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    try {
+                        const lessonData = JSON.parse(e.target.result);
+                        
+                        if (confirm('Importer cette leçon? Le contenu actuel sera perdu.')) {
+                            // Remplir les champs de base
+                            document.getElementById('school-name').value = lessonData.school || '';
+                            document.getElementById('teacher-name').value = lessonData.teacher || '';
+                            document.getElementById('subject').value = lessonData.subject || '';
+                            document.getElementById('discipline').value = lessonData.discipline || '';
+                            document.getElementById('class-name').value = lessonData.className || '';
+                            document.getElementById('lesson-title').value = lessonData.title || '';
+                            document.getElementById('lesson-duration').value = lessonData.duration || '';
+                            document.getElementById('lesson-date').value = lessonData.date || '';
+                            
+                            // Effacer le contenu actuel
+                            document.getElementById('content-blocks').innerHTML = '';
+                            document.getElementById('preview-content').innerHTML = '';
+                            blockCount = 0;
+                            
+                            // Charger le contenu
+                            if (lessonData.content && lessonData.content.length > 0) {
+                                lessonData.content.forEach(blockData => {
+                                    if (blockData.type === 'image') {
+                                        addImageSection();
+                                        const currentBlockId = `block-${blockCount}`;
+                                        
+                                        // Mettre à jour l'image
+                                        if (blockData.imageData) {
+                                            const imagePreview = document.getElementById(`${currentBlockId}-image-preview`);
+                                            imagePreview.src = blockData.imageData;
+                                            imagePreview.style.display = 'block';
+                                        }
+                                        
+                                        // Mettre à jour la légende
+                                        if (blockData.caption) {
+                                            document.getElementById(`${currentBlockId}-image-caption`).value = blockData.caption;
+                                        }
+                                        
+                                        // Mettre à jour l'aperçu
+                                        updateImagePreview(currentBlockId, blockData.imageData, blockData.caption);
+                                    } else {
+                                        addSection(blockData.type);
+                                        const currentBlockId = `block-${blockCount}`;
+                                        
+                                        // Mettre à jour le contenu
+                                        const editor = document.getElementById(`editor-${currentBlockId}`);
+                                        if (editor && blockData.content) {
+                                            editor.innerHTML = blockData.content;
+                                        }
+                                        
+                                        // Mettre à jour la date de ramassage pour les devoirs
+                                        if (blockData.type === 'homework' && blockData.dueDate) {
+                                            document.getElementById(`${currentBlockId}-due-date`).value = blockData.dueDate;
+                                        }
+                                        
+                                        // Mettre à jour l'aperçu
+                                        updateContent(currentBlockId, blockData.type);
+                                    }
+                                });
+                            }
+                            
+                            // Mettre à jour l'aperçu général
+                            updatePreview();
+                        }
+                    } catch (error) {
+                        alert('Erreur lors de l\'import du fichier: ' + error.message);
+                    }
+                };
+                
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+        
+        // Fonction pour mettre à jour les options des filtres
+        function updateFilterOptions() {
+            const subjectFilter = document.getElementById('filter-subject');
+            const disciplineFilter = document.getElementById('filter-discipline');
+            
+            // Sauvegarder les valeurs actuelles
+            const currentSubject = subjectFilter.value;
+            const currentDiscipline = disciplineFilter.value;
+            
+            // Réinitialiser les filtres (en gardant l'option "Tous")
+            while (subjectFilter.options.length > 1) subjectFilter.remove(1);
+            while (disciplineFilter.options.length > 1) disciplineFilter.remove(1);
+            
+            const subjects = new Set();
+            const disciplines = new Set();
+            
+            // Collecter toutes les matières et disciplines disponibles
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('lesson_')) {
+                    const lessonData = JSON.parse(localStorage.getItem(key));
+                    if (lessonData.subject) subjects.add(lessonData.subject);
+                    if (lessonData.discipline) disciplines.add(lessonData.discipline);
+                }
+            }
+            
+            // Ajouter les options de matière
+            subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject;
+                option.textContent = subject;
+                subjectFilter.appendChild(option);
+            });
+            
+            // Ajouter les options de discipline
+            disciplines.forEach(discipline => {
+                const option = document.createElement('option');
+                option.value = discipline;
+                option.textContent = discipline;
+                disciplineFilter.appendChild(option);
+            });
+            
+            // Restaurer les valeurs précédentes si elles existent toujours
+            if (currentSubject && Array.from(subjects).includes(currentSubject)) {
+                subjectFilter.value = currentSubject;
+            }
+            
+            if (currentDiscipline && Array.from(disciplines).includes(currentDiscipline)) {
+                disciplineFilter.value = currentDiscipline;
+            }
+        }
+        
+        // Fonction pour charger les leçons filtrées
+        function loadFilteredLessons() {
+            const subjectFilter = document.getElementById('filter-subject').value;
+            const disciplineFilter = document.getElementById('filter-discipline').value;
+            const dateFilter = document.getElementById('filter-date').value;
+            
+            const savedLessonsContainer = document.getElementById('saved-lessons');
+            savedLessonsContainer.innerHTML = '';
+            
+            let hasFilteredLessons = false;
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('lesson_')) {
+                    const lessonData = JSON.parse(localStorage.getItem(key));
+                    
+                    // Vérifier les filtres
+                    if (subjectFilter && lessonData.subject !== subjectFilter) continue;
+                    if (disciplineFilter && lessonData.discipline !== disciplineFilter) continue;
+                    if (dateFilter && lessonData.date !== dateFilter) continue;
+                    
+                    hasFilteredLessons = true;
+                    
+                    const lessonElement = document.createElement('div');
+                    lessonElement.className = 'lesson-item';
+                    
+                    const formattedDate = lessonData.date ? new Date(lessonData.date).toLocaleDateString('fr-FR') : 'Date non spécifiée';
+                    
+                    lessonElement.innerHTML = `
+                        <div class="lesson-info">
+                            <div class="lesson-title-small">${lessonData.title}</div>
+                            <div class="lesson-meta">${lessonData.subject} - ${lessonData.discipline} - ${formattedDate}</div>
+                        </div>
+                        <div class="lesson-actions">
+                            <button class="btn-info" title="Charger" onclick="loadLesson('${key}')">
+                                <i class="fas fa-load"></i>
+                            </button>
+                            <button class="btn-danger" title="Supprimer" onclick="deleteLesson('${key}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    savedLessonsContainer.appendChild(lessonElement);
+                }
+            }
+            
+            if (!hasFilteredLessons) {
+                savedLessonsContainer.innerHTML = '<p>Aucune leçon ne correspond aux filtres.</p>';
+            }
+        }
+        
+        // Fonction pour effacer les filtres
+        function clearFilters() {
+            document.getElementById('filter-subject').value = '';
+            document.getElementById('filter-discipline').value = '';
+            document.getElementById('filter-date').value = '';
+            loadSavedLessons();
         }
     </script>
 </body>
