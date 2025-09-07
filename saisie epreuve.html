@@ -1,1461 +1,1596 @@
 <!DOCTYPE html>
 <html lang="fr">
-    
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Système d'Épreuves d'Évaluations - République Togolaise</title>
+    <title>Créateur de Fiches d'Évaluation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #f5f7fa;
+            --dark: #2c3e50;
+            --problem: #ffeaa7;
+            --student-work: #d6eaf8;
+            --homework: #e8d6ff;
+            --text-red: #e74c3c;
+            --text-green: #27ae60;
+            --text-blue: #3498db;
+            --text-black: #2c3e50;
+            --qcm: #d1ecf1;
+            --truefalse: #d4edda;
+            --fillblank: #fff3cd;
+            --traditional: #f8d7da;
+            --solution: #d4edda;
+        }
+        
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+        
         body {
-            background-color: #f5f5f5;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             color: #333;
+            line-height: 1.6;
             padding: 20px;
+            min-height: 100vh;
         }
+        
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            background: white;
-            padding: 30px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #006600;
-        }
-        .ministry {
-            font-weight: bold;
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-        .republic {
-            font-size: 18px;
-            font-weight: bold;
-            margin: 10px 0;
-            color: #006600;
-        }
-        .motto {
-            font-style: italic;
-            margin-bottom: 15px;
-            color: #555;
-        }
-        h1 {
-            color: #006600;
-            text-align: center;
-            margin: 20px 0;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-        h2 {
-            color: #006600;
-            margin: 25px 0 15px 0;
-            padding-bottom: 5px;
-            border-bottom: 1px solid #eee;
-        }
-        h3 {
-            color: #006600;
-            margin: 15px 0 10px 0;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-        input[type="text"], input[type="number"], input[type="date"], textarea, select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-        .form-section {
-            margin-bottom: 25px;
-            padding: 15px;
-            background-color: #f9f9f9;
-            border-left: 4px solid #006600;
-            border-radius: 4px;
-        }
-        .btn-container {
-            text-align: center;
-            margin: 30px 0 15px 0;
-        }
-        button {
-            background-color: #006600;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 0 10px;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #004d00;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 15px;
-            border-top: 1px solid #ddd;
-            color: #777;
-            font-size: 14px;
-        }
-        
-        /* Styles pour les informations supplémentaires */
-        .school-info {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .info-group {
-            margin-bottom: 15px;
-        }
-        .info-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
-        
-        /* Styles pour la visualisation des épreuves */
-        .view-container {
-            display: none;
-            margin-top: 20px;
-        }
-        .filter-section {
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        .filter-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        .filter-group {
-            margin-bottom: 10px;
-        }
-        .filter-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .filter-group select, .filter-group input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .cards-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: 300px 1fr;
             gap: 20px;
         }
-        .card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-            transition: transform 0.3s;
-            border-left: 4px solid #006600;
+        
+        header {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        .card-header {
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
+        
+        header h1 {
+            font-size: 2.2rem;
             margin-bottom: 10px;
         }
-        .card-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #006600;
-            margin-bottom: 5px;
-        }
-        .card-details {
-            font-size: 14px;
-            color: #666;
-        }
-        .card-content {
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
-        .card-actions {
-            display: flex;
-            justify-content: space-between;
-        }
-        .card-btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-        .view-btn {
-            background-color: #006600;
-            color: white;
-        }
-        .delete-btn {
-            background-color: #cc0000;
-            color: white;
-        }
-        .no-results {
-            text-align: center;
-            padding: 30px;
-            color: #666;
-            font-style: italic;
-            grid-column: 1 / -1;
+        
+        .app-description {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
         }
         
-        /* Navigation tabs */
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #ddd;
-        }
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            background: #f0f0f0;
-            border: 1px solid #ddd;
-            border-bottom: none;
-            border-radius: 5px 5px 0 0;
-            margin-right: 5px;
-        }
-        .tab.active {
+        .editor-panel {
             background: white;
-            border-bottom: 1px solid white;
-            margin-bottom: -1px;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
         
-        /* Styles pour les questions */
-        .question-item {
+        .preview-panel {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: calc(100vh - 100px);
+        }
+        
+        .panel-title {
+            color: var(--secondary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
             margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        input, select, textarea {
+            width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: #f9f9f9;
+            border-radius: 5px;
+            font-size: 1rem;
         }
-        .question-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
         }
-        .question-number {
-            font-weight: bold;
-        }
-        .remove-question {
-            color: #cc0000;
+        
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 18px;
-        }
-        
-        /* Styles pour les barres de notation */
-        .rating-bars {
-            margin-top: 10px;
-        }
-        .rating-bar {
-            display: flex;
+            font-size: 1rem;
+            display: inline-flex;
             align-items: center;
-            margin-bottom: 8px;
-        }
-        .rating-label {
-            width: 100px;
-            font-weight: bold;
-        }
-        .rating-value {
-            width: 60px;
-            text-align: center;
-        }
-        .rating-slider {
-            flex-grow: 1;
-            margin: 0 10px;
+            gap: 8px;
+            transition: background 0.3s;
         }
         
-        /* Styles pour les statistiques */
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+        button:hover {
+            background: #2980b9;
+        }
+        
+        .btn-success {
+            background: var(--success);
+        }
+        
+        .btn-success:hover {
+            background: #27ae60;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+        }
+        
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+        
+        .btn-info {
+            background: var(--primary);
+        }
+        
+        .btn-info:hover {
+            background: #2980b9;
+        }
+        
+        .btn-purple {
+            background: #9b59b6;
+        }
+        
+        .btn-purple:hover {
+            background: #8e44ad;
+        }
+        
+        .btn-solution {
+            background: #27ae60;
+        }
+        
+        .btn-solution:hover {
+            background: #219653;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
             margin-top: 20px;
         }
-        .stat-box {
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            text-align: center;
-            background: #f9f9f9;
-        }
-        .stat-title {
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 5px;
-        }
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #006600;
-        }
         
-        /* Styles pour les types de questions */
-        .question-type-selector {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        .top-action-buttons {
+            display: flex;
             gap: 10px;
-            margin-bottom: 15px;
-        }
-        .type-btn {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: #f0f0f0;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.3s;
-        }
-        .type-btn:hover {
-            background-color: #e0e0e0;
-        }
-        .type-btn.active {
-            background-color: #006600;
-            color: white;
-            border-color: #004d00;
+            margin-bottom: 20px;
+            justify-content: flex-end;
         }
         
-        /* Styles spécifiques aux types de questions */
-        .qcm-options, .truefalse-options {
+        .section-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .content-blocks {
+            margin-top: 20px;
+        }
+        
+        .content-block {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .block-title {
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .block-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .image-preview {
+            max-width: 100%;
+            margin-top: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .evaluation-preview {
+            padding: 30px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            min-height: 400px;
+        }
+        
+        .preview-header {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.1);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .school-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #ffd700;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .evaluation-title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .header-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .info-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .preview-content {
+            padding: 20px 0;
+        }
+        
+        .content-section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            color: var(--secondary);
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .qcm, .truefalse, .fillblank, .traditional, .problem, .instructions, .solution {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        
+        .qcm {
+            background: var(--qcm);
+            border-left: 4px solid #17a2b8;
+        }
+        
+        .truefalse {
+            background: var(--truefalse);
+            border-left: 4px solid #28a745;
+        }
+        
+        .fillblank {
+            background: var(--fillblank);
+            border-left: 4px solid #ffc107;
+        }
+        
+        .traditional {
+            background: var(--traditional);
+            border-left: 4px solid #dc3545;
+        }
+        
+        .problem {
+            background: var(--problem);
+            border-left: 4px solid #fdcb6e;
+        }
+        
+        .instructions {
+            background: #e8f4fc;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .solution {
+            background: var(--solution);
+            border-left: 4px solid #27ae60;
             margin-top: 10px;
         }
+        
+        .solution-title {
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .preview-image {
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        
+        .question-points {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 5px;
+            font-style: italic;
+        }
+        
+        /* Styles pour la barre d'outils de formatage */
+        .formatting-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+            padding: 8px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        
+        .format-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 4px;
+            background-color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .format-btn:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .format-btn.active {
+            background-color: #e0e0e0;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+        }
+        
+        .color-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .color-btn.red {
+            background-color: var(--text-red);
+        }
+        
+        .color-btn.green {
+            background-color: var(--text-green);
+        }
+        
+        .color-btn.blue {
+            background-color: var(--text-blue);
+        }
+        
+        .color-btn.black {
+            background-color: var(--text-black);
+        }
+        
+        .color-btn.active {
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.3);
+        }
+        
         .option-item {
             display: flex;
             align-items: center;
             margin-bottom: 8px;
         }
+        
         .option-item input[type="text"] {
-            flex-grow: 1;
-            margin-right: 10px;
+            flex: 1;
+            margin-left: 10px;
         }
+        
         .option-item input[type="checkbox"] {
             margin-right: 5px;
         }
-        .add-option {
-            margin-top: 10px;
-            padding: 5px 10px;
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            cursor: pointer;
+        
+        .blank-input {
+            border-bottom: 1px solid #333;
+            display: inline-block;
+            min-width: 100px;
+            margin: 0 5px;
         }
         
-        /* Mots mêlés */
-        .wordsearch-grid {
-            display: grid;
-            grid-template-columns: repeat(10, 30px);
-            gap: 2px;
-            margin: 10px 0;
-        }
-        .wordsearch-cell {
-            width: 30px;
-            height: 30px;
-            border: 1px solid #999;
+        .solution-toggle {
+            margin-top: 10px;
+            cursor: pointer;
+            color: var(--primary);
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            background-color: white;
-        }
-        .wordsearch-words {
-            margin-top: 15px;
-        }
-        .word-list {
-            columns: 2;
-            margin-top: 10px;
+            gap: 5px;
+            font-weight: 500;
         }
         
+        .solution-content {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 3px solid var(--success);
+        }
+        
+        /* Styles pour l'impression */
         @media print {
-            button, .btn-retour, .tabs, .view-container {
-                display: none;
+            body, html {
+                height: auto;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
             }
-            body {
-                background: white;
-                padding: 0;
+            
+            body * {
+                visibility: hidden;
             }
+            
+            .container, .editor-panel, .preview-panel, header, .action-buttons, 
+            .section-buttons, .top-action-buttons, .modal {
+                display: none !important;
+            }
+            
+            .evaluation-preview, .evaluation-preview * {
+                visibility: visible;
+            }
+            
+            .evaluation-preview {
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+                padding: 15px !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+                background: white !important;
+                page-break-inside: avoid;
+            }
+            
+            .preview-header {
+                box-shadow: none !important;
+                margin-bottom: 15px !important;
+                page-break-inside: avoid;
+                background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%) !important;
+            }
+            
+            .content-section {
+                page-break-inside: avoid;
+            }
+            
+            .solution-content {
+                display: block !important;
+            }
+            
+            button, .formatting-toolbar, .solution-toggle, .block-actions, 
+            .image-preview[style*="display: none"] {
+                display: none !important;
+            }
+            
+            /* Assurer que tout le contenu est visible */
+            .preview-content {
+                display: block !important;
+            }
+            
+            /* Corriger l'affichage des images */
+            .preview-image {
+                max-width: 100% !important;
+                height: auto !important;
+            }
+            
+            /* Styles d'impression optimisés */
+            .evaluation-title {
+                font-size: 24pt !important;
+                margin-bottom: 10px !important;
+            }
+            
+            .school-name {
+                font-size: 16pt !important;
+                margin-bottom: 5px !important;
+            }
+            
+            .section-title {
+                font-size: 14pt !important;
+                page-break-after: avoid;
+                margin-bottom: 8px !important;
+            }
+            
+            .question-points {
+                font-size: 11pt !important;
+                margin-top: 8px !important;
+            }
+            
+            /* Éviter les coupures dans les questions */
+            .qcm, .truefalse, .fillblank, .traditional, .problem, .instructions {
+                page-break-inside: avoid;
+                margin: 8px 0 !important;
+            }
+            
+            /* Ajustements pour l'impression */
+            .header-info {
+                margin-top: 10px !important;
+                gap: 10px !important;
+            }
+            
+            .info-item {
+                padding: 4px 8px !important;
+                font-size: 10pt !important;
+            }
+        }
+        
+        /* Modal pour les options d'impression */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: black;
+        }
+        
+        .print-options {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .print-option {
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 992px) {
             .container {
-                box-shadow: none;
+                grid-template-columns: 1fr;
+            }
+            
+            .section-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .evaluation-preview {
                 padding: 15px;
             }
-        }
-        
-        .btn-retour {
-            padding: 8px 16px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-        .btn-retour:hover {
-            background-color: #e0e0e0;
+            
+            .preview-header {
+                padding: 15px;
+            }
+            
+            .top-action-buttons {
+                flex-wrap: wrap;
+            }
         }
     </style>
 </head>
 <body>
-    <button class="btn-retour" onclick="history.back()">← Retour</button>
+    <header>
+        <h1><i class="fas fa-file-alt"></i> Créateur de Fiches d'Évaluation</h1>
+        <p class="app-description">Application permettant aux enseignants de créer des évaluations, devoirs et travaux dirigés avec différents types de questions</p>
+    </header>
     
     <div class="container">
-        <!-- En-tête pour la République Togolaise -->
-        <div class="header">
-            <div class="ministry">MINISTÈRE DES ENSEIGNEMENTS PRIMAIRE, SECONDAIRE, TECHNIQUE ET DE L'ARTISANAT</div>
-            <div class="ministry">DIRECTION DES EXAMENS ET CONCOURS</div>
-            <div class="republic">RÉPUBLIQUE TOGOLAISE</div>
-            <div class="motto">Travail - Liberté - Patrie</div>
-            <h1>SYSTÈME DE SAISIE D'ÉPREUVES D'ÉVALUATION</h1>
-        </div>
-
-        <!-- Navigation tabs -->
-        <div class="tabs">
-            <div class="tab active" onclick="showTab('form')">Créer une épreuve</div>
-            <div class="tab" onclick="showTab('view')">Voir les épreuves enregistrées</div>
-        </div>
-        
-        <!-- Formulaire de création d'épreuve -->
-        <div id="form-container">
-            <form id="evaluationForm">
-                <!-- Informations de base -->
-                <div class="form-section">
-                    <h2><i class="fas fa-info-circle"></i> Informations générales</h2>
-                    <div class="school-info">
-                        <div class="info-group">
-                            <label for="school_name">Nom de l'établissement:</label>
-                            <input type="text" id="school_name" name="school_name" required>
-                        </div>
-                        <div class="info-group">
-                            <label for="teacher_name">Nom de l'enseignant:</label>
-                            <input type="text" id="teacher_name" name="teacher_name" required>
-                        </div>
-                        <div class="info-group">
-                            <label for="class_name">Classe:</label>
-                            <input type="text" id="class_name" name="class_name" placeholder="Ex: 5ème A" required>
-                        </div>
-                        <div class="info-group">
-                            <label for="subject">Matière:</label>
-                            <input type="text" id="subject" name="subject" placeholder="Ex: Mathématiques" required>
-                        </div>
-                    </div>
-                    
-                    <div class="school-info">
-                        <div class="info-group">
-                            <label for="evaluation_type">Type d'évaluation:</label>
-                            <select id="evaluation_type" name="evaluation_type" required>
-                                <option value="">Sélectionnez le type</option>
-                                <option value="interrogation">Interrogation</option>
-                                <option value="devoir_surveille">Devoir surveillé</option>
-                                <option value="composition">Composition trimestrielle</option>
-                            </select>
-                        </div>
-                        <div class="info-group">
-                            <label for="evaluation_date">Date de l'évaluation:</label>
-                            <input type="date" id="evaluation_date" name="evaluation_date" required>
-                        </div>
-                        <div class="info-group">
-                            <label for="duration">Durée (en minutes):</label>
-                            <input type="number" id="duration" name="duration" min="5" required>
-                        </div>
-                        <div class="info-group">
-                            <label for="total_points">Total des points:</label>
-                            <input type="number" id="total_points" name="total_points" min="1" value="20" required>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Instructions et consignes -->
-                <div class="form-section">
-                    <h2><i class="fas fa-clipboard-list"></i> Instructions et consignes</h2>
-                    <div class="info-group">
-                        <label for="instructions">Instructions générales:</label>
-                        <textarea id="instructions" name="instructions" placeholder="Rédigez les instructions pour les élèves..."></textarea>
-                    </div>
-                </div>
-
-                <!-- Questions de l'épreuve -->
-                <div class="form-section">
-                    <h2><i class="fas fa-question-circle"></i> Questions de l'épreuve</h2>
-                    <div id="questions-container">
-                        <!-- Les questions seront ajoutées dynamiquement ici -->
-                    </div>
-                    
-                    <h3>Ajouter une nouvelle question</h3>
-                    <div class="question-type-selector">
-                        <div class="type-btn active" data-type="traditional" onclick="setQuestionType('traditional')">
-                            <i class="fas fa-font"></i> Question traditionnelle
-                        </div>
-                        <div class="type-btn" data-type="problem" onclick="setQuestionType('problem')">
-                            <i class="fas fa-puzzle-piece"></i> Situation problème
-                        </div>
-                        <div class="type-btn" data-type="qcm" onclick="setQuestionType('qcm')">
-                            <i class="fas fa-list-ol"></i> QCM
-                        </div>
-                        <div class="type-btn" data-type="truefalse" onclick="setQuestionType('truefalse')">
-                            <i class="fas fa-check-circle"></i> Vrai/Faux
-                        </div>
-                        <div class="type-btn" data-type="wordsearch" onclick="setQuestionType('wordsearch')">
-                            <i class="fas fa-th"></i> Mots mêlés
-                        </div>
-                    </div>
-                    
-                    <button type="button" onclick="addQuestion()" style="margin-top: 15px;">
-                        <i class="fas fa-plus"></i> Ajouter la question sélectionnée
-                    </button>
-                </div>
-
-                <!-- Barème et notation -->
-                <div class="form-section">
-                    <h2><i class="fas fa-chart-bar"></i> Barème et notation</h2>
-                    <div id="rating-container">
-                        <!-- Le barème sera généré dynamiquement -->
-                    </div>
-                </div>
-
-                <!-- Statistiques de l'évaluation -->
-                <div class="form-section">
-                    <h2><i class="fas fa-chart-pie"></i> Statistiques de l'évaluation</h2>
-                    <div class="stats-container">
-                        <div class="stat-box">
-                            <div class="stat-title">Moyenne de la classe</div>
-                            <div class="stat-value" id="average_score">0.0</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-title">Note la plus élevée</div>
-                            <div class="stat-value" id="highest_score">0.0</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-title">Note la plus basse</div>
-                            <div class="stat-value" id="lowest_score">0.0</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-title">Taux de réussite</div>
-                            <div class="stat-value" id="success_rate">0%</div>
-                        </div>
-                    </div>
-                    
-                    <div class="info-group" style="margin-top: 20px;">
-                        <label for="comments">Commentaires et observations:</label>
-                        <textarea id="comments" name="comments" placeholder="Ajoutez vos observations sur les résultats..."></textarea>
-                    </div>
-                </div>
-
-                <!-- Boutons d'action -->
-                <div class="btn-container">
-                    <button type="button" onclick="saveEvaluation()"><i class="fas fa-save"></i> Enregistrer</button>
-                    <button type="button" onclick="exportToJson()"><i class="fas fa-download"></i> Exporter JSON</button>
-                    <button type="button" onclick="window.print()"><i class="fas fa-print"></i> Imprimer</button>
-                    <button type="reset"><i class="fas fa-redo"></i> Réinitialiser</button>
-                </div>
-            </form>
-        </div>
-        
-        <!-- Visualisation des épreuves enregistrées -->
-        <div id="view-container" class="view-container">
-            <h2>Épreuves enregistrées</h2>
-            
-            <div class="filter-section">
-                <h3>Filtrer les épreuves</h3>
-                <div class="filter-grid">
-                    <div class="filter-group">
-                        <label for="filter-type">Type d'évaluation:</label>
-                        <select id="filter-type">
-                            <option value="">Tous les types</option>
-                            <option value="interrogation">Interrogation</option>
-                            <option value="devoir_surveille">Devoir surveillé</option>
-                            <option value="composition">Composition trimestrielle</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="filter-class">Classe:</label>
-                        <select id="filter-class">
-                            <option value="">Toutes les classes</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="filter-subject">Matière:</label>
-                        <select id="filter-subject">
-                            <option value="">Toutes les matières</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="filter-teacher">Enseignant:</label>
-                        <select id="filter-teacher">
-                            <option value="">Tous les enseignants</option>
-                        </select>
-                    </div>
-                </div>
-                <button onclick="applyFilters()"><i class="fas fa-filter"></i> Appliquer les filtres</button>
-                <button onclick="clearFilters()" style="background-color: #666;"><i class="fas fa-times"></i> Effacer les filtres</button>
+        <div class="editor-panel">
+            <!-- Boutons d'action en haut -->
+            <div class="top-action-buttons">
+                <button class="btn-success" onclick="showPrintOptions()">
+                    <i class="fas fa-file-pdf"></i> Générer PDF
+                </button>
+                <button class="btn-info" onclick="printEvaluation()">
+                    <i class="fas fa-print"></i> Imprimer
+                </button>
+                <button class="btn-danger" onclick="resetEvaluation()">
+                    <i class="fas fa-trash"></i> Tout effacer
+                </button>
             </div>
             
-            <div id="cards-container" class="cards-container">
-                <!-- Les épreuves seront affichées ici dynamiquement -->
+            <h2 class="panel-title"><i class="fas fa-edit"></i> Éditeur d'évaluation</h2>
+            
+            <div class="form-group">
+                <label for="school-name">Nom de l'établissement</label>
+                <input type="text" id="school-name" placeholder="Ex: Lycée Louis Pasteur">
+            </div>
+            
+            <div class="form-group">
+                <label for="teacher-name">Nom de l'enseignant</label>
+                <input type="text" id="teacher-name" placeholder="Ex: Dupont Jean">
+            </div>
+            
+            <div class="form-group">
+                <label for="subject">Matière</label>
+                <input type="text" id="subject" placeholder="Ex: Mathématiques">
+            </div>
+            
+            <div class="form-group">
+                <label for="class-name">Classe/Niveau</label>
+                <input type="text" id="class-name" placeholder="Ex: Seconde 7">
+            </div>
+            
+            <div class="form-group">
+                <label for="evaluation-title">Titre de l'évaluation</label>
+                <input type="text" id="evaluation-title" placeholder="Ex: Devoir sur les fonctions">
+            </div>
+            
+            <div class="form-group">
+                <label for="evaluation-duration">Durée de l'évaluation</label>
+                <input type="text" id="evaluation-duration" placeholder="Ex: 2 heures">
+            </div>
+            
+            <div class="form-group">
+                <label for="total-points">Total des points</label>
+                <input type="number" id="total-points" placeholder="Ex: 20">
+            </div>
+            
+            <h3 class="panel-title"><i class="fas fa-plus-circle"></i> Ajouter des sections</h3>
+            
+            <div class="section-buttons">
+                <button class="btn-info" onclick="addSection('instructions')">
+                    <i class="fas fa-info-circle"></i> Instructions
+                </button>
+                <button class="btn-success" onclick="addSection('qcm')">
+                    <i class="fas fa-check-square"></i> QCM
+                </button>
+                <button class="btn-success" onclick="addSection('truefalse')">
+                    <i class="fas fa-check-circle"></i> Vrai/Faux
+                </button>
+                <button class="btn-warning" onclick="addSection('fillblank')">
+                    <i class="fas fa-pencil-alt"></i> Questions à trous
+                </button>
+                <button class="btn-warning" onclick="addSection('traditional')">
+                    <i class="fas fa-question-circle"></i> Questions traditionnelles
+                </button>
+                <button class="btn-purple" onclick="addSection('problem')">
+                    <i class="fas fa-puzzle-piece"></i> Situation problème
+                </button>
+                <button class="btn-purple" onclick="addImageSection()">
+                    <i class="fas fa-image"></i> Image
+                </button>
+            </div>
+            
+            <div class="content-blocks" id="content-blocks">
+                <!-- Les blocs de contenu seront ajoutés ici dynamiquement -->
             </div>
         </div>
+        
+        <div class="preview-panel">
+            <h2 class="panel-title"><i class="fas fa-eye"></i> Aperçu de l'évaluation</h2>
+            
+            <div class="evaluation-preview" id="evaluation-preview">
+                <div class="preview-header">
+                    <div class="watermark" id="watermark">ÉVALUATION</div>
+                    <div class="school-name" id="preview-school">Nom de l'établissement</div>
+                    <h1 class="evaluation-title" id="preview-title">Titre de l'évaluation</h1>
+                    <p id="preview-subject">Matière: [Matière]</p>
+                    
+                    <div class="header-info">
+                        <div class="info-item">
+                            <i class="fas fa-user-graduate"></i>
+                            <span id="preview-teacher">Enseignant: [Nom]</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-users"></i>
+                            <span id="preview-class">Classe: [Classe]</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-clock"></i>
+                            <span id="preview-duration">Durée: [Durée]</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-star"></i>
+                            <span id="preview-points">Total: [Points] points</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="preview-content" id="preview-content">
+                    <p>Le contenu de votre évaluation apparaîtra ici.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <div class="footer">
-            Système de Saisie d'Épreuves d'Évaluation - République Togolaise © 2023
+    <!-- Modal pour les options d'impression -->
+    <div id="printModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2><i class="fas fa-print"></i> Options d'export PDF</h2>
+            <div class="print-options">
+                <div class="print-option">
+                    <label for="pdfOrientation">Orientation de la page:</label>
+                    <select id="pdfOrientation">
+                        <option value="portrait">Portrait</option>
+                        <option value="landscape">Paysage</option>
+                    </select>
+                </div>
+                <div class="print-option">
+                    <label for="pdfFormat">Format de page:</label>
+                    <select id="pdfFormat">
+                        <option value="a4">A4</option>
+                        <option value="letter">Lettre</option>
+                        <option value="legal">Légal</option>
+                    </select>
+                </div>
+                <div class="print-option">
+                    <label for="includeAnswers">Inclure les réponses:</label>
+                    <input type="checkbox" id="includeAnswers">
+                </div>
+                <div class="print-option">
+                    <label for="includeSolutions">Inclure les solutions détaillées:</label>
+                    <input type="checkbox" id="includeSolutions">
+                </div>
+                <div class="print-option">
+                    <label for="studentNameField">Ajouter un champ pour le nom de l'élève:</label>
+                    <input type="checkbox" id="studentNameField" checked>
+                </div>
+                <div class="print-option">
+                    <label for="watermarkText">Filigrane:</label>
+                    <input type="text" id="watermarkText" placeholder="Ex: CORRIGÉ" value="ÉVALUATION">
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-success" onclick="generatePDF()">
+                    <i class="fas fa-file-pdf"></i> Générer PDF
+                </button>
+            </div>
         </div>
     </div>
 
     <script>
-        let allEvaluations = [];
-        let questionCount = 0;
-        let currentQuestionType = 'traditional';
+        // Initialisation des champs avec des valeurs par défaut
+        document.getElementById('school-name').value = 'Lycée Louis Pasteur';
+        document.getElementById('teacher-name').value = 'Dupont Jean';
+        document.getElementById('subject').value = 'Mathématiques';
+        document.getElementById('class-name').value = 'Seconde 7';
+        document.getElementById('evaluation-title').value = 'Devoir sur les fonctions';
+        document.getElementById('evaluation-duration').value = '2 heures';
+        document.getElementById('total-points').value = '20';
         
-        // Initialisation
-        document.addEventListener('DOMContentLoaded', function() {
-            // Définir la date du jour comme date d'évaluation par défaut
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('evaluation_date').value = today;
-            
-            // Ajouter une première question
-            addQuestion();
-            
-            // Charger les évaluations enregistrées
-            loadAllEvaluations();
-        });
+        // Mise à jour de l'aperçu
+        updatePreview();
         
-        // Afficher l'onglet sélectionné
-        function showTab(tabName) {
-            if (tabName === 'form') {
-                document.getElementById('form-container').style.display = 'block';
-                document.getElementById('view-container').style.display = 'none';
-                document.querySelectorAll('.tab')[0].classList.add('active');
-                document.querySelectorAll('.tab')[1].classList.remove('active');
-            } else {
-                document.getElementById('form-container').style.display = 'none';
-                document.getElementById('view-container').style.display = 'block';
-                document.querySelectorAll('.tab')[0].classList.remove('active');
-                document.querySelectorAll('.tab')[1].classList.add('active');
-                
-                // Recharger les évaluations et les filtres
-                loadAllEvaluations();
-                populateFilterOptions();
-                applyFilters();
-            }
+        // Fonction pour mettre à jour l'aperçu
+        function updatePreview() {
+            document.getElementById('preview-school').textContent = document.getElementById('school-name').value;
+            document.getElementById('preview-title').textContent = document.getElementById('evaluation-title').value;
+            document.getElementById('preview-subject').textContent = 'Matière: ' + document.getElementById('subject').value;
+            document.getElementById('preview-teacher').textContent = 'Enseignant: ' + document.getElementById('teacher-name').value;
+            document.getElementById('preview-class').textContent = 'Classe: ' + document.getElementById('class-name').value;
+            document.getElementById('preview-duration').textContent = 'Durée: ' + document.getElementById('evaluation-duration').value;
+            document.getElementById('preview-points').textContent = 'Total: ' + document.getElementById('total-points').value + ' points';
+            document.getElementById('watermark').textContent = document.getElementById('watermarkText').value || 'ÉVALUATION';
         }
         
-        // Définir le type de question
-        function setQuestionType(type) {
-            currentQuestionType = type;
-            
-            // Mettre à jour l'interface
-            document.querySelectorAll('.type-btn').forEach(btn => {
-                if (btn.dataset.type === type) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-        }
+        // Écouteurs d'événements pour la mise à jour en temps réel
+        document.getElementById('school-name').addEventListener('input', updatePreview);
+        document.getElementById('teacher-name').addEventListener('input', updatePreview);
+        document.getElementById('subject').addEventListener('input', updatePreview);
+        document.getElementById('class-name').addEventListener('input', updatePreview);
+        document.getElementById('evaluation-title').addEventListener('input', updatePreview);
+        document.getElementById('evaluation-duration').addEventListener('input', updatePreview);
+        document.getElementById('total-points').addEventListener('input', updatePreview);
+        document.getElementById('watermarkText').addEventListener('input', updatePreview);
         
-        // Ajouter une question à l'épreuve
-        function addQuestion() {
-            questionCount++;
-            const questionsContainer = document.getElementById('questions-container');
+        // Compteur pour les IDs des blocs
+        let blockCount = 0;
+        
+        // Fonction pour ajouter une section
+        function addSection(type) {
+            blockCount++;
+            const blockId = `block-${blockCount}`;
             
-            const questionItem = document.createElement('div');
-            questionItem.className = 'question-item';
-            questionItem.id = `question-${questionCount}`;
-            questionItem.dataset.type = currentQuestionType;
+            let blockTitle = '';
+            let placeholder = '';
             
-            let questionContent = '';
-            
-            switch(currentQuestionType) {
-                case 'traditional':
-                    questionContent = getTraditionalQuestionHTML(questionCount);
-                    break;
-                case 'problem':
-                    questionContent = getProblemQuestionHTML(questionCount);
+            switch(type) {
+                case 'instructions':
+                    blockTitle = 'Instructions';
+                    placeholder = 'Saisissez les instructions ici...';
                     break;
                 case 'qcm':
-                    questionContent = getQCMQuestionHTML(questionCount);
+                    blockTitle = 'Question à Choix Multiple';
+                    placeholder = 'Saisissez votre question QCM ici...';
                     break;
                 case 'truefalse':
-                    questionContent = getTrueFalseQuestionHTML(questionCount);
+                    blockTitle = 'Question Vrai/Faux';
+                    placeholder = 'Saisissez votre question Vrai/Faux ici...';
                     break;
-                case 'wordsearch':
-                    questionContent = getWordSearchQuestionHTML(questionCount);
+                case 'fillblank':
+                    blockTitle = 'Question à Trous';
+                    placeholder = 'Saisissez votre texte avec des trous. Utilisez [ ] pour indiquer les emplacements des réponses. Ex: La capitale de la France est [Paris].';
                     break;
+                case 'traditional':
+                    blockTitle = 'Question Traditionnelle';
+                    placeholder = 'Saisissez votre question traditionnelle ici...';
+                    break;
+                case 'problem':
+                    blockTitle = 'Situation Problème';
+                    placeholder = 'Décrivez la situation problème ici...';
+                    break;
+                default:
+                    blockTitle = 'Texte';
+                    placeholder = 'Saisissez votre texte ici...';
             }
             
-            questionItem.innerHTML = `
-                <div class="question-header">
-                    <span class="question-number">Question ${questionCount} (${getQuestionTypeLabel(currentQuestionType)})</span>
-                    <span class="remove-question" onclick="removeQuestion(${questionCount})">
-                        <i class="fas fa-times"></i>
-                    </span>
-                </div>
-                ${questionContent}
-            `;
-            
-            questionsContainer.appendChild(questionItem);
-            updateRatingBars();
-        }
-        
-        // Obtenir le libellé du type de question
-        function getQuestionTypeLabel(type) {
-            switch(type) {
-                case 'traditional': return 'Traditionnelle';
-                case 'problem': return 'Situation problème';
-                case 'qcm': return 'QCM';
-                case 'truefalse': return 'Vrai/Faux';
-                case 'wordsearch': return 'Mots mêlés';
-                default: return 'Question';
-            }
-        }
-        
-        // HTML pour une question traditionnelle
-        function getTraditionalQuestionHTML(id) {
-            return `
-                <div class="info-group">
-                    <label for="question-${id}-text">Énoncé de la question:</label>
-                    <textarea id="question-${id}-text" name="questions[${id}][text]" placeholder="Rédigez l'énoncé de la question..." required></textarea>
-                </div>
-                <div class="info-group">
-                    <label for="question-${id}-points">Points attribués:</label>
-                    <input type="number" id="question-${id}-points" name="questions[${id}][points]" min="0.5" step="0.5" value="2" required>
-                </div>
-                <div class="info-group">
-                    <label for="question-${id}-difficulty">Niveau de difficulté:</label>
-                    <select id="question-${id}-difficulty" name="questions[${id}][difficulty]" required>
-                        <option value="facile">Facile</option>
-                        <option value="moyen" selected>Moyen</option>
-                        <option value="difficile">Difficile</option>
-                    </select>
-                </div>
-            `;
-        }
-        
-        // HTML pour une situation problème
-        function getProblemQuestionHTML(id) {
-            return `
-                <div class="info-group">
-                    <label for="question-${id}-context">Contexte de la situation:</label>
-                    <textarea id="question-${id}-context" name="questions[${id}][context]" placeholder="Décrivez le contexte de la situation problème..." required></textarea>
-                </div>
-                <div class="info-group">
-                    <label for="question-${id}-text">Question ou problème à résoudre:</label>
-                    <textarea id="question-${id}-text" name="questions[${id}][text]" placeholder="Formulez le problème à résoudre..." required></textarea>
-                </div>
-                <div class="info-group">
-                    <label for="question-${id}-points">Points attribués:</label>
-                    <input type="number" id="question-${id}-points" name="questions[${id}][points]" min="1" step="0.5" value="4" required>
-                </div>
-                <div class="info-group">
-                    <label for="question-${id}-difficulty">Niveau de difficulté:</label>
-                    <select id="question-${id}-difficulty" name="questions[${id}][difficulty]" required>
-                        <option value="facile">Facile</option>
-                        <option value="moyen">Moyen</option>
-                        <option value="difficile" selected>Difficile</option>
-                    </select>
-                </div>
-            `;
-        }
-        
-        // HTML pour un QCM
-        function getQCMQuestionHTML(id) {
-            return `
-                <div class="info-group">
-                    <label for="question-${id}-text">Énoncé de la question:</label>
-                    <textarea id="question-${id}-text" name="questions[${id}][text]" placeholder="Rédigez l'énoncé de la question..." required></textarea>
-                </div>
-                <div class="qcm-options">
-                    <label>Options de réponse:</label>
-                    <div id="qcm-options-${id}">
-                        <div class="option-item">
-                            <input type="checkbox" name="questions[${id}][correct][]" value="0">
-                            <input type="text" name="questions[${id}][options][]" placeholder="Option 1" required>
-                        </div>
-                        <div class="option-item">
-                            <input type="checkbox" name="questions[${id}][correct][]" value="1">
-                            <input type="text" name="questions[${id}][options][]" placeholder="Option 2" required>
-                        </div>
-                        <div class="option-item">
-                            <input type="checkbox" name="questions[${id}][correct][]" value="2">
-                            <input type="text" name="questions[${id}][options][]" placeholder="Option 3" required>
-                        </div>
-                        <div class="option-item">
-                            <input type="checkbox" name="questions[${id}][correct][]" value="3">
-                            <input type="text" name="questions[${id}][options][]" placeholder="Option 4" required>
+            const blockHTML = `
+                <div class="content-block" id="${blockId}">
+                    <div class="block-header">
+                        <span class="block-title">${blockTitle}</span>
+                        <div class="block-actions">
+                            <button class="btn-danger" onclick="removeBlock('${blockId}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </div>
                     </div>
-                    <button type="button" class="add-option" onclick="addQMCOption(${id})">+ Ajouter une option</button>
-                </div>
-                <div class="info-group">
-                    <label for="question-${id}-points">Points attribués:</label>
-                    <input type="number" id="question-${id}-points" name="questions[${id}][points]" min="0.5" step="0.5" value="1" required>
-                </div>
-                <div class="info-group">
-                    <label for="question-${id}-difficulty">Niveau de difficulté:</label>
-                    <select id="question-${id}-difficulty" name="questions[${id}][difficulty]" required>
-                        <option value="facile" selected>Facile</option>
-                        <option value="moyen">Moyen</option>
-                        <option value="difficile">Difficile</option>
-                    </select>
-                </div>
-            `;
-        }
-        
-        // HTML pour une question Vrai/Faux
-        function getTrueFalseQuestionHTML(id) {
-            return `
-                <div class="info-group">
-                    <label for="question-${id}-text">Énoncé de l'affirmation:</label>
-                    <textarea id="question-${id}-text" name="questions[${id}][text]" placeholder="Rédigez l'affirmation (Vrai ou Faux?)..." required></textarea>
-                </div>
-                <div class="truefalse-options">
-                    <label>Réponse correcte:</label>
-                    <div class="option-item">
-                        <input type="radio" id="question-${id}-true" name="questions[${id}][correct]" value="true" checked>
-                        <label for="question-${id}-true">Vrai</label>
+                    <div class="form-group">
+                        <label for="${blockId}-points">Points attribués</label>
+                        <input type="number" id="${blockId}-points" placeholder="Ex: 5" oninput="updateContent('${blockId}', '${type}')">
                     </div>
-                    <div class="option-item">
-                        <input type="radio" id="question-${id}-false" name="questions[${id}][correct]" value="false">
-                        <label for="question-${id}-false">Faux</label>
+                    ${type === 'qcm' ? `
+                        <div class="form-group">
+                            <label>Options de réponse (cochez la bonne réponse)</label>
+                            <div id="${blockId}-options">
+                                <div class="option-item">
+                                    <input type="checkbox" id="${blockId}-option1-correct" name="${blockId}-correct">
+                                    <input type="text" id="${blockId}-option1" placeholder="Option 1" oninput="updateContent('${blockId}', '${type}')">
+                                </div>
+                                <div class="option-item">
+                                    <input type="checkbox" id="${blockId}-option2-correct" name="${blockId}-correct">
+                                    <input type="text" id="${blockId}-option2" placeholder="Option 2" oninput="updateContent('${blockId}', '${type}')">
+                                </div>
+                            </div>
+                            <button class="btn-info" onclick="addQCMOption('${blockId}')">
+                                <i class="fas fa-plus"></i> Ajouter une option
+                            </button>
+                        </div>
+                    ` : ''}
+                    ${type === 'truefalse' ? `
+                        <div class="form-group">
+                            <label>Réponse correcte</label>
+                            <select id="${blockId}-correct-answer" onchange="updateContent('${blockId}', '${type}')">
+                                <option value="true">Vrai</option>
+                                <option value="false">Faux</option>
+                            </select>
+                        </div>
+                    ` : ''}
+                    <div class="formatting-toolbar" id="toolbar-${blockId}">
+                        <button class="format-btn" title="Gras" onclick="applyFormat('${blockId}', 'bold')">
+                            <i class="fas fa-bold"></i>
+                        </button>
+                        <button class="format-btn" title="Italique" onclick="applyFormat('${blockId}', 'italic')">
+                            <i class="fas fa-italic"></i>
+                        </button>
+                        <button class="format-btn" title="Souligné" onclick="applyFormat('${blockId}', 'underline')">
+                            <i class="fas fa-underline"></i>
+                        </button>
+                        <button class="format-btn" title="Barré" onclick="applyFormat('${blockId}', 'strikeThrough')">
+                            <i class="fas fa-strikethrough"></i>
+                        </button>
+                        <button class="color-btn red" title="Texte rouge" onclick="applyColor('${blockId}', 'red')"></button>
+                        <button class="color-btn green" title="Texte vert" onclick="applyColor('${blockId}', 'green')"></button>
+                        <button class="color-btn blue" title="Texte bleu" onclick="applyColor('${blockId}', 'blue')"></button>
+                        <button class="color-btn black active" title="Texte noir" onclick="applyColor('${blockId}', 'black')"></button>
+                    </div>
+                    <div id="editor-${blockId}" contenteditable="true" class="text-editor" oninput="updateContent('${blockId}', '${type}')" 
+                         style="min-height: 100px; border: 1px solid #ddd; border-radius: 5px; padding: 10px; background: white;">
+                        ${placeholder}
+                    </div>
+                    
+                    <!-- Section Solution -->
+                    <div class="solution-toggle" onclick="toggleSolution('${blockId}')">
+                        <i class="fas fa-chevron-down"></i> Ajouter une solution détaillée
+                    </div>
+                    <div id="solution-${blockId}" class="solution-content">
+                        <div class="formatting-toolbar" id="solution-toolbar-${blockId}">
+                            <button class="format-btn" title="Gras" onclick="applySolutionFormat('${blockId}', 'bold')">
+                                <i class="fas fa-bold"></i>
+                            </button>
+                            <button class="format-btn" title="Italique" onclick="applySolutionFormat('${blockId}', 'italic')">
+                                <i class="fas fa-italic"></i>
+                            </button>
+                            <button class="format-btn" title="Souligné" onclick="applySolutionFormat('${blockId}', 'underline')">
+                                <i class="fas fa-underline"></i>
+                            </button>
+                        </div>
+                        <div id="solution-editor-${blockId}" contenteditable="true" class="text-editor" 
+                             style="min-height: 80px; border: 1px solid #ddd; border-radius: 5px; padding: 10px; background: white;"
+                             placeholder="Rédigez la solution détaillée ici...">
+                            Rédigez la solution détaillée ici...
+                        </div>
                     </div>
                 </div>
-                <div class="info-group">
-                    <label for="question-${id}-points">Points attribués:</label>
-                    <input type="number" id="question-${id}-points" name="questions[${id}][points]" min="0.5" step="0.5" value="0.5" required>
-                </div>
-                <div class="info-group">
-                    <label for="question-${id}-difficulty">Niveau de difficulté:</label>
-                    <select id="question-${id}-difficulty" name="questions[${id}][difficulty]" required>
-                        <option value="facile" selected>Facile</option>
-                        <option value="moyen">Moyen</option>
-                        <option value="difficile">Difficile</option>
-                    </select>
-                </div>
             `;
+            
+            document.getElementById('content-blocks').insertAdjacentHTML('beforeend', blockHTML);
+            updateContentPreview(blockId, type, '', 0);
         }
         
-        // HTML pour une grille de mots mêlés
-        function getWordSearchQuestionHTML(id) {
-            return `
-                <div class="info-group">
-                    <label for="question-${id}-theme">Thème des mots:</label>
-                    <input type="text" id="question-${id}-theme" name="questions[${id}][theme]" placeholder="Ex: Vocabulaire scientifique, Capitales..." required>
+        // Fonction pour basculer l'affichage de la solution
+        function toggleSolution(blockId) {
+            const solutionContent = document.getElementById(`solution-${blockId}`);
+            const toggleIcon = solutionContent.previousElementSibling.querySelector('i');
+            
+            if (solutionContent.style.display === 'block') {
+                solutionContent.style.display = 'none';
+                toggleIcon.className = 'fas fa-chevron-down';
+            } else {
+                solutionContent.style.display = 'block';
+                toggleIcon.className = 'fas fa-chevron-up';
+            }
+        }
+        
+        // Fonction pour appliquer un formatage à la solution
+        function applySolutionFormat(blockId, format) {
+            const editor = document.getElementById(`solution-editor-${blockId}`);
+            document.execCommand(format, false, null);
+        }
+        
+        // Fonction pour ajouter une option à une question QCM
+        function addQCMOption(blockId) {
+            const optionsContainer = document.getElementById(`${blockId}-options`);
+            const optionCount = optionsContainer.children.length + 1;
+            
+            const optionHTML = `
+                <div class="option-item">
+                    <input type="checkbox" id="${blockId}-option${optionCount}-correct" name="${blockId}-correct">
+                    <input type="text" id="${blockId}-option${optionCount}" placeholder="Option ${optionCount}" oninput="updateContent('${blockId}', 'qcm')">
                 </div>
-                <div class="info-group">
-                    <label for="question-${id}-words">Liste des mots à trouver (séparés par des virgules):</label>
-                    <textarea id="question-${id}-words" name="questions[${id}][words]" placeholder="Ex: Photosynthèse, Mitochondrie, Chlorophylle..." required></textarea>
-                </div>
-                <div class="info-group">
-                    <label>Grille de mots mêlés (10x10):</label>
-                    <div class="wordsearch-grid" id="wordsearch-${id}">
-                        ${generateWordSearchGrid()}
+            `;
+            
+            optionsContainer.insertAdjacentHTML('beforeend', optionHTML);
+            updateContent(blockId, 'qcm');
+        }
+        
+        // Fonction pour appliquer un formatage de texte
+        function applyFormat(blockId, format) {
+            const editor = document.getElementById(`editor-${blockId}`);
+            
+            // Sauvegarder la sélection actuelle
+            const selection = window.getSelection();
+            const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+            
+            // Appliquer le formatage
+            document.execCommand(format, false, null);
+            
+            // Restaurer la sélection
+            if (range) {
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+            
+            // Mettre à jour le contenu
+            const type = getBlockType(blockId);
+            updateContent(blockId, type);
+        }
+        
+        // Fonction pour appliquer une couleur au texte
+        function applyColor(blockId, color) {
+            const editor = document.getElementById(`editor-${blockId}`);
+            const toolbar = document.getElementById(`toolbar-${blockId}`);
+            
+            // Mettre à jour les boutons actifs
+            const buttons = toolbar.querySelectorAll('.color-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            toolbar.querySelector(`.color-btn.${color}`).classList.add('active');
+            
+            // Sauvegarder la sélection actuelle
+            const selection = window.getSelection();
+            const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+            
+            // Appliquer la couleur au texte sélectionné
+            document.execCommand('styleWithCSS', false, true);
+            document.execCommand('foreColor', false, getColorValue(color));
+            
+            // Restaurer la sélection
+            if (range) {
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+            
+            // Mettre à jour le contenu
+            const type = getBlockType(blockId);
+            updateContent(blockId, type);
+        }
+        
+        // Fonction pour obtenir la valeur de couleur
+        function getColorValue(color) {
+            switch(color) {
+                case 'red': return '#e74c3c';
+                case 'green': return '#27ae60';
+                case 'blue': return '#3498db';
+                case 'black': return '#2c3e50';
+                default: return '#2c3e50';
+            }
+        }
+        
+        // Fonction pour obtenir le type d'un bloc
+        function getBlockType(blockId) {
+            const block = document.getElementById(blockId);
+            const title = block.querySelector('.block-title').textContent.toLowerCase();
+            
+            if (title.includes('instruction')) return 'instructions';
+            if (title.includes('choix')) return 'qcm';
+            if (title.includes('vrai')) return 'truefalse';
+            if (title.includes('trous')) return 'fillblank';
+            if (title.includes('traditionnelle')) return 'traditional';
+            if (title.includes('situation')) return 'problem';
+            return 'text';
+        }
+        
+        // Fonction pour ajouter une section d'image
+        function addImageSection() {
+            blockCount++;
+            const blockId = `block-${blockCount}`;
+            
+            const blockHTML = `
+                <div class="content-block" id="${blockId}">
+                    <div class="block-header">
+                        <span class="block-title">Image</span>
+                        <div class="block-actions">
+                            <button class="btn-danger" onclick="removeBlock('${blockId}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="${blockId}-points">Points attribués</label>
+                        <input type="number" id="${blockId}-points" placeholder="Ex: 5" oninput="updateContent('${blockId}', 'image')">
+                    </div>
+                    <div class="form-group">
+                        <label for="${blockId}-image-upload">Importer une image</label>
+                        <input type="file" id="${blockId}-image-upload" accept="image/*" onchange="handleImageUpload('${blockId}', this)">
+                    </div>
+                    <div class="form-group">
+                        <label for="${blockId}-image-caption">Légende (optionnel)</label>
+                        <input type="text" id="${blockId}-image-caption" placeholder="Saisissez une légende..." oninput="updateImageCaption('${blockId}', this.value)">
+                    </div>
+                    <img id="${blockId}-image-preview" class="image-preview" src="" alt="Aperçu de l'image">
+                    
+                    <!-- Section Solution pour image -->
+                    <div class="solution-toggle" onclick="toggleSolution('${blockId}')">
+                        <i class="fas fa-chevron-down"></i> Ajouter une solution détaillée
+                    </div>
+                    <div id="solution-${blockId}" class="solution-content">
+                        <div class="formatting-toolbar" id="solution-toolbar-${blockId}">
+                            <button class="format-btn" title="Gras" onclick="applySolutionFormat('${blockId}', 'bold')">
+                                <i class="fas fa-bold"></i>
+                            </button>
+                            <button class="format-btn" title="Italique" onclick="applySolutionFormat('${blockId}', 'italic')">
+                                <i class="fas fa-italic"></i>
+                            </button>
+                            <button class="format-btn" title="Souligné" onclick="applySolutionFormat('${blockId}', 'underline')">
+                                <i class="fas fa-underline"></i>
+                            </button>
+                        </div>
+                        <div id="solution-editor-${blockId}" contenteditable="true" class="text-editor" 
+                             style="min-height: 80px; border: 1px solid #ddd; border-radius: 5px; padding: 10px; background: white;"
+                             placeholder="Rédigez la solution détaillée ici...">
+                            Rédigez la solution détaillée ici...
+                        </div>
                     </div>
                 </div>
-                <div class="info-group">
-                    <label for="question-${id}-points">Points attribués:</label>
-                    <input type="number" id="question-${id}-points" name="questions[${id}][points]" min="0.5" step="0.5" value="3" required>
-                </div>
-                <div class="info-group">
-                    <label for="question-${id}-difficulty">Niveau de difficulté:</label>
-                    <select id="question-${id}-difficulty" name="questions[${id}][difficulty]" required>
-                        <option value="facile" selected>Facile</option>
-                        <option value="moyen">Moyen</option>
-                        <option value="difficile">Difficile</option>
-                    </select>
-                </div>
-            `;
-        }
-        
-        // Générer une grille de mots mêlés
-        function generateWordSearchGrid() {
-            let gridHTML = '';
-            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            
-            for (let i = 0; i < 100; i++) {
-                const randomLetter = letters[Math.floor(Math.random() * letters.length)];
-                gridHTML += `<div class="wordsearch-cell">${randomLetter}</div>`;
-            }
-            
-            return gridHTML;
-        }
-        
-        // Ajouter une option à un QCM
-        function addQMCOption(questionId) {
-            const optionsContainer = document.getElementById(`qcm-options-${questionId}`);
-            const optionCount = optionsContainer.children.length;
-            
-            const optionItem = document.createElement('div');
-            optionItem.className = 'option-item';
-            optionItem.innerHTML = `
-                <input type="checkbox" name="questions[${questionId}][correct][]" value="${optionCount}">
-                <input type="text" name="questions[${questionId}][options][]" placeholder="Option ${optionCount + 1}" required>
             `;
             
-            optionsContainer.appendChild(optionItem);
+            document.getElementById('content-blocks').insertAdjacentHTML('beforeend', blockHTML);
         }
         
-        // Supprimer une question
-        function removeQuestion(questionId) {
-            if (questionCount <= 1) {
-                alert("L'épreuve doit contenir au moins une question.");
-                return;
-            }
-            
-            const questionElement = document.getElementById(`question-${questionId}`);
-            questionElement.remove();
-            
-            // Renumérotation des questions
-            questionCount = 0;
-            const questionItems = document.querySelectorAll('.question-item');
-            questionItems.forEach((item, index) => {
-                questionCount++;
-                const questionNumber = item.querySelector('.question-number');
-                const type = item.dataset.type;
-                questionNumber.textContent = `Question ${questionCount} (${getQuestionTypeLabel(type)})`;
-                
-                // Mettre à jour les IDs et les noms
-                item.id = `question-${questionCount}`;
-                
-                // Mettre à jour tous les champs à l'intérieur de la question
-                const inputs = item.querySelectorAll('input, textarea, select');
-                inputs.forEach(input => {
-                    if (input.name) {
-                        input.name = input.name.replace(/questions\[\d+\]/, `questions[${questionCount}]`);
-                    }
-                    if (input.id) {
-                        input.id = input.id.replace(/question-\d+/, `question-${questionCount}`);
-                    }
-                });
-                
-                // Mettre à jour les événements onclick
-                const removeBtn = item.querySelector('.remove-question');
-                removeBtn.setAttribute('onclick', `removeQuestion(${questionCount})`);
-            });
-            
-            updateRatingBars();
-        }
-        
-        // Mettre à jour les barèmes de notation
-        function updateRatingBars() {
-            const ratingContainer = document.getElementById('rating-container');
-            ratingContainer.innerHTML = '';
-            
-            const totalPoints = parseFloat(document.getElementById('total_points').value) || 20;
-            let assignedPoints = 0;
-            
-            // Ajouter un barème pour chaque question
-            for (let i = 1; i <= questionCount; i++) {
-                const questionElement = document.getElementById(`question-${i}`);
-                if (!questionElement) continue;
-                
-                const pointsInput = document.getElementById(`question-${i}-points`);
-                const points = parseFloat(pointsInput.value) || 0;
-                assignedPoints += points;
-                
-                const ratingBar = document.createElement('div');
-                ratingBar.className = 'rating-bar';
-                ratingBar.innerHTML = `
-                    <span class="rating-label">Question ${i}:</span>
-                    <input type="range" class="rating-slider" min="0" max="${points}" step="0.5" value="0" 
-                           oninput="document.getElementById('question-${i}-score').value = this.value; updateStatistics()">
-                    <span class="rating-value">
-                        <input type="number" id="question-${i}-score" min="0" max="${points}" step="0.5" value="0" 
-                               oninput="document.querySelector('#question-${i} .rating-slider').value = this.value; updateStatistics()" style="width: 50px;">
-                        / ${points}
-                    </span>
-                `;
-                
-                ratingContainer.appendChild(ratingBar);
-            }
-            
-            // Afficher le total des points attribués
-            const totalBar = document.createElement('div');
-            totalBar.className = 'rating-bar';
-            totalBar.style.marginTop = '20px';
-            totalBar.style.paddingTop = '10px';
-            totalBar.style.borderTop = '2px solid #ddd';
-            totalBar.innerHTML = `
-                <span class="rating-label"><strong>Total:</strong></span>
-                <span class="rating-slider"></span>
-                <span class="rating-value">
-                    <strong id="total-score">0</strong> / ${totalPoints}
-                </span>
-            `;
-            
-            ratingContainer.appendChild(totalBar);
-            
-            // Vérifier si le total des points des questions correspond au total de l'épreuve
-            if (Math.abs(assignedPoints - totalPoints) > 0.1) {
-                const warning = document.createElement('div');
-                warning.style.color = '#cc0000';
-                warning.style.marginTop = '10px';
-                warning.innerHTML = `<i class="fas fa-exclamation-triangle"></i> 
-                    Attention: La somme des points des questions (${assignedPoints}) ne correspond pas au total de l'épreuve (${totalPoints}).`;
-                ratingContainer.appendChild(warning);
-            }
-        }
-        
-        // Mettre à jour les statistiques
-        function updateStatistics() {
-            let totalScore = 0;
-            let totalPoints = parseFloat(document.getElementById('total_points').value) || 20;
-            
-            // Calculer le score total
-            for (let i = 1; i <= questionCount; i++) {
-                const scoreInput = document.getElementById(`question-${i}-score`);
-                if (scoreInput) {
-                    totalScore += parseFloat(scoreInput.value) || 0;
-                }
-            }
-            
-            // Mettre à jour l'affichage du score total
-            document.getElementById('total-score').textContent = totalScore.toFixed(1);
-            
-            // Calculer les statistiques (pour l'exemple, on utilise des valeurs fixes)
-            // Dans une application réelle, ces valeurs seraient calculées à partir des résultats des élèves
-            const averageScore = (totalScore * 0.7).toFixed(1);
-            const highestScore = Math.min(totalScore, (totalScore * 0.95)).toFixed(1);
-            const lowestScore = (totalScore * 0.3).toFixed(1);
-            const successRate = Math.round((averageScore / totalScore) * 100);
-            
-            // Mettre à jour l'affichage des statistiques
-            document.getElementById('average_score').textContent = averageScore;
-            document.getElementById('highest_score').textContent = highestScore;
-            document.getElementById('lowest_score').textContent = lowestScore;
-            document.getElementById('success_rate').textContent = `${successRate}%`;
-        }
-        
-        // Collecter les données du formulaire
-        function collectFormData() {
-            const formData = {};
-            
-            // Récupérer les données des champs standards
-            document.querySelectorAll('input, select, textarea').forEach(field => {
-                if (field.name && !field.name.includes('questions')) {
-                    formData[field.name] = field.value;
-                }
-            });
-            
-            // Récupérer les questions
-            formData.questions = [];
-            for (let i = 1; i <= questionCount; i++) {
-                const questionElement = document.getElementById(`question-${i}`);
-                if (!questionElement) continue;
-                
-                const questionType = questionElement.dataset.type;
-                let questionData = {
-                    type: questionType,
-                    points: parseFloat(document.getElementById(`question-${i}-points`).value) || 0,
-                    difficulty: document.getElementById(`question-${i}-difficulty`).value,
-                    score: parseFloat(document.getElementById(`question-${i}-score`).value) || 0
+        // Fonction pour gérer l'upload d'image
+        function handleImageUpload(blockId, input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imagePreview = document.getElementById(`${blockId}-image-preview`);
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                    
+                    // Mettre à jour l'aperçu
+                    const points = document.getElementById(`${blockId}-points`).value || 0;
+                    updateImagePreview(blockId, e.target.result, document.getElementById(`${blockId}-image-caption`).value, points);
                 };
-                
-                // Données spécifiques au type de question
-                switch(questionType) {
-                    case 'traditional':
-                        questionData.text = document.getElementById(`question-${i}-text`).value;
-                        break;
-                    case 'problem':
-                        questionData.context = document.getElementById(`question-${i}-context`).value;
-                        questionData.text = document.getElementById(`question-${i}-text`).value;
-                        break;
-                    case 'qcm':
-                        questionData.text = document.getElementById(`question-${i}-text`).value;
-                        // Récupérer les options et les réponses correctes
-                        questionData.options = [];
-                        questionData.correctAnswers = [];
-                        const optionInputs = document.querySelectorAll(`#qcm-options-${i} input[type="text"]`);
-                        const correctInputs = document.querySelectorAll(`#qcm-options-${i} input[type="checkbox"]`);
-                        
-                        optionInputs.forEach((input, index) => {
-                            questionData.options.push(input.value);
-                            if (correctInputs[index].checked) {
-                                questionData.correctAnswers.push(index);
-                            }
-                        });
-                        break;
-                    case 'truefalse':
-                        questionData.text = document.getElementById(`question-${i}-text`).value;
-                        questionData.correctAnswer = document.querySelector(`input[name="questions[${i}][correct]"]:checked`).value;
-                        break;
-                    case 'wordsearch':
-                        questionData.theme = document.getElementById(`question-${i}-theme`).value;
-                        questionData.words = document.getElementById(`question-${i}-words`).value;
-                        break;
-                }
-                
-                formData.questions.push(questionData);
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        // Fonction pour mettre à jour la légende de l'image
+        function updateImageCaption(blockId, caption) {
+            const imagePreview = document.getElementById(`${blockId}-image-preview`);
+            if (imagePreview.src) {
+                const points = document.getElementById(`${blockId}-points`).value || 0;
+                updateImagePreview(blockId, imagePreview.src, caption, points);
+            }
+        }
+        
+        // Fonction pour mettre à jour l'aperçu de l'image
+        function updateImagePreview(blockId, imageData, caption, points) {
+            let previewElement = document.getElementById(`preview-${blockId}`);
+            
+            if (!previewElement) {
+                previewElement = document.createElement('div');
+                previewElement.id = `preview-${blockId}`;
+                previewElement.className = 'content-section';
+                document.getElementById('preview-content').appendChild(previewElement);
             }
             
-            // Ajouter un timestamp et un ID unique
-            formData.timestamp = new Date().toISOString();
-            formData.id = 'eval_' + new Date().getTime();
-            
-            return formData;
+            previewElement.innerHTML = `
+                <h3 class="section-title">Illustration</h3>
+                <img src="${imageData}" class="preview-image" alt="${caption || 'Illustration'}">
+                ${caption ? `<p class="image-caption"><em>${caption}</em></p>` : ''}
+                ${points > 0 ? `<div class="question-points">Cette question vaut ${points} point(s)</div>` : ''}
+            `;
         }
         
-        // Sauvegarder l'évaluation
-        function saveEvaluation() {
-            const formData = collectFormData();
+        // Fonction pour mettre à jour le contenu de l'aperçu
+        function updateContent(blockId, type) {
+            const editor = document.getElementById(`editor-${blockId}`);
+            const content = editor.innerHTML;
+            const points = document.getElementById(`${blockId}-points`).value || 0;
             
-            // Validation basique
-            if (!formData.school_name || !formData.teacher_name || !formData.class_name || !formData.subject) {
-                alert("Veuillez remplir tous les champs obligatoires.");
-                return;
+            updateContentPreview(blockId, type, content, points);
+        }
+        
+        // Fonction pour mettre à jour l'aperçu du contenu
+        function updateContentPreview(blockId, type, content, points) {
+            let previewElement = document.getElementById(`preview-${blockId}`);
+            
+            if (!previewElement) {
+                previewElement = document.createElement('div');
+                previewElement.id = `preview-${blockId}`;
+                previewElement.className = 'content-section';
+                document.getElementById('preview-content').appendChild(previewElement);
             }
             
-            if (formData.questions.length === 0) {
-                alert("Veuillez ajouter au moins une question à l'épreuve.");
-                return;
-            }
+            let sectionTitle = '';
+            let sectionClass = '';
             
-            // Récupérer les évaluations existantes
-            let allEvals = JSON.parse(localStorage.getItem('allEvaluations')) || [];
-            
-            // Ajouter la nouvelle évaluation
-            allEvals.push(formData);
-            
-            // Sauvegarder dans le stockage local
-            localStorage.setItem('allEvaluations', JSON.stringify(allEvals));
-            
-            alert('Évaluation enregistrée avec succès!');
-        }
-        
-        // Exporter en JSON
-        function exportToJson() {
-            const formData = collectFormData();
-            
-            // Télécharger en tant que fichier JSON
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(formData, null, 2));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "evaluation_" + new Date().getTime() + ".json");
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
-            
-            alert('Évaluation exportée avec succès!');
-        }
-        
-        // Charger toutes les évaluations
-        function loadAllEvaluations() {
-            allEvaluations = JSON.parse(localStorage.getItem('allEvaluations')) || [];
-        }
-        
-        // Remplir les options des filtres
-        function populateFilterOptions() {
-            const typeFilter = document.getElementById('filter-type');
-            const classFilter = document.getElementById('filter-class');
-            const subjectFilter = document.getElementById('filter-subject');
-            const teacherFilter = document.getElementById('filter-teacher');
-            
-            // Réinitialiser les filtres (garder l'option par défaut)
-            typeFilter.innerHTML = '<option value="">Tous les types</option>';
-            classFilter.innerHTML = '<option value="">Toutes les classes</option>';
-            subjectFilter.innerHTML = '<option value="">Toutes les matières</option>';
-            teacherFilter.innerHTML = '<option value="">Tous les enseignants</option>';
-            
-            // Ensembles pour stocker les valeurs uniques
-            const types = new Set(['interrogation', 'devoir_surveille', 'composition']);
-            const classes = new Set();
-            const subjects = new Set();
-            const teachers = new Set();
-            
-            // Récupérer toutes les valeurs uniques
-            allEvaluations.forEach(eval => {
-                if (eval.class_name) classes.add(eval.class_name);
-                if (eval.subject) subjects.add(eval.subject);
-                if (eval.teacher_name) teachers.add(eval.teacher_name);
-            });
-            
-            // Ajouter les options aux filtres
-            types.forEach(t => {
-                const option = document.createElement('option');
-                option.value = t;
-                option.textContent = t === 'interrogation' ? 'Interrogation' : 
-                                   t === 'devoir_surveille' ? 'Devoir surveillé' : 'Composition trimestrielle';
-                typeFilter.appendChild(option);
-            });
-            
-            classes.forEach(c => {
-                const option = document.createElement('option');
-                option.value = c;
-                option.textContent = c;
-                classFilter.appendChild(option);
-            });
-            
-            subjects.forEach(s => {
-                const option = document.createElement('option');
-                option.value = s;
-                option.textContent = s;
-                subjectFilter.appendChild(option);
-            });
-            
-            teachers.forEach(t => {
-                const option = document.createElement('option');
-                option.value = t;
-                option.textContent = t;
-                teacherFilter.appendChild(option);
-            });
-        }
-        
-        // Appliquer les filtres
-        function applyFilters() {
-            const typeFilter = document.getElementById('filter-type').value;
-            const classFilter = document.getElementById('filter-class').value;
-            const subjectFilter = document.getElementById('filter-subject').value;
-            const teacherFilter = document.getElementById('filter-teacher').value;
-            
-            // Filtrer les évaluations
-            const filteredEvals = allEvaluations.filter(eval => {
-                return (!typeFilter || eval.evaluation_type === typeFilter) &&
-                       (!classFilter || eval.class_name === classFilter) &&
-                       (!subjectFilter || eval.subject === subjectFilter) &&
-                       (!teacherFilter || eval.teacher_name === teacherFilter);
-            });
-            
-            // Afficher les évaluations filtrées
-            displayEvaluations(filteredEvals);
-        }
-        
-        // Effacer les filtres
-        function clearFilters() {
-            document.getElementById('filter-type').value = '';
-            document.getElementById('filter-class').value = '';
-            document.getElementById('filter-subject').value = '';
-            document.getElementById('filter-teacher').value = '';
-            
-            // Afficher toutes les évaluations
-            displayEvaluations(allEvaluations);
-        }
-        
-        // Afficher les évaluations dans le conteneur
-        function displayEvaluations(evals) {
-            const container = document.getElementById('cards-container');
-            container.innerHTML = '';
-            
-            if (evals.length === 0) {
-                container.innerHTML = '<div class="no-results">Aucune évaluation ne correspond aux critères de filtrage.</div>';
-                return;
-            }
-            
-            evals.forEach((eval, index) => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                
-                const evalType = eval.evaluation_type === 'interrogation' ? 'Interrogation' : 
-                                eval.evaluation_type === 'devoir_surveille' ? 'Devoir surveillé' : 'Composition trimestrielle';
-                
-                // Formater la date
-                const evalDate = new Date(eval.evaluation_date).toLocaleDateString('fr-FR');
-                
-                // Compter les types de questions
-                const questionTypes = {};
-                if (eval.questions) {
-                    eval.questions.forEach(q => {
-                        questionTypes[q.type] = (questionTypes[q.type] || 0) + 1;
-                    });
-                }
-                
-                let questionTypesText = '';
-                for (const type in questionTypes) {
-                    const label = getQuestionTypeLabel(type);
-                    questionTypesText += `${questionTypes[type]} ${label}, `;
-                }
-                questionTypesText = questionTypesText.replace(/, $/, '');
-                
-                card.innerHTML = `
-                    <div class="card-header">
-                        <div class="card-title">${eval.subject || 'Sans titre'} - ${evalType}</div>
-                        <div class="card-details">
-                            <div>Classe: ${eval.class_name || 'Non spécifié'}</div>
-                            <div>Enseignant: ${eval.teacher_name || 'Non spécifié'}</div>
-                            <div>Date: ${evalDate}</div>
-                            <div>Durée: ${eval.duration} minutes</div>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <p><strong>Établissement:</strong> ${eval.school_name || 'Non spécifié'}</p>
-                        <p><strong>Total des points:</strong> ${eval.total_points || '20'}</p>
-                        <p><strong>Nombre de questions:</strong> ${eval.questions ? eval.questions.length : '0'}</p>
-                        <p><strong>Types de questions:</strong> ${questionTypesText}</p>
-                    </div>
-                    <div class="card-actions">
-                        <button class="card-btn view-btn" onclick="viewEvaluation('${eval.id}')"><i class="fas fa-eye"></i> Voir</button>
-                        <button class="card-btn delete-btn" onclick="deleteEvaluation('${eval.id}')"><i class="fas fa-trash"></i> Supprimer</button>
-                    </div>
-                `;
-                
-                container.appendChild(card);
-            });
-        }
-        
-        // Voir une évaluation détaillée
-        function viewEvaluation(evalId) {
-            const evaluation = allEvaluations.find(e => e.id === evalId);
-            if (!evaluation) return;
-            
-            // Ouvrir une nouvelle fenêtre ou onglet avec l'évaluation
-            const newWindow = window.open('', '_blank');
-            
-            const evalType = evaluation.evaluation_type === 'interrogation' ? 'Interrogation' : 
-                            evaluation.evaluation_type === 'devoir_surveille' ? 'Devoir surveillé' : 'Composition trimestrielle';
-            
-            // Formater la date
-            const evalDate = new Date(evaluation.evaluation_date).toLocaleDateString('fr-FR');
-            
-            let questionsHtml = '';
-            if (evaluation.questions && evaluation.questions.length > 0) {
-                evaluation.questions.forEach((q, index) => {
-                    let questionContent = '';
+            switch(type) {
+                case 'instructions':
+                    sectionTitle = 'Instructions';
+                    sectionClass = 'instructions';
+                    break;
+                case 'qcm':
+                    sectionTitle = 'Question à Choix Multiple';
+                    sectionClass = 'qcm';
                     
-                    switch(q.type) {
-                        case 'traditional':
-                            questionContent = `<p>${q.text}</p>`;
-                            break;
-                        case 'problem':
-                            questionContent = `
-                                <p><strong>Contexte:</strong> ${q.context}</p>
-                                <p><strong>Problème:</strong> ${q.text}</p>
+                    // Récupérer les options et la réponse correcte
+                    let optionsHTML = '';
+                    let correctAnswer = '';
+                    
+                    for (let i = 1; i <= 10; i++) {
+                        const optionInput = document.getElementById(`${blockId}-option${i}`);
+                        const correctCheckbox = document.getElementById(`${blockId}-option${i}-correct`);
+                        
+                        if (optionInput && optionInput.value) {
+                            if (correctCheckbox && correctCheckbox.checked) {
+                                correctAnswer = optionInput.value;
+                            }
+                            optionsHTML += `
+                                <div class="option-item">
+                                    <input type="radio" name="${blockId}-answer" id="${blockId}-preview-option${i}">
+                                    <label for="${blockId}-preview-option${i}">${optionInput.value}</label>
+                                </div>
                             `;
-                            break;
-                        case 'qcm':
-                            questionContent = `
-                                <p>${q.text}</p>
-                                <ul>
-                                    ${q.options ? q.options.map((opt, i) => 
-                                        `<li>${String.fromCharCode(65 + i)}) ${opt} ${q.correctAnswers && q.correctAnswers.includes(i) ? '✓' : ''}</li>`
-                                    ).join('') : ''}
-                                </ul>
-                            `;
-                            break;
-                        case 'truefalse':
-                            questionContent = `
-                                <p>${q.text}</p>
-                                <p>Réponse correcte: <strong>${q.correctAnswer === 'true' ? 'Vrai' : 'Faux'}</strong></p>
-                            `;
-                            break;
-                        case 'wordsearch':
-                            questionContent = `
-                                <p><strong>Thème:</strong> ${q.theme}</p>
-                                <p><strong>Mots à trouver:</strong> ${q.words}</p>
-                                <p><em>Grille de mots mêlés à imprimer</em></p>
-                            `;
-                            break;
+                        }
                     }
                     
-                    questionsHtml += `
-                        <div style="margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-                            <p><strong>Question ${index + 1}:</strong> (${q.points} points) - ${getQuestionTypeLabel(q.type)} - Difficulté: ${q.difficulty}</p>
-                            ${questionContent}
+                    content = `
+                        <div class="question-text">${content}</div>
+                        <div class="options-container">
+                            ${optionsHTML}
                         </div>
                     `;
+                    break;
+                case 'truefalse':
+                    sectionTitle = 'Question Vrai/Faux';
+                    sectionClass = 'truefalse';
+                    
+                    const correctAnswerSelect = document.getElementById(`${blockId}-correct-answer`);
+                    const correctAnswerValue = correctAnswerSelect ? correctAnswerSelect.value : 'true';
+                    
+                    content = `
+                        <div class="question-text">${content}</div>
+                        <div class="options-container">
+                            <div class="option-item">
+                                <input type="radio" name="${blockId}-answer" id="${blockId}-preview-true" value="true">
+                                <label for="${blockId}-preview-true">Vrai</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="radio" name="${blockId}-answer" id="${blockId}-preview-false" value="false">
+                                <label for="${blockId}-preview-false">Faux</label>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'fillblank':
+                    sectionTitle = 'Question à Trous';
+                    sectionClass = 'fillblank';
+                    
+                    // Remplacer les [mot] par des champs de saisie
+                    const blankRegex = /\[(.*?)\]/g;
+                    const blankContent = content.replace(blankRegex, '<span class="blank-input"></span>');
+                    
+                    content = `
+                        <div class="question-text">${blankContent}</div>
+                    `;
+                    break;
+                case 'traditional':
+                    sectionTitle = 'Question Traditionnelle';
+                    sectionClass = 'traditional';
+                    content = `
+                        <div class="question-text">${content}</div>
+                        <div class="answer-space" style="min-height: 100px; border-bottom: 1px dashed #ccc; margin: 15px 0;"></div>
+                    `;
+                    break;
+                case 'problem':
+                    sectionTitle = 'Situation Problème';
+                    sectionClass = 'problem';
+                    content = `
+                        <div class="question-text">${content}</div>
+                        <div class="answer-space" style="min-height: 150px; border-bottom: 1px dashed #ccc; margin: 15px 0;"></div>
+                    `;
+                    break;
+                default:
+                    sectionTitle = 'Contenu';
+                    sectionClass = 'instructions';
+            }
+            
+            // Ajouter la solution si elle existe
+            const solutionEditor = document.getElementById(`solution-editor-${blockId}`);
+            let solutionHTML = '';
+            
+            if (solutionEditor && solutionEditor.innerHTML && solutionEditor.innerHTML !== 'Rédigez la solution détaillée ici...') {
+                solutionHTML = `
+                    <div class="solution">
+                        <div class="solution-title">
+                            <i class="fas fa-lightbulb"></i> Solution
+                        </div>
+                        <div class="solution-content">
+                            ${solutionEditor.innerHTML}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            previewElement.innerHTML = `
+                <h3 class="section-title">${sectionTitle}</h3>
+                <div class="${sectionClass}">
+                    ${content}
+                    ${points > 0 ? `<div class="question-points">Cette question vaut ${points} point(s)</div>` : ''}
+                    ${solutionHTML}
+                </div>
+            `;
+        }
+        
+        // Fonction pour supprimer un bloc
+        function removeBlock(blockId) {
+            const block = document.getElementById(blockId);
+            block.remove();
+            
+            const previewElement = document.getElementById(`preview-${blockId}`);
+            if (previewElement) {
+                previewElement.remove();
+            }
+        }
+        
+        // Fonction pour réinitialiser l'évaluation
+        function resetEvaluation() {
+            if (confirm('Êtes-vous sûr de vouloir tout effacer ? Tous les contenus ajoutés seront perdus.')) {
+                document.getElementById('content-blocks').innerHTML = '';
+                document.getElementById('preview-content').innerHTML = '<p>Le contenu de votre évaluation apparaîtra ici.</p>';
+                blockCount = 0;
+            }
+        }
+        
+        // Fonction pour afficher les options d'impression
+        function showPrintOptions() {
+            document.getElementById('printModal').style.display = 'block';
+        }
+        
+        // Fonction pour fermer la modal
+        function closeModal() {
+            document.getElementById('printModal').style.display = 'none';
+        }
+        
+        // Fonction pour imprimer l'évaluation
+        function printEvaluation() {
+            // Afficher temporairement toutes les solutions pour l'impression
+            const solutionContents = document.querySelectorAll('.solution-content');
+            solutionContents.forEach(solution => {
+                solution.style.display = 'block';
+            });
+            
+            // Scroll vers le haut pour une impression correcte
+            window.scrollTo(0, 0);
+            
+            // Délai pour permettre le scroll avant l'impression
+            setTimeout(() => {
+                window.print();
+                
+                // Remettre l'affichage initial après l'impression
+                setTimeout(() => {
+                    solutionContents.forEach(solution => {
+                        solution.style.display = 'none';
+                    });
+                    
+                    // Remettre les icônes en état initial
+                    const toggleIcons = document.querySelectorAll('.solution-toggle i');
+                    toggleIcons.forEach(icon => {
+                        icon.className = 'fas fa-chevron-down';
+                    });
+                }, 100);
+            }, 100);
+        }
+        
+        // Fonction pour générer le PDF
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            
+            // Récupérer les options
+            const orientation = document.getElementById('pdfOrientation').value;
+            const format = document.getElementById('pdfFormat').value;
+            const includeAnswers = document.getElementById('includeAnswers').checked;
+            const includeSolutions = document.getElementById('includeSolutions').checked;
+            const studentNameField = document.getElementById('studentNameField').checked;
+            const watermarkText = document.getElementById('watermarkText').value;
+            
+            // Créer un clone de l'aperçu pour la génération PDF
+            const previewElement = document.getElementById('evaluation-preview');
+            const clone = previewElement.cloneNode(true);
+            
+            // Mettre à jour le filigrane
+            const watermark = clone.querySelector('.watermark');
+            if (watermark) {
+                watermark.textContent = watermarkText;
+            }
+            
+            // Ajouter un champ pour le nom de l'élève si demandé
+            if (studentNameField) {
+                const studentField = document.createElement('div');
+                studentField.style.marginBottom = '20px';
+                studentField.style.padding = '10px';
+                studentField.style.border = '1px solid #ccc';
+                studentField.innerHTML = `
+                    <strong>Nom et prénom de l'élève:</strong> 
+                    <span style="display:inline-block; width: 300px; border-bottom: 1px solid #000; margin-left: 10px;"></span>
+                `;
+                clone.insertBefore(studentField, clone.firstChild.nextSibling);
+            }
+            
+            // Afficher les réponses si demandé
+            if (includeAnswers) {
+                const blocks = document.querySelectorAll('.content-block');
+                blocks.forEach(block => {
+                    const blockId = block.id;
+                    const type = getBlockType(blockId);
+                    
+                    if (type === 'qcm') {
+                        // Trouver la réponse correcte pour QCM
+                        let correctAnswer = '';
+                        for (let i = 1; i <= 10; i++) {
+                            const correctCheckbox = document.getElementById(`${blockId}-option${i}-correct`);
+                            const optionInput = document.getElementById(`${blockId}-option${i}`);
+                            
+                            if (correctCheckbox && correctCheckbox.checked && optionInput) {
+                                correctAnswer = optionInput.value;
+                                break;
+                            }
+                        }
+                        
+                        // Ajouter la réponse dans le clone
+                        const previewBlock = clone.querySelector(`#preview-${blockId}`);
+                        if (previewBlock && correctAnswer) {
+                            const answerDiv = document.createElement('div');
+                            answerDiv.style.marginTop = '10px';
+                            answerDiv.style.padding = '10px';
+                            answerDiv.style.backgroundColor = '#d4edda';
+                            answerDiv.style.borderRadius = '5px';
+                            answerDiv.innerHTML = `<strong>Réponse correcte:</strong> ${correctAnswer}`;
+                            previewBlock.appendChild(answerDiv);
+                        }
+                    }
+                    else if (type === 'truefalse') {
+                        // Trouver la réponse correcte pour Vrai/Faux
+                        const correctAnswerSelect = document.getElementById(`${blockId}-correct-answer`);
+                        const correctAnswer = correctAnswerSelect ? correctAnswerSelect.value : 'true';
+                        
+                        // Ajouter la réponse dans le clone
+                        const previewBlock = clone.querySelector(`#preview-${blockId}`);
+                        if (previewBlock) {
+                            const answerDiv = document.createElement('div');
+                            answerDiv.style.marginTop = '10px';
+                            answerDiv.style.padding = '10px';
+                            answerDiv.style.backgroundColor = '#d4edda';
+                            answerDiv.style.borderRadius = '5px';
+                            answerDiv.innerHTML = `<strong>Réponse correcte:</strong> ${correctAnswer === 'true' ? 'Vrai' : 'Faux'}`;
+                            previewBlock.appendChild(answerDiv);
+                        }
+                    }
                 });
             }
             
-            newWindow.document.write(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Évaluation - ${evaluation.subject} - ${evalType}</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; padding: 20px; }
-                        .header { text-align: center; margin-bottom: 20px; }
-                        .section { margin-bottom: 20px; }
-                        .question { margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <h1>${evaluation.subject} - ${evalType}</h1>
-                        <h2>${evaluation.class_name} - ${evalDate}</h2>
-                    </div>
+            // Afficher les solutions détaillées si demandé
+            if (includeSolutions) {
+                const blocks = document.querySelectorAll('.content-block');
+                blocks.forEach(block => {
+                    const blockId = block.id;
+                    const solutionEditor = document.getElementById(`solution-editor-${blockId}`);
                     
-                    <div class="section">
-                        <h3>Informations générales</h3>
-                        <p><strong>Enseignant:</strong> ${evaluation.teacher_name}</p>
-                        <p><strong>Établissement:</strong> ${evaluation.school_name}</p>
-                        <p><strong>Durée:</strong> ${evaluation.duration} minutes</p>
-                        <p><strong>Total des points:</strong> ${evaluation.total_points}</p>
-                    </div>
-                    
-                    <div class="section">
-                        <h3>Instructions</h3>
-                        <p>${evaluation.instructions || 'Aucune instruction spécifiée.'}</p>
-                    </div>
-                    
-                    <div class="section">
-                        <h3>Questions</h3>
-                        ${questionsHtml}
-                    </div>
-                    
-                    <div class="section">
-                        <h3>Barème</h3>
-                        <p>Le barème est indicatif et peut être ajusté par l'enseignant.</p>
-                    </div>
-                    
-                    <button onclick="window.print()" style="margin-top: 20px; padding: 10px 15px;">Imprimer</button>
-                </body>
-                </html>
-            `);
-            newWindow.document.close();
+                    if (solutionEditor && solutionEditor.innerHTML && solutionEditor.innerHTML !== 'Rédigez la solution détaillée ici...') {
+                        const previewBlock = clone.querySelector(`#preview-${blockId}`);
+                        if (previewBlock) {
+                            const solutionDiv = document.createElement('div');
+                            solutionDiv.className = 'solution';
+                            solutionDiv.innerHTML = `
+                                <div class="solution-title">
+                                    <i class="fas fa-lightbulb"></i> Solution détaillée
+                                </div>
+                                <div class="solution-content">
+                                    ${solutionEditor.innerHTML}
+                                </div>
+                            `;
+                            previewBlock.appendChild(solutionDiv);
+                        }
+                    }
+                });
+            }
+            
+            // Appliquer des styles spécifiques pour le PDF
+            clone.style.width = orientation === 'portrait' ? '210mm' : '297mm';
+            clone.style.padding = '15mm';
+            clone.style.fontSize = '12pt';
+            
+            // Masquer temporairement l'original et afficher le clone
+            previewElement.style.visibility = 'hidden';
+            document.body.appendChild(clone);
+            
+            // Générer le PDF avec html2canvas et jsPDF
+            html2canvas(clone, {
+                scale: 2, // Qualité plus élevée
+                useCORS: true,
+                logging: false
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/jpeg', 1.0);
+                const pdf = new jsPDF({
+                    orientation: orientation,
+                    unit: 'mm',
+                    format: format
+                });
+                
+                const imgWidth = pdf.internal.pageSize.getWidth();
+                let imgHeight = canvas.height * imgWidth / canvas.width;
+                
+                // Ajouter la première page
+                pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+                
+                // Ajouter des pages supplémentaires si nécessaire
+                let heightLeft = imgHeight;
+                let position = 0;
+                
+                while (heightLeft > 0) {
+                    position = heightLeft - pdf.internal.pageSize.getHeight();
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pdf.internal.pageSize.getHeight();
+                }
+                
+                // Télécharger le PDF
+                const fileName = `evaluation_${document.getElementById('evaluation-title').value.replace(/\s+/g, '_')}.pdf`;
+                pdf.save(fileName);
+                
+                // Nettoyer et restaurer l'affichage
+                document.body.removeChild(clone);
+                previewElement.style.visibility = 'visible';
+                closeModal();
+            });
         }
         
-        // Supprimer une évaluation
-        function deleteEvaluation(evalId) {
-            if (confirm('Êtes-vous sûr de vouloir supprimer cette évaluation ?')) {
-                allEvaluations = allEvaluations.filter(e => e.id !== evalId);
-                localStorage.setItem('allEvaluations', JSON.stringify(allEvaluations));
-                
-                // Recharger l'affichage
-                populateFilterOptions();
-                applyFilters();
-                
-                alert('Évaluation supprimée avec succès!');
+        // Fermer la modal si on clique en dehors
+        window.onclick = function(event) {
+            const modal = document.getElementById('printModal');
+            if (event.target == modal) {
+                closeModal();
             }
         }
-        
-        // Écouter les changements sur le total des points
-        document.getElementById('total_points').addEventListener('change', updateRatingBars);
-        
-        // Écouter les changements sur les points des questions
-        document.addEventListener('input', function(e) {
-            if (e.target.name && e.target.name.includes('points')) {
-                updateRatingBars();
-            }
-        });
     </script>
 </body>
 </html>
