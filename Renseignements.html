@@ -1,71 +1,5 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bouton Actualiser</title>
-    <style>
-        .refresh-button {
-            position: fixed;
-            bottom: 90px;  /* Positionné au-dessus du bouton WhatsApp */
-            right: 20px;
-            background-color: #4285f4;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            text-align: center;
-            font-size: 24px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-        
-        .refresh-button:hover {
-            background-color: #3367d6;
-            transform: rotate(360deg);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        
-        .refresh-icon {
-            width: 24px;
-            height: 24px;
-            fill: white;
-        }
-    </style>
-</head>
-<body>
-
-    <!-- Bouton Actualiser -->
-    <button onclick="window.location.reload()" class="refresh-button" aria-label="Actualiser la page">
-        <svg class="refresh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-        </svg>
-    </button>
-</body>
-</html>
-<html lang="fr">
-    <style>
-  .btn-retour {
-    padding: 8px 16px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .btn-retour:hover {
-    background-color: #e0e0e0;
-  }
-</style>
-
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -212,13 +146,13 @@
             background-color: #c0392b;
         }
 
-        .btn-whatsapp {
-            background-color: #25D366;
+        .btn-print {
+            background-color: #9b59b6;
             color: white;
         }
 
-        .btn-whatsapp:hover {
-            background-color: #128C7E;
+        .btn-print:hover {
+            background-color: #8e44ad;
         }
 
         .form-actions {
@@ -246,6 +180,37 @@
 
         .period-selector {
             margin-bottom: 15px;
+        }
+
+        .btn-retour {
+            padding: 8px 16px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .btn-retour:hover {
+            background-color: #e0e0e0;
+        }
+
+        @media print {
+            .btn-retour, .form-actions, button {
+                display: none !important;
+            }
+            
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 15px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -304,7 +269,7 @@
                     <div class="form-col">
                         <div class="form-group">
                             <label for="birthDate">Date de naissance</label>
-                            <input type="date" id="birthDate" required>
+                            <input type="date" id="birthDate" required onchange="calculateRetirementDate()">
                         </div>
                     </div>
                     <div class="form-col">
@@ -339,13 +304,13 @@
                     <div class="form-col">
                         <div class="form-group">
                             <label for="regionServiceDate">Date de prise de service dans la région</label>
-                            <input type="date" id="regionServiceDate" required>
+                            <input type="date" id="regionServiceDate" required onchange="calculateServiceYears('regionServiceDate', 'yearsInRegion')">
                         </div>
                     </div>
                     <div class="form-col">
                         <div class="form-group">
                             <label for="inspectionServiceDate">Date de prise de service dans l'inspection</label>
-                            <input type="date" id="inspectionServiceDate" required>
+                            <input type="date" id="inspectionServiceDate" required onchange="calculateServiceYears('inspectionServiceDate', 'yearsInInspection')">
                         </div>
                     </div>
                 </div>
@@ -354,20 +319,20 @@
                     <div class="form-col">
                         <div class="form-group">
                             <label for="yearsInRegion">Nombre d'années dans la région</label>
-                            <input type="number" id="yearsInRegion" min="0" required>
+                            <input type="number" id="yearsInRegion" min="0" readonly>
                         </div>
                     </div>
                     <div class="form-col">
                         <div class="form-group">
                             <label for="yearsInInspection">Nombre d'années dans l'inspection</label>
-                            <input type="number" id="yearsInInspection" min="0" required>
+                            <input type="number" id="yearsInInspection" min="0" readonly>
                         </div>
                     </div>
                 </div>
                 
                 <div class="form-group">
                     <label for="retirementDate">Date présumée de départ à la retraite</label>
-                    <input type="date" id="retirementDate">
+                    <input type="date" id="retirementDate" readonly>
                 </div>
                 
                 <div class="form-group">
@@ -488,7 +453,7 @@
             </div>
 
             <div class="form-actions">
-                <button type="button" class="btn btn-whatsapp" onclick="sendViaWhatsApp()">Envoyer via WhatsApp</button>
+                <button type="button" class="btn btn-print" onclick="printForm()">Imprimer/PDF</button>
                 <button type="reset" class="btn btn-danger">Annuler</button>
                 <button type="submit" class="btn btn-primary">Enregistrer</button>
             </div>
@@ -588,46 +553,49 @@
             container.insertBefore(newSubject, container.lastElementChild);
         }
 
-        // Envoyer via WhatsApp
-        function sendViaWhatsApp() {
-            // Récupérer les données principales
-            const lastName = document.getElementById('lastName').value || 'Non renseigné';
-            const firstName = document.getElementById('firstName').value || 'Non renseigné';
-            const matricule = document.getElementById('matricule').value || 'Non renseigné';
+        // Fonction pour calculer les années de service
+        function calculateServiceYears(dateFieldId, yearsFieldId) {
+            const dateField = document.getElementById(dateFieldId);
+            const yearsField = document.getElementById(yearsFieldId);
             
-            // Récupérer les statistiques d'enseignement
-            const period = document.getElementById('teachingPeriod').value;
-            const mainSubject = document.getElementById('mainSubject').value || 'Non renseigné';
-            const mainThemes = document.getElementById('mainSubjectThemes').value || '0';
-            const mainLessons = document.getElementById('mainSubjectLessons').value || '0';
+            if (dateField.value) {
+                const serviceDate = new Date(dateField.value);
+                const today = new Date();
+                
+                // Calcul de la différence en années
+                let years = today.getFullYear() - serviceDate.getFullYear();
+                const monthDiff = today.getMonth() - serviceDate.getMonth();
+                
+                // Ajustement si l'anniversaire de service n'est pas encore passé cette année
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < serviceDate.getDate())) {
+                    years--;
+                }
+                
+                yearsField.value = years;
+            }
+        }
+
+        // Fonction pour calculer la date de retraite (60 ans après la naissance)
+        function calculateRetirementDate() {
+            const birthDateField = document.getElementById('birthDate');
+            const retirementDateField = document.getElementById('retirementDate');
             
-            const secondarySubject = document.getElementById('secondarySubject').value || 'Non renseigné';
-            const secondaryThemes = document.getElementById('secondarySubjectThemes').value || '0';
-            const secondaryLessons = document.getElementById('secondarySubjectLessons').value || '0';
-            
-            // Construire le message
-            let message = `*Fiche Administrative Enseignant*\n\n`;
-            message += `*Nom:* ${lastName}\n`;
-            message += `*Prénoms:* ${firstName}\n`;
-            message += `*Matricule:* ${matricule}\n\n`;
-            
-            message += `*Statistiques d'enseignement (${period})*\n\n`;
-            message += `*Matière dominante (${mainSubject}):*\n`;
-            message += `- Thèmes enseignés: ${mainThemes}\n`;
-            message += `- Leçons enseignées: ${mainLessons}\n\n`;
-            
-            message += `*Matière secondaire (${secondarySubject}):*\n`;
-            message += `- Thèmes enseignés: ${secondaryThemes}\n`;
-            message += `- Leçons enseignées: ${secondaryLessons}\n`;
-            
-            // Encoder le message pour l'URL
-            const encodedMessage = encodeURIComponent(message);
-            
-            // Numéro de téléphone
-            const phoneNumber = '92871605';
-            
-            // Ouvrir WhatsApp avec le message pré-rempli
-            window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
+            if (birthDateField.value) {
+                const birthDate = new Date(birthDateField.value);
+                const retirementDate = new Date(birthDate);
+                
+                // Ajouter 60 ans à la date de naissance
+                retirementDate.setFullYear(birthDate.getFullYear() + 60);
+                
+                // Formater la date pour l'affichage (YYYY-MM-DD)
+                const formattedDate = retirementDate.toISOString().split('T')[0];
+                retirementDateField.value = formattedDate;
+            }
+        }
+
+        // Fonction pour imprimer le formulaire
+        function printForm() {
+            window.print();
         }
 
         // Gestion de la soumission du formulaire
@@ -720,34 +688,6 @@
             // Afficher les données dans la console pour vérification
             console.log('Données enregistrées:', formData);
         });
-
-        // Calcul automatique des années de service
-        document.getElementById('regionServiceDate').addEventListener('change', function() {
-            calculateServiceYears('regionServiceDate', 'yearsInRegion');
-        });
-
-        document.getElementById('inspectionServiceDate').addEventListener('change', function() {
-            calculateServiceYears('inspectionServiceDate', 'yearsInInspection');
-        });
-
-        function calculateServiceYears(dateFieldId, yearsFieldId) {
-            const dateField = document.getElementById(dateFieldId);
-            const yearsField = document.getElementById(yearsFieldId);
-            
-            if (dateField.value) {
-                const serviceDate = new Date(dateField.value);
-                const today = new Date();
-                const years = today.getFullYear() - serviceDate.getFullYear();
-                
-                // Ajustement si l'anniversaire de service n'est pas encore passé cette année
-                const monthDiff = today.getMonth() - serviceDate.getMonth();
-                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < serviceDate.getDate())) {
-                    yearsField.value = years - 1;
-                } else {
-                    yearsField.value = years;
-                }
-            }
-        }
 
         // Charger les données sauvegardées si elles existent
         window.addEventListener('load', function() {
