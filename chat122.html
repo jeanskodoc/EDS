@@ -1,20 +1,5 @@
 <!DOCTYPE html>
 <html lang="fr"> 
-     <style>
-  .btn-retour {
-    padding: 8px 16px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .btn-retour:hover {
-    background-color: #e0e0e0;
-  }
-</style>
-
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -567,7 +552,7 @@
         }
         
         .member-name {
-            font-weight: 600;
+            font-weight: 6 00;
         }
         
         .member-phone {
@@ -624,11 +609,11 @@
             border-radius: 4px;
         }
         
-        /* Widget WhatsApp */
+        /* Widget WhatsApp - Positionné à gauche */
         .whatsapp-widget-container {
             position: fixed;
             bottom: 20px;
-            right: 20px;
+            left: 20px; /* Changé de right à left */
             z-index: 1000;
         }
         
@@ -803,6 +788,22 @@
             font-size: 14px;
         }
         
+        /* Style pour le bouton retour */
+        .btn-retour {
+            padding: 8px 16px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+        
+        .btn-retour:hover {
+            background-color: #e0e0e0;
+        }
+        
         /* Responsive design */
         @media (max-width: 992px) {
             .main-content {
@@ -828,6 +829,12 @@
             .widget-config-content {
                 flex-direction: column;
             }
+            
+            /* Ajustement du widget WhatsApp en mode responsive */
+            .whatsapp-widget-container {
+                bottom: 70px;
+                left: 15px;
+            }
         }
         
         @media (max-width: 576px) {
@@ -848,6 +855,18 @@
             }
             
             .widget-config-header h2 {
+                font-size: 24px;
+            }
+            
+            /* Ajustement supplémentaire pour mobile */
+            .whatsapp-widget-container {
+                bottom: 60px;
+                left: 10px;
+            }
+            
+            .whatsapp-widget {
+                width: 50px;
+                height: 50px;
                 font-size: 24px;
             }
         }
@@ -885,8 +904,8 @@
      
 <body>
     <header>
-         <button class="btn-retour" onclick="history.back()">← Retour</button>
         <div class="container">
+            <button class="btn-retour" onclick="history.back()">← Retour</button>
             <div class="header-content">
                 <h1><i class="fas fa-graduation-cap"></i> EduConnect - Plateforme Collaborative</h1>
                 <div class="user-info">
@@ -1477,7 +1496,7 @@
         </div>
     </div>
 
-    <!-- Widget WhatsApp flottant -->
+    <!-- Widget WhatsApp flottant - Positionné à gauche -->
     <div class="whatsapp-widget-container" id="whatsappWidget">
         <a href="https://chat.whatsapp.com/" target="_blank" class="whatsapp-widget" title="Rejoignez notre groupe WhatsApp!">
             <i class="fab fa-whatsapp"></i>
@@ -1509,7 +1528,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="groupClass">Classe:</span>
+                    <label for="groupClass">Classe:</label>
                     <select id="groupClass">
                         <option value="">Sélectionner une classe (si applicable)</option>
                         <option value="6eme">6ème</option>
@@ -1591,7 +1610,7 @@
                     <h4 style="color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
                         <i class="fab fa-whatsapp"></i> Synchronisation WhatsApp
                     </h4>
-                    <p style="margin-bottom: 15px;">Scannez ce code QR pour synchroniser ce groupe avec votre application WhatsApp mobile :</p>
+                    <p style="margin-bottom: 15px;">Scannez ce code QR pour synchronisez ce groupe avec votre application WhatsApp mobile :</p>
                     
                     <div class="qr-placeholder" id="qr-code-container">
                         <span>Génération du QR Code...</span>
@@ -1672,7 +1691,7 @@
                 <div class="code-box">
                     <button class="copy-btn" onclick="copyWidgetCode()">Copier le code</button>
                     <pre><code id="widget-code">&lt;!-- Widget WhatsApp --&gt;
-&lt;div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;"&gt;
+&lt;div style="position: fixed; bottom: 20px; left: 20px; z-index: 1000;"&gt;
   &lt;a href="https://chat.whatsapp.com/" target="_blank" style="display: block; width: 60px; height: 60px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 30px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.4); transition: transform 0.3s, box-shadow 0.3s; animation: pulse 2s infinite;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" title="Rejoignez notre groupe WhatsApp!"&gt;
     &lt;i class="fab fa-whatsapp"&gt;&lt;/i&gt;
   &lt;/a&gt;
@@ -2198,7 +2217,7 @@
                 
                 // Mettre à jour le code du widget
                 const widgetCode = `<!-- Widget WhatsApp -->
-<div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+<div style="position: fixed; bottom: 20px; left: 20px; z-index: 1000;">
   <a href="${link}" target="_blank" style="display: block; width: 60px; height: 60px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 30px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.4); transition: transform 0.3s, box-shadow 0.3s; animation: pulse 2s infinite;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" title="${message}">
     <i class="fab fa-whatsapp"></i>
   </a>
