@@ -301,12 +301,12 @@
             display: none;
         }
 
-        /* Style pour le bouton WhatsApp */
-        .whatsapp-btn {
+        /* Style pour le bouton Imprimer PDF */
+        .print-btn {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background-color: #25D366;
+            background-color: #e74c3c;
             color: white;
             width: 60px;
             height: 60px;
@@ -320,17 +320,17 @@
             z-index: 1000;
         }
 
-        .whatsapp-btn:hover {
+        .print-btn:hover {
             transform: scale(1.1);
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
         }
 
-        .whatsapp-btn i {
+        .print-btn i {
             font-size: 30px;
         }
 
-        /* Style pour la popup d'envoi */
-        .whatsapp-popup {
+        /* Style pour la popup d'impression */
+        .print-popup {
             position: fixed;
             bottom: 100px;
             right: 30px;
@@ -343,13 +343,13 @@
             display: none;
         }
 
-        .whatsapp-popup h3 {
+        .print-popup h3 {
             margin-bottom: 15px;
             color: #333;
             font-size: 16px;
         }
 
-        .whatsapp-popup select {
+        .print-popup select {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
@@ -358,12 +358,12 @@
             font-size: 14px;
         }
 
-        .whatsapp-popup-buttons {
+        .print-popup-buttons {
             display: flex;
             justify-content: space-between;
         }
 
-        .whatsapp-popup button {
+        .print-popup button {
             padding: 8px 15px;
             border: none;
             border-radius: 5px;
@@ -371,12 +371,12 @@
             font-size: 14px;
         }
 
-        .whatsapp-popup .send-btn {
-            background-color: #25D366;
+        .print-popup .print-btn-confirm {
+            background-color: #e74c3c;
             color: white;
         }
 
-        .whatsapp-popup .cancel-btn {
+        .print-popup .cancel-btn {
             background-color: #f1f1f1;
             color: #333;
         }
@@ -461,6 +461,32 @@
             transform: translateY(0);
         }
 
+        /* Styles pour l'impression */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .container, .container * {
+                visibility: visible;
+            }
+            .container {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                box-shadow: none;
+                background: white;
+            }
+            .header {
+                background: #4facfe;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            .btn-retour, .refresh-button, .print-btn, .database-controls {
+                display: none !important;
+            }
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .container {
@@ -492,7 +518,7 @@
                 width: 100%;
             }
 
-            .whatsapp-popup {
+            .print-popup {
                 width: 250px;
                 right: 15px;
             }
@@ -703,24 +729,24 @@
         </svg>
     </button>
 
-    <!-- Bouton WhatsApp flottant -->
-    <div class="whatsapp-btn" onclick="toggleWhatsAppPopup()">
-        <i class="fab fa-whatsapp"></i>
+    <!-- Bouton Imprimer PDF flottant -->
+    <div class="print-btn" onclick="togglePrintPopup()">
+        <i class="fas fa-file-pdf"></i>
     </div>
 
-    <!-- Popup d'envoi WhatsApp -->
-    <div class="whatsapp-popup" id="whatsappPopup">
-        <h3>Envoyer les données par WhatsApp</h3>
-        <select id="whatsappDataType">
+    <!-- Popup d'impression PDF -->
+    <div class="print-popup" id="printPopup">
+        <h3>Imprimer les données en PDF</h3>
+        <select id="printDataType">
             <option value="councils">Conseils</option>
             <option value="pedagogicalDays">Journées Pédagogiques</option>
             <option value="evaluations">Évaluations</option>
             <option value="holidays">Jours Fériés</option>
             <option value="all">Toutes les données</option>
         </select>
-        <div class="whatsapp-popup-buttons">
-            <button class="cancel-btn" onclick="toggleWhatsAppPopup()">Annuler</button>
-            <button class="send-btn" onclick="sendDataViaWhatsApp()">Envoyer</button>
+        <div class="print-popup-buttons">
+            <button class="cancel-btn" onclick="togglePrintPopup()">Annuler</button>
+            <button class="print-btn-confirm" onclick="printDataAsPDF()">Imprimer</button>
         </div>
     </div>
 
@@ -1263,130 +1289,336 @@
             }
         }
 
-        // Fonction pour afficher/masquer la popup WhatsApp
-        function toggleWhatsAppPopup() {
-            const popup = document.getElementById('whatsappPopup');
+        // Fonction pour afficher/masquer la popup d'impression
+        function togglePrintPopup() {
+            const popup = document.getElementById('printPopup');
             popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
         }
 
-        // Fonction pour envoyer les données via WhatsApp
-        function sendDataViaWhatsApp() {
-            const dataType = document.getElementById('whatsappDataType').value;
-            let message = "📚 Rapport des Activités Pédagogiques - Lycée Niamtougou\n\n";
-
+        // Fonction pour imprimer les données en PDF
+        function printDataAsPDF() {
+            const dataType = document.getElementById('printDataType').value;
+            
+            // Créer un conteneur pour l'impression
+            const printContainer = document.createElement('div');
+            printContainer.style.padding = '20px';
+            printContainer.style.fontFamily = 'Arial, sans-serif';
+            
+            // Ajouter le titre
+            const title = document.createElement('h1');
+            title.textContent = 'Rapport des Activités Pédagogiques - Lycée Niamtougou';
+            title.style.textAlign = 'center';
+            title.style.marginBottom = '20px';
+            title.style.color = '#4facfe';
+            printContainer.appendChild(title);
+            
+            // Ajouter la date du rapport
+            const reportDate = document.createElement('p');
+            reportDate.textContent = 'Rapport généré le: ' + new Date().toLocaleDateString('fr-FR');
+            reportDate.style.textAlign = 'right';
+            reportDate.style.marginBottom = '30px';
+            reportDate.style.fontStyle = 'italic';
+            printContainer.appendChild(reportDate);
+            
             // Ajouter les données selon le type sélectionné
             switch(dataType) {
                 case 'councils':
                     if (councilsData.length === 0) {
-                        alert("Aucun conseil à envoyer.");
+                        alert("Aucun conseil à imprimer.");
                         return;
                     }
-                    message += "📝 CONSEILS D'ENSEIGNEMENT/CLASSE\n\n";
-                    councilsData.forEach(council => {
-                        message += `Type: ${council.type === 'enseignement' ? 'Conseil d\'Enseignement' : 'Conseil de Classe'}\n`;
-                        message += `Date: ${formatDate(council.date)} ${council.startTime} - ${council.endTime}\n`;
-                        message += `Président: ${council.president}\n`;
-                        message += `Secrétaire: ${council.secretary}\n`;
-                        message += `Participants: ${council.attendance.join(', ')}\n\n`;
+                    
+                    const councilTitle = document.createElement('h2');
+                    councilTitle.textContent = 'CONSEILS D\'ENSEIGNEMENT/CLASSE';
+                    councilTitle.style.borderBottom = '2px solid #4facfe';
+                    councilTitle.style.paddingBottom = '10px';
+                    councilTitle.style.marginBottom = '20px';
+                    printContainer.appendChild(councilTitle);
+                    
+                    councilsData.forEach((council, index) => {
+                        const councilDiv = document.createElement('div');
+                        councilDiv.style.marginBottom = '30px';
+                        councilDiv.innerHTML = `
+                            <h3>${index + 1}. ${council.type === 'enseignement' ? 'Conseil d\'Enseignement' : 'Conseil de Classe'} du ${formatDate(council.date)}</h3>
+                            <p><strong>Heure:</strong> ${council.startTime} - ${council.endTime}</p>
+                            <p><strong>Président:</strong> ${council.president}</p>
+                            <p><strong>Secrétaire:</strong> ${council.secretary}</p>
+                            <h4>Ordre du jour:</h4>
+                            <p>${council.agenda.replace(/\n/g, '<br>')}</p>
+                            <h4>Informations clés:</h4>
+                            <p>${council.keyPoints.replace(/\n/g, '<br>')}</p>
+                            <h4>Liste de présence:</h4>
+                            <ul>
+                                ${council.attendance.map(p => `<li>${p}</li>`).join('')}
+                            </ul>
+                        `;
+                        printContainer.appendChild(councilDiv);
                     });
                     break;
                     
                 case 'pedagogicalDays':
                     if (pedagogicalDaysData.length === 0) {
-                        alert("Aucune journée pédagogique à envoyer.");
+                        alert("Aucune journée pédagogique à imprimer.");
                         return;
                     }
-                    message += "📅 JOURNÉES PÉDAGOGIQUES\n\n";
-                    pedagogicalDaysData.forEach(day => {
-                        message += `Dates: ${day.dates.map(d => formatDate(d)).join(', ')}\n`;
-                        message += `Thèmes: ${day.themes}\n\n`;
+                    
+                    const pedagogicalTitle = document.createElement('h2');
+                    pedagogicalTitle.textContent = 'JOURNÉES PÉDAGOGIQUES';
+                    pedagogicalTitle.style.borderBottom = '2px solid #4facfe';
+                    pedagogicalTitle.style.paddingBottom = '10px';
+                    pedagogicalTitle.style.marginBottom = '20px';
+                    printContainer.appendChild(pedagogicalTitle);
+                    
+                    pedagogicalDaysData.forEach((day, index) => {
+                        const dayDiv = document.createElement('div');
+                        dayDiv.style.marginBottom = '30px';
+                        dayDiv.innerHTML = `
+                            <h3>${index + 1}. Journée Pédagogique - ${day.dates.map(d => formatDate(d)).join(', ')}</h3>
+                            <h4>Thèmes développés:</h4>
+                            <p>${day.themes.replace(/\n/g, '<br>')}</p>
+                        `;
+                        printContainer.appendChild(dayDiv);
                     });
                     break;
                     
                 case 'evaluations':
                     if (evaluationsData.length === 0) {
-                        alert("Aucune évaluation à envoyer.");
+                        alert("Aucune évaluation à imprimer.");
                         return;
                     }
-                    message += "📆 ÉVALUATIONS\n\n";
-                    evaluationsData.forEach(eval => {
-                        message += `Type: ${getEvaluationTypeName(eval.type)}\n`;
-                        message += `Date: ${formatDate(eval.date)}\n`;
-                        message += `Matières: ${eval.subjects.join(', ')}\n`;
-                        message += `Classes: ${eval.classes.join(', ')}\n\n`;
+                    
+                    const evaluationTitle = document.createElement('h2');
+                    evaluationTitle.textContent = 'ÉVALUATIONS';
+                    evaluationTitle.style.borderBottom = '2px solid #4facfe';
+                    evaluationTitle.style.paddingBottom = '10px';
+                    evaluationTitle.style.marginBottom = '20px';
+                    printContainer.appendChild(evaluationTitle);
+                    
+                    evaluationsData.forEach((eval, index) => {
+                        const evalDiv = document.createElement('div');
+                        evalDiv.style.marginBottom = '30px';
+                        evalDiv.innerHTML = `
+                            <h3>${index + 1}. ${getEvaluationTypeName(eval.type)} du ${formatDate(eval.date)}</h3>
+                            <h4>Matières concernées:</h4>
+                            <ul>
+                                ${eval.subjects.map(s => `<li>${s}</li>`).join('')}
+                            </ul>
+                            <h4>Classes concernées:</h4>
+                            <ul>
+                                ${eval.classes.map(c => `<li>${c}</li>`).join('')}
+                            </ul>
+                        `;
+                        printContainer.appendChild(evalDiv);
                     });
                     break;
                     
                 case 'holidays':
                     if (holidaysData.length === 0) {
-                        alert("Aucun jour férié à envoyer.");
+                        alert("Aucun jour férié à imprimer.");
                         return;
                     }
-                    message += "🏖️ JOURS FÉRIÉS\n\n";
+                    
+                    const holidayTitle = document.createElement('h2');
+                    holidayTitle.textContent = 'JOURS FÉRIÉS';
+                    holidayTitle.style.borderBottom = '2px solid #4facfe';
+                    holidayTitle.style.paddingBottom = '10px';
+                    holidayTitle.style.marginBottom = '20px';
+                    printContainer.appendChild(holidayTitle);
+                    
+                    const holidayList = document.createElement('ul');
+                    holidayList.style.listStyleType = 'none';
+                    holidayList.style.padding = '0';
+                    
                     holidaysData.forEach(holiday => {
-                        message += `Date: ${formatDate(holiday.date)}\n`;
+                        const holidayItem = document.createElement('li');
+                        holidayItem.textContent = formatDate(holiday.date);
+                        holidayItem.style.padding = '5px 0';
+                        holidayItem.style.borderBottom = '1px dotted #ccc';
+                        holidayList.appendChild(holidayItem);
                     });
+                    
+                    printContainer.appendChild(holidayList);
                     break;
                     
                 case 'all':
                     if (councilsData.length === 0 && pedagogicalDaysData.length === 0 && 
                         evaluationsData.length === 0 && holidaysData.length === 0) {
-                        alert("Aucune donnée à envoyer.");
+                        alert("Aucune donnée à imprimer.");
                         return;
                     }
                     
+                    // Conseils
                     if (councilsData.length > 0) {
-                        message += "📝 CONSEILS D'ENSEIGNEMENT/CLASSE\n\n";
-                        councilsData.forEach(council => {
-                            message += `Type: ${council.type === 'enseignement' ? 'Conseil d\'Enseignement' : 'Conseil de Classe'}\n`;
-                            message += `Date: ${formatDate(council.date)} ${council.startTime} - ${council.endTime}\n`;
-                            message += `Président: ${council.president}\n`;
-                            message += `Secrétaire: ${council.secretary}\n`;
-                            message += `Participants: ${council.attendance.join(', ')}\n\n`;
+                        const allCouncilTitle = document.createElement('h2');
+                        allCouncilTitle.textContent = 'CONSEILS D\'ENSEIGNEMENT/CLASSE';
+                        allCouncilTitle.style.borderBottom = '2px solid #4facfe';
+                        allCouncilTitle.style.paddingBottom = '10px';
+                        allCouncilTitle.style.marginBottom = '20px';
+                        printContainer.appendChild(allCouncilTitle);
+                        
+                        councilsData.forEach((council, index) => {
+                            const councilDiv = document.createElement('div');
+                            councilDiv.style.marginBottom = '30px';
+                            councilDiv.innerHTML = `
+                                <h3>${index + 1}. ${council.type === 'enseignement' ? 'Conseil d\'Enseignement' : 'Conseil de Classe'} du ${formatDate(council.date)}</h3>
+                                <p><strong>Heure:</strong> ${council.startTime} - ${council.endTime}</p>
+                                <p><strong>Président:</strong> ${council.president}</p>
+                                <p><strong>Secrétaire:</strong> ${council.secretary}</p>
+                                <h4>Ordre du jour:</h4>
+                                <p>${council.agenda.replace(/\n/g, '<br>')}</p>
+                                <h4>Informations clés:</h4>
+                                <p>${council.keyPoints.replace(/\n/g, '<br>')}</p>
+                                <h4>Liste de présence:</h4>
+                                <ul>
+                                    ${council.attendance.map(p => `<li>${p}</li>`).join('')}
+                                </ul>
+                            `;
+                            printContainer.appendChild(councilDiv);
                         });
                     }
                     
+                    // Journées pédagogiques
                     if (pedagogicalDaysData.length > 0) {
-                        message += "📅 JOURNÉES PÉDAGOGIQUES\n\n";
-                        pedagogicalDaysData.forEach(day => {
-                            message += `Dates: ${day.dates.map(d => formatDate(d)).join(', ')}\n`;
-                            message += `Thèmes: ${day.themes}\n\n`;
+                        const allPedagogicalTitle = document.createElement('h2');
+                        allPedagogicalTitle.textContent = 'JOURNÉES PÉDAGOGIQUES';
+                        allPedagogicalTitle.style.borderBottom = '2px solid #4facfe';
+                        allPedagogicalTitle.style.paddingBottom = '10px';
+                        allPedagogicalTitle.style.marginBottom = '20px';
+                        printContainer.appendChild(allPedagogicalTitle);
+                        
+                        pedagogicalDaysData.forEach((day, index) => {
+                            const dayDiv = document.createElement('div');
+                            dayDiv.style.marginBottom = '30px';
+                            dayDiv.innerHTML = `
+                                <h3>${index + 1}. Journée Pédagogique - ${day.dates.map(d => formatDate(d)).join(', ')}</h3>
+                                <h4>Thèmes développés:</h4>
+                                <p>${day.themes.replace(/\n/g, '<br>')}</p>
+                            `;
+                            printContainer.appendChild(dayDiv);
                         });
                     }
                     
+                    // Évaluations
                     if (evaluationsData.length > 0) {
-                        message += "📆 ÉVALUATIONS\n\n";
-                        evaluationsData.forEach(eval => {
-                            message += `Type: ${getEvaluationTypeName(eval.type)}\n`;
-                            message += `Date: ${formatDate(eval.date)}\n`;
-                            message += `Matières: ${eval.subjects.join(', ')}\n`;
-                            message += `Classes: ${eval.classes.join(', ')}\n\n`;
+                        const allEvaluationTitle = document.createElement('h2');
+                        allEvaluationTitle.textContent = 'ÉVALUATIONS';
+                        allEvaluationTitle.style.borderBottom = '2px solid #4facfe';
+                        allEvaluationTitle.style.paddingBottom = '10px';
+                        allEvaluationTitle.style.marginBottom = '20px';
+                        printContainer.appendChild(allEvaluationTitle);
+                        
+                        evaluationsData.forEach((eval, index) => {
+                            const evalDiv = document.createElement('div');
+                            evalDiv.style.marginBottom = '30px';
+                            evalDiv.innerHTML = `
+                                <h3>${index + 1}. ${getEvaluationTypeName(eval.type)} du ${formatDate(eval.date)}</h3>
+                                <h4>Matières concernées:</h4>
+                                <ul>
+                                    ${eval.subjects.map(s => `<li>${s}</li>`).join('')}
+                                </ul>
+                                <h4>Classes concernées:</h4>
+                                <ul>
+                                    ${eval.classes.map(c => `<li>${c}</li>`).join('')}
+                                </ul>
+                            `;
+                            printContainer.appendChild(evalDiv);
                         });
                     }
                     
+                    // Jours fériés
                     if (holidaysData.length > 0) {
-                        message += "🏖️ JOURS FÉRIÉS\n\n";
+                        const allHolidayTitle = document.createElement('h2');
+                        allHolidayTitle.textContent = 'JOURS FÉRIÉS';
+                        allHolidayTitle.style.borderBottom = '2px solid #4facfe';
+                        allHolidayTitle.style.paddingBottom = '10px';
+                        allHolidayTitle.style.marginBottom = '20px';
+                        printContainer.appendChild(allHolidayTitle);
+                        
+                        const holidayList = document.createElement('ul');
+                        holidayList.style.listStyleType = 'none';
+                        holidayList.style.padding = '0';
+                        
                         holidaysData.forEach(holiday => {
-                            message += `Date: ${formatDate(holiday.date)}\n`;
+                            const holidayItem = document.createElement('li');
+                            holidayItem.textContent = formatDate(holiday.date);
+                            holidayItem.style.padding = '5px 0';
+                            holidayItem.style.borderBottom = '1px dotted #ccc';
+                            holidayList.appendChild(holidayItem);
                         });
+                        
+                        printContainer.appendChild(holidayList);
                     }
                     break;
             }
-
-            // Encoder le message pour l'URL
-            const encodedMessage = encodeURIComponent(message);
             
-            // Numéro de téléphone (Togo)
-            const phoneNumber = "22892871605";
+            // Ajouter un pied de page avec la date et le numéro de page
+            const footer = document.createElement('div');
+            footer.style.marginTop = '50px';
+            footer.style.paddingTop = '10px';
+            footer.style.borderTop = '1px solid #ccc';
+            footer.style.textAlign = 'center';
+            footer.style.fontSize = '12px';
+            footer.style.color = '#666';
+            footer.innerHTML = `
+                <p>Lycée Niamtougou - République Togolaise</p>
+                <p>Page 1 sur 1 - Généré le ${new Date().toLocaleDateString('fr-FR')}</p>
+            `;
+            printContainer.appendChild(footer);
             
-            // Créer le lien WhatsApp
-            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+            // Créer une nouvelle fenêtre pour l'impression
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Rapport des Activités Pédagogiques</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            margin: 0;
+                            padding: 20px;
+                            color: #333;
+                        }
+                        h1 {
+                            color: #4facfe;
+                            text-align: center;
+                        }
+                        h2 {
+                            color: #4facfe;
+                            border-bottom: 2px solid #4facfe;
+                            padding-bottom: 10px;
+                        }
+                        h3 {
+                            color: #555;
+                        }
+                        h4 {
+                            color: #666;
+                        }
+                        ul {
+                            padding-left: 20px;
+                        }
+                        @media print {
+                            body {
+                                padding: 15px;
+                            }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${printContainer.innerHTML}
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
             
-            // Ouvrir WhatsApp dans un nouvel onglet
-            window.open(whatsappUrl, '_blank');
+            // Attendre que le contenu soit chargé avant d'imprimer
+            printWindow.onload = function() {
+                printWindow.print();
+                // printWindow.close(); // Optionnel: fermer la fenêtre après impression
+            };
             
             // Fermer la popup
-            toggleWhatsAppPopup();
+            togglePrintPopup();
         }
     </script>
 </body>
