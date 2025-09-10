@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Enseignants - Soutien Scolaire</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Styles généraux */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* En-tête */
+        header {
+            background: linear-gradient(135deg, #4e54c8, #8f94fb);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 25px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #f0f0f0;
+            text-decoration: underline;
+        }
+        
+        /* Bannière principale */
+        .hero {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%234e54c8" opacity="0.1"/><path d="M0 0L100 100" stroke="%234e54c8" stroke-width="2" opacity="0.2"/></svg>');
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #4e54c8;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: #555;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #4e54c8;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background: #3a3eb3;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-tool {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px;
+            padding: 15px 25px;
+            min-width: 200px;
+        }
+        
+        .btn-tool i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .btn-screenshare {
+            background: #FF6B6B;
+        }
+        
+        .btn-screenshare:hover {
+            background: #EE5A5A;
+        }
+        
+        .btn-geogebra {
+            background: #1E88E5;
+        }
+        
+        .btn-geogebra:hover {
+            background: #1976D2;
+        }
+        
+        /* Sections */
+        section {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #4e54c8;
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: #4e54c8;
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+        
+        /* Motivation */
+        .motivation {
+            background-color: white;
+        }
+        
+        .motivation-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .motivation-content p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, #f0f3ff 0%, #e0e7ff 100%);
+            border-left: 4px solid #4e54c8;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+            text-align: left;
+        }
+        
+        /* Outils numériques */
+        .digital-tools {
+            background: #f0f3ff;
+        }
+        
+        .tools-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+        }
+        
+        .tool-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            flex: 1;
+            min-width: 300px;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        .tool-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+            color: #4e54c8;
+        }
+        
+        .tool-description {
+            margin-bottom: 25px;
+        }
+        
+        /* Widget WhatsApp */
+        .whatsapp-widget {
+            background: white;
+        }
+        
+        .widget-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+        
+        .widget-generator {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .widget-preview {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .widget-code {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin-top: 20px;
+            width: 100%;
+            overflow-x: auto;
+        }
+        
+        /* Témoignages */
+        .testimonials {
+            background: #f0f3ff;
+        }
+        
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .testimonial-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .testimonial-text:before {
+            content: """;
+            font-size: 50px;
+            color: #4e54c8;
+            opacity: 0.2;
+            position: absolute;
+            left: -10px;
+            top: -20px;
+        }
+        
+        .testimonial-author {
+            font-weight: bold;
+            color: #4e54c8;
+        }
+        
+        /* Pied de page */
+        footer {
+            background: #333;
+            color: white;
+            padding: 40px 0 20px;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 15px;
+            color: #8f94fb;
+        }
+        
+        .footer-links {
+            list-style: none;
+            margin-left: 0;
+            padding-left: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+            list-style: none;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #8f94fb;
+            padding-left: 5px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            color: #8f94fb;
+        }
+        
+        .copyright {
+            border-top: 1px solid #555;
+            padding-top: 20px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .widget-container {
+                flex-direction: column;
+            }
+            
+            .tools-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo"><i class="fas fa-chalkboard-teacher"></i>Espace Enseignants</div>
+                <ul class="nav-links">
+                    <li><a href="#motivation">Motivation</a></li>
+                    <li><a href="#tools">Outils numériques</a></li>
+                    <li><a href="#widget">Widget WhatsApp</a></li>
+                    <li><a href="#testimonials">Témoignages</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Bannière principale -->
+    <section class="hero">
+        <div class="container">
+            <h1>Enseignants dévoués pour élèves en difficulté</h1>
+            <p>Rejoignez notre communauté d'enseignants passionnés et aidez les élèves à surmonter leurs difficultés scolaires</p>
+            <a href="#tools" class="btn">Découvrir nos outils</a>
+        </div>
+    </section>
+
+    <!-- Motivation -->
+    <section id="motivation" class="motivation">
+        <div class="container">
+            <h2 class="section-title">Notre Motivation</h2>
+            <div class="motivation-content">
+                <p>Chez SoutienScolaire, nous croyons que chaque élève mérite une chance de réussir, indépendamment de ses difficultés passées. Notre mission est de fournir un accompagnement personnalisé et bienveillant aux élèves en situation d'échec ou de décrochage scolaire.</p>
+                
+                <div class="highlight">
+                    <p><i class="fas fa-quote-left" style="color: #4e54c8; margin-right: 10px;"></i> 
+                    En tant qu'enseignant, vous avez le pouvoir de transformer la relation qu'un élève entretient avec l'apprentissage. Votre engagement peut faire la différence entre l'échec et la réussite, entre le décrochage et la persévérance.
+                    </p>
+                </div>
+                
+                <p>Nous recherchons des enseignants passionnés, patients et créatifs, qui voient au-delà des notes et des résultats immédiats. Des professionnels qui comprennent que les difficultés scolaires sont souvent le reflet de défis plus larges : manque de confiance en soi, problèmes d'organisation, méthodologie inadaptée, ou simplement besoin d'un encadrement plus personnalisé.</p>
+                
+                <p>En rejoignant notre équipe, vous bénéficierez :</p>
+                
+                <ul style="text-align: left; max-width: 600px; margin: 0 auto 30px;">
+                    <li>D'une formation continue aux pédagogies alternatives et différenciées</li>
+                    <li>D'outils modernes pour un enseignement en ligne efficace</li>
+                    <li>D'un soutien constant de notre équipe pédagogique</li>
+                    <li>D'une rémunération attractive et de horaires flexibles</li>
+                    <li>De la satisfaction de voir vos élèves progresser et reprendre confiance</li>
+                </ul>
+                
+                <p>Si vous êtes prêt à relever ce défi enrichissant et à faire une réelle différence dans la vie des élèves, nous serions ravis de vous accueillir dans notre communauté.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Outils numériques -->
+    <section id="tools" class="digital-tools">
+        <div class="container">
+            <h2 class="section-title">Outils Numériques pour Enseignants</h2>
+            <div class="tools-container">
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <h3>Partage d'écran</h3>
+                    <p class="tool-description">
+                        Utilisez Getscreen.me pour partager votre écran avec vos élèves pendant les cours en ligne. 
+                        Présentez des documents, des présentations ou guidez-les à travers des exercices en temps réel.
+                    </p>
+                    <a href="https://getscreen.me/fr/" class="btn btn-tool btn-screenshare" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Accéder à Getscreen.me
+                    </a>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Geogebra</h3>
+                    <p class="tool-description">
+                        Créez des représentations graphiques interactives pour les mathématiques et les sciences. 
+                        Géométrie, algèbre, statistiques - rendez les concepts abstraits concrets et compréhensibles.
+                    </p>
+                    <a href="https://www.geogebra.org/" class="btn btn-tool btn-geogebra" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Accéder à Geogebra
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Widget WhatsApp -->
+    <section id="widget" class="whatsapp-widget">
+        <div class="container">
+            <h2 class="section-title">Générateur de Widget WhatsApp</h2>
+            <div class="widget-container">
+                <div class="widget-generator">
+                    <h3>Personnalisez votre widget</h3>
+                    <p>Créez un widget WhatsApp personnalisé pour votre page de cours et permettez à vos élèves de vous contacter facilement.</p>
+                    
+                    <div class="form-group">
+                        <label for="teacher-name">Votre nom</label>
+                        <input type="text" id="teacher-name" placeholder="Ex: Prof. Dupont">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="teacher-subject">Matière enseignée</label>
+                        <input type="text" id="teacher-subject" placeholder="Ex: Mathématiques">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="whatsapp-group">Lien du groupe WhatsApp</label>
+                        <input type="text" id="whatsapp-group" placeholder="Ex: https://chat.whatsapp.com/..." value="https://chat.whatsapp.com/">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="welcome-message">Message d'accueil personnalisé</label>
+                        <textarea id="welcome-message" placeholder="Ex: Rejoignez notre groupe pour...">Rejoignez notre groupe WhatsApp pour poser vos questions et obtenir de l'aide!</textarea>
+                    </div>
+                    
+                    <button id="generate-btn" class="btn">Générer le widget</button>
+                </div>
+                
+                <div class="widget-preview">
+                    <h3>Aperçu du widget</h3>
+                    <p>Votre widget WhatsApp s'affichera comme ceci :</p>
+                    
+                    <div id="widget-example" style="margin: 20px 0; padding: 15px; border: 2px dashed #ccc; border-radius: 10px; text-align: center;">
+                        <p>Le widget s'affichera ici après personnalisation</p>
+                    </div>
+                    
+                    <div class="widget-code">
+                        <p>Code d'intégration :</p>
+                        <code id="widget-code-content">
+                            // Le code s'affichera ici
+                        </code>
+                    </div>
+                    
+                    <button id="copy-btn" class="btn" style="margin-top: 15px;">Copier le code</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Témoignages -->
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <h2 class="section-title">Témoignages d'Enseignants</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"Les outils comme Geogebra et Getscreen.me ont transformé ma façon d'enseigner en ligne. Je peux maintenant créer des cours interactifs qui captivent vraiment mes élèves."</p>
+                    <p class="testimonial-author">Marie, professeure de mathématiques</p>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"La possibilité de partager mon écran en temps réel a considérablement amélioré la qualité de mes explications. Les élèves comprennent beaucoup mieux les concepts complexes."</p>
+                    <p class="testimonial-author">Thomas, professeur de physique</p>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"Geogebra est devenu un outil indispensable pour mes cours de géométrie. Les visualisations interactives aident énormément les élèves en difficulté."</p>
+                    <p class="testimonial-author">Sophie, professeure de mathématiques</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pied de page -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>À propos</h3>
+                    <p>SoutienScolaire offre des cours de soutien en ligne de qualité pour aider les élèves en difficulté à progresser et réussir leur scolarité.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Liens rapides</h3>
+                    <ul class="footer-links">
+                        <li><a href="#motivation">Notre motivation</a></li>
+                        <li><a href="#tools">Outils numériques</a></li>
+                        <li><a href="#widget">Widget WhatsApp</a></li>
+                        <li><a href="#testimonials">Témoignages</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Rue de l'Éducation, Paris</p>
+                    <p><i class="fas fa-phone"></i> +33 1 23 45 67 89</p>
+                    <p><i class="fas fa-envelope"></i> enseignants@soutienscolaire.fr</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 SoutienScolaire - Tous droits réservés</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const generateBtn = document.getElementById('generate-btn');
+            const copyBtn = document.getElementById('copy-btn');
+            const widgetExample = document.getElementById('widget-example');
+            const widgetCode = document.getElementById('widget-code-content');
+            
+            generateBtn.addEventListener('click', function() {
+                const name = document.getElementById('teacher-name').value || 'Prof. Dupont';
+                const subject = document.getElementById('teacher-subject').value || 'Mathématiques';
+                const groupLink = document.getElementById('whatsapp-group').value || 'https://chat.whatsapp.com/';
+                const message = encodeURIComponent(document.getElementById('welcome-message').value || 'Rejoignez notre groupe WhatsApp pour poser vos questions et obtenir de l\'aide!');
+                
+                // Mise à jour de l'aperçu
+                widgetExample.innerHTML = `
+                    <h4>${name} - ${subject}</h4>
+                    <p>Rejoignez notre groupe d'entraide sur WhatsApp</p>
+                    <a href="${groupLink}" class="btn btn-whatsapp" target="_blank" style="margin-top: 10px;">
+                        <i class="fab fa-whatsapp"></i> Rejoindre le groupe
+                    </a>
+                `;
+                
+                // Génération du code
+                widgetCode.textContent = `
+<!-- Widget WhatsApp pour ${name} -->
+<div style="text-align: center; padding: 15px; border: 1px solid #25D366; border-radius: 10px; background: #f0f3ff;">
+    <h4>${name} - ${subject}</h4>
+    <p>Rejoignez notre groupe d'entraide sur WhatsApp</p>
+    <a href="${groupLink}" target="_blank" style="display: inline-block; background: #25D366; color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 10px;">
+        <i class="fab fa-whatsapp"></i> Rejoindre le groupe
+    </a>
+</div>
+                `;
+            });
+            
+            copyBtn.addEventListener('click', function() {
+                const range = document.createRange();
+                range.selectNode(widgetCode);
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(range);
+                document.execCommand('copy');
+                window.getSelection().removeAllRanges();
+                
+                // Feedback visuel
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = 'Code copié !';
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>
