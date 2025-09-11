@@ -1,74 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-        <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bouton Actualiser</title>
-    <style>
-        .refresh-button {
-            position: fixed;
-            bottom: 90px;  /* Positionné au-dessus du bouton WhatsApp */
-            right: 20px;
-            background-color: #4285f4;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            text-align: center;
-            font-size: 24px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-        
-        .refresh-button:hover {
-            background-color: #3367d6;
-            transform: rotate(360deg);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        
-        .refresh-icon {
-            width: 24px;
-            height: 24px;
-            fill: white;
-        }
-    </style>
-</head>
-<body>
-    
-
-    <!-- Bouton Actualiser -->
-    <button onclick="window.location.reload()" class="refresh-button" aria-label="Actualiser la page">
-        <svg class="refresh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-        </svg>
-    </button>
-</body>
-</html>
-<html lang="fr">
-    <style>
-  .btn-retour {
-    padding: 8px 16px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .btn-retour:hover {
-    background-color: #e0e0e0;
-  }
-</style>
-
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Inscriptions - Lycée Niamtougou</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -140,7 +76,7 @@
             color: #555;
         }
 
-        .form-group input {
+        .form-group input, .form-group select {
             width: 100%;
             padding: 12px 16px;
             border: 2px solid #e1e8ed;
@@ -149,7 +85,7 @@
             transition: all 0.3s ease;
         }
 
-        .form-group input:focus {
+        .form-group input:focus, .form-group select:focus {
             outline: none;
             border-color: #4facfe;
             box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
@@ -163,7 +99,6 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            width: 100%;
         }
 
         .btn-primary {
@@ -397,6 +332,83 @@
             color: #333;
         }
 
+        /* Styles pour les matières en difficulté */
+        .difficult-subjects {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            border: 1px solid #e1e8ed;
+        }
+
+        .subject-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .subject-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .subject-checkbox input {
+            margin: 0;
+        }
+
+        /* Bouton retour */
+        .btn-retour {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-retour:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Bouton Actualiser */
+        .refresh-button {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            font-size: 24px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .refresh-button:hover {
+            background-color: #3367d6;
+            transform: rotate(360deg);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .refresh-icon {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .login-container {
@@ -426,15 +438,18 @@
                 flex-wrap: wrap;
                 justify-content: center;
             }
+
+            .subject-checkboxes {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
     <!-- Page de connexion -->
     <div class="login-page" id="loginPage">
         <div class="login-container">
-        <button class="btn-retour" onclick="history.back()">← Retour</button>
+            <button class="btn-retour" onclick="history.back()">← Retour</button>
             <div class="login-header">
                 <div class="school-logo">LN</div>
                 <div class="school-name">Lycée Niamtougou</div>
@@ -535,6 +550,46 @@
                                 <input type="text" id="studentParent" placeholder="Nom du parent/tuteur">
                             </div>
                         </div>
+
+                        <!-- Nouvelle section pour les matières en difficulté -->
+                        <div class="difficult-subjects">
+                            <h3>Matières en difficulté</h3>
+                            <p>Sélectionnez les matières où l'élève rencontre des difficultés:</p>
+                            <div class="subject-checkboxes" id="difficultSubjects">
+                                <div class="subject-checkbox">
+                                    <input type="checkbox" id="maths" value="Mathématiques">
+                                    <label for="maths">Mathématiques</label>
+                                </div>
+                                <div class="subject-checkbox">
+                                    <input type="checkbox" id="french" value="Français">
+                                    <label for="french">Français</label>
+                                </div>
+                                <div class="subject-checkbox">
+                                    <input type="checkbox" id="english" value="Anglais">
+                                    <label for="english">Anglais</label>
+                                </div>
+                                <div class="subject-checkbox">
+                                    <input type="checkbox" id="physics" value="Physique">
+                                    <label for="physics">Physique</label>
+                                </div>
+                                <div class="subject-checkbox">
+                                    <input type="checkbox" id="chemistry" value="Chimie">
+                                    <label for="chemistry">Chimie</label>
+                                </div>
+                                <div class="subject-checkbox">
+                                    <input type="checkbox" id="biology" value="SVT">
+                                    <label for="biology">SVT</label>
+                                </div>
+                                <div class="subject-checkbox">
+                                    <input type="checkbox" id="history" value="Histoire-Géo">
+                                    <label for="history">Histoire-Géo</label>
+                                </div>
+                                <div class="subject-checkbox">
+                                    <input type="checkbox" id="philosophy" value="Philosophie">
+                                    <label for="philosophy">Philosophie</label>
+                                </div>
+                            </div>
+                        </div>
                         
                         <div class="form-actions">
                             <button type="button" class="btn btn-whatsapp" onclick="sendViaWhatsApp()">
@@ -582,7 +637,7 @@
                                     <th>Nom</th>
                                     <th>Classe</th>
                                     <th>Date inscription</th>
-                                    <th>Responsable</th>
+                                    <th>Matières difficiles</th>
                                     <th>Statut</th>
                                     <th>Actions</th>
                                 </tr>
@@ -609,6 +664,13 @@
             </div>
         </div>
     </div>
+
+    <!-- Bouton Actualiser -->
+    <button onclick="window.location.reload()" class="refresh-button" aria-label="Actualiser la page">
+        <svg class="refresh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+        </svg>
+    </button>
 
     <script>
         // Comptes autorisés
@@ -732,6 +794,12 @@
             const studentPhone = document.getElementById('studentPhone').value.trim();
             const studentParent = document.getElementById('studentParent').value.trim();
 
+            // Récupérer les matières en difficulté sélectionnées
+            const difficultSubjects = [];
+            document.querySelectorAll('#difficultSubjects input[type="checkbox"]:checked').forEach(checkbox => {
+                difficultSubjects.push(checkbox.value);
+            });
+
             // Validation
             if (!studentId || !studentName || !studentClass || !registrationDate) {
                 showModal('Erreur', 'Veuillez remplir tous les champs obligatoires');
@@ -753,6 +821,7 @@
                 address: studentAddress || '',
                 phone: studentPhone || '',
                 parent: studentParent || '',
+                difficultSubjects: difficultSubjects,
                 status: 'active',
                 createdAt: new Date().toISOString()
             };
@@ -770,6 +839,11 @@
             document.getElementById('registrationForm').reset();
             document.getElementById('registrationDate').value = new Date().toISOString().split('T')[0];
             
+            // Décocher toutes les matières
+            document.querySelectorAll('#difficultSubjects input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
             // Mettre à jour l'affichage
             displayStudents(students);
         }
@@ -786,12 +860,19 @@
 
             studentsToDisplay.forEach(student => {
                 const row = document.createElement('tr');
+                
+                // Formater les matières difficiles
+                let difficultSubjectsText = '-';
+                if (student.difficultSubjects && student.difficultSubjects.length > 0) {
+                    difficultSubjectsText = student.difficultSubjects.join(', ');
+                }
+                
                 row.innerHTML = `
                     <td>${student.id}</td>
                     <td>${student.name}</td>
                     <td>${student.class}</td>
                     <td>${formatDate(student.registrationDate)}</td>
-                    <td>${student.parent || '-'}</td>
+                    <td>${difficultSubjectsText}</td>
                     <td><span class="status-${student.status}">${student.status === 'active' ? 'Actif' : 'Inactif'}</span></td>
                     <td>
                         <button class="btn btn-secondary btn-sm" onclick="editStudent('${student.id}')">
@@ -855,6 +936,21 @@
             document.getElementById('studentPhone').value = student.phone;
             document.getElementById('studentParent').value = student.parent;
 
+            // Décocher toutes les matières d'abord
+            document.querySelectorAll('#difficultSubjects input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+
+            // Cocher les matières en difficulté de l'élève
+            if (student.difficultSubjects) {
+                student.difficultSubjects.forEach(subject => {
+                    const checkbox = document.querySelector(`#difficultSubjects input[value="${subject}"]`);
+                    if (checkbox) {
+                        checkbox.checked = true;
+                    }
+                });
+            }
+
             // Faire défiler jusqu'au formulaire
             document.getElementById('registrationForm').scrollIntoView({ behavior: 'smooth' });
         }
@@ -869,6 +965,12 @@
             const studentAddress = document.getElementById('studentAddress').value.trim();
             const studentPhone = document.getElementById('studentPhone').value.trim();
             const studentParent = document.getElementById('studentParent').value.trim();
+
+            // Récupérer les matières en difficulté sélectionnées
+            const difficultSubjects = [];
+            document.querySelectorAll('#difficultSubjects input[type="checkbox"]:checked').forEach(checkbox => {
+                difficultSubjects.push(checkbox.value);
+            });
 
             // Vérifier les champs obligatoires
             if (!studentId || !studentName || !studentClass || !registrationDate) {
@@ -886,6 +988,10 @@
             if (studentAddress) message += `*Adresse:* ${studentAddress}\n`;
             if (studentPhone) message += `*Téléphone:* ${studentPhone}\n`;
             if (studentParent) message += `*Responsable:* ${studentParent}\n`;
+            
+            if (difficultSubjects.length > 0) {
+                message += `*Matières en difficulté:* ${difficultSubjects.join(', ')}\n`;
+            }
 
             // Encoder le message pour l'URL
             const encodedMessage = encodeURIComponent(message);
