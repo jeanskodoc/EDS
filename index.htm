@@ -137,6 +137,7 @@
             transition: all 0.3s ease;
             border: 2px solid rgba(255, 255, 255, 0.3);
             cursor: pointer;
+            margin: 5px;
         }
 
         .btn:hover {
@@ -155,6 +156,14 @@
         .btn-admin {
             background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
         }
+        
+        .btn-payment {
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+        }
+        
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+        }
 
         .btn-refresh {
             position: absolute;
@@ -163,6 +172,13 @@
             background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
             padding: 8px 15px;
             font-size: 0.9rem;
+        }
+        
+        .payment-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
         }
 
         .footer {
@@ -400,6 +416,23 @@
                      ENSEIGNANTS.
                 </p>
                 <a href="cse.html" class="btn btn-teachers">Accéder</a>
+            </div>
+            
+            <!-- Nouvelle carte pour le paiement et WhatsApp -->
+            <div class="portal-card">
+                <div class="portal-icon">💳</div>
+                <h2>Paiement en ligne</h2>
+                <p>
+                    Effectuez votre paiement scolaire en ligne et confirmez-le via WhatsApp.
+                </p>
+                <div class="payment-buttons">
+                    <a href="https://me.fedapay.com/ZRFU62iT" target="_blank" class="btn btn-payment">
+                        💳 Payer maintenant
+                    </a>
+                    <a href="https://wa.me/22892871605?text=Bonjour,%20j'ai%20effectué%20mon%20paiement%20avec%20succès." target="_blank" class="btn btn-whatsapp">
+                        📞 Confirmer sur WhatsApp
+                    </a>
+                </div>
             </div>
         </div>
         
