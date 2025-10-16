@@ -1,20 +1,5 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <style>
-  .btn-retour {
-    padding: 8px 16px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .btn-retour:hover {
-    background-color: #e0e0e0;
-  }
-</style>
-
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,20 +9,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #3498db;
-            --secondary: #2c3e50;
-            --success: #2ecc71;
-            --warning: #f39c12;
-            --danger: #e74c3c;
-            --light: #f5f7fa;
-            --dark: #2c3e50;
-            --problem: #ffeaa7;
-            --student-work: #d6eaf8;
-            --homework: #e8d6ff;
-            --text-red: #e74c3c;
-            --text-green: #27ae60;
-            --text-blue: #3498db;
-            --text-black: #2c3e50;
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --danger: #e63946;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --problem: #ffd166;
+            --student-work: #a8dadc;
+            --homework: #cdb4db;
+            --text-red: #e63946;
+            --text-green: #2a9d8f;
+            --text-blue: #4361ee;
+            --text-black: #212529;
+            --gradient: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --hover-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
         }
         
         * {
@@ -59,77 +47,121 @@
             max-width: 1400px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 20px;
+            grid-template-columns: 320px 1fr;
+            gap: 25px;
         }
         
         header {
             grid-column: 1 / -1;
-            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            background: var(--gradient);
             color: white;
-            padding: 20px;
+            padding: 25px;
             text-align: center;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #4cc9f0, #f72585, #4361ee);
         }
         
         header h1 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
         }
         
         .app-description {
             font-size: 1.1rem;
             max-width: 800px;
             margin: 0 auto;
+            opacity: 0.9;
         }
         
         .editor-panel {
             background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
             display: flex;
             flex-direction: column;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .editor-panel:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
         }
         
         .preview-panel {
             background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
             overflow-y: auto;
             max-height: calc(100vh - 100px);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .preview-panel:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
         }
         
         .panel-title {
             color: var(--secondary);
             margin-bottom: 20px;
-            padding-bottom: 10px;
+            padding-bottom: 12px;
             border-bottom: 2px solid var(--primary);
             display: flex;
             align-items: center;
             gap: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .panel-title i {
+            color: var(--primary);
         }
         
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
+            margin-bottom: 8px;
+            font-weight: 600;
             color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         input, select, textarea {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
             font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
         }
         
         textarea {
@@ -141,18 +173,21 @@
             background: var(--primary);
             color: white;
             border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
+            padding: 12px 18px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 1rem;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         
         button:hover {
-            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
         
         .btn-success {
@@ -160,7 +195,7 @@
         }
         
         .btn-success:hover {
-            background: #27ae60;
+            background: #3ab0d5;
         }
         
         .btn-danger {
@@ -168,7 +203,7 @@
         }
         
         .btn-danger:hover {
-            background: #c0392b;
+            background: #d32f2f;
         }
         
         .btn-warning {
@@ -176,7 +211,7 @@
         }
         
         .btn-warning:hover {
-            background: #e67e22;
+            background: #e11571;
         }
         
         .btn-info {
@@ -184,67 +219,78 @@
         }
         
         .btn-info:hover {
-            background: #2980b9;
+            background: #3050d6;
         }
         
         .btn-purple {
-            background: #9b59b6;
+            background: #7209b7;
         }
         
         .btn-purple:hover {
-            background: #8e44ad;
+            background: #5e0796;
         }
         
         .action-buttons {
             display: flex;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 25px;
             flex-wrap: wrap;
         }
         
         .section-buttons {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin: 15px 0;
+            gap: 12px;
+            margin: 20px 0;
         }
         
         .content-blocks {
-            margin-top: 20px;
+            margin-top: 25px;
             flex-grow: 1;
             overflow-y: auto;
         }
         
         .content-block {
             background: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-left: 4px solid var(--primary);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 18px;
+            border-left: 5px solid var(--primary);
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .content-block:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         .block-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
         
         .block-title {
-            font-weight: 500;
+            font-weight: 600;
             color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .block-actions {
             display: flex;
-            gap: 5px;
+            gap: 8px;
         }
         
         .image-preview {
             max-width: 100%;
-            margin-top: 10px;
-            border-radius: 5px;
+            margin-top: 12px;
+            border-radius: 8px;
             display: none;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
         }
         
         .lesson-preview {
@@ -252,42 +298,45 @@
             background: white;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
             min-height: 400px;
+            border-radius: 12px;
         }
         
         .preview-header {
-            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            background: var(--gradient);
             color: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         .school-name {
             font-size: 1.5rem;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             color: #ffd700;
         }
         
         .lesson-title {
-            font-size: 2rem;
-            margin-bottom: 10px;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
         }
         
         .header-info {
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
-            margin-top: 15px;
+            margin-top: 20px;
         }
         
         .info-item {
             background: rgba(255, 255, 255, 0.2);
-            padding: 5px 10px;
-            border-radius: 5px;
+            padding: 8px 15px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            backdrop-filter: blur(5px);
         }
         
         .preview-content {
@@ -295,115 +344,131 @@
         }
         
         .content-section {
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
         
         .section-title {
             color: var(--secondary);
-            margin-bottom: 10px;
-            padding-bottom: 5px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
             border-bottom: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .definition, .theorem, .example, .exercise, .problem, .student-work, .solution, .homework {
-            padding: 15px;
-            border-radius: 8px;
-            margin: 10px 0;
+            padding: 18px;
+            border-radius: 10px;
+            margin: 12px 0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
         }
         
         .definition {
             background: #e8f4fc;
-            border-left: 4px solid var(--primary);
+            border-left: 5px solid var(--primary);
         }
         
         .theorem {
             background: #e8f4fc;
-            border-left: 4px solid var(--primary);
+            border-left: 5px solid var(--primary);
         }
         
         .example {
             background: #e7f9ed;
-            border-left: 4px solid var(--success);
+            border-left: 5px solid var(--success);
         }
         
         .exercise {
             background: #fef9e7;
-            border-left: 4px solid var(--warning);
+            border-left: 5px solid var(--warning);
         }
         
         .problem {
             background: var(--problem);
-            border-left: 4px solid #fdcb6e;
+            border-left: 5px solid #ffb347;
         }
         
         .student-work {
             background: var(--student-work);
-            border-left: 4px solid var(--primary);
+            border-left: 5px solid var(--primary);
         }
         
         .solution {
             background: #f4ecf7;
-            border-left: 4px solid #9b59b6;
+            border-left: 5px solid #7209b7;
         }
         
         .homework {
             background: var(--homework);
-            border-left: 4px solid #8e44ad;
+            border-left: 5px solid #7209b7;
         }
         
         .preview-image {
             max-width: 100%;
-            border-radius: 8px;
-            margin: 10px 0;
+            border-radius: 10px;
+            margin: 12px 0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
         }
         
         .homework-info {
-            margin-top: 10px;
-            padding: 10px;
+            margin-top: 12px;
+            padding: 12px;
             background: rgba(0, 0, 0, 0.05);
-            border-radius: 5px;
+            border-radius: 8px;
             font-style: italic;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         /* Styles pour la barre d'outils de formatage */
         .formatting-toolbar {
             display: flex;
             flex-wrap: wrap;
-            gap: 5px;
-            margin-bottom: 10px;
-            padding: 8px;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding: 10px;
             background: #f0f0f0;
-            border-radius: 5px;
+            border-radius: 8px;
         }
         
         .format-btn {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             background-color: #fff;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.2s;
         }
         
         .format-btn:hover {
             background-color: #f0f0f0;
+            transform: translateY(-2px);
         }
         
         .format-btn.active {
             background-color: #e0e0e0;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
         }
         
         .color-btn {
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             border: none;
             cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .color-btn:hover {
+            transform: scale(1.1);
         }
         
         .color-btn.red {
@@ -424,42 +489,52 @@
         
         .color-btn.active {
             box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.3);
+            transform: scale(1.1);
         }
         
         .data-management {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #e0e0e0;
         }
         
         .filter-section {
             background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
         }
         
         .filter-row {
             display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
+            gap: 12px;
+            margin-bottom: 12px;
         }
         
         .saved-lessons {
-            margin-top: 15px;
-            max-height: 200px;
+            margin-top: 18px;
+            max-height: 250px;
             overflow-y: auto;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            background: #f8f9fa;
         }
         
         .lesson-item {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: all 0.2s;
+            border-radius: 8px;
+        }
+        
+        .lesson-item:hover {
+            background: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
         }
         
         .lesson-item:last-child {
@@ -471,17 +546,33 @@
         }
         
         .lesson-title-small {
-            font-weight: 500;
+            font-weight: 600;
         }
         
         .lesson-meta {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: #666;
+            margin-top: 4px;
         }
         
         .lesson-actions {
             display: flex;
-            gap: 5px;
+            gap: 8px;
+        }
+        
+        .text-editor {
+            min-height: 120px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            background: white;
+            transition: all 0.3s;
+        }
+        
+        .text-editor:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
         }
         
         @media (max-width: 992px) {
@@ -496,9 +587,17 @@
             .filter-row {
                 flex-direction: column;
             }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-buttons button {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
-     <button class="btn-retour" onclick="history.back()">← Retour</button>
 </head>
 <body>
     <header>
@@ -507,47 +606,46 @@
     </header>
     
     <div class="container">
-       
         <div class="editor-panel">
             <h2 class="panel-title"><i class="fas fa-edit"></i> Éditeur de leçon</h2>
             
             <div class="form-group">
-                <label for="school-name">Nom de l'établissement</label>
+                <label for="school-name"><i class="fas fa-school"></i> Nom de l'établissement</label>
                 <input type="text" id="school-name" placeholder="Ex: Lycée Louis Pasteur">
             </div>
             
             <div class="form-group">
-                <label for="teacher-name">Nom de l'enseignant</label>
+                <label for="teacher-name"><i class="fas fa-user-tie"></i> Nom de l'enseignant</label>
                 <input type="text" id="teacher-name" placeholder="Ex: Dupont Jean">
             </div>
             
             <div class="form-group">
-                <label for="subject">Matière</label>
+                <label for="subject"><i class="fas fa-book"></i> Matière</label>
                 <input type="text" id="subject" placeholder="Ex: Mathématiques">
             </div>
             
             <div class="form-group">
-                <label for="discipline">Discipline</label>
+                <label for="discipline"><i class="fas fa-graduation-cap"></i> Discipline</label>
                 <input type="text" id="discipline" placeholder="Ex: Géométrie">
             </div>
             
             <div class="form-group">
-                <label for="class-name">Classe/Niveau</label>
+                <label for="class-name"><i class="fas fa-users"></i> Classe/Niveau</label>
                 <input type="text" id="class-name" placeholder="Ex: Seconde 7">
             </div>
             
             <div class="form-group">
-                <label for="lesson-title">Titre de la leçon</label>
+                <label for="lesson-title"><i class="fas fa-heading"></i> Titre de la leçon</label>
                 <input type="text" id="lesson-title" placeholder="Ex: Théorèmes de Pythagore et de Thalès">
             </div>
             
             <div class="form-group">
-                <label for="lesson-duration">Durée de la leçon</label>
+                <label for="lesson-duration"><i class="fas fa-clock"></i> Durée de la leçon</label>
                 <input type="text" id="lesson-duration" placeholder="Ex: 4 heures">
             </div>
             
             <div class="form-group">
-                <label for="lesson-date">Date de la leçon</label>
+                <label for="lesson-date"><i class="fas fa-calendar-alt"></i> Date de la leçon</label>
                 <input type="date" id="lesson-date">
             </div>
             
@@ -617,13 +715,13 @@
                 <div class="filter-section">
                     <div class="filter-row">
                         <div class="form-group">
-                            <label for="filter-subject">Matière</label>
+                            <label for="filter-subject"><i class="fas fa-book"></i> Matière</label>
                             <select id="filter-subject">
                                 <option value="">Toutes les matières</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="filter-discipline">Discipline</label>
+                            <label for="filter-discipline"><i class="fas fa-graduation-cap"></i> Discipline</label>
                             <select id="filter-discipline">
                                 <option value="">Toutes les disciplines</option>
                             </select>
@@ -631,7 +729,7 @@
                     </div>
                     <div class="filter-row">
                         <div class="form-group">
-                            <label for="filter-date">Date</label>
+                            <label for="filter-date"><i class="fas fa-calendar-alt"></i> Date</label>
                             <input type="date" id="filter-date">
                         </div>
                         <button class="btn-info" onclick="loadFilteredLessons()">
@@ -661,7 +759,7 @@
                     
                     <div class="header-info">
                         <div class="info-item">
-                            <i class="fas fa-user-graduate"></i>
+                            <i class="fas fa-user-tie"></i>
                             <span id="preview-teacher">Enseignant: [Nom]</span>
                         </div>
                         <div class="info-item">
@@ -673,7 +771,7 @@
                             <span id="preview-duration">Durée: [Durée]</span>
                         </div>
                         <div class="info-item">
-                            <i class="fas fa-calendar"></i>
+                            <i class="fas fa-calendar-alt"></i>
                             <span id="preview-date">Date: [Date]</span>
                         </div>
                     </div>
@@ -746,53 +844,64 @@
             
             let blockTitle = '';
             let placeholder = '';
+            let icon = '';
             
             switch(type) {
                 case 'definition':
                     blockTitle = 'Définition';
                     placeholder = 'Saisissez votre définition ici...';
+                    icon = 'fas fa-bookmark';
                     break;
                 case 'theorem':
                     blockTitle = 'Théorème';
                     placeholder = 'Énoncez le théorème ici...';
+                    icon = 'fas fa-graduation-cap';
                     break;
                 case 'example':
                     blockTitle = 'Exemple';
                     placeholder = 'Décrivez votre exemple ici...';
+                    icon = 'fas fa-lightbulb';
                     break;
                 case 'exercise':
                     blockTitle = 'Exercice';
                     placeholder = 'Décrivez l\'exercice ici...';
+                    icon = 'fas fa-pencil-alt';
                     break;
                 case 'problem':
                     blockTitle = 'Situation Problème';
                     placeholder = 'Décrivez la situation problème ici...';
+                    icon = 'fas fa-question-circle';
                     break;
                 case 'student-work':
                     blockTitle = 'Travail de l\'Élève';
                     placeholder = 'Décrivez le travail attendu de l\'élève ici...';
+                    icon = 'fas fa-user-graduate';
                     break;
                 case 'solution':
                     blockTitle = 'Solution';
                     placeholder = 'Expliquez la solution ici...';
+                    icon = 'fas fa-check-circle';
                     break;
                 case 'homework':
                     blockTitle = 'Devoir Maison';
                     placeholder = 'Décrivez le devoir maison ici...';
+                    icon = 'fas fa-tasks';
                     break;
                 case 'formula':
                     blockTitle = 'Formule';
                     placeholder = 'Saisissez la formule ici...';
+                    icon = 'fas fa-square-root-alt';
                     break;
                 default:
                     blockTitle = 'Texte';
                     placeholder = 'Saisissez votre texte ici...';
+                    icon = 'fas fa-paragraph';
             }
             
             const blockHTML = `
                 <div class="content-block" id="${blockId}">
                     <div class="block-header">
-                        <span class="block-title">${blockTitle}</span>
+                        <span class="block-title"><i class="${icon}"></i> ${blockTitle}</span>
                         <div class="block-actions">
                             <button class="btn-danger" onclick="removeBlock('${blockId}')">
                                 <i class="fas fa-trash"></i>
@@ -801,7 +910,7 @@
                     </div>
                     ${type === 'homework' ? `
                         <div class="form-group">
-                            <label for="${blockId}-due-date">Date de ramassage</label>
+                            <label for="${blockId}-due-date"><i class="fas fa-calendar-alt"></i> Date de ramassage</label>
                             <input type="date" id="${blockId}-due-date" onchange="updateContent('${blockId}', '${type}')">
                         </div>
                     ` : ''}
@@ -823,8 +932,7 @@
                         <button class="color-btn blue" title="Texte bleu" onclick="applyColor('${blockId}', 'blue')"></button>
                         <button class="color-btn black active" title="Texte noir" onclick="applyColor('${blockId}', 'black')"></button>
                     </div>
-                    <div id="editor-${blockId}" contenteditable="true" class="text-editor" oninput="updateContent('${blockId}', '${type}')" 
-                         style="min-height: 100px; border: 1px solid #ddd; border-radius: 5px; padding: 10px; background: white;">
+                    <div id="editor-${blockId}" contenteditable="true" class="text-editor" oninput="updateContent('${blockId}', '${type}')">
                         ${placeholder}
                     </div>
                 </div>
@@ -888,11 +996,11 @@
         // Fonction pour obtenir la valeur de couleur
         function getColorValue(color) {
             switch(color) {
-                case 'red': return '#e74c3c';
-                case 'green': return '#27ae60';
-                case 'blue': return '#3498db';
-                case 'black': return '#2c3e50';
-                default: return '#2c3e50';
+                case 'red': return '#e63946';
+                case 'green': return '#2a9d8f';
+                case 'blue': return '#4361ee';
+                case 'black': return '#212529';
+                default: return '#212529';
             }
         }
         
@@ -921,7 +1029,7 @@
             const blockHTML = `
                 <div class="content-block" id="${blockId}">
                     <div class="block-header">
-                        <span class="block-title">Image</span>
+                        <span class="block-title"><i class="fas fa-image"></i> Image</span>
                         <div class="block-actions">
                             <button class="btn-danger" onclick="removeBlock('${blockId}')">
                                 <i class="fas fa-trash"></i>
@@ -929,11 +1037,11 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="${blockId}-image-upload">Importer une image</label>
+                        <label for="${blockId}-image-upload"><i class="fas fa-upload"></i> Importer une image</label>
                         <input type="file" id="${blockId}-image-upload" accept="image/*" onchange="handleImageUpload('${blockId}', this)">
                     </div>
                     <div class="form-group">
-                        <label for="${blockId}-image-caption">Légende (optionnel)</label>
+                        <label for="${blockId}-image-caption"><i class="fas fa-font"></i> Légende (optionnel)</label>
                         <input type="text" id="${blockId}-image-caption" placeholder="Saisissez une légende..." oninput="updateImageCaption('${blockId}', this.value)">
                     </div>
                     <img id="${blockId}-image-preview" class="image-preview" src="" alt="Aperçu de l'image">
@@ -980,7 +1088,7 @@
             }
             
             previewElement.innerHTML = `
-                <h3 class="section-title">Illustration</h3>
+                <h3 class="section-title"><i class="fas fa-image"></i> Illustration</h3>
                 <img src="${imageData}" class="preview-image" alt="Illustration">
                 ${caption ? `<p class="image-caption"><em>${caption}</em></p>` : ''}
             `;
@@ -1013,47 +1121,58 @@
             
             let title = '';
             let className = '';
+            let icon = '';
             
             switch(type) {
                 case 'definition':
                     title = 'Définition';
                     className = 'definition';
+                    icon = 'fas fa-bookmark';
                     break;
                 case 'theorem':
                     title = 'Théorème';
                     className = 'theorem';
+                    icon = 'fas fa-graduation-cap';
                     break;
                 case 'example':
                     title = 'Exemple';
                     className = 'example';
+                    icon = 'fas fa-lightbulb';
                     break;
                 case 'exercise':
                     title = 'Exercice';
                     className = 'exercise';
+                    icon = 'fas fa-pencil-alt';
                     break;
                 case 'problem':
                     title = 'Situation Problème';
                     className = 'problem';
+                    icon = 'fas fa-question-circle';
                     break;
                 case 'student-work':
                     title = 'Travail de l\'Élève';
                     className = 'student-work';
+                    icon = 'fas fa-user-graduate';
                     break;
                 case 'solution':
                     title = 'Solution';
                     className = 'solution';
+                    icon = 'fas fa-check-circle';
                     break;
                 case 'homework':
                     title = 'Devoir Maison';
                     className = 'homework';
+                    icon = 'fas fa-tasks';
                     break;
                 case 'formula':
                     title = 'Formule';
                     className = 'formula';
+                    icon = 'fas fa-square-root-alt';
                     break;
                 default:
                     title = '';
                     className = '';
+                    icon = 'fas fa-paragraph';
             }
             
             let dueDateHtml = '';
@@ -1068,7 +1187,7 @@
             }
             
             previewElement.innerHTML = `
-                <h3 class="section-title">${title}</h3>
+                <h3 class="section-title"><i class="${icon}"></i> ${title}</h3>
                 <div class="${className}">
                     ${content}
                     ${dueDateHtml}
@@ -1201,7 +1320,7 @@
                         </div>
                         <div class="lesson-actions">
                             <button class="btn-info" title="Charger" onclick="loadLesson('${key}')">
-                                <i class="fas fa-load"></i>
+                                <i class="fas fa-download"></i>
                             </button>
                             <button class="btn-danger" title="Supprimer" onclick="deleteLesson('${key}')">
                                 <i class="fas fa-trash"></i>
@@ -1481,7 +1600,7 @@
                         </div>
                         <div class="lesson-actions">
                             <button class="btn-info" title="Charger" onclick="loadLesson('${key}')">
-                                <i class="fas fa-load"></i>
+                                <i class="fas fa-download"></i>
                             </button>
                             <button class="btn-danger" title="Supprimer" onclick="deleteLesson('${key}')">
                                 <i class="fas fa-trash"></i>
