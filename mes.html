@@ -19,6 +19,9 @@
             --problem: #ffd166;
             --student-work: #a8dadc;
             --homework: #cdb4db;
+            --prerequisites: #ffafcc;
+            --materials: #bde0fe;
+            --strategy: #cdb4db;
             --text-red: #e63946;
             --text-green: #2a9d8f;
             --text-blue: #4361ee;
@@ -39,7 +42,7 @@
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             color: #333;
             line-height: 1.6;
-            padding: 20px;
+            padding: 15px;
             min-height: 100vh;
         }
         
@@ -47,18 +50,17 @@
             max-width: 1400px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 25px;
+            grid-template-columns: 1fr;
+            gap: 20px;
         }
         
         header {
-            grid-column: 1 / -1;
             background: var(--gradient);
             color: white;
-            padding: 25px;
+            padding: 20px;
             text-align: center;
-            border-radius: 15px;
-            margin-bottom: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
             box-shadow: var(--card-shadow);
             position: relative;
             overflow: hidden;
@@ -75,16 +77,16 @@
         }
         
         header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            gap: 10px;
         }
         
         .app-description {
-            font-size: 1.1rem;
+            font-size: 1rem;
             max-width: 800px;
             margin: 0 auto;
             opacity: 0.9;
@@ -92,8 +94,8 @@
         
         .editor-panel {
             background: white;
-            border-radius: 15px;
-            padding: 25px;
+            border-radius: 12px;
+            padding: 20px;
             box-shadow: var(--card-shadow);
             display: flex;
             flex-direction: column;
@@ -101,14 +103,13 @@
         }
         
         .editor-panel:hover {
-            transform: translateY(-5px);
             box-shadow: var(--hover-shadow);
         }
         
         .preview-panel {
             background: white;
-            border-radius: 15px;
-            padding: 25px;
+            border-radius: 12px;
+            padding: 20px;
             box-shadow: var(--card-shadow);
             overflow-y: auto;
             max-height: calc(100vh - 100px);
@@ -116,19 +117,18 @@
         }
         
         .preview-panel:hover {
-            transform: translateY(-5px);
             box-shadow: var(--hover-shadow);
         }
         
         .panel-title {
             color: var(--secondary);
-            margin-bottom: 20px;
-            padding-bottom: 12px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
             border-bottom: 2px solid var(--primary);
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 1.3rem;
+            gap: 8px;
+            font-size: 1.2rem;
         }
         
         .panel-title i {
@@ -136,22 +136,23 @@
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: 600;
             color: var(--dark);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            font-size: 0.95rem;
         }
         
         input, select, textarea {
             width: 100%;
-            padding: 12px 15px;
+            padding: 12px;
             border: 1px solid #e0e0e0;
             border-radius: 8px;
             font-size: 1rem;
@@ -173,16 +174,19 @@
             background: var(--primary);
             color: white;
             border: none;
-            padding: 12px 18px;
+            padding: 12px 16px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.95rem;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             transition: all 0.3s;
             font-weight: 600;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            margin-bottom: 8px;
         }
         
         button:hover {
@@ -230,31 +234,47 @@
             background: #5e0796;
         }
         
+        .btn-pink {
+            background: #ffafcc;
+        }
+        
+        .btn-pink:hover {
+            background: #ff91ba;
+        }
+        
+        .btn-blue {
+            background: #bde0fe;
+        }
+        
+        .btn-blue:hover {
+            background: #a1d0fd;
+        }
+        
         .action-buttons {
-            display: flex;
-            gap: 12px;
-            margin-top: 25px;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 20px;
         }
         
         .section-buttons {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin: 20px 0;
+            gap: 10px;
+            margin: 15px 0;
         }
         
         .content-blocks {
-            margin-top: 25px;
+            margin-top: 20px;
             flex-grow: 1;
             overflow-y: auto;
         }
         
         .content-block {
             background: #f8f9fa;
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 18px;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
             border-left: 5px solid var(--primary);
             transition: all 0.3s;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
@@ -269,7 +289,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
         
         .block-title {
@@ -277,61 +297,62 @@
             color: var(--dark);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            font-size: 0.95rem;
         }
         
         .block-actions {
             display: flex;
-            gap: 8px;
+            gap: 6px;
         }
         
         .image-preview {
             max-width: 100%;
-            margin-top: 12px;
+            margin-top: 10px;
             border-radius: 8px;
             display: none;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
         }
         
         .lesson-preview {
-            padding: 30px;
+            padding: 20px;
             background: white;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
             min-height: 400px;
-            border-radius: 12px;
+            border-radius: 10px;
         }
         
         .preview-header {
             background: var(--gradient);
             color: white;
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         .school-name {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: bold;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: #ffd700;
         }
         
         .lesson-title {
-            font-size: 2.2rem;
-            margin-bottom: 15px;
+            font-size: 1.8rem;
+            margin-bottom: 12px;
         }
         
         .header-info {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 20px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 15px;
         }
         
         .info-item {
             background: rgba(255, 255, 255, 0.2);
-            padding: 8px 15px;
+            padding: 8px 12px;
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -340,27 +361,28 @@
         }
         
         .preview-content {
-            padding: 20px 0;
+            padding: 15px 0;
         }
         
         .content-section {
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         
         .section-title {
             color: var(--secondary);
-            margin-bottom: 12px;
-            padding-bottom: 8px;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
             border-bottom: 2px solid var(--primary);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            font-size: 1.1rem;
         }
         
-        .definition, .theorem, .example, .exercise, .problem, .student-work, .solution, .homework {
-            padding: 18px;
-            border-radius: 10px;
-            margin: 12px 0;
+        .definition, .theorem, .example, .exercise, .problem, .student-work, .solution, .homework, .prerequisites, .materials, .strategy {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
         }
         
@@ -404,38 +426,53 @@
             border-left: 5px solid #7209b7;
         }
         
+        .prerequisites {
+            background: var(--prerequisites);
+            border-left: 5px solid #ff70a6;
+        }
+        
+        .materials {
+            background: var(--materials);
+            border-left: 5px solid #7fbfff;
+        }
+        
+        .strategy {
+            background: var(--strategy);
+            border-left: 5px solid #a663cc;
+        }
+        
         .preview-image {
             max-width: 100%;
-            border-radius: 10px;
-            margin: 12px 0;
+            border-radius: 8px;
+            margin: 10px 0;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
         }
         
         .homework-info {
-            margin-top: 12px;
-            padding: 12px;
+            margin-top: 10px;
+            padding: 10px;
             background: rgba(0, 0, 0, 0.05);
-            border-radius: 8px;
+            border-radius: 6px;
             font-style: italic;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         
         /* Styles pour la barre d'outils de formatage */
         .formatting-toolbar {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 12px;
-            padding: 10px;
+            gap: 6px;
+            margin-bottom: 10px;
+            padding: 8px;
             background: #f0f0f0;
-            border-radius: 8px;
+            border-radius: 6px;
         }
         
         .format-btn {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border: none;
             border-radius: 6px;
             background-color: #fff;
@@ -458,8 +495,8 @@
         }
         
         .color-btn {
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             border: none;
             cursor: pointer;
@@ -493,43 +530,44 @@
         }
         
         .data-management {
-            margin-top: 25px;
-            padding-top: 25px;
+            margin-top: 20px;
+            padding-top: 20px;
             border-top: 1px solid #e0e0e0;
         }
         
         .filter-section {
             background: #f8f9fa;
-            padding: 18px;
-            border-radius: 10px;
-            margin-bottom: 18px;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
         }
         
         .filter-row {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 12px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
         }
         
         .saved-lessons {
-            margin-top: 18px;
-            max-height: 250px;
+            margin-top: 15px;
+            max-height: 200px;
             overflow-y: auto;
             border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            padding: 15px;
+            border-radius: 8px;
+            padding: 12px;
             background: #f8f9fa;
         }
         
         .lesson-item {
-            padding: 12px;
+            padding: 10px;
             border-bottom: 1px solid #e0e0e0;
             display: flex;
             justify-content: space-between;
             align-items: center;
             transition: all 0.2s;
-            border-radius: 8px;
+            border-radius: 6px;
         }
         
         .lesson-item:hover {
@@ -547,24 +585,25 @@
         
         .lesson-title-small {
             font-weight: 600;
+            font-size: 0.95rem;
         }
         
         .lesson-meta {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #666;
-            margin-top: 4px;
+            margin-top: 3px;
         }
         
         .lesson-actions {
             display: flex;
-            gap: 8px;
+            gap: 6px;
         }
         
         .text-editor {
-            min-height: 120px;
+            min-height: 100px;
             border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 15px;
+            border-radius: 6px;
+            padding: 12px;
             background: white;
             transition: all 0.3s;
         }
@@ -575,26 +614,160 @@
             box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
         }
         
-        @media (max-width: 992px) {
-            .container {
-                grid-template-columns: 1fr;
+        .mobile-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .mobile-controls button {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .view-only-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .view-only-content {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            z-index: 1001;
+        }
+        
+        .class-count {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .class-count-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            background: #f8f9fa;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .class-count-item.total {
+            background: var(--primary);
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* Responsive Design */
+        @media (min-width: 576px) {
+            .header-info {
+                grid-template-columns: repeat(2, 1fr);
             }
             
             .section-buttons {
-                grid-template-columns: 1fr;
-            }
-            
-            .filter-row {
-                flex-direction: column;
+                grid-template-columns: repeat(3, 1fr);
             }
             
             .action-buttons {
-                flex-direction: column;
+                grid-template-columns: repeat(2, 1fr);
             }
             
-            .action-buttons button {
-                width: 100%;
-                justify-content: center;
+            .filter-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .header-info {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .section-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .action-buttons {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .filter-row {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            button {
+                width: auto;
+                margin-bottom: 0;
+            }
+            
+            .mobile-controls {
+                display: none;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .container {
+                grid-template-columns: 320px 1fr;
+            }
+            
+            .header-info {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .section-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .action-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .filter-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .container {
+                grid-template-columns: 350px 1fr;
+            }
+            
+            .action-buttons {
+                grid-template-columns: repeat(3, 1fr);
             }
         }
     </style>
@@ -605,8 +778,17 @@
         <p class="app-description">Application permettant aux enseignants de créer des fiches de leçons dans toutes les matières et de les exporter en PDF</p>
     </header>
     
+    <div class="mobile-controls">
+        <button class="btn-info" onclick="toggleView('editor')">
+            <i class="fas fa-edit"></i> Éditeur
+        </button>
+        <button class="btn-success" onclick="toggleView('preview')">
+            <i class="fas fa-eye"></i> Aperçu
+        </button>
+    </div>
+    
     <div class="container">
-        <div class="editor-panel">
+        <div class="editor-panel" id="editor-panel">
             <h2 class="panel-title"><i class="fas fa-edit"></i> Éditeur de leçon</h2>
             
             <div class="form-group">
@@ -630,8 +812,31 @@
             </div>
             
             <div class="form-group">
+                <label for="lesson-theme"><i class="fas fa-palette"></i> Thème de la leçon</label>
+                <input type="text" id="lesson-theme" placeholder="Ex: Triangles et trigonométrie">
+            </div>
+            
+            <div class="form-group">
                 <label for="class-name"><i class="fas fa-users"></i> Classe/Niveau</label>
                 <input type="text" id="class-name" placeholder="Ex: Seconde 7">
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-user-friends"></i> Effectif de la classe</label>
+                <div class="class-count">
+                    <div class="form-group">
+                        <label for="boys-count">Garçons</label>
+                        <input type="number" id="boys-count" min="0" value="0" oninput="updateClassTotal()">
+                    </div>
+                    <div class="form-group">
+                        <label for="girls-count">Filles</label>
+                        <input type="number" id="girls-count" min="0" value="0" oninput="updateClassTotal()">
+                    </div>
+                    <div class="class-count-item total">
+                        <div>Total</div>
+                        <div id="class-total">0</div>
+                    </div>
+                </div>
             </div>
             
             <div class="form-group">
@@ -665,7 +870,7 @@
                     <i class="fas fa-pencil-alt"></i> Exercice
                 </button>
                 <button class="btn-info" onclick="addSection('problem')">
-                    <i class="fas fa-question-circle"></i> Situation problème
+                    <i class="fas fa-question-circle"></i> Problème
                 </button>
                 <button class="btn-info" onclick="addSection('student-work')">
                     <i class="fas fa-user-graduate"></i> Travail élève
@@ -676,14 +881,17 @@
                 <button class="btn-warning" onclick="addSection('homework')">
                     <i class="fas fa-tasks"></i> Devoir maison
                 </button>
+                <button class="btn-pink" onclick="addSection('prerequisites')">
+                    <i class="fas fa-layer-group"></i> Prérequis
+                </button>
+                <button class="btn-blue" onclick="addSection('materials')">
+                    <i class="fas fa-tools"></i> Matériel
+                </button>
+                <button class="btn-purple" onclick="addSection('strategy')">
+                    <i class="fas fa-chalkboard"></i> Stratégie
+                </button>
                 <button class="btn-warning" onclick="addImageSection()">
                     <i class="fas fa-image"></i> Image
-                </button>
-                <button class="btn-success" onclick="addSection('text')">
-                    <i class="fas fa-paragraph"></i> Texte
-                </button>
-                <button class="btn-success" onclick="addSection('formula')">
-                    <i class="fas fa-square-root-alt"></i> Formule
                 </button>
             </div>
             
@@ -706,6 +914,9 @@
                 </button>
                 <button class="btn-success" onclick="generatePDF()">
                     <i class="fas fa-file-pdf"></i> Générer PDF
+                </button>
+                <button class="btn-info" onclick="showViewOnlyPreview()">
+                    <i class="fas fa-expand"></i> Aperçu seul
                 </button>
             </div>
             
@@ -748,7 +959,7 @@
             </div>
         </div>
         
-        <div class="preview-panel">
+        <div class="preview-panel" id="preview-panel">
             <h2 class="panel-title"><i class="fas fa-eye"></i> Aperçu de la leçon</h2>
             
             <div class="lesson-preview" id="lesson-preview">
@@ -756,6 +967,7 @@
                     <div class="school-name" id="preview-school">Nom de l'établissement</div>
                     <h1 class="lesson-title" id="preview-title">Titre de la leçon</h1>
                     <p id="preview-subject">Matière: [Matière]</p>
+                    <p id="preview-theme">Thème: [Thème]</p>
                     
                     <div class="header-info">
                         <div class="info-item">
@@ -765,6 +977,10 @@
                         <div class="info-item">
                             <i class="fas fa-users"></i>
                             <span id="preview-class">Classe: [Classe]</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-user-friends"></i>
+                            <span id="preview-students">Effectif: [Effectif]</span>
                         </div>
                         <div class="info-item">
                             <i class="fas fa-clock"></i>
@@ -784,16 +1000,31 @@
         </div>
     </div>
 
+    <div id="view-only-overlay" class="view-only-overlay" style="display: none;">
+        <div class="view-only-content">
+            <button class="close-btn" onclick="closeViewOnlyPreview()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="view-only-preview">
+                <!-- Le contenu de l'aperçu sera inséré ici -->
+            </div>
+        </div>
+    </div>
+
     <script>
         // Initialisation des champs avec des valeurs par défaut
         document.getElementById('school-name').value = 'Lycée Louis Pasteur';
         document.getElementById('teacher-name').value = 'Dupont Jean';
         document.getElementById('subject').value = 'Mathématiques';
         document.getElementById('discipline').value = 'Géométrie';
+        document.getElementById('lesson-theme').value = 'Triangles et trigonométrie';
         document.getElementById('class-name').value = 'Seconde 7';
         document.getElementById('lesson-title').value = 'Théorèmes de Pythagore et de Thalès';
         document.getElementById('lesson-duration').value = '4 heures';
         document.getElementById('lesson-date').valueAsDate = new Date();
+        
+        // Calcul initial de l'effectif total
+        updateClassTotal();
         
         // Mise à jour de l'aperçu
         updatePreview();
@@ -802,14 +1033,62 @@
         loadSavedLessons();
         updateFilterOptions();
         
+        // Fonction pour calculer l'effectif total
+        function updateClassTotal() {
+            const boys = parseInt(document.getElementById('boys-count').value) || 0;
+            const girls = parseInt(document.getElementById('girls-count').value) || 0;
+            const total = boys + girls;
+            document.getElementById('class-total').textContent = total;
+            updatePreview();
+        }
+        
+        // Fonction pour basculer entre l'éditeur et l'aperçu sur mobile
+        function toggleView(view) {
+            const editorPanel = document.getElementById('editor-panel');
+            const previewPanel = document.getElementById('preview-panel');
+            
+            if (view === 'editor') {
+                editorPanel.style.display = 'flex';
+                previewPanel.style.display = 'none';
+            } else {
+                editorPanel.style.display = 'none';
+                previewPanel.style.display = 'block';
+            }
+        }
+        
+        // Fonction pour afficher l'aperçu seul en plein écran
+        function showViewOnlyPreview() {
+            const overlay = document.getElementById('view-only-overlay');
+            const previewContent = document.getElementById('view-only-preview');
+            
+            // Copier le contenu de l'aperçu
+            previewContent.innerHTML = document.getElementById('lesson-preview').innerHTML;
+            
+            // Afficher l'overlay
+            overlay.style.display = 'flex';
+        }
+        
+        // Fonction pour fermer l'aperçu seul
+        function closeViewOnlyPreview() {
+            const overlay = document.getElementById('view-only-overlay');
+            overlay.style.display = 'none';
+        }
+        
         // Fonction pour mettre à jour l'aperçu
         function updatePreview() {
             document.getElementById('preview-school').textContent = document.getElementById('school-name').value;
             document.getElementById('preview-title').textContent = document.getElementById('lesson-title').value;
             document.getElementById('preview-subject').textContent = 'Matière: ' + document.getElementById('subject').value;
+            document.getElementById('preview-theme').textContent = 'Thème: ' + document.getElementById('lesson-theme').value;
             document.getElementById('preview-teacher').textContent = 'Enseignant: ' + document.getElementById('teacher-name').value;
             document.getElementById('preview-class').textContent = 'Classe: ' + document.getElementById('class-name').value;
             document.getElementById('preview-duration').textContent = 'Durée: ' + document.getElementById('lesson-duration').value;
+            
+            // Mise à jour de l'effectif
+            const boys = parseInt(document.getElementById('boys-count').value) || 0;
+            const girls = parseInt(document.getElementById('girls-count').value) || 0;
+            const total = boys + girls;
+            document.getElementById('preview-students').textContent = `Effectif: ${total} élèves (${boys} garçons, ${girls} filles)`;
             
             const lessonDate = document.getElementById('lesson-date').value;
             if (lessonDate) {
@@ -829,10 +1108,14 @@
         document.getElementById('school-name').addEventListener('input', updatePreview);
         document.getElementById('teacher-name').addEventListener('input', updatePreview);
         document.getElementById('subject').addEventListener('input', updatePreview);
+        document.getElementById('discipline').addEventListener('input', updatePreview);
+        document.getElementById('lesson-theme').addEventListener('input', updatePreview);
         document.getElementById('class-name').addEventListener('input', updatePreview);
         document.getElementById('lesson-title').addEventListener('input', updatePreview);
         document.getElementById('lesson-duration').addEventListener('input', updatePreview);
         document.getElementById('lesson-date').addEventListener('input', updatePreview);
+        document.getElementById('boys-count').addEventListener('input', updatePreview);
+        document.getElementById('girls-count').addEventListener('input', updatePreview);
         
         // Compteur pour les IDs des blocs
         let blockCount = 0;
@@ -887,10 +1170,20 @@
                     placeholder = 'Décrivez le devoir maison ici...';
                     icon = 'fas fa-tasks';
                     break;
-                case 'formula':
-                    blockTitle = 'Formule';
-                    placeholder = 'Saisissez la formule ici...';
-                    icon = 'fas fa-square-root-alt';
+                case 'prerequisites':
+                    blockTitle = 'Prérequis';
+                    placeholder = 'Listez les prérequis nécessaires pour cette leçon...';
+                    icon = 'fas fa-layer-group';
+                    break;
+                case 'materials':
+                    blockTitle = 'Matériel Didactique';
+                    placeholder = 'Listez le matériel nécessaire pour cette leçon...';
+                    icon = 'fas fa-tools';
+                    break;
+                case 'strategy':
+                    blockTitle = 'Stratégie Pédagogique';
+                    placeholder = 'Décrivez la stratégie pédagogique utilisée...';
+                    icon = 'fas fa-chalkboard';
                     break;
                 default:
                     blockTitle = 'Texte';
@@ -1017,7 +1310,9 @@
             if (title.includes('travail')) return 'student-work';
             if (title.includes('solution')) return 'solution';
             if (title.includes('devoir')) return 'homework';
-            if (title.includes('formule')) return 'formula';
+            if (title.includes('prérequis')) return 'prerequisites';
+            if (title.includes('matériel')) return 'materials';
+            if (title.includes('stratégie')) return 'strategy';
             return 'text';
         }
         
@@ -1164,10 +1459,20 @@
                     className = 'homework';
                     icon = 'fas fa-tasks';
                     break;
-                case 'formula':
-                    title = 'Formule';
-                    className = 'formula';
-                    icon = 'fas fa-square-root-alt';
+                case 'prerequisites':
+                    title = 'Prérequis';
+                    className = 'prerequisites';
+                    icon = 'fas fa-layer-group';
+                    break;
+                case 'materials':
+                    title = 'Matériel Didactique';
+                    className = 'materials';
+                    icon = 'fas fa-tools';
+                    break;
+                case 'strategy':
+                    title = 'Stratégie Pédagogique';
+                    className = 'strategy';
+                    icon = 'fas fa-chalkboard';
                     break;
                 default:
                     title = '';
@@ -1259,7 +1564,10 @@
                 teacher: document.getElementById('teacher-name').value,
                 subject: document.getElementById('subject').value,
                 discipline: document.getElementById('discipline').value,
+                theme: document.getElementById('lesson-theme').value,
                 className: document.getElementById('class-name').value,
+                boysCount: document.getElementById('boys-count').value,
+                girlsCount: document.getElementById('girls-count').value,
                 title: document.getElementById('lesson-title').value,
                 duration: document.getElementById('lesson-duration').value,
                 date: document.getElementById('lesson-date').value,
@@ -1325,6 +1633,9 @@
                             <button class="btn-danger" title="Supprimer" onclick="deleteLesson('${key}')">
                                 <i class="fas fa-trash"></i>
                             </button>
+                            <button class="btn-success" title="Aperçu seul" onclick="showSavedLessonPreview('${key}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
                         </div>
                     `;
                     
@@ -1337,6 +1648,162 @@
             }
         }
         
+        // Fonction pour afficher l'aperçu d'une leçon enregistrée
+        function showSavedLessonPreview(lessonId) {
+            const lessonData = JSON.parse(localStorage.getItem(lessonId));
+            const overlay = document.getElementById('view-only-overlay');
+            const previewContent = document.getElementById('view-only-preview');
+            
+            // Générer le contenu de l'aperçu
+            let previewHTML = `
+                <div class="preview-header">
+                    <div class="school-name">${lessonData.school || 'Nom de l\'établissement'}</div>
+                    <h1 class="lesson-title">${lessonData.title || 'Titre de la leçon'}</h1>
+                    <p>Matière: ${lessonData.subject || '[Matière]'}</p>
+                    <p>Thème: ${lessonData.theme || '[Thème]'}</p>
+                    
+                    <div class="header-info">
+                        <div class="info-item">
+                            <i class="fas fa-user-tie"></i>
+                            <span>Enseignant: ${lessonData.teacher || '[Nom]'}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-users"></i>
+                            <span>Classe: ${lessonData.className || '[Classe]'}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-user-friends"></i>
+                            <span>Effectif: ${(parseInt(lessonData.boysCount) || 0) + (parseInt(lessonData.girlsCount) || 0)} élèves (${lessonData.boysCount || 0} garçons, ${lessonData.girlsCount || 0} filles)</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Durée: ${lessonData.duration || '[Durée]'}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Date: ${lessonData.date ? new Date(lessonData.date).toLocaleDateString('fr-FR') : '[Date]'}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="preview-content">
+            `;
+            
+            // Ajouter le contenu de la leçon
+            if (lessonData.content && lessonData.content.length > 0) {
+                lessonData.content.forEach(blockData => {
+                    let title = '';
+                    let className = '';
+                    let icon = '';
+                    
+                    switch(blockData.type) {
+                        case 'definition':
+                            title = 'Définition';
+                            className = 'definition';
+                            icon = 'fas fa-bookmark';
+                            break;
+                        case 'theorem':
+                            title = 'Théorème';
+                            className = 'theorem';
+                            icon = 'fas fa-graduation-cap';
+                            break;
+                        case 'example':
+                            title = 'Exemple';
+                            className = 'example';
+                            icon = 'fas fa-lightbulb';
+                            break;
+                        case 'exercise':
+                            title = 'Exercice';
+                            className = 'exercise';
+                            icon = 'fas fa-pencil-alt';
+                            break;
+                        case 'problem':
+                            title = 'Situation Problème';
+                            className = 'problem';
+                            icon = 'fas fa-question-circle';
+                            break;
+                        case 'student-work':
+                            title = 'Travail de l\'Élève';
+                            className = 'student-work';
+                            icon = 'fas fa-user-graduate';
+                            break;
+                        case 'solution':
+                            title = 'Solution';
+                            className = 'solution';
+                            icon = 'fas fa-check-circle';
+                            break;
+                        case 'homework':
+                            title = 'Devoir Maison';
+                            className = 'homework';
+                            icon = 'fas fa-tasks';
+                            break;
+                        case 'prerequisites':
+                            title = 'Prérequis';
+                            className = 'prerequisites';
+                            icon = 'fas fa-layer-group';
+                            break;
+                        case 'materials':
+                            title = 'Matériel Didactique';
+                            className = 'materials';
+                            icon = 'fas fa-tools';
+                            break;
+                        case 'strategy':
+                            title = 'Stratégie Pédagogique';
+                            className = 'strategy';
+                            icon = 'fas fa-chalkboard';
+                            break;
+                        case 'image':
+                            title = 'Illustration';
+                            className = 'image';
+                            icon = 'fas fa-image';
+                            break;
+                        default:
+                            title = '';
+                            className = '';
+                            icon = 'fas fa-paragraph';
+                    }
+                    
+                    let dueDateHtml = '';
+                    if (blockData.type === 'homework' && blockData.dueDate) {
+                        const formattedDate = new Date(blockData.dueDate).toLocaleDateString('fr-FR', {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+                        dueDateHtml = `<div class="homework-info"><i class="fas fa-calendar-alt"></i> Date de ramassage: ${formattedDate}</div>`;
+                    }
+                    
+                    if (blockData.type === 'image') {
+                        previewHTML += `
+                            <div class="content-section">
+                                <h3 class="section-title"><i class="${icon}"></i> ${title}</h3>
+                                <img src="${blockData.imageData}" class="preview-image" alt="Illustration">
+                                ${blockData.caption ? `<p class="image-caption"><em>${blockData.caption}</em></p>` : ''}
+                            </div>
+                        `;
+                    } else {
+                        previewHTML += `
+                            <div class="content-section">
+                                <h3 class="section-title"><i class="${icon}"></i> ${title}</h3>
+                                <div class="${className}">
+                                    ${blockData.content}
+                                    ${dueDateHtml}
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+            } else {
+                previewHTML += '<p>Aucun contenu dans cette leçon.</p>';
+            }
+            
+            previewHTML += '</div>';
+            previewContent.innerHTML = previewHTML;
+            
+            // Afficher l'overlay
+            overlay.style.display = 'flex';
+        }
+        
         // Fonction pour charger une leçon spécifique
         function loadLesson(lessonId) {
             if (confirm('Charger cette leçon? Le contenu actuel sera perdu.')) {
@@ -1347,10 +1814,16 @@
                 document.getElementById('teacher-name').value = lessonData.teacher || '';
                 document.getElementById('subject').value = lessonData.subject || '';
                 document.getElementById('discipline').value = lessonData.discipline || '';
+                document.getElementById('lesson-theme').value = lessonData.theme || '';
                 document.getElementById('class-name').value = lessonData.className || '';
+                document.getElementById('boys-count').value = lessonData.boysCount || '';
+                document.getElementById('girls-count').value = lessonData.girlsCount || '';
                 document.getElementById('lesson-title').value = lessonData.title || '';
                 document.getElementById('lesson-duration').value = lessonData.duration || '';
                 document.getElementById('lesson-date').value = lessonData.date || '';
+                
+                // Mettre à jour le total
+                updateClassTotal();
                 
                 // Effacer le contenu actuel
                 document.getElementById('content-blocks').innerHTML = '';
@@ -1447,10 +1920,16 @@
                             document.getElementById('teacher-name').value = lessonData.teacher || '';
                             document.getElementById('subject').value = lessonData.subject || '';
                             document.getElementById('discipline').value = lessonData.discipline || '';
+                            document.getElementById('lesson-theme').value = lessonData.theme || '';
                             document.getElementById('class-name').value = lessonData.className || '';
+                            document.getElementById('boys-count').value = lessonData.boysCount || '';
+                            document.getElementById('girls-count').value = lessonData.girlsCount || '';
                             document.getElementById('lesson-title').value = lessonData.title || '';
                             document.getElementById('lesson-duration').value = lessonData.duration || '';
                             document.getElementById('lesson-date').value = lessonData.date || '';
+                            
+                            // Mettre à jour le total
+                            updateClassTotal();
                             
                             // Effacer le contenu actuel
                             document.getElementById('content-blocks').innerHTML = '';
@@ -1604,6 +2083,9 @@
                             </button>
                             <button class="btn-danger" title="Supprimer" onclick="deleteLesson('${key}')">
                                 <i class="fas fa-trash"></i>
+                            </button>
+                            <button class="btn-success" title="Aperçu seul" onclick="showSavedLessonPreview('${key}')">
+                                <i class="fas fa-eye"></i>
                             </button>
                         </div>
                     `;
