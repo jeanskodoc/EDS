@@ -1,18 +1,5 @@
 <!DOCTYPE html>
 <html lang="fr">
-     <style>
-  .btn-retour {
-    padding: 8px 16px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .btn-retour:hover {
-    background-color: #e0e0e0;
-  }
-</style>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,12 +10,19 @@
     <style>
         :root {
             --primary: #3498db;
+            --primary-light: #5dade2;
+            --primary-dark: #2980b9;
             --secondary: #2c3e50;
+            --secondary-light: #34495e;
             --success: #2ecc71;
+            --success-light: #58d68d;
             --warning: #f39c12;
+            --warning-light: #f7dc6f;
             --danger: #e74c3c;
+            --danger-light: #ec7063;
             --light: #f5f7fa;
             --dark: #2c3e50;
+            --gray: #95a5a6;
             --problem: #ffeaa7;
             --student-work: #d6eaf8;
             --homework: #e8d6ff;
@@ -41,6 +35,10 @@
             --fillblank: #fff3cd;
             --traditional: #f8d7da;
             --solution: #d4edda;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --radius-sm: 8px;
         }
         
         * {
@@ -72,35 +70,52 @@
             color: white;
             padding: 20px;
             text-align: center;
-            border-radius: 10px;
+            border-radius: var(--radius);
             margin-bottom: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.1"><path fill="white" d="M30,30 L70,30 L70,70 L30,70 Z M35,35 L65,35 L65,65 L35,65 Z M40,40 L60,40 L60,60 L40,60 Z"></path></svg>');
+            background-size: 50px;
         }
         
         header h1 {
             font-size: 2.2rem;
             margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
         }
         
         .app-description {
             font-size: 1.1rem;
             max-width: 800px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
         
         .editor-panel {
             background: white;
-            border-radius: 10px;
+            border-radius: var(--radius);
             padding: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow);
             position: relative;
         }
         
         .preview-panel {
             background: white;
-            border-radius: 10px;
+            border-radius: var(--radius);
             padding: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow);
             overflow-y: auto;
             max-height: calc(100vh - 100px);
         }
@@ -113,25 +128,37 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            font-size: 1.3rem;
         }
         
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            position: relative;
         }
         
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
+            margin-bottom: 8px;
+            font-weight: 600;
             color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         input, select, textarea {
             width: 100%;
-            padding: 10px;
+            padding: 12px 15px;
             border: 1px solid #ddd;
-            border-radius: 5px;
+            border-radius: var(--radius-sm);
             font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
         }
         
         textarea {
@@ -143,18 +170,22 @@
             background: var(--primary);
             color: white;
             border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
+            padding: 12px 18px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
             font-size: 1rem;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: var(--shadow);
         }
         
         button:hover {
-            background: #2980b9;
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
         }
         
         .btn-success {
@@ -186,7 +217,7 @@
         }
         
         .btn-info:hover {
-            background: #2980b9;
+            background: var(--primary-dark);
         }
         
         .btn-purple {
@@ -203,6 +234,28 @@
         
         .btn-solution:hover {
             background: #219653;
+        }
+        
+        .btn-retour {
+            padding: 10px 16px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--dark);
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-retour:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
         }
         
         .action-buttons {
@@ -231,22 +284,31 @@
         
         .content-block {
             background: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 20px;
             border-left: 4px solid var(--primary);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .content-block:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
         }
         
         .block-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
         
         .block-title {
-            font-weight: 500;
+            font-weight: 600;
             color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .block-actions {
@@ -257,8 +319,9 @@
         .image-preview {
             max-width: 100%;
             margin-top: 10px;
-            border-radius: 5px;
+            border-radius: var(--radius-sm);
             display: none;
+            box-shadow: var(--shadow);
         }
         
         .evaluation-preview {
@@ -266,15 +329,18 @@
             background: white;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
             min-height: 400px;
+            border-radius: var(--radius);
         }
         
         .preview-header {
             background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
             color: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            padding: 25px;
+            border-radius: var(--radius);
+            margin-bottom: 25px;
             position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
         }
         
         .watermark {
@@ -286,6 +352,7 @@
             color: rgba(255, 255, 255, 0.1);
             pointer-events: none;
             z-index: 1;
+            font-weight: bold;
         }
         
         .school-name {
@@ -315,11 +382,12 @@
         
         .info-item {
             background: rgba(255, 255, 255, 0.2);
-            padding: 5px 10px;
-            border-radius: 5px;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            font-size: 0.9rem;
         }
         
         .preview-content {
@@ -335,12 +403,16 @@
             margin-bottom: 10px;
             padding-bottom: 5px;
             border-bottom: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .qcm, .truefalse, .fillblank, .traditional, .problem, .instructions, .solution {
-            padding: 15px;
-            border-radius: 8px;
-            margin: 10px 0;
+            padding: 20px;
+            border-radius: var(--radius);
+            margin: 15px 0;
+            box-shadow: var(--shadow);
         }
         
         .qcm {
@@ -390,16 +462,20 @@
         
         .preview-image {
             max-width: 100%;
-            border-radius: 8px;
+            border-radius: var(--radius);
             margin: 10px 0;
+            box-shadow: var(--shadow);
         }
         
         .question-points {
             margin-top: 10px;
             padding: 10px;
             background: rgba(0, 0, 0, 0.05);
-            border-radius: 5px;
+            border-radius: var(--radius-sm);
             font-style: italic;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         /* Styles pour la barre d'outils de formatage */
@@ -408,26 +484,28 @@
             flex-wrap: wrap;
             gap: 5px;
             margin-bottom: 10px;
-            padding: 8px;
+            padding: 10px;
             background: #f0f0f0;
-            border-radius: 5px;
+            border-radius: var(--radius-sm);
         }
         
         .format-btn {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border: none;
-            border-radius: 4px;
+            border-radius: var(--radius-sm);
             background-color: #fff;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
         }
         
         .format-btn:hover {
             background-color: #f0f0f0;
+            transform: translateY(-2px);
         }
         
         .format-btn.active {
@@ -436,11 +514,16 @@
         }
         
         .color-btn {
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             border: none;
             cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .color-btn:hover {
+            transform: scale(1.1);
         }
         
         .color-btn.red {
@@ -466,12 +549,12 @@
         .option-item {
             display: flex;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            gap: 10px;
         }
         
         .option-item input[type="text"] {
             flex: 1;
-            margin-left: 10px;
         }
         
         .option-item input[type="checkbox"] {
@@ -486,22 +569,31 @@
         }
         
         .solution-toggle {
-            margin-top: 10px;
+            margin-top: 15px;
             cursor: pointer;
             color: var(--primary);
             display: flex;
             align-items: center;
-            gap: 5px;
-            font-weight: 500;
+            gap: 8px;
+            font-weight: 600;
+            padding: 10px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: var(--radius-sm);
+            transition: all 0.3s ease;
+        }
+        
+        .solution-toggle:hover {
+            background: rgba(52, 152, 219, 0.2);
         }
         
         .solution-content {
             display: none;
-            margin-top: 10px;
-            padding: 10px;
+            margin-top: 15px;
+            padding: 15px;
             background: #f8f9fa;
-            border-radius: 5px;
+            border-radius: var(--radius-sm);
             border-left: 3px solid var(--success);
+            box-shadow: var(--shadow);
         }
         
         /* Styles pour l'impression */
@@ -518,7 +610,7 @@
             }
             
             .container, .editor-panel, .preview-panel, header, .action-buttons, 
-            .section-buttons, .top-action-buttons, .modal {
+            .section-buttons, .top-action-buttons, .modal, .btn-retour {
                 display: none !important;
             }
             
@@ -620,16 +712,17 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
         }
         
         .modal-content {
             background-color: white;
             margin: 10% auto;
-            padding: 20px;
-            border-radius: 10px;
+            padding: 25px;
+            border-radius: var(--radius);
             width: 80%;
             max-width: 500px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            box-shadow: var(--shadow-lg);
         }
         
         .close {
@@ -638,6 +731,7 @@
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
+            transition: color 0.3s ease;
         }
         
         .close:hover {
@@ -654,13 +748,86 @@
             margin-bottom: 15px;
         }
         
+        /* Responsive Design */
+        /* Tablettes (écrans moyens) */
         @media (max-width: 992px) {
             .container {
                 grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .section-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .evaluation-preview {
+                padding: 20px;
+            }
+            
+            .preview-header {
+                padding: 20px;
+            }
+            
+            .top-action-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .header-info {
+                gap: 10px;
+            }
+            
+            .info-item {
+                padding: 6px 10px;
+                font-size: 0.85rem;
+            }
+        }
+        
+        /* Mobiles (écrans petits) */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            header {
+                padding: 15px;
+            }
+            
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .app-description {
+                font-size: 1rem;
+            }
+            
+            .editor-panel, .preview-panel {
+                padding: 15px;
+            }
+            
+            .panel-title {
+                font-size: 1.2rem;
             }
             
             .section-buttons {
                 grid-template-columns: 1fr;
+            }
+            
+            .top-action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .header-info {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .info-item {
+                width: 100%;
+                justify-content: center;
             }
             
             .evaluation-preview {
@@ -671,14 +838,65 @@
                 padding: 15px;
             }
             
-            .top-action-buttons {
-                flex-wrap: wrap;
+            .evaluation-title {
+                font-size: 1.6rem;
+            }
+            
+            .school-name {
+                font-size: 1.2rem;
+            }
+            
+            .watermark {
+                font-size: 3rem;
+            }
+            
+            .formatting-toolbar {
+                justify-content: center;
+            }
+        }
+        
+        /* Très petits écrans */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            header {
+                padding: 12px;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .editor-panel, .preview-panel {
+                padding: 12px;
+            }
+            
+            .content-block {
+                padding: 15px;
+            }
+            
+            .evaluation-title {
+                font-size: 1.4rem;
+            }
+            
+            .watermark {
+                font-size: 2.5rem;
+            }
+            
+            button {
+                padding: 10px 15px;
+                font-size: 0.9rem;
             }
         }
     </style>
 </head>
-     <button class="btn-retour" onclick="history.back()">← Retour</button>
 <body>
+    <button class="btn-retour" onclick="history.back()">
+        <i class="fas fa-arrow-left"></i> Retour
+    </button>
+    
     <header>
         <h1><i class="fas fa-file-alt"></i> Créateur de Fiches d'Évaluation</h1>
         <p class="app-description">Application permettant aux enseignants de créer des évaluations, devoirs et travaux dirigés avec différents types de questions</p>
@@ -702,37 +920,37 @@
             <h2 class="panel-title"><i class="fas fa-edit"></i> Éditeur d'évaluation</h2>
             
             <div class="form-group">
-                <label for="school-name">Nom de l'établissement</label>
+                <label for="school-name"><i class="fas fa-school"></i> Nom de l'établissement</label>
                 <input type="text" id="school-name" placeholder="Ex: Lycée Louis Pasteur">
             </div>
             
             <div class="form-group">
-                <label for="teacher-name">Nom de l'enseignant</label>
+                <label for="teacher-name"><i class="fas fa-user-tie"></i> Nom de l'enseignant</label>
                 <input type="text" id="teacher-name" placeholder="Ex: Dupont Jean">
             </div>
             
             <div class="form-group">
-                <label for="subject">Matière</label>
+                <label for="subject"><i class="fas fa-book"></i> Matière</label>
                 <input type="text" id="subject" placeholder="Ex: Mathématiques">
             </div>
             
             <div class="form-group">
-                <label for="class-name">Classe/Niveau</label>
+                <label for="class-name"><i class="fas fa-users"></i> Classe/Niveau</label>
                 <input type="text" id="class-name" placeholder="Ex: Seconde 7">
             </div>
             
             <div class="form-group">
-                <label for="evaluation-title">Titre de l'évaluation</label>
+                <label for="evaluation-title"><i class="fas fa-heading"></i> Titre de l'évaluation</label>
                 <input type="text" id="evaluation-title" placeholder="Ex: Devoir sur les fonctions">
             </div>
             
             <div class="form-group">
-                <label for="evaluation-duration">Durée de l'évaluation</label>
+                <label for="evaluation-duration"><i class="fas fa-clock"></i> Durée de l'évaluation</label>
                 <input type="text" id="evaluation-duration" placeholder="Ex: 2 heures">
             </div>
             
             <div class="form-group">
-                <label for="total-points">Total des points</label>
+                <label for="total-points"><i class="fas fa-star"></i> Total des points</label>
                 <input type="number" id="total-points" placeholder="Ex: 20">
             </div>
             
@@ -779,7 +997,7 @@
                     
                     <div class="header-info">
                         <div class="info-item">
-                            <i class="fas fa-user-graduate"></i>
+                            <i class="fas fa-user-tie"></i>
                             <span id="preview-teacher">Enseignant: [Nom]</span>
                         </div>
                         <div class="info-item">
@@ -811,14 +1029,14 @@
             <h2><i class="fas fa-print"></i> Options d'export PDF</h2>
             <div class="print-options">
                 <div class="print-option">
-                    <label for="pdfOrientation">Orientation de la page:</label>
+                    <label for="pdfOrientation"><i class="fas fa-compress-alt"></i> Orientation de la page:</label>
                     <select id="pdfOrientation">
                         <option value="portrait">Portrait</option>
                         <option value="landscape">Paysage</option>
                     </select>
                 </div>
                 <div class="print-option">
-                    <label for="pdfFormat">Format de page:</label>
+                    <label for="pdfFormat"><i class="fas fa-file"></i> Format de page:</label>
                     <select id="pdfFormat">
                         <option value="a4">A4</option>
                         <option value="letter">Lettre</option>
@@ -826,19 +1044,19 @@
                     </select>
                 </div>
                 <div class="print-option">
-                    <label for="includeAnswers">Inclure les réponses:</label>
+                    <label for="includeAnswers"><i class="fas fa-check-circle"></i> Inclure les réponses:</label>
                     <input type="checkbox" id="includeAnswers">
                 </div>
                 <div class="print-option">
-                    <label for="includeSolutions">Inclure les solutions détaillées:</label>
+                    <label for="includeSolutions"><i class="fas fa-lightbulb"></i> Inclure les solutions détaillées:</label>
                     <input type="checkbox" id="includeSolutions">
                 </div>
                 <div class="print-option">
-                    <label for="studentNameField">Ajouter un champ pour le nom de l'élève:</label>
+                    <label for="studentNameField"><i class="fas fa-user-graduate"></i> Ajouter un champ pour le nom de l'élève:</label>
                     <input type="checkbox" id="studentNameField" checked>
                 </div>
                 <div class="print-option">
-                    <label for="watermarkText">Filigrane:</label>
+                    <label for="watermarkText"><i class="fas fa-water"></i> Filigrane:</label>
                     <input type="text" id="watermarkText" placeholder="Ex: CORRIGÉ" value="ÉVALUATION">
                 </div>
             </div>
@@ -885,513 +1103,472 @@
         document.getElementById('total-points').addEventListener('input', updatePreview);
         document.getElementById('watermarkText').addEventListener('input', updatePreview);
         
-        // Compteur pour les IDs des blocs
-        let blockCount = 0;
-        
         // Fonction pour ajouter une section
         function addSection(type) {
-            blockCount++;
-            const blockId = `block-${blockCount}`;
+            const contentBlocks = document.getElementById('content-blocks');
+            const blockId = 'block-' + Date.now();
             
-            let blockTitle = '';
-            let placeholder = '';
+            let blockHTML = '';
             
             switch(type) {
                 case 'instructions':
-                    blockTitle = 'Instructions';
-                    placeholder = 'Saisissez les instructions ici...';
-                    break;
-                case 'qcm':
-                    blockTitle = 'Question à Choix Multiple';
-                    placeholder = 'Saisissez votre question QCM ici...';
-                    break;
-                case 'truefalse':
-                    blockTitle = 'Question Vrai/Faux';
-                    placeholder = 'Saisissez votre question Vrai/Faux ici...';
-                    break;
-                case 'fillblank':
-                    blockTitle = 'Question à Trous';
-                    placeholder = 'Saisissez votre texte avec des trous. Utilisez [ ] pour indiquer les emplacements des réponses. Ex: La capitale de la France est [Paris].';
-                    break;
-                case 'traditional':
-                    blockTitle = 'Question Traditionnelle';
-                    placeholder = 'Saisissez votre question traditionnelle ici...';
-                    break;
-                case 'problem':
-                    blockTitle = 'Situation Problème';
-                    placeholder = 'Décrivez la situation problème ici...';
-                    break;
-                default:
-                    blockTitle = 'Texte';
-                    placeholder = 'Saisissez votre texte ici...';
-            }
-            
-            const blockHTML = `
-                <div class="content-block" id="${blockId}">
-                    <div class="block-header">
-                        <span class="block-title">${blockTitle}</span>
-                        <div class="block-actions">
-                            <button class="btn-danger" onclick="removeBlock('${blockId}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="${blockId}-points">Points attribués</label>
-                        <input type="number" id="${blockId}-points" placeholder="Ex: 5" oninput="updateContent('${blockId}', '${type}')">
-                    </div>
-                    ${type === 'qcm' ? `
-                        <div class="form-group">
-                            <label>Options de réponse (cochez la bonne réponse)</label>
-                            <div id="${blockId}-options">
-                                <div class="option-item">
-                                    <input type="checkbox" id="${blockId}-option1-correct" name="${blockId}-correct">
-                                    <input type="text" id="${blockId}-option1" placeholder="Option 1" oninput="updateContent('${blockId}', '${type}')">
-                                </div>
-                                <div class="option-item">
-                                    <input type="checkbox" id="${blockId}-option2-correct" name="${blockId}-correct">
-                                    <input type="text" id="${blockId}-option2" placeholder="Option 2" oninput="updateContent('${blockId}', '${type}')">
+                    blockHTML = `
+                        <div class="content-block" id="${blockId}">
+                            <div class="block-header">
+                                <div class="block-title"><i class="fas fa-info-circle"></i> Instructions</div>
+                                <div class="block-actions">
+                                    <button class="btn-danger" onclick="removeBlock('${blockId}')"><i class="fas fa-trash"></i></button>
                                 </div>
                             </div>
-                            <button class="btn-info" onclick="addQCMOption('${blockId}')">
-                                <i class="fas fa-plus"></i> Ajouter une option
-                            </button>
+                            <div class="form-group">
+                                <label for="${blockId}-text">Instructions</label>
+                                <textarea id="${blockId}-text" placeholder="Entrez les instructions pour cette section..." oninput="updatePreviewContent()"></textarea>
+                            </div>
                         </div>
-                    ` : ''}
-                    ${type === 'truefalse' ? `
-                        <div class="form-group">
-                            <label>Réponse correcte</label>
-                            <select id="${blockId}-correct-answer" onchange="updateContent('${blockId}', '${type}')">
-                                <option value="true">Vrai</option>
-                                <option value="false">Faux</option>
-                            </select>
-                        </div>
-                    ` : ''}
-                    <div class="formatting-toolbar" id="toolbar-${blockId}">
-                        <button class="format-btn" title="Gras" onclick="applyFormat('${blockId}', 'bold')">
-                            <i class="fas fa-bold"></i>
-                        </button>
-                        <button class="format-btn" title="Italique" onclick="applyFormat('${blockId}', 'italic')">
-                            <i class="fas fa-italic"></i>
-                        </button>
-                        <button class="format-btn" title="Souligné" onclick="applyFormat('${blockId}', 'underline')">
-                            <i class="fas fa-underline"></i>
-                        </button>
-                        <button class="format-btn" title="Barré" onclick="applyFormat('${blockId}', 'strikeThrough')">
-                            <i class="fas fa-strikethrough"></i>
-                        </button>
-                        <button class="color-btn red" title="Texte rouge" onclick="applyColor('${blockId}', 'red')"></button>
-                        <button class="color-btn green" title="Texte vert" onclick="applyColor('${blockId}', 'green')"></button>
-                        <button class="color-btn blue" title="Texte bleu" onclick="applyColor('${blockId}', 'blue')"></button>
-                        <button class="color-btn black active" title="Texte noir" onclick="applyColor('${blockId}', 'black')"></button>
-                    </div>
-                    <div id="editor-${blockId}" contenteditable="true" class="text-editor" oninput="updateContent('${blockId}', '${type}')" 
-                         style="min-height: 100px; border: 1px solid #ddd; border-radius: 5px; padding: 10px; background: white;">
-                        ${placeholder}
-                    </div>
+                    `;
+                    break;
                     
-                    <!-- Section Solution -->
-                    <div class="solution-toggle" onclick="toggleSolution('${blockId}')">
-                        <i class="fas fa-chevron-down"></i> Ajouter une solution détaillée
-                    </div>
-                    <div id="solution-${blockId}" class="solution-content">
-                        <div class="formatting-toolbar" id="solution-toolbar-${blockId}">
-                            <button class="format-btn" title="Gras" onclick="applySolutionFormat('${blockId}', 'bold')">
-                                <i class="fas fa-bold"></i>
-                            </button>
-                            <button class="format-btn" title="Italique" onclick="applySolutionFormat('${blockId}', 'italic')">
-                                <i class="fas fa-italic"></i>
-                            </button>
-                            <button class="format-btn" title="Souligné" onclick="applySolutionFormat('${blockId}', 'underline')">
-                                <i class="fas fa-underline"></i>
-                            </button>
+                case 'qcm':
+                    blockHTML = `
+                        <div class="content-block" id="${blockId}">
+                            <div class="block-header">
+                                <div class="block-title"><i class="fas fa-check-square"></i> Question à Choix Multiple</div>
+                                <div class="block-actions">
+                                    <button class="btn-danger" onclick="removeBlock('${blockId}')"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="${blockId}-question">Question</label>
+                                <textarea id="${blockId}-question" placeholder="Entrez la question..." oninput="updatePreviewContent()"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="${blockId}-points">Points</label>
+                                <input type="number" id="${blockId}-points" placeholder="Ex: 2" oninput="updatePreviewContent()">
+                            </div>
+                            <div class="form-group">
+                                <label>Options de réponse</label>
+                                <div id="${blockId}-options">
+                                    <div class="option-item">
+                                        <input type="radio" name="${blockId}-correct" value="0" checked>
+                                        <input type="text" placeholder="Option 1" oninput="updatePreviewContent()">
+                                        <button class="btn-danger" onclick="removeOption(this)"><i class="fas fa-times"></i></button>
+                                    </div>
+                                    <div class="option-item">
+                                        <input type="radio" name="${blockId}-correct" value="1">
+                                        <input type="text" placeholder="Option 2" oninput="updatePreviewContent()">
+                                        <button class="btn-danger" onclick="removeOption(this)"><i class="fas fa-times"></i></button>
+                                    </div>
+                                </div>
+                                <button class="btn-info" onclick="addOption('${blockId}')"><i class="fas fa-plus"></i> Ajouter une option</button>
+                            </div>
+                            <div class="form-group">
+                                <label for="${blockId}-solution">Solution détaillée (optionnelle)</label>
+                                <textarea id="${blockId}-solution" placeholder="Entrez une explication détaillée de la réponse..." oninput="updatePreviewContent()"></textarea>
+                            </div>
                         </div>
-                        <div id="solution-editor-${blockId}" contenteditable="true" class="text-editor" 
-                             style="min-height: 80px; border: 1px solid #ddd; border-radius: 5px; padding: 10px; background: white;"
-                             placeholder="Rédigez la solution détaillée ici...">
-                            Rédigez la solution détaillée ici...
+                    `;
+                    break;
+                    
+                case 'truefalse':
+                    blockHTML = `
+                        <div class="content-block" id="${blockId}">
+                            <div class="block-header">
+                                <div class="block-title"><i class="fas fa-check-circle"></i> Question Vrai/Faux</div>
+                                <div class="block-actions">
+                                    <button class="btn-danger" onclick="removeBlock('${blockId}')"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="${blockId}-question">Question</label>
+                                <textarea id="${blockId}-question" placeholder="Entrez la question..." oninput="updatePreviewContent()"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="${blockId}-points">Points</label>
+                                <input type="number" id="${blockId}-points" placeholder="Ex: 1" oninput="updatePreviewContent()">
+                            </div>
+                            <div class="form-group">
+                                <label>Réponse correcte</label>
+                                <div>
+                                    <input type="radio" id="${blockId}-true" name="${blockId}-answer" value="true" checked>
+                                    <label for="${blockId}-true">Vrai</label>
+                                    <input type="radio" id="${blockId}-false" name="${blockId}-answer" value="false">
+                                    <label for="${blockId}-false">Faux</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="${blockId}-solution">Solution détaillée (optionnelle)</label>
+                                <textarea id="${blockId}-solution" placeholder="Entrez une explication détaillée de la réponse..." oninput="updatePreviewContent()"></textarea>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            `;
-            
-            document.getElementById('content-blocks').insertAdjacentHTML('beforeend', blockHTML);
-            updateContentPreview(blockId, type, '', 0);
-        }
-        
-        // Fonction pour basculer l'affichage de la solution
-        function toggleSolution(blockId) {
-            const solutionContent = document.getElementById(`solution-${blockId}`);
-            const toggleIcon = solutionContent.previousElementSibling.querySelector('i');
-            
-            if (solutionContent.style.display === 'block') {
-                solutionContent.style.display = 'none';
-                toggleIcon.className = 'fas fa-chevron-down';
-            } else {
-                solutionContent.style.display = 'block';
-                toggleIcon.className = 'fas fa-chevron-up';
-            }
-        }
-        
-        // Fonction pour appliquer un formatage à la solution
-        function applySolutionFormat(blockId, format) {
-            const editor = document.getElementById(`solution-editor-${blockId}`);
-            document.execCommand(format, false, null);
-        }
-        
-        // Fonction pour ajouter une option à une question QCM
-        function addQCMOption(blockId) {
-            const optionsContainer = document.getElementById(`${blockId}-options`);
-            const optionCount = optionsContainer.children.length + 1;
-            
-            const optionHTML = `
-                <div class="option-item">
-                    <input type="checkbox" id="${blockId}-option${optionCount}-correct" name="${blockId}-correct">
-                    <input type="text" id="${blockId}-option${optionCount}" placeholder="Option ${optionCount}" oninput="updateContent('${blockId}', 'qcm')">
-                </div>
-            `;
-            
-            optionsContainer.insertAdjacentHTML('beforeend', optionHTML);
-            updateContent(blockId, 'qcm');
-        }
-        
-        // Fonction pour appliquer un formatage de texte
-        function applyFormat(blockId, format) {
-            const editor = document.getElementById(`editor-${blockId}`);
-            
-            // Sauvegarder la sélection actuelle
-            const selection = window.getSelection();
-            const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
-            
-            // Appliquer le formatage
-            document.execCommand(format, false, null);
-            
-            // Restaurer la sélection
-            if (range) {
-                selection.removeAllRanges();
-                selection.addRange(range);
-            }
-            
-            // Mettre à jour le contenu
-            const type = getBlockType(blockId);
-            updateContent(blockId, type);
-        }
-        
-        // Fonction pour appliquer une couleur au texte
-        function applyColor(blockId, color) {
-            const editor = document.getElementById(`editor-${blockId}`);
-            const toolbar = document.getElementById(`toolbar-${blockId}`);
-            
-            // Mettre à jour les boutons actifs
-            const buttons = toolbar.querySelectorAll('.color-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            toolbar.querySelector(`.color-btn.${color}`).classList.add('active');
-            
-            // Sauvegarder la sélection actuelle
-            const selection = window.getSelection();
-            const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
-            
-            // Appliquer la couleur au texte sélectionné
-            document.execCommand('styleWithCSS', false, true);
-            document.execCommand('foreColor', false, getColorValue(color));
-            
-            // Restaurer la sélection
-            if (range) {
-                selection.removeAllRanges();
-                selection.addRange(range);
+                    `;
+                    break;
+                    
+                case 'fillblank':
+                    blockHTML = `
+                        <div class="content-block" id="${blockId}">
+                            <div class="block-header">
+                                <div class="block-title"><i class="fas fa-pencil-alt"></i> Question à Trous</div>
+                                <div class="block-actions">
+                                    <button class="btn-danger" onclick="removeBlock('${blockId}')"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="${blockId}-question">Texte avec des trous (utilisez [ ] pour marquer les trous)</label>
+                                <textarea id="${blockId}-question" placeholder="Ex: La capitale de la France est [Paris]." oninput="updatePreviewContent()"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="${blockId}-points">Points</label>
+                                <input type="number" id="${blockId}-points" placeholder="Ex: 3" oninput="updatePreviewContent()">
+                            </div>
+                            <div class="form-group">
+                                <label for="${blockId}-solution">Solution détaillée (optionnelle)</label>
+                                <textarea id="${blockId}-solution" placeholder="Entrez une explication détaillée de la réponse..." oninput="updatePreviewContent()"></textarea>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'traditional':
+                    blockHTML = `
+                        <div class="content-block" id="${blockId}">
+                            <div class="block-header">
+                                <div class="block-title"><i class="fas fa-question-circle"></i> Question Traditionnelle</div>
+                                <div class="block-actions">
+                                    <button class="btn-danger" onclick="removeBlock('${blockId}')"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="${blockId}-question">Question</label>
+                                <textarea id="${blockId}-question" placeholder="Entrez la question..." oninput="updatePreviewContent()"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="${blockId}-points">Points</label>
+                                <input type="number" id="${blockId}-points" placeholder="Ex: 5" oninput="updatePreviewContent()">
+                            </div>
+                            <div class="form-group">
+                                <label for="${blockId}-solution">Solution détaillée (optionnelle)</label>
+                                <textarea id="${blockId}-solution" placeholder="Entrez la réponse attendue..." oninput="updatePreviewContent()"></textarea>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'problem':
+                    blockHTML = `
+                        <div class="content-block" id="${blockId}">
+                            <div class="block-header">
+                                <div class="block-title"><i class="fas fa-puzzle-piece"></i> Situation Problème</div>
+                                <div class="block-actions">
+                                    <button class="btn-danger" onclick="removeBlock('${blockId}')"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="${blockId}-context">Contexte du problème</label>
+                                <textarea id="${blockId}-context" placeholder="Décrivez la situation problème..." oninput="updatePreviewContent()"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="${blockId}-question">Question</label>
+                                <textarea id="${blockId}-question" placeholder="Entrez la question..." oninput="updatePreviewContent()"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="${blockId}-points">Points</label>
+                                <input type="number" id="${blockId}-points" placeholder="Ex: 10" oninput="updatePreviewContent()">
+                            </div>
+                            <div class="form-group">
+                                <label for="${blockId}-solution">Solution détaillée (optionnelle)</label>
+                                <textarea id="${blockId}-solution" placeholder="Entrez la solution détaillée..." oninput="updatePreviewContent()"></textarea>
+                            </div>
+                        </div>
+                    `;
+                    break;
             }
             
-            // Mettre à jour le contenu
-            const type = getBlockType(blockId);
-            updateContent(blockId, type);
+            contentBlocks.insertAdjacentHTML('beforeend', blockHTML);
+            updatePreviewContent();
         }
         
-        // Fonction pour obtenir la valeur de couleur
-        function getColorValue(color) {
-            switch(color) {
-                case 'red': return '#e74c3c';
-                case 'green': return '#27ae60';
-                case 'blue': return '#3498db';
-                case 'black': return '#2c3e50';
-                default: return '#2c3e50';
-            }
-        }
-        
-        // Fonction pour obtenir le type d'un bloc
-        function getBlockType(blockId) {
-            const block = document.getElementById(blockId);
-            const title = block.querySelector('.block-title').textContent.toLowerCase();
-            
-            if (title.includes('instruction')) return 'instructions';
-            if (title.includes('choix')) return 'qcm';
-            if (title.includes('vrai')) return 'truefalse';
-            if (title.includes('trous')) return 'fillblank';
-            if (title.includes('traditionnelle')) return 'traditional';
-            if (title.includes('situation')) return 'problem';
-            return 'text';
-        }
-        
-        // Fonction pour ajouter une section d'image
+        // Fonction pour ajouter une section image
         function addImageSection() {
-            blockCount++;
-            const blockId = `block-${blockCount}`;
+            const contentBlocks = document.getElementById('content-blocks');
+            const blockId = 'block-' + Date.now();
             
             const blockHTML = `
                 <div class="content-block" id="${blockId}">
                     <div class="block-header">
-                        <span class="block-title">Image</span>
+                        <div class="block-title"><i class="fas fa-image"></i> Image</div>
                         <div class="block-actions">
-                            <button class="btn-danger" onclick="removeBlock('${blockId}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                            <button class="btn-danger" onclick="removeBlock('${blockId}')"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="${blockId}-points">Points attribués</label>
-                        <input type="number" id="${blockId}-points" placeholder="Ex: 5" oninput="updateContent('${blockId}', 'image')">
+                        <label for="${blockId}-image">Sélectionner une image</label>
+                        <input type="file" id="${blockId}-image" accept="image/*" onchange="previewImage(this, '${blockId}')">
                     </div>
                     <div class="form-group">
-                        <label for="${blockId}-image-upload">Importer une image</label>
-                        <input type="file" id="${blockId}-image-upload" accept="image/*" onchange="handleImageUpload('${blockId}', this)">
+                        <label for="${blockId}-caption">Légende (optionnelle)</label>
+                        <input type="text" id="${blockId}-caption" placeholder="Entrez une légende pour l'image..." oninput="updatePreviewContent()">
                     </div>
-                    <div class="form-group">
-                        <label for="${blockId}-image-caption">Légende (optionnel)</label>
-                        <input type="text" id="${blockId}-image-caption" placeholder="Saisissez une légende..." oninput="updateImageCaption('${blockId}', this.value)">
-                    </div>
-                    <img id="${blockId}-image-preview" class="image-preview" src="" alt="Aperçu de l'image">
-                    
-                    <!-- Section Solution pour image -->
-                    <div class="solution-toggle" onclick="toggleSolution('${blockId}')">
-                        <i class="fas fa-chevron-down"></i> Ajouter une solution détaillée
-                    </div>
-                    <div id="solution-${blockId}" class="solution-content">
-                        <div class="formatting-toolbar" id="solution-toolbar-${blockId}">
-                            <button class="format-btn" title="Gras" onclick="applySolutionFormat('${blockId}', 'bold')">
-                                <i class="fas fa-bold"></i>
-                            </button>
-                            <button class="format-btn" title="Italique" onclick="applySolutionFormat('${blockId}', 'italic')">
-                                <i class="fas fa-italic"></i>
-                            </button>
-                            <button class="format-btn" title="Souligné" onclick="applySolutionFormat('${blockId}', 'underline')">
-                                <i class="fas fa-underline"></i>
-                            </button>
-                        </div>
-                        <div id="solution-editor-${blockId}" contenteditable="true" class="text-editor" 
-                             style="min-height: 80px; border: 1px solid #ddd; border-radius: 5px; padding: 10px; background: white;"
-                             placeholder="Rédigez la solution détaillée ici...">
-                            Rédigez la solution détaillée ici...
-                        </div>
-                    </div>
+                    <img id="${blockId}-preview" class="image-preview">
                 </div>
             `;
             
-            document.getElementById('content-blocks').insertAdjacentHTML('beforeend', blockHTML);
+            contentBlocks.insertAdjacentHTML('beforeend', blockHTML);
         }
         
-        // Fonction pour gérer l'upload d'image
-        function handleImageUpload(blockId, input) {
+        // Fonction pour prévisualiser une image
+        function previewImage(input, blockId) {
+            const preview = document.getElementById(`${blockId}-preview`);
             const file = input.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                updatePreviewContent();
+            }
+            
             if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const imagePreview = document.getElementById(`${blockId}-image-preview`);
-                    imagePreview.src = e.target.result;
-                    imagePreview.style.display = 'block';
-                    
-                    // Mettre à jour l'aperçu
-                    const points = document.getElementById(`${blockId}-points`).value || 0;
-                    updateImagePreview(blockId, e.target.result, document.getElementById(`${blockId}-image-caption`).value, points);
-                };
                 reader.readAsDataURL(file);
             }
         }
         
-        // Fonction pour mettre à jour la légende de l'image
-        function updateImageCaption(blockId, caption) {
-            const imagePreview = document.getElementById(`${blockId}-image-preview`);
-            if (imagePreview.src) {
-                const points = document.getElementById(`${blockId}-points`).value || 0;
-                updateImagePreview(blockId, imagePreview.src, caption, points);
-            }
-        }
-        
-        // Fonction pour mettre à jour l'aperçu de l'image
-        function updateImagePreview(blockId, imageData, caption, points) {
-            let previewElement = document.getElementById(`preview-${blockId}`);
+        // Fonction pour ajouter une option à une question QCM
+        function addOption(blockId) {
+            const optionsContainer = document.getElementById(`${blockId}-options`);
+            const optionCount = optionsContainer.children.length;
             
-            if (!previewElement) {
-                previewElement = document.createElement('div');
-                previewElement.id = `preview-${blockId}`;
-                previewElement.className = 'content-section';
-                document.getElementById('preview-content').appendChild(previewElement);
-            }
-            
-            previewElement.innerHTML = `
-                <h3 class="section-title">Illustration</h3>
-                <img src="${imageData}" class="preview-image" alt="${caption || 'Illustration'}">
-                ${caption ? `<p class="image-caption"><em>${caption}</em></p>` : ''}
-                ${points > 0 ? `<div class="question-points">Cette question vaut ${points} point(s)</div>` : ''}
-            `;
-        }
-        
-        // Fonction pour mettre à jour le contenu de l'aperçu
-        function updateContent(blockId, type) {
-            const editor = document.getElementById(`editor-${blockId}`);
-            const content = editor.innerHTML;
-            const points = document.getElementById(`${blockId}-points`).value || 0;
-            
-            updateContentPreview(blockId, type, content, points);
-        }
-        
-        // Fonction pour mettre à jour l'aperçu du contenu
-        function updateContentPreview(blockId, type, content, points) {
-            let previewElement = document.getElementById(`preview-${blockId}`);
-            
-            if (!previewElement) {
-                previewElement = document.createElement('div');
-                previewElement.id = `preview-${blockId}`;
-                previewElement.className = 'content-section';
-                document.getElementById('preview-content').appendChild(previewElement);
-            }
-            
-            let sectionTitle = '';
-            let sectionClass = '';
-            
-            switch(type) {
-                case 'instructions':
-                    sectionTitle = 'Instructions';
-                    sectionClass = 'instructions';
-                    break;
-                case 'qcm':
-                    sectionTitle = 'Question à Choix Multiple';
-                    sectionClass = 'qcm';
-                    
-                    // Récupérer les options et la réponse correcte
-                    let optionsHTML = '';
-                    let correctAnswer = '';
-                    
-                    for (let i = 1; i <= 10; i++) {
-                        const optionInput = document.getElementById(`${blockId}-option${i}`);
-                        const correctCheckbox = document.getElementById(`${blockId}-option${i}-correct`);
-                        
-                        if (optionInput && optionInput.value) {
-                            if (correctCheckbox && correctCheckbox.checked) {
-                                correctAnswer = optionInput.value;
-                            }
-                            optionsHTML += `
-                                <div class="option-item">
-                                    <input type="radio" name="${blockId}-answer" id="${blockId}-preview-option${i}">
-                                    <label for="${blockId}-preview-option${i}">${optionInput.value}</label>
-                                </div>
-                            `;
-                        }
-                    }
-                    
-                    content = `
-                        <div class="question-text">${content}</div>
-                        <div class="options-container">
-                            ${optionsHTML}
-                        </div>
-                    `;
-                    break;
-                case 'truefalse':
-                    sectionTitle = 'Question Vrai/Faux';
-                    sectionClass = 'truefalse';
-                    
-                    const correctAnswerSelect = document.getElementById(`${blockId}-correct-answer`);
-                    const correctAnswerValue = correctAnswerSelect ? correctAnswerSelect.value : 'true';
-                    
-                    content = `
-                        <div class="question-text">${content}</div>
-                        <div class="options-container">
-                            <div class="option-item">
-                                <input type="radio" name="${blockId}-answer" id="${blockId}-preview-true" value="true">
-                                <label for="${blockId}-preview-true">Vrai</label>
-                            </div>
-                            <div class="option-item">
-                                <input type="radio" name="${blockId}-answer" id="${blockId}-preview-false" value="false">
-                                <label for="${blockId}-preview-false">Faux</label>
-                            </div>
-                        </div>
-                    `;
-                    break;
-                case 'fillblank':
-                    sectionTitle = 'Question à Trous';
-                    sectionClass = 'fillblank';
-                    
-                    // Remplacer les [mot] par des champs de saisie
-                    const blankRegex = /\[(.*?)\]/g;
-                    const blankContent = content.replace(blankRegex, '<span class="blank-input"></span>');
-                    
-                    content = `
-                        <div class="question-text">${blankContent}</div>
-                    `;
-                    break;
-                case 'traditional':
-                    sectionTitle = 'Question Traditionnelle';
-                    sectionClass = 'traditional';
-                    content = `
-                        <div class="question-text">${content}</div>
-                        <div class="answer-space" style="min-height: 100px; border-bottom: 1px dashed #ccc; margin: 15px 0;"></div>
-                    `;
-                    break;
-                case 'problem':
-                    sectionTitle = 'Situation Problème';
-                    sectionClass = 'problem';
-                    content = `
-                        <div class="question-text">${content}</div>
-                        <div class="answer-space" style="min-height: 150px; border-bottom: 1px dashed #ccc; margin: 15px 0;"></div>
-                    `;
-                    break;
-                default:
-                    sectionTitle = 'Contenu';
-                    sectionClass = 'instructions';
-            }
-            
-            // Ajouter la solution si elle existe
-            const solutionEditor = document.getElementById(`solution-editor-${blockId}`);
-            let solutionHTML = '';
-            
-            if (solutionEditor && solutionEditor.innerHTML && solutionEditor.innerHTML !== 'Rédigez la solution détaillée ici...') {
-                solutionHTML = `
-                    <div class="solution">
-                        <div class="solution-title">
-                            <i class="fas fa-lightbulb"></i> Solution
-                        </div>
-                        <div class="solution-content">
-                            ${solutionEditor.innerHTML}
-                        </div>
-                    </div>
-                `;
-            }
-            
-            previewElement.innerHTML = `
-                <h3 class="section-title">${sectionTitle}</h3>
-                <div class="${sectionClass}">
-                    ${content}
-                    ${points > 0 ? `<div class="question-points">Cette question vaut ${points} point(s)</div>` : ''}
-                    ${solutionHTML}
+            const optionHTML = `
+                <div class="option-item">
+                    <input type="radio" name="${blockId}-correct" value="${optionCount}">
+                    <input type="text" placeholder="Option ${optionCount + 1}" oninput="updatePreviewContent()">
+                    <button class="btn-danger" onclick="removeOption(this)"><i class="fas fa-times"></i></button>
                 </div>
             `;
+            
+            optionsContainer.insertAdjacentHTML('beforeend', optionHTML);
+        }
+        
+        // Fonction pour supprimer une option
+        function removeOption(button) {
+            button.parentElement.remove();
+            updatePreviewContent();
         }
         
         // Fonction pour supprimer un bloc
         function removeBlock(blockId) {
-            const block = document.getElementById(blockId);
-            block.remove();
-            
-            const previewElement = document.getElementById(`preview-${blockId}`);
-            if (previewElement) {
-                previewElement.remove();
-            }
+            document.getElementById(blockId).remove();
+            updatePreviewContent();
         }
         
-        // Fonction pour réinitialiser l'évaluation
-        function resetEvaluation() {
-            if (confirm('Êtes-vous sûr de vouloir tout effacer ? Tous les contenus ajoutés seront perdus.')) {
-                document.getElementById('content-blocks').innerHTML = '';
-                document.getElementById('preview-content').innerHTML = '<p>Le contenu de votre évaluation apparaîtra ici.</p>';
-                blockCount = 0;
+        // Fonction pour mettre à jour le contenu de l'aperçu
+        function updatePreviewContent() {
+            const previewContent = document.getElementById('preview-content');
+            let contentHTML = '';
+            
+            // Récupérer tous les blocs de contenu
+            const contentBlocks = document.getElementById('content-blocks').children;
+            
+            for (let block of contentBlocks) {
+                const blockId = block.id;
+                
+                // Instructions
+                if (block.querySelector('.fa-info-circle')) {
+                    const text = document.getElementById(`${blockId}-text`).value;
+                    if (text) {
+                        contentHTML += `
+                            <div class="content-section">
+                                <div class="instructions">
+                                    <h3 class="section-title"><i class="fas fa-info-circle"></i> Instructions</h3>
+                                    <p>${text}</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+                
+                // QCM
+                else if (block.querySelector('.fa-check-square')) {
+                    const question = document.getElementById(`${blockId}-question`).value;
+                    const points = document.getElementById(`${blockId}-points`).value;
+                    const solution = document.getElementById(`${blockId}-solution`).value;
+                    
+                    if (question) {
+                        let optionsHTML = '';
+                        const options = document.getElementById(`${blockId}-options`).children;
+                        
+                        for (let i = 0; i < options.length; i++) {
+                            const optionText = options[i].querySelector('input[type="text"]').value;
+                            if (optionText) {
+                                optionsHTML += `<p>□ ${optionText}</p>`;
+                            }
+                        }
+                        
+                        contentHTML += `
+                            <div class="content-section">
+                                <div class="qcm">
+                                    <p><strong>${question}</strong></p>
+                                    ${optionsHTML}
+                                    ${points ? `<div class="question-points"><i class="fas fa-star"></i> ${points} point(s)</div>` : ''}
+                                    ${solution ? `
+                                        <div class="solution-toggle" onclick="toggleSolution('${blockId}-solution')">
+                                            <i class="fas fa-lightbulb"></i> Voir la solution
+                                        </div>
+                                        <div class="solution-content" id="${blockId}-solution">
+                                            <div class="solution-title"><i class="fas fa-check-circle"></i> Solution</div>
+                                            <p>${solution}</p>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+                
+                // Vrai/Faux
+                else if (block.querySelector('.fa-check-circle')) {
+                    const question = document.getElementById(`${blockId}-question`).value;
+                    const points = document.getElementById(`${blockId}-points`).value;
+                    const solution = document.getElementById(`${blockId}-solution`).value;
+                    const isTrue = document.getElementById(`${blockId}-true`).checked;
+                    
+                    if (question) {
+                        contentHTML += `
+                            <div class="content-section">
+                                <div class="truefalse">
+                                    <p><strong>${question}</strong></p>
+                                    <p>□ Vrai</p>
+                                    <p>□ Faux</p>
+                                    ${points ? `<div class="question-points"><i class="fas fa-star"></i> ${points} point(s)</div>` : ''}
+                                    ${solution ? `
+                                        <div class="solution-toggle" onclick="toggleSolution('${blockId}-solution')">
+                                            <i class="fas fa-lightbulb"></i> Voir la solution
+                                        </div>
+                                        <div class="solution-content" id="${blockId}-solution">
+                                            <div class="solution-title"><i class="fas fa-check-circle"></i> Solution</div>
+                                            <p>Réponse correcte: ${isTrue ? 'Vrai' : 'Faux'}</p>
+                                            <p>${solution}</p>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+                
+                // Questions à trous
+                else if (block.querySelector('.fa-pencil-alt')) {
+                    const question = document.getElementById(`${blockId}-question`).value;
+                    const points = document.getElementById(`${blockId}-points`).value;
+                    const solution = document.getElementById(`${blockId}-solution`).value;
+                    
+                    if (question) {
+                        // Remplacer [texte] par des champs vides pour l'aperçu
+                        const previewText = question.replace(/\[(.*?)\]/g, '<span class="blank-input">__________</span>');
+                        
+                        contentHTML += `
+                            <div class="content-section">
+                                <div class="fillblank">
+                                    <p>${previewText}</p>
+                                    ${points ? `<div class="question-points"><i class="fas fa-star"></i> ${points} point(s)</div>` : ''}
+                                    ${solution ? `
+                                        <div class="solution-toggle" onclick="toggleSolution('${blockId}-solution')">
+                                            <i class="fas fa-lightbulb"></i> Voir la solution
+                                        </div>
+                                        <div class="solution-content" id="${blockId}-solution">
+                                            <div class="solution-title"><i class="fas fa-check-circle"></i> Solution</div>
+                                            <p>${solution}</p>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+                
+                // Questions traditionnelles
+                else if (block.querySelector('.fa-question-circle')) {
+                    const question = document.getElementById(`${blockId}-question`).value;
+                    const points = document.getElementById(`${blockId}-points`).value;
+                    const solution = document.getElementById(`${blockId}-solution`).value;
+                    
+                    if (question) {
+                        contentHTML += `
+                            <div class="content-section">
+                                <div class="traditional">
+                                    <p><strong>${question}</strong></p>
+                                    <div style="height: 100px; border-bottom: 1px solid #ccc; margin: 15px 0;"></div>
+                                    ${points ? `<div class="question-points"><i class="fas fa-star"></i> ${points} point(s)</div>` : ''}
+                                    ${solution ? `
+                                        <div class="solution-toggle" onclick="toggleSolution('${blockId}-solution')">
+                                            <i class="fas fa-lightbulb"></i> Voir la solution
+                                        </div>
+                                        <div class="solution-content" id="${blockId}-solution">
+                                            <div class="solution-title"><i class="fas fa-check-circle"></i> Solution</div>
+                                            <p>${solution}</p>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+                
+                // Situation problème
+                else if (block.querySelector('.fa-puzzle-piece')) {
+                    const context = document.getElementById(`${blockId}-context`).value;
+                    const question = document.getElementById(`${blockId}-question`).value;
+                    const points = document.getElementById(`${blockId}-points`).value;
+                    const solution = document.getElementById(`${blockId}-solution`).value;
+                    
+                    if (context || question) {
+                        contentHTML += `
+                            <div class="content-section">
+                                <div class="problem">
+                                    ${context ? `<p>${context}</p>` : ''}
+                                    ${question ? `<p><strong>${question}</strong></p>` : ''}
+                                    <div style="height: 150px; border-bottom: 1px solid #ccc; margin: 15px 0;"></div>
+                                    ${points ? `<div class="question-points"><i class="fas fa-star"></i> ${points} point(s)</div>` : ''}
+                                    ${solution ? `
+                                        <div class="solution-toggle" onclick="toggleSolution('${blockId}-solution')">
+                                            <i class="fas fa-lightbulb"></i> Voir la solution
+                                        </div>
+                                        <div class="solution-content" id="${blockId}-solution">
+                                            <div class="solution-title"><i class="fas fa-check-circle"></i> Solution</div>
+                                            <p>${solution}</p>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+                
+                // Image
+                else if (block.querySelector('.fa-image')) {
+                    const preview = document.getElementById(`${blockId}-preview`);
+                    const caption = document.getElementById(`${blockId}-caption`).value;
+                    
+                    if (preview.style.display !== 'none') {
+                        contentHTML += `
+                            <div class="content-section">
+                                <img src="${preview.src}" class="preview-image">
+                                ${caption ? `<p style="text-align: center; font-style: italic;">${caption}</p>` : ''}
+                            </div>
+                        `;
+                    }
+                }
+            }
+            
+            previewContent.innerHTML = contentHTML || '<p>Le contenu de votre évaluation apparaîtra ici.</p>';
+        }
+        
+        // Fonction pour afficher/masquer les solutions
+        function toggleSolution(solutionId) {
+            const solutionContent = document.getElementById(solutionId);
+            if (solutionContent.style.display === 'block') {
+                solutionContent.style.display = 'none';
+            } else {
+                solutionContent.style.display = 'block';
             }
         }
         
@@ -1405,203 +1582,102 @@
             document.getElementById('printModal').style.display = 'none';
         }
         
-        // Fonction pour imprimer l'évaluation
-        function printEvaluation() {
-            // Afficher temporairement toutes les solutions pour l'impression
-            const solutionContents = document.querySelectorAll('.solution-content');
-            solutionContents.forEach(solution => {
-                solution.style.display = 'block';
-            });
-            
-            // Scroll vers le haut pour une impression correcte
-            window.scrollTo(0, 0);
-            
-            // Délai pour permettre le scroll avant l'impression
-            setTimeout(() => {
-                window.print();
-                
-                // Remettre l'affichage initial après l'impression
-                setTimeout(() => {
-                    solutionContents.forEach(solution => {
-                        solution.style.display = 'none';
-                    });
-                    
-                    // Remettre les icônes en état initial
-                    const toggleIcons = document.querySelectorAll('.solution-toggle i');
-                    toggleIcons.forEach(icon => {
-                        icon.className = 'fas fa-chevron-down';
-                    });
-                }, 100);
-            }, 100);
-        }
-        
-        // Fonction pour générer le PDF
+        // Fonction pour générer un PDF
         function generatePDF() {
             const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({
+                orientation: document.getElementById('pdfOrientation').value,
+                unit: 'mm',
+                format: document.getElementById('pdfFormat').value
+            });
             
-            // Récupérer les options
-            const orientation = document.getElementById('pdfOrientation').value;
-            const format = document.getElementById('pdfFormat').value;
-            const includeAnswers = document.getElementById('includeAnswers').checked;
-            const includeSolutions = document.getElementById('includeSolutions').checked;
-            const studentNameField = document.getElementById('studentNameField').checked;
-            const watermarkText = document.getElementById('watermarkText').value;
-            
-            // Créer un clone de l'aperçu pour la génération PDF
+            // Récupérer le contenu de l'aperçu
             const previewElement = document.getElementById('evaluation-preview');
-            const clone = previewElement.cloneNode(true);
             
-            // Mettre à jour le filigrane
-            const watermark = clone.querySelector('.watermark');
-            if (watermark) {
-                watermark.textContent = watermarkText;
+            // Afficher toutes les solutions si demandé
+            const includeSolutions = document.getElementById('includeSolutions').checked;
+            if (includeSolutions) {
+                const solutionToggles = previewElement.querySelectorAll('.solution-toggle');
+                solutionToggles.forEach(toggle => {
+                    const solutionId = toggle.getAttribute('onclick').match(/'([^']+)'/)[1];
+                    document.getElementById(solutionId).style.display = 'block';
+                });
             }
             
             // Ajouter un champ pour le nom de l'élève si demandé
+            const studentNameField = document.getElementById('studentNameField').checked;
             if (studentNameField) {
                 const studentField = document.createElement('div');
-                studentField.style.marginBottom = '20px';
-                studentField.style.padding = '10px';
-                studentField.style.border = '1px solid #ccc';
                 studentField.innerHTML = `
-                    <strong>Nom et prénom de l'élève:</strong> 
-                    <span style="display:inline-block; width: 300px; border-bottom: 1px solid #000; margin-left: 10px;"></span>
+                    <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                        <p><strong>Nom et prénom de l'élève:</strong> _________________________________</p>
+                    </div>
                 `;
-                clone.insertBefore(studentField, clone.firstChild.nextSibling);
+                previewElement.insertBefore(studentField, previewElement.firstChild);
             }
             
-            // Afficher les réponses si demandé
-            if (includeAnswers) {
-                const blocks = document.querySelectorAll('.content-block');
-                blocks.forEach(block => {
-                    const blockId = block.id;
-                    const type = getBlockType(blockId);
-                    
-                    if (type === 'qcm') {
-                        // Trouver la réponse correcte pour QCM
-                        let correctAnswer = '';
-                        for (let i = 1; i <= 10; i++) {
-                            const correctCheckbox = document.getElementById(`${blockId}-option${i}-correct`);
-                            const optionInput = document.getElementById(`${blockId}-option${i}`);
-                            
-                            if (correctCheckbox && correctCheckbox.checked && optionInput) {
-                                correctAnswer = optionInput.value;
-                                break;
-                            }
-                        }
-                        
-                        // Ajouter la réponse dans le clone
-                        const previewBlock = clone.querySelector(`#preview-${blockId}`);
-                        if (previewBlock && correctAnswer) {
-                            const answerDiv = document.createElement('div');
-                            answerDiv.style.marginTop = '10px';
-                            answerDiv.style.padding = '10px';
-                            answerDiv.style.backgroundColor = '#d4edda';
-                            answerDiv.style.borderRadius = '5px';
-                            answerDiv.innerHTML = `<strong>Réponse correcte:</strong> ${correctAnswer}`;
-                            previewBlock.appendChild(answerDiv);
-                        }
-                    }
-                    else if (type === 'truefalse') {
-                        // Trouver la réponse correcte pour Vrai/Faux
-                        const correctAnswerSelect = document.getElementById(`${blockId}-correct-answer`);
-                        const correctAnswer = correctAnswerSelect ? correctAnswerSelect.value : 'true';
-                        
-                        // Ajouter la réponse dans le clone
-                        const previewBlock = clone.querySelector(`#preview-${blockId}`);
-                        if (previewBlock) {
-                            const answerDiv = document.createElement('div');
-                            answerDiv.style.marginTop = '10px';
-                            answerDiv.style.padding = '10px';
-                            answerDiv.style.backgroundColor = '#d4edda';
-                            answerDiv.style.borderRadius = '5px';
-                            answerDiv.innerHTML = `<strong>Réponse correcte:</strong> ${correctAnswer === 'true' ? 'Vrai' : 'Faux'}`;
-                            previewBlock.appendChild(answerDiv);
-                        }
-                    }
-                });
-            }
-            
-            // Afficher les solutions détaillées si demandé
-            if (includeSolutions) {
-                const blocks = document.querySelectorAll('.content-block');
-                blocks.forEach(block => {
-                    const blockId = block.id;
-                    const solutionEditor = document.getElementById(`solution-editor-${blockId}`);
-                    
-                    if (solutionEditor && solutionEditor.innerHTML && solutionEditor.innerHTML !== 'Rédigez la solution détaillée ici...') {
-                        const previewBlock = clone.querySelector(`#preview-${blockId}`);
-                        if (previewBlock) {
-                            const solutionDiv = document.createElement('div');
-                            solutionDiv.className = 'solution';
-                            solutionDiv.innerHTML = `
-                                <div class="solution-title">
-                                    <i class="fas fa-lightbulb"></i> Solution détaillée
-                                </div>
-                                <div class="solution-content">
-                                    ${solutionEditor.innerHTML}
-                                </div>
-                            `;
-                            previewBlock.appendChild(solutionDiv);
-                        }
-                    }
-                });
-            }
-            
-            // Appliquer des styles spécifiques pour le PDF
-            clone.style.width = orientation === 'portrait' ? '210mm' : '297mm';
-            clone.style.padding = '15mm';
-            clone.style.fontSize = '12pt';
-            
-            // Masquer temporairement l'original et afficher le clone
-            previewElement.style.visibility = 'hidden';
-            document.body.appendChild(clone);
-            
-            // Générer le PDF avec html2canvas et jsPDF
-            html2canvas(clone, {
-                scale: 2, // Qualité plus élevée
+            // Générer le PDF
+            html2canvas(previewElement, {
+                scale: 2,
                 useCORS: true,
                 logging: false
             }).then(canvas => {
-                const imgData = canvas.toDataURL('image/jpeg', 1.0);
-                const pdf = new jsPDF({
-                    orientation: orientation,
-                    unit: 'mm',
-                    format: format
-                });
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = doc.internal.pageSize.getWidth();
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
                 
-                const imgWidth = pdf.internal.pageSize.getWidth();
-                let imgHeight = canvas.height * imgWidth / canvas.width;
+                doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                doc.save('evaluation.pdf');
                 
-                // Ajouter la première page
-                pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
-                
-                // Ajouter des pages supplémentaires si nécessaire
-                let heightLeft = imgHeight;
-                let position = 0;
-                
-                while (heightLeft > 0) {
-                    position = heightLeft - pdf.internal.pageSize.getHeight();
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
-                    heightLeft -= pdf.internal.pageSize.getHeight();
+                // Restaurer l'état initial
+                if (studentNameField) {
+                    previewElement.removeChild(previewElement.firstChild);
                 }
                 
-                // Télécharger le PDF
-                const fileName = `evaluation_${document.getElementById('evaluation-title').value.replace(/\s+/g, '_')}.pdf`;
-                pdf.save(fileName);
+                if (includeSolutions) {
+                    const solutionContents = previewElement.querySelectorAll('.solution-content');
+                    solutionContents.forEach(content => {
+                        content.style.display = 'none';
+                    });
+                }
                 
-                // Nettoyer et restaurer l'affichage
-                document.body.removeChild(clone);
-                previewElement.style.visibility = 'visible';
                 closeModal();
             });
+        }
+        
+        // Fonction pour imprimer l'évaluation
+        function printEvaluation() {
+            // Afficher toutes les solutions
+            const solutionToggles = document.querySelectorAll('.solution-toggle');
+            solutionToggles.forEach(toggle => {
+                const solutionId = toggle.getAttribute('onclick').match(/'([^']+)'/)[1];
+                document.getElementById(solutionId).style.display = 'block';
+            });
+            
+            // Imprimer
+            window.print();
+            
+            // Masquer à nouveau les solutions
+            setTimeout(() => {
+                const solutionContents = document.querySelectorAll('.solution-content');
+                solutionContents.forEach(content => {
+                    content.style.display = 'none';
+                });
+            }, 500);
+        }
+        
+        // Fonction pour réinitialiser l'évaluation
+        function resetEvaluation() {
+            if (confirm('Êtes-vous sûr de vouloir effacer toute l\'évaluation ?')) {
+                document.getElementById('content-blocks').innerHTML = '';
+                updatePreviewContent();
+            }
         }
         
         // Fermer la modal si on clique en dehors
         window.onclick = function(event) {
             const modal = document.getElementById('printModal');
-            if (event.target == modal) {
+            if (event.target === modal) {
                 closeModal();
             }
         }
