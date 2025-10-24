@@ -4,8 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Évaluations</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Styles précédents conservés */
+        /* Variables CSS pour une meilleure maintenabilité */
+        :root {
+            --primary-color: #4facfe;
+            --secondary-color: #00f2fe;
+            --success-color: #43e97b;
+            --warning-color: #ffc107;
+            --danger-color: #ff6b6b;
+            --dark-color: #333;
+            --light-color: #f5f7fa;
+            --gray-color: #666;
+            --border-radius: 10px;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        /* Reset et styles de base */
         * {
             margin: 0;
             padding: 0;
@@ -14,21 +30,24 @@
         }
 
         body {
-            background-color: #f5f7fa;
-            padding: 20px;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
         }
 
+        /* Container principal */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background: white;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
             overflow: hidden;
         }
 
+        /* En-tête */
         .header {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
             padding: 30px;
             text-align: center;
@@ -44,10 +63,12 @@
             opacity: 0.9;
         }
 
+        /* Contenu principal */
         .content {
             padding: 30px;
         }
 
+        /* Boutons et contrôles */
         .controls {
             display: flex;
             gap: 15px;
@@ -62,10 +83,11 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             display: flex;
             align-items: center;
             gap: 8px;
+            white-space: nowrap;
         }
 
         .btn-primary {
@@ -79,7 +101,7 @@
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            background: linear-gradient(135deg, var(--danger-color), #ff8e8e);
             color: white;
         }
 
@@ -89,7 +111,7 @@
         }
 
         .btn-success {
-            background: linear-gradient(135deg, #43e97b, #38f9d7);
+            background: linear-gradient(135deg, var(--success-color), #38f9d7);
             color: white;
         }
 
@@ -99,7 +121,7 @@
         }
 
         .btn-warning {
-            background: linear-gradient(135deg, #ffc107, #ffab00);
+            background: linear-gradient(135deg, var(--warning-color), #ffab00);
             color: white;
         }
 
@@ -108,14 +130,24 @@
             box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
         }
 
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
         .file-input {
             display: none;
         }
 
+        /* Informations méta */
         .meta-info {
             background: #f8f9ff;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: var(--border-radius);
             margin-bottom: 20px;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -131,23 +163,24 @@
 
         .meta-label {
             font-size: 0.9rem;
-            color: #666;
+            color: var(--gray-color);
             margin-bottom: 5px;
         }
 
         .meta-value {
             font-weight: 600;
-            color: #333;
+            color: var(--dark-color);
         }
 
+        /* Tableau des évaluations */
         .evaluations-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
             background: white;
-            border-radius: 10px;
+            border-radius: var(--border-radius);
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            box-shadow: var(--box-shadow);
         }
 
         .evaluations-table th, .evaluations-table td {
@@ -157,7 +190,7 @@
         }
 
         .evaluations-table th {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             font-weight: 600;
         }
@@ -172,9 +205,10 @@
 
         .grade-excellent { color: #28a745; font-weight: bold; }
         .grade-good { color: #17a2b8; font-weight: bold; }
-        .grade-average { color: #ffc107; font-weight: bold; }
+        .grade-average { color: var(--warning-color); font-weight: bold; }
         .grade-poor { color: #dc3545; font-weight: bold; }
 
+        /* Indicateur de chargement */
         .loading {
             display: none;
             position: fixed;
@@ -191,7 +225,7 @@
         .loading-content {
             background: white;
             padding: 30px;
-            border-radius: 10px;
+            border-radius: var(--border-radius);
             text-align: center;
         }
 
@@ -199,7 +233,7 @@
             width: 50px;
             height: 50px;
             border: 5px solid #f3f3f3;
-            border-top: 5px solid #4facfe;
+            border-top: 5px solid var(--primary-color);
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
@@ -210,6 +244,7 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* Messages */
         .message {
             padding: 15px;
             border-radius: 8px;
@@ -220,15 +255,16 @@
         }
 
         .error-message {
-            background: #ff6b6b;
+            background: var(--danger-color);
             color: white;
         }
 
         .success-message {
-            background: #43e97b;
+            background: var(--success-color);
             color: white;
         }
 
+        /* Filtres */
         .filters {
             display: flex;
             gap: 15px;
@@ -243,11 +279,12 @@
             display: flex;
             flex-direction: column;
             min-width: 200px;
+            flex: 1;
         }
 
         .filter-label {
             font-size: 0.9rem;
-            color: #666;
+            color: var(--gray-color);
             margin-bottom: 5px;
         }
 
@@ -273,17 +310,18 @@
             background: #5a6268;
         }
 
+        /* Statistiques */
         .stats-container {
             background: #f8f9ff;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: var(--border-radius);
             margin-bottom: 20px;
         }
 
         .stats-title {
             font-size: 1.2rem;
             margin-bottom: 15px;
-            color: #333;
+            color: var(--dark-color);
         }
 
         .stats-grid {
@@ -303,15 +341,16 @@
         .stat-value {
             font-size: 1.5rem;
             font-weight: bold;
-            color: #4facfe;
+            color: var(--primary-color);
             margin-bottom: 5px;
         }
 
         .stat-label {
             font-size: 0.9rem;
-            color: #666;
+            color: var(--gray-color);
         }
 
+        /* Boîte de dialogue de confirmation */
         .confirmation-dialog {
             display: none;
             position: fixed;
@@ -328,7 +367,7 @@
         .confirmation-content {
             background: white;
             padding: 30px;
-            border-radius: 10px;
+            border-radius: var(--border-radius);
             max-width: 500px;
             width: 90%;
         }
@@ -340,7 +379,7 @@
             margin-top: 20px;
         }
 
-        /* Styles pour l'authentification */
+        /* Authentification */
         .auth-container {
             display: flex;
             justify-content: center;
@@ -352,8 +391,8 @@
         .auth-box {
             background: white;
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
             width: 100%;
             max-width: 400px;
         }
@@ -361,7 +400,7 @@
         .auth-title {
             text-align: center;
             margin-bottom: 20px;
-            color: #333;
+            color: var(--dark-color);
         }
 
         .auth-form {
@@ -378,7 +417,7 @@
 
         .auth-label {
             font-size: 0.9rem;
-            color: #666;
+            color: var(--gray-color);
         }
 
         .auth-input {
@@ -407,7 +446,7 @@
             text-align: center;
             margin-top: 15px;
             font-size: 0.9rem;
-            color: #666;
+            color: var(--gray-color);
         }
 
         .auth-toggle-btn {
@@ -418,6 +457,7 @@
             text-decoration: underline;
         }
 
+        /* Classes utilitaires */
         .hidden {
             display: none;
         }
@@ -436,6 +476,7 @@
             background-color: #3333ff;
         }
 
+        /* Liste des fichiers */
         .file-list {
             margin: 15px 0;
             padding: 15px;
@@ -480,11 +521,11 @@
             color: #856404;
         }
 
-        /* Styles pour la section des élèves en difficulté */
+        /* Section des élèves en difficulté */
         .students-difficulty {
             margin: 20px 0;
             background: #fff8f8;
-            border-radius: 10px;
+            border-radius: var(--border-radius);
             padding: 20px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
         }
@@ -525,7 +566,7 @@
         .student-name {
             font-weight: bold;
             font-size: 1.1rem;
-            color: #333;
+            color: var(--dark-color);
         }
 
         .student-class {
@@ -552,7 +593,7 @@
 
         .stat-label {
             font-size: 0.8rem;
-            color: #666;
+            color: var(--gray-color);
         }
 
         .low-grade {
@@ -585,7 +626,7 @@
         .toggle-details {
             background: none;
             border: none;
-            color: #4facfe;
+            color: var(--primary-color);
             cursor: pointer;
             font-size: 0.9rem;
             margin-top: 10px;
@@ -606,22 +647,22 @@
         .no-difficulty {
             text-align: center;
             padding: 20px;
-            color: #666;
+            color: var(--gray-color);
             background: white;
             border-radius: 8px;
         }
 
-        /* Styles pour l'analyse des fichiers */
+        /* Analyse des fichiers */
         .file-analysis {
             margin: 20px 0;
             background: #f8f9ff;
-            border-radius: 10px;
+            border-radius: var(--border-radius);
             padding: 20px;
         }
 
         .file-analysis h3 {
             margin-bottom: 15px;
-            color: #333;
+            color: var(--dark-color);
         }
 
         .analysis-results {
@@ -639,7 +680,7 @@
 
         .analysis-card h4 {
             margin-bottom: 10px;
-            color: #4facfe;
+            color: var(--primary-color);
         }
 
         .analysis-stats {
@@ -658,14 +699,25 @@
         .analysis-stat-value {
             font-size: 1.2rem;
             font-weight: bold;
-            color: #4facfe;
+            color: var(--primary-color);
         }
 
         .analysis-stat-label {
             font-size: 0.8rem;
-            color: #666;
+            color: var(--gray-color);
         }
 
+        /* Menu mobile */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Responsive design */
         @media (max-width: 768px) {
             .header {
                 padding: 20px;
@@ -679,6 +731,11 @@
                 padding: 20px;
             }
 
+            .evaluations-table {
+                display: block;
+                overflow-x: auto;
+            }
+
             .evaluations-table th, .evaluations-table td {
                 padding: 10px;
                 font-size: 0.9rem;
@@ -690,6 +747,7 @@
 
             .btn {
                 width: 100%;
+                justify-content: center;
             }
 
             .filters {
@@ -715,16 +773,50 @@
             .analysis-results {
                 grid-template-columns: 1fr;
             }
+
+            .mobile-menu-btn {
+                display: block;
+                position: absolute;
+                top: 20px;
+                right: 20px;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .meta-info {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
-    <button class="btn-retour" onclick="history.back()">← Retour</button>
 <body>
-    
-
     <!-- Section d'authentification -->
     <div id="auth-container" class="auth-container">
-        
         <div class="auth-box">
             <h2 class="auth-title" id="auth-title">Connexion</h2>
             <form id="login-form" class="auth-form">
@@ -766,6 +858,9 @@
     <!-- Application principale (cachée par défaut) -->
     <div id="app-container" class="container hidden">
         <div class="header">
+            <button class="mobile-menu-btn" id="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
             <h1>Gestion des Évaluations</h1>
             <p>Importation et visualisation des données d'évaluation</p>
         </div>
@@ -774,19 +869,19 @@
             <!-- Contrôles -->
             <div class="controls">
                 <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">
-                    📥 Importer des fichiers JSON
+                    <i class="fas fa-file-import"></i> Importer des fichiers JSON
                 </button>
                 <button class="btn btn-success" onclick="saveToDatabase()">
-                    💾 Enregistrer dans la base
+                    <i class="fas fa-save"></i> Enregistrer dans la base
                 </button>
                 <button class="btn btn-warning" onclick="showDeleteConfirmation()">
-                    🗑 Supprimer les données
+                    <i class="fas fa-trash-alt"></i> Supprimer les données
                 </button>
-                <button class="btn" onclick="loadFromDatabase()">
-                    🔄 Charger depuis la base
+                <button class="btn btn-secondary" onclick="loadFromDatabase()">
+                    <i class="fas fa-sync-alt"></i> Charger depuis la base
                 </button>
-                <button class="btn" onclick="logout()" style="margin-left: auto;">
-                    👋 Déconnexion
+                <button class="btn btn-secondary" onclick="logout()" style="margin-left: auto;">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
                 </button>
             </div>
 
@@ -822,7 +917,7 @@
 
             <!-- Section des élèves en difficulté -->
             <div id="students-difficulty-section" class="students-difficulty" style="display: none;">
-                <h3>Élèves en difficulté</h3>
+                <h3><i class="fas fa-exclamation-triangle"></i> Élèves en difficulté</h3>
                 <div id="students-difficulty-cards" class="student-cards">
                     <!-- Les cartes des élèves en difficulté seront insérées ici -->
                 </div>
@@ -885,7 +980,8 @@
                 </tbody>
             </table>
 
-            <div id="no-data" style="text-align: center; padding: 40px; color: #666; display: none;">
+            <div id="no-data" style="text-align: center; padding: 40px; color: var(--gray-color); display: none;">
+                <i class="fas fa-info-circle" style="font-size: 3rem; margin-bottom: 15px;"></i>
                 <p>Aucune donnée à afficher. Importez un fichier JSON pour commencer.</p>
             </div>
         </div>
@@ -894,10 +990,10 @@
     <!-- Boîte de dialogue de confirmation -->
     <div id="confirmation-dialog" class="confirmation-dialog">
         <div class="confirmation-content">
-            <h3>Confirmation de suppression</h3>
+            <h3><i class="fas fa-exclamation-triangle"></i> Confirmation de suppression</h3>
             <p>Êtes-vous sûr de vouloir supprimer toutes les données de la base de données ? Cette action est irréversible.</p>
             <div class="confirmation-buttons">
-                <button class="btn" onclick="hideDeleteConfirmation()">Annuler</button>
+                <button class="btn btn-secondary" onclick="hideDeleteConfirmation()">Annuler</button>
                 <button class="btn btn-danger" onclick="deleteDatabase()">Confirmer la suppression</button>
             </div>
         </div>
