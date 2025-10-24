@@ -4,52 +4,88 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cahier de Texte Numérique</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      line-height: 1.6;
-      margin: 0;
-      padding: 20px;
-      background-color: #f5f5f5;
-      color: #333;
+    /* Variables CSS pour une meilleure maintenabilité */
+    :root {
+      --primary-color: #3498db;
+      --secondary-color: #2980b9;
+      --success-color: #2ecc71;
+      --warning-color: #f39c12;
+      --danger-color: #e74c3c;
+      --info-color: #9b59b6;
+      --dark-color: #2c3e50;
+      --light-color: #f5f5f5;
+      --gray-color: #7f8c8d;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
     }
+
+    /* Reset et styles de base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      line-height: 1.6;
+      background-color: var(--light-color);
+      color: var(--dark-color);
+      padding: 20px;
+    }
+
+    /* Container principal */
     .container {
       max-width: 1000px;
       margin: 0 auto;
       background: white;
       padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
     }
+
+    /* Écran de connexion */
     .login-container {
       max-width: 400px;
       margin: 50px auto;
       padding: 30px;
       background: white;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
     }
+
+    /* En-têtes */
     h1, h2 {
-      color: #2c3e50;
+      color: var(--dark-color);
     }
+
     h1 {
       text-align: center;
       margin-bottom: 30px;
-      border-bottom: 2px solid #3498db;
+      border-bottom: 2px solid var(--primary-color);
       padding-bottom: 10px;
     }
+
+    /* Sections */
     .section {
       margin-bottom: 30px;
       padding: 20px;
       background: #f9f9f9;
       border-radius: 5px;
-      border-left: 4px solid #3498db;
+      border-left: 4px solid var(--primary-color);
     }
+
+    /* Formulaires */
     label {
       display: block;
       margin-bottom: 5px;
       font-weight: bold;
+      color: var(--dark-color);
     }
+
     input[type="text"], input[type="password"], input[type="date"], textarea, select {
       width: 100%;
       padding: 10px;
@@ -57,13 +93,23 @@
       border: 1px solid #ddd;
       border-radius: 4px;
       box-sizing: border-box;
+      transition: var(--transition);
     }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    }
+
     textarea {
       min-height: 100px;
       resize: vertical;
     }
-    button {
-      background-color: #3498db;
+
+    /* Boutons */
+    .btn {
+      background-color: var(--primary-color);
       color: white;
       border: none;
       padding: 10px 15px;
@@ -72,54 +118,116 @@
       font-size: 16px;
       margin-right: 10px;
       margin-bottom: 10px;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
-    button:hover {
-      background-color: #2980b9;
+
+    .btn:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-2px);
     }
+
+    .btn-success {
+      background-color: var(--success-color);
+    }
+
+    .btn-success:hover {
+      background-color: #27ae60;
+    }
+
+    .btn-warning {
+      background-color: var(--warning-color);
+    }
+
+    .btn-warning:hover {
+      background-color: #e67e22;
+    }
+
+    .btn-danger {
+      background-color: var(--danger-color);
+    }
+
+    .btn-danger:hover {
+      background-color: #c0392b;
+    }
+
+    .btn-info {
+      background-color: var(--info-color);
+    }
+
+    .btn-info:hover {
+      background-color: #8e44ad;
+    }
+
+    .btn-sm {
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+
+    /* Tableaux */
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
     }
+
     th, td {
       border: 1px solid #ddd;
       padding: 8px;
       text-align: left;
     }
+
     th {
-      background-color: #3498db;
+      background-color: var(--primary-color);
       color: white;
     }
+
     tr:nth-child(even) {
       background-color: #f2f2f2;
     }
+
+    /* Onglets */
     .tabs {
       display: flex;
       margin-bottom: 20px;
+      flex-wrap: wrap;
     }
+
     .tab {
       padding: 10px 20px;
       background: #ddd;
       cursor: pointer;
       border-radius: 5px 5px 0 0;
       margin-right: 5px;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
+
     .tab.active {
-      background: #3498db;
+      background: var(--primary-color);
       color: white;
     }
+
     .tab-content {
       display: none;
     }
+
     .tab-content.active {
       display: block;
     }
+
+    /* Liste des étudiants */
     .student-list {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       gap: 10px;
       margin-top: 15px;
     }
+
     .student-item {
       display: flex;
       flex-direction: column;
@@ -127,31 +235,42 @@
       padding: 8px;
       border-radius: 4px;
     }
+
     .student-item .status-options {
       display: flex;
       justify-content: space-between;
       margin-bottom: 5px;
     }
+
     .student-item .student-info {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
+
     .student-item input {
       margin-right: 5px;
     }
+
+    /* Recherche */
     .search-box {
       margin-bottom: 15px;
     }
+
+    /* Statuts */
     .status-present {
-      color: green;
+      color: var(--success-color);
     }
+
     .status-absent {
-      color: red;
+      color: var(--danger-color);
     }
+
     .status-late {
-      color: orange;
+      color: var(--warning-color);
     }
+
+    /* Bouton WhatsApp */
     .whatsapp-btn {
       background-color: #25D366;
       color: white;
@@ -164,48 +283,59 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      transition: var(--transition);
     }
+
     .whatsapp-btn:hover {
       background-color: #128C7E;
+      transform: translateY(-2px);
     }
-    .whatsapp-icon {
-      width: 20px;
-      height: 20px;
-    }
+
+    /* Bouton de déconnexion */
     .logout-btn {
-      background-color: #e74c3c;
+      background-color: var(--danger-color);
       float: right;
     }
+
     .logout-btn:hover {
       background-color: #c0392b;
     }
+
+    /* Classes utilitaires */
     .hidden {
       display: none;
     }
+
     .error-message {
-      color: #e74c3c;
+      color: var(--danger-color);
       margin-bottom: 15px;
       text-align: center;
     }
+
     .gender-icon {
       font-size: 14px;
       margin-left: 5px;
     }
+
+    /* Résumé de présence */
     .attendance-summary {
       margin-top: 20px;
       padding: 15px;
       background-color: #f8f9fa;
       border-radius: 5px;
-      border-left: 4px solid #2c3e50;
+      border-left: 4px solid var(--dark-color);
     }
+
     .summary-item {
       margin: 5px 0;
     }
-    /* Styles pour la saisie intelligente */
+
+    /* Saisie intelligente */
     .autocomplete-container {
       position: relative;
       width: 100%;
     }
+
     .autocomplete-items {
       position: absolute;
       border: 1px solid #d4d4d4;
@@ -218,19 +348,23 @@
       max-height: 200px;
       overflow-y: auto;
     }
+
     .autocomplete-items div {
       padding: 10px;
       cursor: pointer;
       background-color: #fff;
       border-bottom: 1px solid #d4d4d4;
     }
+
     .autocomplete-items div:hover {
       background-color: #e9e9e9;
     }
+
     .autocomplete-active {
-      background-color: #3498db !important;
+      background-color: var(--primary-color) !important;
       color: #ffffff;
     }
+
     .suggestion-chip {
       display: inline-block;
       background-color: #e0e0e0;
@@ -239,20 +373,25 @@
       border-radius: 16px;
       font-size: 0.9em;
       cursor: pointer;
+      transition: var(--transition);
     }
+
     .suggestion-chip:hover {
       background-color: #d0d0d0;
     }
+
     .suggestions-container {
       margin-top: 5px;
       margin-bottom: 15px;
     }
-    /* Styles pour l'éditeur de texte enrichi */
+
+    /* Éditeur de texte enrichi */
     .rich-text-editor {
       border: 1px solid #ddd;
       border-radius: 4px;
       margin-bottom: 15px;
     }
+
     .toolbar {
       background-color: #f5f5f5;
       border-bottom: 1px solid #ddd;
@@ -261,6 +400,7 @@
       flex-wrap: wrap;
       gap: 5px;
     }
+
     .toolbar button, .toolbar select {
       background-color: white;
       border: 1px solid #ddd;
@@ -268,29 +408,37 @@
       padding: 5px 8px;
       cursor: pointer;
       font-size: 14px;
+      transition: var(--transition);
     }
+
     .toolbar button:hover {
       background-color: #f0f0f0;
     }
+
     .toolbar select {
       height: 30px;
     }
+
     .editor-content {
       min-height: 100px;
       padding: 10px;
       resize: vertical;
       overflow-y: auto;
     }
+
     .editor-content:focus {
       outline: none;
+      border-color: var(--primary-color);
     }
+
     .color-picker {
       width: 30px;
       height: 30px;
       padding: 0;
       border: 1px solid #ddd;
     }
-    /* Styles pour la visualisation */
+
+    /* Mode visualisation */
     .view-mode {
       background-color: #f8f9fa;
       padding: 15px;
@@ -298,59 +446,75 @@
       border: 1px solid #ddd;
       margin-bottom: 15px;
     }
+
     .view-mode h3 {
       margin-top: 0;
-      color: #2c3e50;
+      color: var(--dark-color);
       border-bottom: 1px solid #ddd;
       padding-bottom: 10px;
     }
+
     .view-mode .content {
       margin: 10px 0;
     }
+
+    /* Import/Export */
     .import-btn {
-      background-color: #2ecc71;
+      background-color: var(--success-color);
     }
+
     .import-btn:hover {
       background-color: #27ae60;
     }
+
     .view-btn {
-      background-color: #9b59b6;
+      background-color: var(--info-color);
     }
+
     .view-btn:hover {
       background-color: #8e44ad;
     }
+
     .export-btn {
-      background-color: #f39c12;
+      background-color: var(--warning-color);
     }
+
     .export-btn:hover {
       background-color: #e67e22;
     }
+
     .file-input {
       display: none;
     }
+
     .file-input-label {
       display: inline-block;
       padding: 10px 15px;
-      background-color: #2ecc71;
+      background-color: var(--success-color);
       color: white;
       border-radius: 4px;
       cursor: pointer;
       margin-right: 10px;
+      transition: var(--transition);
     }
+
     .file-input-label:hover {
       background-color: #27ae60;
     }
+
     .import-container {
       margin-bottom: 20px;
       padding: 15px;
       background-color: #f8f9fa;
       border-radius: 5px;
-      border-left: 4px solid #2ecc71;
+      border-left: 4px solid var(--success-color);
     }
-    /* Styles pour les champs de saisie enrichis */
+
+    /* Champs de saisie enrichis */
     .rich-input {
       position: relative;
     }
+
     .rich-input-toolbar {
       background-color: #f5f5f5;
       border: 1px solid #ddd;
@@ -361,6 +525,7 @@
       flex-wrap: wrap;
       gap: 5px;
     }
+
     .rich-input-content {
       min-height: 60px;
       padding: 10px;
@@ -369,10 +534,13 @@
       resize: vertical;
       overflow-y: auto;
     }
+
     .rich-input-content:focus {
       outline: none;
-      border-color: #3498db;
+      border-color: var(--primary-color);
     }
+
+    /* Bouton retour */
     .btn-retour {
       padding: 8px 16px;
       background-color: #f0f0f0;
@@ -381,11 +549,17 @@
       cursor: pointer;
       font-size: 14px;
       margin-bottom: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: var(--transition);
     }
+
     .btn-retour:hover {
       background-color: #e0e0e0;
     }
-    /* Styles pour la modal d'aperçu */
+
+    /* Modal */
     .modal {
       display: none;
       position: fixed;
@@ -397,6 +571,7 @@
       overflow: auto;
       background-color: rgba(0,0,0,0.4);
     }
+
     .modal-content {
       background-color: #fefefe;
       margin: 5% auto;
@@ -404,11 +579,12 @@
       border: 1px solid #888;
       width: 80%;
       max-width: 800px;
-      border-radius: 8px;
+      border-radius: var(--border-radius);
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
       max-height: 80vh;
       overflow-y: auto;
     }
+
     .close {
       color: #aaa;
       float: right;
@@ -416,20 +592,80 @@
       font-weight: bold;
       cursor: pointer;
     }
+
     .close:hover,
     .close:focus {
       color: black;
       text-decoration: none;
     }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      .container {
+        padding: 15px;
+      }
+
+      .login-container {
+        margin: 20px auto;
+        padding: 20px;
+      }
+
+      .tabs {
+        flex-direction: column;
+      }
+
+      .tab {
+        margin-bottom: 5px;
+        border-radius: 5px;
+      }
+
+      .student-list {
+        grid-template-columns: 1fr;
+      }
+
+      .btn {
+        width: 100%;
+        margin-right: 0;
+        justify-content: center;
+      }
+
+      .modal-content {
+        width: 95%;
+        margin: 10% auto;
+      }
+
+      .toolbar {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .section {
+        padding: 15px;
+      }
+
+      .btn {
+        padding: 8px 12px;
+        font-size: 14px;
+      }
+    }
   </style>
 </head>
 <body>
- 
-
   <!-- Écran de connexion -->
   <div id="loginScreen" class="login-container">
-     <button class="btn-retour" onclick="history.back()">← Retour</button>
-    <h1>Connexion Enseignants</h1>
+    <button class="btn-retour" onclick="history.back()">
+      <i class="fas fa-arrow-left"></i> Retour
+    </button>
+    <h1><i class="fas fa-chalkboard-teacher"></i> Connexion Enseignants</h1>
     <div id="loginError" class="error-message hidden"></div>
     <label for="username">Nom d'utilisateur:</label>
     <input type="text" id="username" placeholder="Votre nom d'utilisateur">
@@ -437,33 +673,49 @@
     <label for="password">Mot de passe:</label>
     <input type="password" id="password" placeholder="Votre mot de passe">
 
-    <button onclick="login()">Se connecter</button>
+    <button class="btn" onclick="login()">
+      <i class="fas fa-sign-in-alt"></i> Se connecter
+    </button>
   </div>
 
   <!-- Application principale (cachée jusqu'à l'authentification) -->
   <div id="appContainer" class="container hidden">
-    <button class="logout-btn" onclick="logout()">Déconnexion</button>
-    <h1>Cahier de Texte Numérique</h1>
+    <button class="btn logout-btn" onclick="logout()">
+      <i class="fas fa-sign-out-alt"></i> Déconnexion
+    </button>
+    <h1><i class="fas fa-book"></i> Cahier de Texte Numérique</h1>
 
     <div class="tabs">
-      <div class="tab active" onclick="openTab('lesson')">Nouvelle Leçon</div>
-      <div class="tab" onclick="openTab('attendance')">Présence</div>
-      <div class="tab" onclick="openTab('view')">Voir les Entrées</div>
+      <div class="tab active" onclick="openTab('lesson')">
+        <i class="fas fa-plus-circle"></i> Nouvelle Leçon
+      </div>
+      <div class="tab" onclick="openTab('attendance')">
+        <i class="fas fa-clipboard-check"></i> Présence
+      </div>
+      <div class="tab" onclick="openTab('view')">
+        <i class="fas fa-eye"></i> Voir les Entrées
+      </div>
     </div>
 
     <!-- Nouvelle Leçon Tab -->
     <div id="lesson" class="tab-content active">
       <div class="import-container">
-        <h2>Importer/Exporter des données</h2>
-        <label for="jsonFile" class="file-input-label">Choisir un fichier JSON</label>
+        <h2><i class="fas fa-file-import"></i> Importer/Exporter des données</h2>
+        <label for="jsonFile" class="file-input-label">
+          <i class="fas fa-folder-open"></i> Choisir un fichier JSON
+        </label>
         <input type="file" id="jsonFile" accept=".json" class="file-input" onchange="importJSON(this.files)">
-        <button class="import-btn" onclick="document.getElementById('jsonFile').click()">Importer JSON</button>
-        <button class="export-btn" onclick="exportJSON()">Exporter JSON</button>
+        <button class="btn import-btn" onclick="document.getElementById('jsonFile').click()">
+          <i class="fas fa-file-import"></i> Importer JSON
+        </button>
+        <button class="btn export-btn" onclick="exportJSON()">
+          <i class="fas fa-file-export"></i> Exporter JSON
+        </button>
         <p><small>Importez ou exportez un fichier JSON pour sauvegarder ou charger vos données.</small></p>
       </div>
 
       <div class="section">
-        <h2>Informations de la Leçon</h2>
+        <h2><i class="fas fa-info-circle"></i> Informations de la Leçon</h2>
         <label for="lessonDate">Date:</label>
         <input type="date" id="lessonDate" required>
 
@@ -500,7 +752,7 @@
       </div>
 
       <div class="section">
-        <h2>Contenu du Cours</h2>
+        <h2><i class="fas fa-book-open"></i> Contenu du Cours</h2>
         <label>Grandes lignes du cours:</label>
         <div class="rich-text-editor">
           <div class="toolbar">
@@ -521,14 +773,14 @@
               <option value="6">Très grand</option>
               <option value="7">Maximum</option>
             </select>
-            <button onclick="formatText('bold', null, 'lessonContent')"><strong>G</strong></button>
-            <button onclick="formatText('italic', null, 'lessonContent')"><em>I</em></button>
-            <button onclick="formatText('underline', null, 'lessonContent')"><u>S</u></button>
-            <button onclick="formatText('insertOrderedList', null, 'lessonContent')">①</button>
-            <button onclick="formatText('insertUnorderedList', null, 'lessonContent')">•</button>
+            <button onclick="formatText('bold', null, 'lessonContent')"><i class="fas fa-bold"></i></button>
+            <button onclick="formatText('italic', null, 'lessonContent')"><i class="fas fa-italic"></i></button>
+            <button onclick="formatText('underline', null, 'lessonContent')"><i class="fas fa-underline"></i></button>
+            <button onclick="formatText('insertOrderedList', null, 'lessonContent')"><i class="fas fa-list-ol"></i></button>
+            <button onclick="formatText('insertUnorderedList', null, 'lessonContent')"><i class="fas fa-list-ul"></i></button>
             <input type="color" id="textColor" class="color-picker" onchange="applyColor('forecolor', this.value, 'lessonContent')" value="#000000">
             <input type="color" id="bgColor" class="color-picker" onchange="applyColor('backcolor', this.value, 'lessonContent')" value="#ffffff">
-            <button onclick="formatText('removeFormat', null, 'lessonContent')">✕</button>
+            <button onclick="formatText('removeFormat', null, 'lessonContent')"><i class="fas fa-eraser"></i></button>
           </div>
           <div id="lessonContent" class="editor-content" contenteditable="true" placeholder="Décrivez les points principaux abordés pendant le cours..."></div>
         </div>
@@ -536,7 +788,7 @@
       </div>
 
       <div class="section">
-        <h2>Devoirs à la Maison</h2>
+        <h2><i class="fas fa-home"></i> Devoirs à la Maison</h2>
         <label>Devoirs assignés:</label>
         <div class="rich-text-editor">
           <div class="toolbar">
@@ -557,14 +809,14 @@
               <option value="6">Très grand</option>
               <option value="7">Maximum</option>
             </select>
-            <button onclick="formatText('bold', null, 'homework')"><strong>G</strong></button>
-            <button onclick="formatText('italic', null, 'homework')"><em>I</em></button>
-            <button onclick="formatText('underline', null, 'homework')"><u>S</u></button>
-            <button onclick="formatText('insertOrderedList', null, 'homework')">①</button>
-            <button onclick="formatText('insertUnorderedList', null, 'homework')">•</button>
+            <button onclick="formatText('bold', null, 'homework')"><i class="fas fa-bold"></i></button>
+            <button onclick="formatText('italic', null, 'homework')"><i class="fas fa-italic"></i></button>
+            <button onclick="formatText('underline', null, 'homework')"><i class="fas fa-underline"></i></button>
+            <button onclick="formatText('insertOrderedList', null, 'homework')"><i class="fas fa-list-ol"></i></button>
+            <button onclick="formatText('insertUnorderedList', null, 'homework')"><i class="fas fa-list-ul"></i></button>
             <input type="color" class="color-picker" onchange="applyColor('forecolor', this.value, 'homework')" value="#000000">
             <input type="color" class="color-picker" onchange="applyColor('backcolor', this.value, 'homework')" value="#ffffff">
-            <button onclick="formatText('removeFormat', null, 'homework')">✕</button>
+            <button onclick="formatText('removeFormat', null, 'homework')"><i class="fas fa-eraser"></i></button>
           </div>
           <div id="homework" class="editor-content" contenteditable="true" placeholder="Décrivez les devoirs à faire pour la prochaine séance..."></div>
         </div>
@@ -574,15 +826,21 @@
         <input type="date" id="dueDate">
       </div>
 
-      <button onclick="saveLesson()">Enregistrer la Leçon</button>
-      <button onclick="clearForm()">Effacer le Formulaire</button>
-      <button class="view-btn" onclick="previewLesson()">Visualiser la Leçon</button>
+      <button class="btn btn-success" onclick="saveLesson()">
+        <i class="fas fa-save"></i> Enregistrer la Leçon
+      </button>
+      <button class="btn btn-danger" onclick="clearForm()">
+        <i class="fas fa-trash"></i> Effacer le Formulaire
+      </button>
+      <button class="btn btn-info view-btn" onclick="previewLesson()">
+        <i class="fas fa-eye"></i> Visualiser la Leçon
+      </button>
     </div>
 
     <!-- Contrôle de Présence Tab -->
     <div id="attendance" class="tab-content">
       <div class="section">
-        <h2>Contrôle de Présence</h2>
+        <h2><i class="fas fa-clipboard-check"></i> Contrôle de Présence</h2>
 
         <label for="attendanceDate">Date:</label>
         <input type="date" id="attendanceDate" required>
@@ -617,17 +875,21 @@
           <input type="text" id="studentSearch" placeholder="Nom de l'élève..." oninput="filterStudents()">
         </div>
 
-        <h3>Liste des Élèves</h3>
+        <h3><i class="fas fa-users"></i> Liste des Élèves</h3>
         <div id="studentsContainer" class="student-list">
           <!-- Les élèves seront chargés ici dynamiquement -->
         </div>
 
-        <button onclick="saveAttendance()">Enregistrer la Présence</button>
-        <button onclick="clearAttendance()">Effacer</button>
+        <button class="btn btn-success" onclick="saveAttendance()">
+          <i class="fas fa-save"></i> Enregistrer la Présence
+        </button>
+        <button class="btn btn-danger" onclick="clearAttendance()">
+          <i class="fas fa-trash"></i> Effacer
+        </button>
       </div>
 
       <div class="section">
-        <h2>Historique de Présence</h2>
+        <h2><i class="fas fa-history"></i> Historique de Présence</h2>
         <div id="attendanceHistory">
           <!-- L'historique sera chargé ici dynamiquement -->
         </div>
@@ -637,7 +899,7 @@
     <!-- Voir les Entrées Tab -->
     <div id="view" class="tab-content">
       <div class="section">
-        <h2>Filtrer les Entrées</h2>
+        <h2><i class="fas fa-filter"></i> Filtrer les Entrées</h2>
 
         <label for="filterClass">Classe:</label>
         <select id="filterClass" onchange="filterEntries()">
@@ -672,10 +934,9 @@
       </div>
 
       <div class="section">
-        <h2>Leçons Enregistrées</h2>
+        <h2><i class="fas fa-book"></i> Leçons Enregistrées</h2>
         <button class="whatsapp-btn" onclick="sendViaWhatsApp()">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="whatsapp-icon">
-          Envoyer via WhatsApp
+          <i class="fab fa-whatsapp"></i> Envoyer via WhatsApp
         </button>
         <div id="lessonsList">
           <!-- Les leçons seront chargées ici dynamiquement -->
@@ -1206,8 +1467,8 @@
             <p class="summary-item"><strong>Absents:</strong> ${absentCount} (Garçons: ${absentMale}, Filles: ${absentFemale})</p>
             <p class="summary-item"><strong>Retards:</strong> ${lateCount} (Garçons: ${lateMale}, Filles: ${lateFemale})</p>
           </div>
-          <button onclick="viewAttendanceDetails(${record.id})">Voir détails</button>
-          <button onclick="deleteAttendanceRecord(${record.id})">Supprimer</button>
+          <button class="btn btn-sm" onclick="viewAttendanceDetails(${record.id})">Voir détails</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteAttendanceRecord(${record.id})">Supprimer</button>
         `;
 
         historyContainer.appendChild(recordElement);
@@ -1311,8 +1572,8 @@
           <div class="lesson-content">${lesson.content}</div>
           ${lesson.homework ? `<p><strong>Devoirs:</strong></p><div class="lesson-content">${lesson.homework}</div>` : ''}
           ${lesson.dueDate ? `<p><strong>À rendre pour le:</strong> ${formatDate(lesson.dueDate)}</p>` : ''}
-          <button onclick="editLesson(${lesson.id})">Modifier</button>
-          <button onclick="deleteLesson(${lesson.id})">Supprimer</button>
+          <button class="btn btn-sm" onclick="editLesson(${lesson.id})">Modifier</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteLesson(${lesson.id})">Supprimer</button>
         `;
 
         lessonsList.appendChild(lessonElement);
@@ -1468,7 +1729,7 @@
       modalContent.innerHTML = `
         <h2>${title}</h2>
         <div>${content}</div>
-        <button style="margin-top: 15px; padding: 5px 10px;" onclick="closeModal()">Fermer</button>
+        <button class="btn" style="margin-top: 15px;" onclick="closeModal()">Fermer</button>
       `;
       
       modal.style.display = 'block';
