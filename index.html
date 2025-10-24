@@ -3,8 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lycée Niamtougou - Portail Scolaire</title>
+    <title>Lycée Niamtougou - Portail Scolaire Numérique</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #43e97b;
+            --danger: #ff6b6b;
+            --warning: #f6d365;
+            --info: #4facfe;
+            --light: #ffffff;
+            --dark: #2d3748;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-success: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --gradient-danger: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+            --gradient-warning: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            --gradient-info: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.2);
+            --radius: 16px;
+            --transition: all 0.3s ease;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,49 +34,85 @@
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--gradient-primary);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             color: white;
+            line-height: 1.5;
+            font-size: 16px;
         }
 
         .header {
             background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             backdrop-filter: blur(10px);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: var(--shadow);
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header-content {
+            max-width: 100%;
+            margin: 0 auto;
             position: relative;
         }
 
+        .school-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
         .school-logo {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             background: linear-gradient(135deg, #fff, #f0f8ff);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            flex-shrink: 0;
         }
 
         .school-logo-text {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: bold;
-            color: #4facfe;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .school-info {
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
         }
 
         .school-name {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 700;
             margin-bottom: 5px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #fff, #e0f7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
         }
 
         .school-subtitle {
-            font-size: 1rem;
+            font-size: 0.9rem;
             opacity: 0.9;
+            margin-bottom: 3px;
+            font-weight: 500;
         }
 
         .main-content {
@@ -63,98 +120,140 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 30px;
+            justify-content: flex-start;
+            padding: 20px 15px;
+            width: 100%;
         }
 
-        .welcome-message {
+        .welcome-section {
             text-align: center;
-            margin-bottom: 40px;
-            max-width: 800px;
+            margin-bottom: 30px;
+            max-width: 100%;
+            width: 100%;
+        }
+
+        .welcome-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 0.9rem;
         }
 
         .welcome-message h1 {
-            font-size: 2.5rem;
+            font-size: 1.8rem;
             margin-bottom: 15px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            font-weight: 700;
+            line-height: 1.3;
         }
 
         .welcome-message p {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            opacity: 0.9;
+            font-size: 1rem;
+            line-height: 1.5;
+            opacity: 0.95;
+            font-weight: 300;
+            max-width: 100%;
         }
 
-        .portal-cards {
+        .portal-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: 1fr;
+            gap: 20px;
             width: 100%;
-            max-width: 1000px;
+            max-width: 100%;
         }
 
         .portal-card {
             background: rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            padding: 30px;
+            border-radius: var(--radius);
+            padding: 25px 20px;
             text-align: center;
-            backdrop-filter: blur(5px);
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(8px);
+            transition: var(--transition);
+            box-shadow: var(--shadow);
             border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
         }
 
         .portal-card:hover {
-            transform: translateY(-10px);
-            background: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow-hover);
         }
 
         .portal-icon {
-            font-size: 3.5rem;
+            font-size: 2.5rem;
             margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            transition: var(--transition);
+        }
+
+        .portal-card:hover .portal-icon {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.3);
         }
 
         .portal-card h2 {
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             margin-bottom: 15px;
+            font-weight: 600;
+            line-height: 1.3;
         }
 
         .portal-card p {
-            font-size: 1rem;
-            margin-bottom: 25px;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
             opacity: 0.9;
+            line-height: 1.4;
         }
 
         .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            background: rgba(255, 255, 255, 0.2);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.25);
             color: white;
-            border-radius: 50px;
+            border-radius: 25px;
             text-decoration: none;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             border: 2px solid rgba(255, 255, 255, 0.3);
             cursor: pointer;
-            margin: 5px;
+            margin: 3px;
+            font-size: 0.9rem;
+            width: 100%;
+            max-width: 200px;
         }
 
         .btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.35);
             transform: translateY(-2px);
         }
 
         .btn-parents {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: var(--gradient-info);
         }
 
         .btn-teachers {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            background: var(--gradient-success);
         }
 
         .btn-admin {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+            background: var(--gradient-danger);
         }
         
         .btn-payment {
@@ -166,14 +265,14 @@
         }
 
         .btn-refresh {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-            padding: 8px 15px;
+            background: var(--gradient-warning);
+            padding: 10px 15px;
             font-size: 0.9rem;
+            width: auto;
+            margin: 10px auto 0;
+            display: block;
         }
-        
+
         .payment-buttons {
             display: flex;
             flex-direction: column;
@@ -181,18 +280,33 @@
             margin-top: 15px;
         }
 
+        .payment-buttons .btn {
+            max-width: 100%;
+        }
+
         .footer {
             text-align: center;
-            padding: 20px;
+            padding: 20px 15px;
             background: rgba(0, 0, 0, 0.2);
             font-size: 0.9rem;
+            backdrop-filter: blur(5px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .footer p {
+            margin-bottom: 8px;
         }
 
         .back-to-top {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: var(--gradient-info);
             color: white;
             width: 50px;
             height: 50px;
@@ -200,22 +314,190 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            z-index: 100;
-            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            transition: var(--transition);
             border: none;
             cursor: pointer;
             font-size: 1.2rem;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
         }
 
         .back-to-top:hover {
             transform: scale(1.1);
-            background: linear-gradient(135deg, #3a8dcf 0%, #00c9e0 100%);
         }
 
-        @media (max-width: 768px) {
-            .portal-cards {
-                grid-template-columns: 1fr;
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px 10px;
+            border-radius: 12px;
+            backdrop-filter: blur(5px);
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, #fff, #e0f7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* ========== STYLES RESPONSIVE ========== */
+
+        /* Petits écrans mobiles (jusqu'à 360px) */
+        @media (max-width: 360px) {
+            .header {
+                padding: 12px 10px;
+            }
+            
+            .school-logo {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .school-logo-text {
+                font-size: 1.3rem;
+            }
+            
+            .school-name {
+                font-size: 1.4rem;
+            }
+            
+            .school-subtitle {
+                font-size: 0.8rem;
+            }
+            
+            .welcome-message h1 {
+                font-size: 1.5rem;
+            }
+            
+            .welcome-message p {
+                font-size: 0.9rem;
+            }
+            
+            .portal-card {
+                padding: 20px 15px;
+            }
+            
+            .portal-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 2rem;
+            }
+            
+            .portal-card h2 {
+                font-size: 1.2rem;
+            }
+            
+            .portal-card p {
+                font-size: 0.85rem;
+            }
+            
+            .btn {
+                padding: 10px 15px;
+                font-size: 0.85rem;
+            }
+            
+            .stats-bar {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+            
+            .stat-item {
+                padding: 12px 8px;
+            }
+            
+            .stat-number {
+                font-size: 1.3rem;
+            }
+            
+            .stat-label {
+                font-size: 0.75rem;
+            }
+            
+            .back-to-top {
+                width: 45px;
+                height: 45px;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+
+        /* Mobiles standards (361px à 480px) */
+        @media (min-width: 361px) and (max-width: 480px) {
+            .school-name {
+                font-size: 1.5rem;
+            }
+            
+            .welcome-message h1 {
+                font-size: 1.6rem;
+            }
+            
+            .portal-grid {
+                gap: 15px;
+            }
+        }
+
+        /* Tablettes petites (481px à 600px) */
+        @media (min-width: 481px) and (max-width: 600px) {
+            .portal-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .portal-card {
+                padding: 20px;
+            }
+            
+            .school-name {
+                font-size: 1.7rem;
+            }
+            
+            .welcome-message h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Tablettes moyennes (601px à 768px) */
+        @media (min-width: 601px) and (max-width: 768px) {
+            .header {
+                padding: 20px;
+            }
+            
+            .main-content {
+                padding: 25px 20px;
+            }
+            
+            .portal-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            .school-name {
+                font-size: 1.8rem;
             }
             
             .welcome-message h1 {
@@ -223,264 +505,526 @@
             }
             
             .welcome-message p {
-                font-size: 1rem;
+                font-size: 1.1rem;
             }
             
-            .btn-refresh {
-                position: static;
-                margin-top: 15px;
+            .stats-bar {
+                max-width: 500px;
             }
+            
+            .stat-number {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Tablettes grandes (769px à 1024px) */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .portal-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+            }
+            
+            .header {
+                padding: 25px;
+            }
+            
+            .main-content {
+                padding: 30px 25px;
+            }
+            
+            .school-name {
+                font-size: 2rem;
+            }
+        }
+
+        /* Améliorations pour le tactile */
+        @media (hover: none) and (pointer: coarse) {
+            .portal-card:hover {
+                transform: none;
+            }
+            
+            .btn:hover {
+                transform: none;
+            }
+            
+            .portal-card:active {
+                background: rgba(255, 255, 255, 0.25);
+                transform: scale(0.98);
+            }
+            
+            .btn:active {
+                background: rgba(255, 255, 255, 0.4);
+                transform: scale(0.95);
+            }
+        }
+
+        /* Mode paysage sur mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .header {
+                padding: 10px 15px;
+            }
+            
+            .main-content {
+                padding: 15px;
+            }
+            
+            .welcome-section {
+                margin-bottom: 20px;
+            }
+            
+            .portal-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .portal-card {
+                padding: 15px;
+            }
+            
+            .portal-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+                margin-bottom: 10px;
+            }
+            
+            .portal-card h2 {
+                font-size: 1.1rem;
+                margin-bottom: 8px;
+            }
+            
+            .portal-card p {
+                font-size: 0.8rem;
+                margin-bottom: 12px;
+            }
+            
+            .btn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Support pour les préférences de contraste élevé */
+        @media (prefers-contrast: high) {
+            .portal-card {
+                border: 2px solid white;
+            }
+            
+            .btn {
+                border: 2px solid white;
+            }
+        }
+
+        /* Support pour la réduction des animations */
+        @media (prefers-reduced-motion: reduce) {
+            .portal-card,
+            .btn,
+            .back-to-top,
+            .school-logo {
+                transition: none;
+            }
+            
+            .portal-card:hover {
+                transform: none;
+            }
+        }
+
+        /* Empêcher le zoom sur iOS */
+        @media screen and (max-width: 768px) {
+            input, select, textarea {
+                font-size: 16px !important;
+            }
+        }
+
+        /* Amélioration de la lisibilité sur petits écrans */
+        .portal-card h2,
+        .portal-card p,
+        .btn {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* Optimisation des espacements pour mobile */
+        .mobile-optimized {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Amélioration des cibles tactiles */
+        .btn,
+        .portal-card {
+            min-height: 44px;
         }
     </style>
 </head>
     
-<body>
+<body class="mobile-optimized">
     
     <header class="header">
-        <button class="btn btn-refresh" id="refreshBtn">
-            <span>🔄 Actualiser</span>
-            
-        </button>
-        <div class="school-logo">
-            <div class="school-logo-text">LN</div>
+        <div class="header-content">
+            <div class="school-brand">
+                <div class="school-logo">
+                    <div class="school-logo-text">LN</div>
+                </div>
+                <div class="school-info">
+                    <h1 class="school-name">Lycée Niamtougou</h1>
+                    <p class="school-subtitle">République Togolaise</p>
+                    <p class="school-subtitle">DRE-KARA-IESG-NIAMTOUGOU</p>
+                </div>
+            </div>
+            <button class="btn btn-refresh" id="refreshBtn">
+                <i class="fas fa-sync-alt"></i>
+                <span>Actualiser</span>
+            </button>
         </div>
-        <h1 class="school-name">Lycée Niamtougou</h1>
-        <p class="school-subtitle">République Togolaise</p>
-        <p class="school-subtitle">DRE-KARA-IESG-NIAMTOUGOU</p>
     </header>
 
     <main class="main-content">
-        <div class="welcome-message">
-            <h1>Bienvenue sur le Portail Scolaire</h1>
-            <p>
-                Le Lycée Niamtougou met à votre disposition cette plateforme numérique pour faciliter 
-                le suivi scolaire, la communication entre les différents acteurs et la gestion des 
-                évaluations. Veuillez sélectionner votre espace de connexion ci-dessous.
-            </p>
+        <div class="welcome-section">
+            <div class="welcome-badge">
+                <i class="fas fa-graduation-cap"></i>
+                Portail Scolaire Numérique
+            </div>
+            
+            <div class="welcome-message">
+                <h1>Bienvenue sur le Portail Scolaire</h1>
+                <p>
+                    Le Lycée Niamtougou met à votre disposition cette plateforme numérique innovante 
+                    pour faciliter le suivi scolaire et la communication entre tous les acteurs.
+                </p>
+            </div>
+
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-number">1,200+</div>
+                    <div class="stat-label">Élèves</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">65+</div>
+                    <div class="stat-label">Enseignants</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Disponible</div>
+                </div>
+            </div>
         </div>
 
-        <div class="portal-cards">
+        <div class="portal-grid">
+            <!-- Espace Parents et Communication -->
             <div class="portal-card">
-                <div class="portal-icon">👨‍👩‍👧‍👦</div>
+                <div class="portal-icon">
+                    <i class="fas fa-users"></i>
+                </div>
                 <h2>Espace Parents</h2>
-                <p>
-                    Accédez aux notes, évaluations et informations scolaires de votre enfant.
-                </p>
-                <a href="PARENTS.html" class="btn btn-parents">Accéder</a>
+                <p>Notes, évaluations et informations scolaires en temps réel</p>
+                <a href="PARENTS.html" class="btn btn-parents">
+                    <i class="fas fa-arrow-right"></i>
+                    Accéder
+                </a>
             </div>
             
             <div class="portal-card">
-                <div class="portal-icon">👨‍🏫</div>
-                <h2>Espace chat</h2>
-                <p>
-                    discussions et échanges.
-                </p>
-                <a href="chat122.html" class="btn btn-parents">Accéder</a>
+                <div class="portal-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h2>Espace Discussion</h2>
+                <p>Discussions et échanges entre la communauté éducative</p>
+                <a href="chat122.html" class="btn btn-parents">
+                    <i class="fas fa-arrow-right"></i>
+                    Accéder
+                </a>
             </div>
 
+            <!-- Espace Enseignants -->
             <div class="portal-card">
-                <div class="portal-icon">👨‍🏫</div>
+                <div class="portal-icon">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </div>
                 <h2>Espace Enseignants</h2>
-                <p>
-                    Saisissez les notes et évaluations des élèves.
-                </p>
-                <a href="enseignante.html" class="btn btn-teachers">Accéder</a>
+                <p>Saisie des notes et évaluations des élèves</p>
+                <a href="enseignante.html" class="btn btn-teachers">
+                    <i class="fas fa-arrow-right"></i>
+                    Accéder
+                </a>
             </div>
 
             <div class="portal-card">
-                <div class="portal-icon">👨‍🏫</div>
-                <h2>CAHIER DE SERVICE</h2>
-                <p>
-                    Générez automatiquement ou consultez votre emploi du temps numérique.
-                </p>
-                <a href="cahier de charge.html" class="btn btn-teachers">Accéder</a>
+                <div class="portal-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <h2>Cahier de Service</h2>
+                <p>Emploi du temps numérique personnalisé</p>
+                <a href="cahier de charge.html" class="btn btn-teachers">
+                    <i class="fas fa-arrow-right"></i>
+                    Accéder
+                </a>
             </div>
             
             <div class="portal-card">
-                <div class="portal-icon">👨‍🏫</div>
-                <h2>CAHIER DE TEXTE-PRÉSENCE</h2>
-                <p>
-                    Saisissez les Thèmes;leçons et contrôle de présences.
-                </p>
-                <a href="Cahier de texte.html" class="btn btn-teachers">Accéder</a>
+                <div class="portal-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h2>Cahier de Texte</h2>
+                <p>Thèmes, leçons et contrôle des présences</p>
+                <a href="Cahier de texte.html" class="btn btn-teachers">
+                    <i class="fas fa-arrow-right"></i>
+                    Accéder
+                </a>
             </div>
             
             <div class="portal-card">
-                <div class="portal-icon">👨‍🏫</div>
-                <h2>fiche de la leçon</h2>
-                <p>
-                    Saisissez vos leçons.
-                </p>
-                <a href="mes.html" class="btn btn-teachers">Accéder</a>
+                <div class="portal-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <h2>Fiche de Leçon</h2>
+                <p>Saisie et organisation des leçons</p>
+                <a href="mes.html" class="btn btn-teachers">
+                    <i class="fas fa-arrow-right"></i>
+                    Accéder
+                </a>
             </div>
             
             <div class="portal-card">
-                <div class="portal-icon">👨‍🏫</div>
-                <h2>fiche d'épreuve</h2>
-                <p>
-                    Saisissez vos épreuves.
-                </p>
-                <a href="saisie epreuve.html" class="btn btn-teachers">Accéder</a>
+                <div class="portal-icon">
+                    <i class="fas fa-edit"></i>
+                </div>
+                <h2>Fiche d'Épreuve</h2>
+                <p>Création et gestion des épreuves</p>
+                <a href="saisie epreuve.html" class="btn btn-teachers">
+                    <i class="fas fa-arrow-right"></i>
+                    Accéder
+                </a>
             </div>
             
             <div class="portal-card">
-                <div class="portal-icon">👨‍💼</div>
-                <h2>Espace Enseignant</h2>
-                <p>
-                    Gestion des notes et générateur json.
-                </p>
-                <a href="Analyse des résultats.html" class="btn btn-admin">Accéder</a>
+                <div class="portal-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <h2>Analyse Résultats</h2>
+                <p>Gestion des notes et rapports statistiques</p>
+                <a href="Analyse des résultats.html" class="btn btn-admin">
+                    <i class="fas fa-arrow-right"></i>
+                    Accéder
+                </a>
             </div>
 
+            <!-- Espace Administration -->
             <div class="portal-card">
-                <div class="portal-icon">👨‍💼</div>
-                <h2>Espace Administration</h2>
-                <p>
-                    Gestion des élèves par classe et par statut.
-                </p>
-                <a href="gestion.html" class="btn btn-admin">Accéder</a>
+                <div class="portal-icon">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <h2>Gestion Élèves</h2>
+                <p>Gestion par classe et statut administratif</p>
+                <a href="gestion.html" class="btn btn-admin">
+                    <i class="fas fa-arrow-right"></i>
+                    Accéder
+                </a>
             </div>
             
             <div class="portal-card">
-                <div class="portal-icon">👨‍💼</div>
-                <h2>Espace Administration</h2>
-                <p>
-                    Gestion du personnel.
-                </p>
-                <a href="gestion ens.html" class="btn btn-admin">Accéder</a>
+                <div class="portal-icon">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <h2>Gestion Personnel</h2>
+                <p>Administration du personnel enseignant</p>
+                <a href="gestion ens.html" class="btn btn-admin">
+                    <i class="fas fa-arrow-right"></i>
+                    Accéder
+                </a>
             </div>
             
             <div class="portal-card">
-                <div class="portal-icon">👨‍💼</div>
-                <h2>Espace Administration</h2>
-                <p>
-                    Tableau de bord complet avec statistiques 
-                    et identification des élèves en difficultés.
-                </p>
-                <a href="donnees.html" class="btn btn-admin">Accéder</a>
+                <div class="portal-icon">
+                    <i class="fas fa-tachometer-alt"></i>
+                </div>
+                <h2>Tableau de Bord</h2>
+                <p>Statistiques et élèves en difficulté</p>
+                <a href="donnees.html" class="btn btn-admin">
+                    <i class="fas fa-arrow-right"></i>
+                    Accéder
+                </a>
             </div>
         
             <div class="portal-card">
-                <div class="portal-icon">👨‍💼</div>
-                <h2>Espace surveillant</h2>
-                <p>
-                    Tableau de bord complet des retards,absences,cas de maladie.
-                </p>
-                <a href="urveillant.html" class="btn btn-admin">Accéder</a>
+                <div class="portal-icon">
+                    <i class="fas fa-clipboard-check"></i>
+                </div>
+                <h2>Espace Surveillant</h2>
+                <p>Retards, absences et cas de maladie</p>
+                <a href="urveillant.html" class="btn btn-admin">
+                    <i class="fas fa-arrow-right"></i>
+                    Accéder
+                </a>
             </div>
             
             <div class="portal-card">
-                <div class="portal-icon">👨‍💼</div>
-                <h2>Espace Activités pédagogiques</h2>
-                <p>
-                    Tableau de bord complet des programmations.  
-                </p>
-                <a href="ACTIVITE.html" class="btn btn-admin">Accéder</a>
+                <div class="portal-icon">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <h2>Activités Pédagogiques</h2>
+                <p>Programmation des activités de l'établissement</p>
+                <a href="ACTIVITE.html" class="btn btn-admin">
+                    <i class="fas fa-arrow-right"></i>
+                    Accéder
+                </a>
             </div>
             
             <div class="portal-card">
-                <div class="portal-icon">👨‍🏫</div>
-                <h2>Espace Enseignants</h2>
-                <p>
-                    Saisissez les informations administratives.
-                </p>
-                <a href="Renseignements.html" class="btn btn-teachers">Accéder</a>
+                <div class="portal-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <h2>Informations Admin</h2>
+                <p>Informations administratives enseignants</p>
+                <a href="Renseignements.html" class="btn btn-teachers">
+                    <i class="fas fa-arrow-right"></i>
+                    Accéder
+                </a>
             </div>
 
             <div class="portal-card">
-                <div class="portal-icon">👨‍🏫</div>
-                <h2>Espace Enseignants</h2>
-                <p>
-                    Générateur de source bulletin.
-                </p>
-                <a href="Saisi.html" class="btn btn-teachers">Accéder</a>
+                <div class="portal-icon">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+                <h2>Générateur Bulletin</h2>
+                <p>Générateur automatique de bulletins</p>
+                <a href="Saisi.html" class="btn btn-teachers">
+                    <i class="fas fa-arrow-right"></i>
+                    Accéder
+                </a>
             </div>
             
             <div class="portal-card">  
-                <div class="portal-icon">👨‍💼</div>
-                <h2>INSCRIPTIONS</h2>
-                <p>
-                    inscriptions d'élèves en difficultés.
-                </p>
-                <a href="scolarite.html" class="btn btn-admin">Accéder</a> 
+                <div class="portal-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h2>Inscriptions</h2>
+                <p>Gestion inscriptions élèves en difficulté</p>
+                <a href="scolarite.html" class="btn btn-admin">
+                    <i class="fas fa-arrow-right"></i>
+                    Accéder
+                </a> 
             </div>
              
             <div class="portal-card">
-                <div class="portal-icon">👨‍🏫</div>
-                <h2>COURS DE SOUTIEN EN LIGNE</h2>
-                <p>
-                    ÉLÈVES EN DIFFICULTÉS.
-                </p>
-                <a href="COURS DE SOUTIEN.html" class="btn btn-teachers">Accéder</a>
-            </div>
-            <div class="portal-card">
-                <div class="portal-icon">👨‍🏫</div>
-                <h2>COURS DE SOUTIEN EN LIGNE</h2>
-                <p>
-                     ENSEIGNANTS.
-                </p>
-                <a href="cse.html" class="btn btn-teachers">Accéder</a>
+                <div class="portal-icon">
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+                <h2>Cours Soutien Élèves</h2>
+                <p>Plateforme cours de soutien en ligne</p>
+                <a href="COURS DE SOUTIEN.html" class="btn btn-teachers">
+                    <i class="fas fa-arrow-right"></i>
+                    Accéder
+                </a>
             </div>
             
-            <!-- Nouvelle carte pour le paiement et WhatsApp -->
             <div class="portal-card">
-                <div class="portal-icon">💳</div>
-                <h2>Paiement en ligne</h2>
-                <p>
-                    Effectuez votre paiement scolaire en ligne et confirmez-le via WhatsApp.
-                </p>
+                <div class="portal-icon">
+                    <i class="fas fa-chalkboard"></i>
+                </div>
+                <h2>Cours Soutien Enseignants</h2>
+                <p>Interface enseignants cours de soutien</p>
+                <a href="cse.html" class="btn btn-teachers">
+                    <i class="fas fa-arrow-right"></i>
+                    Accéder
+                </a>
+            </div>
+            
+            <!-- Paiement en ligne -->
+            <div class="portal-card">
+                <div class="portal-icon">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <h2>Paiement en Ligne</h2>
+                <p>Paiements scolaires sécurisés en ligne</p>
                 <div class="payment-buttons">
                     <a href="https://me.fedapay.com/ZRFU62iT" target="_blank" class="btn btn-payment">
-                        💳 Payer maintenant
+                        <i class="fas fa-credit-card"></i>
+                        Payer maintenant
                     </a>
                     <a href="https://wa.me/22892871605?text=Bonjour,%20j'ai%20effectué%20mon%20paiement%20avec%20succès." target="_blank" class="btn btn-whatsapp">
-                        📞 Confirmer sur WhatsApp
+                        <i class="fab fa-whatsapp"></i>
+                        Confirmer WhatsApp
                     </a>
                 </div>
             </div>
         </div>
-        
     </main>
     
-    <button class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-        ↑
+    <button class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" aria-label="Retour en haut">
+        <i class="fas fa-chevron-up"></i>
     </button>
     
     <footer class="footer">
-        <p>&copy; 2025-2026 Lycée Niamtougou - Tous droits réservés</p>
-        <p> E.D.S " Ecoles Dignes du Siecle "</p>
+        <div class="footer-content">
+            <p>&copy; 2025-2026 Lycée Niamtougou - Tous droits réservés</p>
+            <p><i class="fas fa-star"></i> E.D.S " Écoles Dignes du Siècle " <i class="fas fa-star"></i></p>
+            <p>Plateforme développée avec <i class="fas fa-heart" style="color: #ff6b6b;"></i> pour l'éducation</p>
+        </div>
     </footer>
 
     <script>
+        // Gestion du bouton rafraîchissement
         document.getElementById('refreshBtn').addEventListener('click', function() {
-            // Afficher une animation de chargement
-            this.innerHTML = '<span>⏳ Chargement...</span>';
+            const btn = this;
+            const originalContent = btn.innerHTML;
             
-            // Simuler un temps de chargement (dans un vrai site, ce serait une requête AJAX)
+            // Animation de chargement
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span> Chargement...</span>';
+            btn.disabled = true;
+            
+            // Simuler un temps de chargement
             setTimeout(() => {
-                // Recharger la page (dans un vrai site, on mettrait à jour les données dynamiquement)
                 location.reload();
-                
-                // Ou pour une mise à jour sans rechargement complet:
-                // fetchLatestData();
-                
-                this.innerHTML = '<span>🔄 Actualiser</span>';
             }, 1000);
         });
 
-        // Fonction exemple pour récupérer les données (à adapter selon vos besoins)
-        function fetchLatestData() {
-            fetch('/api/get-latest-data')
-                .then(response => response.json())
-                .then(data => {
-                    // Traiter les nouvelles données ici
-                    console.log('Nouvelles données chargées:', data);
-                    // Mettre à jour l'interface utilisateur avec les nouvelles données
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
+        // Gestion du bouton retour en haut
+        window.addEventListener('scroll', () => {
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.scrollY > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        // Optimisation pour le tactile
+        document.addEventListener('touchstart', function() {}, {passive: true});
+
+        // Amélioration des performances sur mobile
+        let ticking = false;
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                requestAnimationFrame(function() {
+                    // Code d'animation éventuel
+                    ticking = false;
                 });
-        }
+                ticking = true;
+            }
+        });
+
+        // Prévention du zoom double-tap sur iOS
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Optimisation de l'affichage sur mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ajustement de la hauteur pour mobile
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        });
+
+        // Recalcul sur redimensionnement
+        window.addEventListener('resize', function() {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        });
     </script>
 </body>
 </html>
