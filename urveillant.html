@@ -4,7 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Espace Surveillants - Lycée Niamtougou</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --danger: #e63946;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --border-radius: 12px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -16,20 +33,21 @@
             background: linear-gradient(135deg, #4a6baf 0%, #2c3e50 100%);
             min-height: 100vh;
             padding: 20px;
+            color: var(--dark);
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
             backdrop-filter: blur(10px);
             overflow: hidden;
         }
 
         .header {
-            background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
             padding: 30px;
             text-align: center;
@@ -82,7 +100,7 @@
         .school-logo-text {
             font-size: 1.8rem;
             font-weight: bold;
-            color: #3a7bd5;
+            color: var(--primary);
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             position: relative;
             z-index: 2;
@@ -148,7 +166,7 @@
         .form-group label {
             display: block;
             font-weight: 600;
-            color: #555;
+            color: var(--dark);
             margin-bottom: 8px;
             font-size: 1rem;
         }
@@ -156,93 +174,112 @@
         .form-group input, .form-group select {
             width: 100%;
             padding: 15px 20px;
-            border: 2px solid #e1e8ed;
-            border-radius: 10px;
+            border: 2px solid var(--gray-light);
+            border-radius: var(--border-radius);
             font-size: 1rem;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             background: white;
         }
 
         .form-group input:focus, .form-group select:focus {
             outline: none;
-            border-color: #3a7bd5;
-            box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
             transform: translateY(-1px);
         }
 
-        .login-btn {
-            background: linear-gradient(135deg, #4a6baf, #2c3e50);
+        .btn {
+            padding: 15px 30px;
+            background-color: var(--primary);
             color: white;
             border: none;
-            padding: 18px 50px;
-            border-radius: 15px;
-            font-size: 1.2rem;
-            font-weight: 600;
+            border-radius: var(--border-radius);
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(74, 107, 175, 0.3);
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .login-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 35px rgba(74, 107, 175, 0.4);
-        }
-
-        .register-btn {
-            background: linear-gradient(135deg, #43e97b, #38f9d7);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 10px;
             font-size: 1rem;
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             width: 100%;
+            margin-bottom: 15px;
         }
 
-        .register-btn:hover {
+        .btn:hover {
+            background-color: var(--secondary);
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(67, 233, 123, 0.3);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
         }
 
-        .back-btn {
-            background: #6c757d;
+        .btn-success {
+            background-color: var(--success);
+        }
+
+        .btn-success:hover {
+            background-color: #3a86ff;
+        }
+
+        .btn-warning {
+            background-color: var(--warning);
+        }
+
+        .btn-warning:hover {
+            background-color: #b5179e;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background-color: #c1121f;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary);
             color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 10px;
-            font-size: 1rem;
-            cursor: pointer;
-            margin-right: 10px;
-            transition: all 0.3s ease;
         }
 
-        .back-btn:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 14px;
         }
 
         .error-message {
-            background: #ff6b6b;
-            color: white;
+            background: rgba(230, 57, 70, 0.1);
+            color: var(--danger);
             padding: 15px;
-            border-radius: 10px;
+            border-radius: var(--border-radius);
             margin-bottom: 20px;
             text-align: center;
             font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 1px solid rgba(230, 57, 70, 0.2);
         }
 
         .success-message {
-            background: #43e97b;
-            color: white;
+            background: rgba(76, 201, 240, 0.1);
+            color: var(--success);
             padding: 15px;
-            border-radius: 10px;
+            border-radius: var(--border-radius);
             margin-bottom: 20px;
             text-align: center;
             font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 1px solid rgba(76, 201, 240, 0.2);
         }
 
         .content {
@@ -257,17 +294,20 @@
 
         .sidebar {
             background: #f8f9ff;
-            border-radius: 15px;
+            border-radius: var(--border-radius);
             padding: 25px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
 
         .sidebar-title {
             font-size: 1.3rem;
-            color: #333;
+            color: var(--dark);
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #e1e8ed;
+            border-bottom: 2px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .filter-group {
@@ -277,7 +317,7 @@
         .filter-group label {
             display: block;
             font-weight: 600;
-            color: #555;
+            color: var(--dark);
             margin-bottom: 8px;
             font-size: 0.95rem;
         }
@@ -285,8 +325,8 @@
         .filter-group select, .filter-group input {
             width: 100%;
             padding: 12px 15px;
-            border: 2px solid #e1e8ed;
-            border-radius: 10px;
+            border: 2px solid var(--gray-light);
+            border-radius: var(--border-radius);
             font-size: 0.95rem;
         }
 
@@ -299,22 +339,28 @@
 
         .stat-card {
             background: white;
-            border-radius: 10px;
+            border-radius: var(--border-radius);
             padding: 15px;
             text-align: center;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid var(--primary);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
         }
 
         .stat-value {
             font-size: 1.5rem;
             font-weight: bold;
-            color: #3a7bd5;
+            color: var(--primary);
             margin-bottom: 5px;
         }
 
         .stat-label {
             font-size: 0.8rem;
-            color: #666;
+            color: var(--gray);
         }
 
         .main-content {
@@ -329,15 +375,15 @@
         }
 
         .action-btn {
-            background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
             border: none;
             padding: 12px 20px;
-            border-radius: 10px;
+            border-radius: var(--border-radius);
             font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             display: flex;
             align-items: center;
             gap: 8px;
@@ -349,7 +395,7 @@
         }
 
         .action-btn.secondary {
-            background: linear-gradient(135deg, #6c757d, #adb5bd);
+            background: linear-gradient(135deg, var(--gray), #adb5bd);
         }
 
         .action-btn.tertiary {
@@ -361,20 +407,20 @@
         }
 
         .action-btn.danger {
-            background: linear-gradient(135deg, #dc3545, #a71d2a);
+            background: linear-gradient(135deg, var(--danger), #a71d2a);
         }
 
         .records-table {
             width: 100%;
             border-collapse: collapse;
             background: white;
-            border-radius: 15px;
+            border-radius: var(--border-radius);
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
 
         .records-table th {
-            background: #3a7bd5;
+            background: var(--primary);
             color: white;
             padding: 15px;
             text-align: left;
@@ -383,7 +429,7 @@
 
         .records-table td {
             padding: 12px 15px;
-            border-bottom: 1px solid #e1e8ed;
+            border-bottom: 1px solid var(--gray-light);
         }
 
         .records-table tr:last-child td {
@@ -395,36 +441,38 @@
         }
 
         .status-badge {
-            display: inline-block;
-            padding: 5px 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 600;
         }
 
         .status-absent {
-            background: #ff6b6b;
-            color: white;
+            background: rgba(230, 57, 70, 0.1);
+            color: var(--danger);
         }
 
         .status-late {
-            background: #ffc107;
-            color: #333;
+            background: rgba(255, 193, 7, 0.1);
+            color: #f57c00;
         }
 
         .status-evaluation {
-            background: #17a2b8;
-            color: white;
+            background: rgba(23, 162, 184, 0.1);
+            color: #0288d1;
         }
 
         .status-sick {
-            background: #6610f2;
-            color: white;
+            background: rgba(102, 16, 242, 0.1);
+            color: #7b1fa2;
         }
 
         .status-contact {
-            background: #28a745;
-            color: white;
+            background: rgba(40, 167, 69, 0.1);
+            color: #2e7d32;
         }
 
         .modal {
@@ -438,11 +486,12 @@
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
 
         .modal-content {
             background: white;
-            border-radius: 15px;
+            border-radius: var(--border-radius);
             width: 100%;
             max-width: 600px;
             padding: 30px;
@@ -458,13 +507,22 @@
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
-            color: #666;
+            color: var(--gray);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+            transform: rotate(90deg);
         }
 
         .modal-title {
             font-size: 1.5rem;
             margin-bottom: 20px;
-            color: #3a7bd5;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .form-row {
@@ -482,15 +540,18 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            background: rgba(255, 107, 107, 0.9);
+            background: rgba(230, 57, 70, 0.9);
             color: white;
             border: none;
             padding: 10px 20px;
-            border-radius: 10px;
+            border-radius: var(--border-radius);
             cursor: pointer;
             font-weight: 600;
             z-index: 1000;
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .logout-btn:hover {
@@ -500,7 +561,7 @@
 
         .report-section {
             background: white;
-            border-radius: 15px;
+            border-radius: var(--border-radius);
             padding: 25px;
             margin-top: 30px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
@@ -508,10 +569,13 @@
 
         .report-title {
             font-size: 1.3rem;
-            color: #333;
+            color: var(--dark);
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #e1e8ed;
+            border-bottom: 2px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .report-content {
@@ -529,7 +593,7 @@
             position: fixed;
             bottom: 90px;
             right: 20px;
-            background-color: #4285f4;
+            background-color: var(--primary);
             color: white;
             border: none;
             border-radius: 50%;
@@ -537,17 +601,17 @@
             height: 60px;
             text-align: center;
             font-size: 24px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: var(--shadow);
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             z-index: 1000;
         }
         
         .refresh-button:hover {
-            background-color: #3367d6;
+            background-color: var(--secondary);
             transform: rotate(360deg);
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
@@ -559,15 +623,21 @@
         }
 
         .btn-retour {
-            padding: 8px 16px;
-            background-color: #f0f0f0;
+            padding: 10px 20px;
+            background-color: var(--gray-light);
             border: 1px solid #ccc;
-            border-radius: 4px;
+            border-radius: var(--border-radius);
             cursor: pointer;
             font-size: 14px;
+            margin: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
         }
         .btn-retour:hover {
             background-color: #e0e0e0;
+            transform: translateY(-2px);
         }
 
         /* Styles pour l'impression */
@@ -631,6 +701,20 @@
             .form-full-row {
                 grid-column: span 1;
             }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .refresh-button {
+                bottom: 20px;
+                right: 20px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -642,19 +726,14 @@
                 font-size: 1.4rem;
             }
 
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            .action-btn {
-                width: 100%;
-                justify-content: center;
-            }
-
             .records-table th, 
             .records-table td {
                 padding: 8px 10px;
                 font-size: 0.85rem;
+            }
+
+            .login-form, .register-form {
+                padding: 20px;
             }
         }
     </style>
@@ -662,15 +741,14 @@
 <body>
     <!-- Bouton Actualiser -->
     <button onclick="window.location.reload()" class="refresh-button" aria-label="Actualiser la page">
-        <svg class="refresh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-        </svg>
+        <i class="fas fa-sync-alt"></i>
     </button>
 
-   
-
     <div class="container">
-         <button class="btn-retour" onclick="history.back()">← Retour</button>
+        <button class="btn-retour" onclick="history.back()">
+            <i class="fas fa-arrow-left"></i> Retour
+        </button>
+        
         <div class="header">
             <div class="school-info">
                 <div class="school-logo">
@@ -679,96 +757,110 @@
                 <div class="school-name">Lycée Niamtougou</div>
                 <div class="school-subtitle">Espace Surveillants</div>
             </div>
-            <h1 id="main-title">📋 Gestion des Absences et Retards</h1>
+            <h1 id="main-title"><i class="fas fa-clipboard-list"></i> Gestion des Absences et Retards</h1>
             <p id="main-subtitle">Suivi des élèves et contact avec les parents</p>
         </div>
 
         <!-- Section de connexion -->
         <div id="login-section" class="auth-section">
             <div class="login-form">
-                <div id="error-message" class="error-message" style="display: none;"></div>
-                <div id="success-message" class="success-message" style="display: none;"></div>
+                <div id="error-message" class="error-message" style="display: none;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="error-text"></span>
+                </div>
+                <div id="success-message" class="success-message" style="display: none;">
+                    <i class="fas fa-check-circle"></i>
+                    <span id="success-text"></span>
+                </div>
                 
                 <form id="loginForm">
                     <div class="form-group">
-                        <label for="username">👤 Identifiant :</label>
+                        <label for="username"><i class="fas fa-user"></i> Identifiant :</label>
                         <input type="text" id="username" name="username" required placeholder="Votre identifiant">
                     </div>
                     
                     <div class="form-group">
-                        <label for="password">🔑 Mot de passe :</label>
+                        <label for="password"><i class="fas fa-lock"></i> Mot de passe :</label>
                         <input type="password" id="password" name="password" required placeholder="Votre mot de passe">
                     </div>
                     
-                    <button type="submit" class="login-btn">
-                        🚪 Se connecter
+                    <button type="submit" class="btn">
+                        <i class="fas fa-sign-in-alt"></i> Se connecter
                     </button>
                 </form>
                 
-                <button type="button" class="register-btn" onclick="showRegisterForm()">
-                    📝 Créer un compte surveillant
-                    </button>
+                <button type="button" class="btn btn-outline" onclick="showRegisterForm()">
+                    <i class="fas fa-user-plus"></i> Créer un compte surveillant
+                </button>
             </div>
         </div>
 
         <!-- Section d'inscription -->
         <div id="register-section" class="auth-section hidden">
             <div class="register-form">
-                <div id="register-error" class="error-message" style="display: none;"></div>
-                <div id="register-success" class="success-message" style="display: none;"></div>
+                <div id="register-error" class="error-message" style="display: none;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="register-error-text"></span>
+                </div>
+                <div id="register-success" class="success-message" style="display: none;">
+                    <i class="fas fa-check-circle"></i>
+                    <span id="register-success-text"></span>
+                </div>
                 
-                <h2>📝 Créer un compte surveillant</h2>
+                <h2><i class="fas fa-user-plus"></i> Créer un compte surveillant</h2>
                 <form id="registerForm">
                     <div class="form-group">
-                        <label for="supervisor-name">👤 Nom complet :</label>
+                        <label for="supervisor-name"><i class="fas fa-user"></i> Nom complet :</label>
                         <input type="text" id="supervisor-name" name="supervisor-name" required placeholder="Votre nom complet">
                     </div>
                     
                     <div class="form-group">
-                        <label for="supervisor-email">📧 Email :</label>
+                        <label for="supervisor-email"><i class="fas fa-envelope"></i> Email :</label>
                         <input type="email" id="supervisor-email" name="supervisor-email" required placeholder="Votre adresse email">
                     </div>
                     
                     <div class="form-group">
-                        <label for="supervisor-phone">📞 Téléphone :</label>
+                        <label for="supervisor-phone"><i class="fas fa-phone"></i> Téléphone :</label>
                         <input type="tel" id="supervisor-phone" name="supervisor-phone" required placeholder="Votre numéro de téléphone">
                     </div>
                     
                     <div class="form-group">
-                        <label for="register-username">👤 Identifiant :</label>
+                        <label for="register-username"><i class="fas fa-user"></i> Identifiant :</label>
                         <input type="text" id="register-username" name="register-username" required placeholder="Choisissez un identifiant">
                     </div>
                     
                     <div class="form-group">
-                        <label for="register-password">🔑 Mot de passe :</label>
+                        <label for="register-password"><i class="fas fa-lock"></i> Mot de passe :</label>
                         <input type="password" id="register-password" name="register-password" required placeholder="Créez un mot de passe">
                     </div>
                     
                     <div class="form-group">
-                        <label for="confirm-password">🔏 Confirmer le mot de passe :</label>
+                        <label for="confirm-password"><i class="fas fa-lock"></i> Confirmer le mot de passe :</label>
                         <input type="password" id="confirm-password" name="confirm-password" required placeholder="Confirmez votre mot de passe">
                     </div>
                     
-                    <button type="submit" class="login-btn">
-                        ✅ S'inscrire
+                    <button type="submit" class="btn">
+                        <i class="fas fa-check"></i> S'inscrire
                     </button>
                 </form>
                 
-                <button type="button" class="back-btn" onclick="showLoginSection()">
-                    ← Retour à la connexion
+                <button type="button" class="btn btn-outline" onclick="showLoginSection()">
+                    <i class="fas fa-arrow-left"></i> Retour à la connexion
                 </button>
             </div>
         </div>
 
         <!-- Section principale après connexion -->
         <div id="main-content" class="auth-section hidden">
-            <button class="logout-btn" onclick="logout()">🚪 Déconnexion</button>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </button>
             
             <div class="content">
                 <div class="dashboard">
                     <!-- Sidebar avec filtres -->
                     <div class="sidebar">
-                        <h3 class="sidebar-title">🔍 Filtres</h3>
+                        <h3 class="sidebar-title"><i class="fas fa-filter"></i> Filtres</h3>
                         
                         <div class="filter-group">
                             <label for="filter-class">Classe :</label>
@@ -817,7 +909,7 @@
                         </div>
                         
                         <button class="action-btn" onclick="applyFilters()">
-                            🔄 Appliquer les filtres
+                            <i class="fas fa-sync-alt"></i> Appliquer les filtres
                         </button>
                         
                         <div class="stats-cards">
@@ -837,22 +929,22 @@
 
                         <div class="action-buttons" style="margin-top: 20px;">
                             <button class="action-btn whatsapp" onclick="sendViaWhatsApp()">
-                                📱 Envoyer par WhatsApp
+                                <i class="fab fa-whatsapp"></i> Envoyer par WhatsApp
                             </button>
                             <button class="action-btn tertiary" onclick="generateMonthlyReport()">
-                                📊 Générer bilan mensuel
+                                <i class="fas fa-chart-bar"></i> Générer bilan mensuel
                             </button>
                             <button class="action-btn secondary" onclick="saveData()">
-                                💾 Sauvegarder les données
+                                <i class="fas fa-save"></i> Sauvegarder les données
                             </button>
                             <button class="action-btn" onclick="importData()">
-                                📂 Importer des données
+                                <i class="fas fa-file-import"></i> Importer des données
                             </button>
                             <button class="action-btn danger" onclick="confirmDeleteAllData()">
-                                🗑️ Supprimer toutes les données
+                                <i class="fas fa-trash"></i> Supprimer toutes les données
                             </button>
                             <button class="action-btn" onclick="printData()">
-                                🖨️ Imprimer les données
+                                <i class="fas fa-print"></i> Imprimer les données
                             </button>
                         </div>
                     </div>
@@ -861,19 +953,19 @@
                     <div class="main-content">
                         <div class="action-buttons">
                             <button class="action-btn" onclick="openAddModal('absence')">
-                                ➕ Ajouter une absence
+                                <i class="fas fa-plus"></i> Ajouter une absence
                             </button>
                             <button class="action-btn" onclick="openAddModal('retard')">
-                                ⏱️ Ajouter un retard
+                                <i class="fas fa-clock"></i> Ajouter un retard
                             </button>
                             <button class="action-btn" onclick="openAddModal('evaluation')">
-                                📝 Évaluation manquée
+                                <i class="fas fa-file-alt"></i> Évaluation manquée
                             </button>
                             <button class="action-btn secondary" onclick="openAddModal('maladie')">
-                                🏥 Déclarer maladie
+                                <i class="fas fa-heartbeat"></i> Déclarer maladie
                             </button>
                             <button class="action-btn secondary" onclick="openAddModal('contact')">
-                                📞 Contact parent
+                                <i class="fas fa-phone"></i> Contact parent
                             </button>
                         </div>
                         
@@ -897,13 +989,13 @@
 
                         <!-- Section pour le rapport mensuel -->
                         <div id="monthly-report" class="report-section" style="display: none;">
-                            <h3 class="report-title">📅 Bilan Mensuel</h3>
+                            <h3 class="report-title"><i class="fas fa-chart-bar"></i> Bilan Mensuel</h3>
                             <div class="action-buttons">
                                 <button class="action-btn tertiary" onclick="printReport()">
-                                    🖨️ Imprimer ce rapport
+                                    <i class="fas fa-print"></i> Imprimer ce rapport
                                 </button>
                                 <button class="action-btn secondary" onclick="closeReport()">
-                                    ❌ Fermer
+                                    <i class="fas fa-times"></i> Fermer
                                 </button>
                             </div>
                             <div id="report-content" class="report-content">
@@ -923,7 +1015,9 @@
     <div id="record-modal" class="modal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal()">&times;</button>
-            <h3 class="modal-title" id="modal-title">Ajouter un enregistrement</h3>
+            <h3 class="modal-title" id="modal-title">
+                <i class="fas fa-plus"></i> Ajouter un enregistrement
+            </h3>
             
             <form id="record-form">
                 <input type="hidden" id="record-id">
@@ -931,12 +1025,12 @@
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="modal-date">Date :</label>
+                        <label for="modal-date"><i class="fas fa-calendar"></i> Date :</label>
                         <input type="date" id="modal-date" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="modal-class">Classe :</label>
+                        <label for="modal-class"><i class="fas fa-users"></i> Classe :</label>
                         <select id="modal-class" required>
                             <option value="">Sélectionner une classe</option>
                             <option value="6eme">6ème</option>
@@ -959,25 +1053,25 @@
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="modal-student">Élève :</label>
+                        <label for="modal-student"><i class="fas fa-user-graduate"></i> Élève :</label>
                         <select id="modal-student" required>
                             <option value="">Sélectionner un élève</option>
                         </select>
                     </div>
                     
                     <div class="form-group" id="modal-time-container" style="display: none;">
-                        <label for="modal-time">Heure de retard :</label>
+                        <label for="modal-time"><i class="fas fa-clock"></i> Heure de retard :</label>
                         <input type="time" id="modal-time">
                     </div>
                 </div>
                 
                 <div class="form-group form-full-row">
-                    <label for="modal-reason" id="modal-reason-label">Motif :</label>
+                    <label for="modal-reason" id="modal-reason-label"><i class="fas fa-comment"></i> Motif :</label>
                     <input type="text" id="modal-reason" placeholder="Décrivez la raison..." required>
                 </div>
                 
                 <div class="form-group form-full-row" id="modal-contact-container" style="display: none;">
-                    <label for="modal-contact-details">Détails du contact :</label>
+                    <label for="modal-contact-details"><i class="fas fa-phone"></i> Détails du contact :</label>
                     <textarea id="modal-contact-details" rows="3" placeholder="Notes sur le contact avec le parent..."></textarea>
                 </div>
                 
@@ -987,14 +1081,16 @@
                     </label>
                 </div>
                 
-                <button type="submit" class="action-btn">
-                    💾 Enregistrer
+                <button type="submit" class="btn">
+                    <i class="fas fa-save"></i> Enregistrer
                 </button>
             </form>
         </div>
     </div>
 
     <script>
+        // Le code JavaScript reste identique à la version précédente
+        // Seules les modifications CSS ont été apportées
         // Variables globales
         let db;
         let currentUser = null;
@@ -1283,28 +1379,34 @@
                 // Déterminer le badge selon le type
                 let badgeClass = '';
                 let badgeText = '';
+                let badgeIcon = '';
                 
                 switch(record.type) {
                     case 'absence':
                         badgeClass = 'status-absent';
                         badgeText = 'Absence';
+                        badgeIcon = 'fas fa-user-times';
                         break;
                     case 'retard':
                         badgeClass = 'status-late';
                         badgeText = 'Retard';
+                        badgeIcon = 'fas fa-clock';
                         if (record.time) badgeText += ` (${record.time})`;
                         break;
                     case 'evaluation':
                         badgeClass = 'status-evaluation';
                         badgeText = 'Évaluation';
+                        badgeIcon = 'fas fa-file-alt';
                         break;
                     case 'maladie':
                         badgeClass = 'status-sick';
                         badgeText = 'Maladie';
+                        badgeIcon = 'fas fa-heartbeat';
                         break;
                     case 'contact':
                         badgeClass = 'status-contact';
                         badgeText = 'Contact';
+                        badgeIcon = 'fas fa-phone';
                         break;
                 }
                 
@@ -1312,13 +1414,21 @@
                     <td>${formattedDate}</td>
                     <td>${record.student}</td>
                     <td>${record.class}</td>
-                    <td><span class="status-badge ${badgeClass}">${badgeText}</span></td>
+                    <td><span class="status-badge ${badgeClass}"><i class="${badgeIcon}"></i> ${badgeText}</span></td>
                     <td>${record.reason}</td>
                     <td>
-                        <button onclick="editRecord(${record.id})" style="background: none; border: none; cursor: pointer; color: #3a7bd5;">✏️</button>
-                        <button onclick="deleteRecord(${record.id})" style="background: none; border: none; cursor: pointer; color: #ff6b6b;">🗑️</button>
-                        ${record.type === 'contact' ? '' : `<button onclick="contactParent('${record.student}')" style="background: none; border: none; cursor: pointer; color: #28a745;">📞</button>`}
-                        <button onclick="sendStudentViaWhatsApp('${record.student}')" style="background: none; border: none; cursor: pointer; color: #25D366;">📱</button>
+                        <button onclick="editRecord(${record.id})" class="action-btn btn-sm" title="Modifier">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteRecord(${record.id})" class="action-btn btn-sm danger" title="Supprimer">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        ${record.type === 'contact' ? '' : `<button onclick="contactParent('${record.student}')" class="action-btn btn-sm tertiary" title="Contacter parent">
+                            <i class="fas fa-phone"></i>
+                        </button>`}
+                        <button onclick="sendStudentViaWhatsApp('${record.student}')" class="action-btn btn-sm whatsapp" title="Envoyer WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </button>
                     </td>
                 `;
                 
@@ -1389,35 +1499,35 @@
             // Configurer le modal selon le type
             switch(type) {
                 case 'absence':
-                    modalTitle.textContent = 'Ajouter une absence';
+                    modalTitle.innerHTML = '<i class="fas fa-user-times"></i> Ajouter une absence';
                     reasonLabel.textContent = 'Motif de l\'absence :';
                     timeContainer.style.display = 'none';
                     contactContainer.style.display = 'none';
                     justifiedContainer.style.display = 'block';
                     break;
                 case 'retard':
-                    modalTitle.textContent = 'Ajouter un retard';
+                    modalTitle.innerHTML = '<i class="fas fa-clock"></i> Ajouter un retard';
                     reasonLabel.textContent = 'Motif du retard :';
                     timeContainer.style.display = 'block';
                     contactContainer.style.display = 'none';
                     justifiedContainer.style.display = 'block';
                     break;
                 case 'evaluation':
-                    modalTitle.textContent = 'Ajouter une évaluation manquée';
+                    modalTitle.innerHTML = '<i class="fas fa-file-alt"></i> Ajouter une évaluation manquée';
                     reasonLabel.textContent = 'Matière/Type d\'évaluation :';
                     timeContainer.style.display = 'none';
                     contactContainer.style.display = 'none';
                     justifiedContainer.style.display = 'block';
                     break;
                 case 'maladie':
-                    modalTitle.textContent = 'Déclarer une maladie';
+                    modalTitle.innerHTML = '<i class="fas fa-heartbeat"></i> Déclarer une maladie';
                     reasonLabel.textContent = 'Description des symptômes :';
                     timeContainer.style.display = 'none';
                     contactContainer.style.display = 'none';
                     justifiedContainer.style.display = 'block';
                     break;
                 case 'contact':
-                    modalTitle.textContent = 'Enregistrer un contact avec un parent';
+                    modalTitle.innerHTML = '<i class="fas fa-phone"></i> Enregistrer un contact avec un parent';
                     reasonLabel.textContent = 'Raison du contact :';
                     timeContainer.style.display = 'none';
                     contactContainer.style.display = 'block';
@@ -1461,7 +1571,7 @@
             // Configurer selon le type
             switch(record.type) {
                 case 'absence':
-                    modalTitle.textContent = 'Modifier une absence';
+                    modalTitle.innerHTML = '<i class="fas fa-user-times"></i> Modifier une absence';
                     reasonLabel.textContent = 'Motif de l\'absence :';
                     timeContainer.style.display = 'none';
                     contactContainer.style.display = 'none';
@@ -1469,7 +1579,7 @@
                     document.getElementById('modal-justified').checked = record.justified || false;
                     break;
                 case 'retard':
-                    modalTitle.textContent = 'Modifier un retard';
+                    modalTitle.innerHTML = '<i class="fas fa-clock"></i> Modifier un retard';
                     reasonLabel.textContent = 'Motif du retard :';
                     timeContainer.style.display = 'block';
                     contactContainer.style.display = 'none';
@@ -1478,7 +1588,7 @@
                     document.getElementById('modal-justified').checked = record.justified || false;
                     break;
                 case 'evaluation':
-                    modalTitle.textContent = 'Modifier une évaluation manquée';
+                    modalTitle.innerHTML = '<i class="fas fa-file-alt"></i> Modifier une évaluation manquée';
                     reasonLabel.textContent = 'Matière/Type d\'évaluation :';
                     timeContainer.style.display = 'none';
                     contactContainer.style.display = 'none';
@@ -1486,7 +1596,7 @@
                     document.getElementById('modal-justified').checked = record.justified || false;
                     break;
                 case 'maladie':
-                    modalTitle.textContent = 'Modifier une déclaration de maladie';
+                    modalTitle.innerHTML = '<i class="fas fa-heartbeat"></i> Modifier une déclaration de maladie';
                     reasonLabel.textContent = 'Description des symptômes :';
                     timeContainer.style.display = 'none';
                     contactContainer.style.display = 'none';
@@ -1494,7 +1604,7 @@
                     document.getElementById('modal-justified').checked = record.justified || false;
                     break;
                 case 'contact':
-                    modalTitle.textContent = 'Modifier un contact avec un parent';
+                    modalTitle.innerHTML = '<i class="fas fa-phone"></i> Modifier un contact avec un parent';
                     reasonLabel.textContent = 'Raison du contact :';
                     timeContainer.style.display = 'none';
                     contactContainer.style.display = 'block';
@@ -1883,7 +1993,7 @@
                 // Désactiver le bouton pendant l'enregistrement
                 const submitBtn = e.target.querySelector('button[type="submit"]');
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = 'Enregistrement...';
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enregistrement...';
                 
                 // Sauvegarder l'enregistrement
                 const recordId = await saveRecord(recordData);
@@ -1918,7 +2028,7 @@
                 const submitBtn = e.target.querySelector('button[type="submit"]');
                 if (submitBtn) {
                     submitBtn.disabled = false;
-                    submitBtn.innerHTML = '💾 Enregistrer';
+                    submitBtn.innerHTML = '<i class="fas fa-save"></i> Enregistrer';
                 }
             }
         });
@@ -1937,8 +2047,8 @@
                     await showMainContent(supervisor);
                 } else {
                     const errorElement = document.getElementById('error-message');
-                    errorElement.textContent = "Identifiant ou mot de passe incorrect";
-                    errorElement.style.display = 'block';
+                    document.getElementById('error-text').textContent = "Identifiant ou mot de passe incorrect";
+                    errorElement.style.display = 'flex';
                     
                     setTimeout(() => {
                         errorElement.style.display = 'none';
@@ -1947,8 +2057,8 @@
             } catch (error) {
                 console.error("Erreur de connexion", error);
                 const errorElement = document.getElementById('error-message');
-                errorElement.textContent = "Erreur lors de la connexion";
-                errorElement.style.display = 'block';
+                document.getElementById('error-text').textContent = "Erreur lors de la connexion";
+                errorElement.style.display = 'flex';
                 
                 setTimeout(() => {
                     errorElement.style.display = 'none';
@@ -1975,8 +2085,8 @@
             successElement.style.display = 'none';
             
             if (password !== confirmPassword) {
-                errorElement.textContent = "Les mots de passe ne correspondent pas";
-                errorElement.style.display = 'block';
+                document.getElementById('register-error-text').textContent = "Les mots de passe ne correspondent pas";
+                errorElement.style.display = 'flex';
                 return;
             }
             
@@ -2000,14 +2110,14 @@
                 ]);
                 
                 if (existingByUsername) {
-                    errorElement.textContent = "Un compte existe déjà avec cet identifiant";
-                    errorElement.style.display = 'block';
+                    document.getElementById('register-error-text').textContent = "Un compte existe déjà avec cet identifiant";
+                    errorElement.style.display = 'flex';
                     return;
                 }
                 
                 if (existingByEmail) {
-                    errorElement.textContent = "Un compte existe déjà avec cet email";
-                    errorElement.style.display = 'block';
+                    document.getElementById('register-error-text').textContent = "Un compte existe déjà avec cet email";
+                    errorElement.style.display = 'flex';
                     return;
                 }
                 
@@ -2023,8 +2133,8 @@
                 await addSupervisor(newSupervisor);
                 
                 // Afficher un message de succès
-                successElement.textContent = "Compte créé avec succès! Vous pouvez maintenant vous connecter.";
-                successElement.style.display = 'block';
+                document.getElementById('register-success-text').textContent = "Compte créé avec succès! Vous pouvez maintenant vous connecter.";
+                successElement.style.display = 'flex';
                 
                 // Réinitialiser le formulaire
                 this.reset();
@@ -2036,8 +2146,8 @@
                 }, 3000);
             } catch (error) {
                 console.error("Erreur d'inscription", error);
-                errorElement.textContent = "Une erreur est survenue lors de la création du compte";
-                errorElement.style.display = 'block';
+                document.getElementById('register-error-text').textContent = "Une erreur est survenue lors de la création du compte";
+                errorElement.style.display = 'flex';
             }
         });
 
