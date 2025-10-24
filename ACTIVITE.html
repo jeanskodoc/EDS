@@ -4,33 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Activités Pédagogiques</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Variables CSS pour une meilleure maintenabilité */
+        :root {
+            --primary-color: #4facfe;
+            --secondary-color: #00f2fe;
+            --success-color: #43e97b;
+            --warning-color: #ffa726;
+            --danger-color: #ff6b6b;
+            --info-color: #26c6da;
+            --dark-color: #333;
+            --light-color: #f5f7fa;
+            --gray-color: #666;
+            --border-radius: 15px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        /* Reset et styles de base */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
+            color: var(--dark-color);
+            line-height: 1.6;
         }
 
+        /* Container principal */
         .container {
             max-width: 1400px;
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
             backdrop-filter: blur(10px);
             overflow: hidden;
         }
 
+        /* En-tête */
         .header {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
             padding: 30px;
             text-align: center;
@@ -83,7 +104,7 @@
         .school-logo-text {
             font-size: 1.8rem;
             font-weight: bold;
-            color: #4facfe;
+            color: var(--primary-color);
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             position: relative;
             z-index: 2;
@@ -128,36 +149,85 @@
             z-index: 2;
         }
 
-        .return-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 8px 15px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            color: white;
+        /* Boutons */
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             display: flex;
             align-items: center;
-            gap: 5px;
-            text-decoration: none;
+            gap: 8px;
+            white-space: nowrap;
         }
 
-        .return-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .btn-primary:hover {
             transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4);
         }
 
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--success-color), #38f9d7);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(67, 233, 123, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger-color), #ff8e8e);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning-color), #ff7043);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 167, 38, 0.4);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, var(--info-color), #00bcd4);
+            color: white;
+        }
+
+        .btn-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(38, 198, 218, 0.4);
+        }
+
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+
+        /* Contenu principal */
         .dashboard-content {
             padding: 40px;
         }
 
+        /* Sections */
         .section {
             background: white;
-            border-radius: 15px;
+            border-radius: var(--border-radius);
             padding: 25px;
             margin-bottom: 30px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
@@ -165,7 +235,7 @@
 
         .section-title {
             font-size: 1.5rem;
-            color: #333;
+            color: var(--dark-color);
             margin-bottom: 20px;
             display: flex;
             align-items: center;
@@ -176,10 +246,11 @@
             content: '';
             width: 4px;
             height: 25px;
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             border-radius: 2px;
         }
 
+        /* Formulaires */
         .form-group {
             margin-bottom: 20px;
         }
@@ -188,7 +259,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #555;
+            color: var(--gray-color);
         }
 
         .form-group input,
@@ -199,7 +270,7 @@
             border: 2px solid #e1e8ed;
             border-radius: 10px;
             font-size: 1rem;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             background: white;
         }
 
@@ -212,7 +283,7 @@
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #4facfe;
+            border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
         }
 
@@ -223,46 +294,6 @@
             margin-bottom: 15px;
         }
 
-        .btn {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            color: white;
-        }
-
-        .btn-secondary {
-            background: linear-gradient(135deg, #43e97b, #38f9d7);
-            color: white;
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
-            color: white;
-        }
-
-        .btn-warning {
-            background: linear-gradient(135deg, #ffa726, #ff7043);
-            color: white;
-        }
-
-        .btn-info {
-            background: linear-gradient(135deg, #26c6da, #00bcd4);
-            color: white;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        }
-
         .form-actions {
             display: flex;
             justify-content: flex-end;
@@ -270,6 +301,7 @@
             margin-top: 20px;
         }
 
+        /* Tableaux */
         .table-container {
             overflow-x: auto;
             margin-top: 20px;
@@ -297,17 +329,19 @@
             background: #f8f9ff;
         }
 
-        .hidden {
-            display: none;
+        /* Contrôles de base de données */
+        .database-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            padding: 0 20px;
         }
 
-        /* Style pour le bouton Imprimer PDF */
-        .print-btn {
+        /* Boutons flottants */
+        .floating-btn {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background-color: #e74c3c;
-            color: white;
             width: 60px;
             height: 60px;
             border-radius: 50%;
@@ -316,20 +350,63 @@
             justify-content: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             z-index: 1000;
         }
 
-        .print-btn:hover {
+        .floating-btn:hover {
             transform: scale(1.1);
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
         }
 
-        .print-btn i {
-            font-size: 30px;
+        .print-btn {
+            bottom: 30px;
+            right: 30px;
+            background-color: #e74c3c;
+            color: white;
         }
 
-        /* Style pour la popup d'impression */
+        .refresh-btn {
+            bottom: 100px;
+            right: 30px;
+            background-color: #4285f4;
+            color: white;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(360deg);
+        }
+
+        .floating-btn i {
+            font-size: 24px;
+        }
+
+        /* Bouton retour */
+        .btn-retour {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 16px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: var(--transition);
+        }
+
+        .btn-retour:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Popup d'impression */
         .print-popup {
             position: fixed;
             bottom: 100px;
@@ -345,7 +422,7 @@
 
         .print-popup h3 {
             margin-bottom: 15px;
-            color: #333;
+            color: var(--dark-color);
             font-size: 16px;
         }
 
@@ -378,69 +455,10 @@
 
         .print-popup .cancel-btn {
             background-color: #f1f1f1;
-            color: #333;
+            color: var(--dark-color);
         }
 
-        /* Boutons de gestion de la base de données */
-        .database-controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
-            flex-wrap: wrap;
-            padding: 0 20px;
-        }
-
-        .refresh-button {
-            position: fixed;
-            bottom: 90px;
-            right: 20px;
-            background-color: #4285f4;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            text-align: center;
-            font-size: 24px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-        
-        .refresh-button:hover {
-            background-color: #3367d6;
-            transform: rotate(360deg);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        
-        .refresh-icon {
-            width: 24px;
-            height: 24px;
-            fill: white;
-        }
-
-        .btn-retour {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            padding: 8px 16px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            color: white;
-            cursor: pointer;
-            font-size: 14px;
-            z-index: 10;
-        }
-        .btn-retour:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-        }
-
+        /* Notification */
         .notification {
             position: fixed;
             top: 20px;
@@ -461,6 +479,20 @@
             transform: translateY(0);
         }
 
+        /* Éléments d'évaluation */
+        .evaluation-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #e1e8ed;
+            border-radius: 10px;
+            background: #f8f9ff;
+        }
+
+        /* Classes utilitaires */
+        .hidden {
+            display: none;
+        }
+
         /* Styles pour l'impression */
         @media print {
             body * {
@@ -478,20 +510,24 @@
                 background: white;
             }
             .header {
-                background: #4facfe;
+                background: var(--primary-color);
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
             }
-            .btn-retour, .refresh-button, .print-btn, .database-controls {
+            .btn-retour, .refresh-btn, .print-btn, .database-controls {
                 display: none !important;
             }
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
             .container {
-                margin: 10px;
-                border-radius: 15px;
+                margin: 0;
+                border-radius: 10px;
             }
 
             .header {
@@ -516,6 +552,12 @@
 
             .btn {
                 width: 100%;
+                justify-content: center;
+            }
+
+            .database-controls {
+                flex-direction: column;
+                padding: 0 10px;
             }
 
             .print-popup {
@@ -523,19 +565,55 @@
                 right: 15px;
             }
 
-            .database-controls {
-                flex-direction: column;
+            .floating-btn {
+                width: 50px;
+                height: 50px;
             }
-            
+
+            .print-btn {
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .refresh-btn {
+                bottom: 80px;
+                right: 20px;
+            }
+
             .btn-retour {
                 top: 10px;
                 left: 10px;
             }
         }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .school-name {
+                font-size: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+
+            .btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <button class="btn-retour" onclick="history.back()">← Retour</button>
+    <button class="btn-retour" onclick="history.back()">
+        <i class="fas fa-arrow-left"></i> Retour
+    </button>
     
     <div class="container">
         <div class="header">
@@ -546,22 +624,30 @@
                 <div class="school-name">Lycée Niamtougou</div>
                 <div class="school-subtitle">République Togolaise</div>
             </div>
-            <h1>📚 Activités Pédagogiques</h1>
+            <h1><i class="fas fa-book-open"></i> Activités Pédagogiques</h1>
             <p>Gestion des conseils, journées pédagogiques et évaluations</p>
         </div>
 
         <!-- Contrôles de la base de données -->
         <div class="database-controls">
-            <button class="btn btn-primary" onclick="saveToDatabase()">💾 Sauvegarder dans la base</button>
-            <button class="btn btn-secondary" onclick="importFromJSON()">📂 Importer JSON</button>
-            <button class="btn btn-info" onclick="exportToJSON()">📤 Exporter JSON</button>
-            <button class="btn btn-danger" onclick="clearDatabase()">🗑️ Supprimer les données</button>
+            <button class="btn btn-primary" onclick="saveToDatabase()">
+                <i class="fas fa-save"></i> Sauvegarder
+            </button>
+            <button class="btn btn-secondary" onclick="importFromJSON()">
+                <i class="fas fa-file-import"></i> Importer JSON
+            </button>
+            <button class="btn btn-info" onclick="exportToJSON()">
+                <i class="fas fa-file-export"></i> Exporter JSON
+            </button>
+            <button class="btn btn-danger" onclick="clearDatabase()">
+                <i class="fas fa-trash-alt"></i> Supprimer données
+            </button>
         </div>
 
         <div class="dashboard-content">
             <!-- Section Conseils d'Enseignement/Classe -->
             <div class="section">
-                <h2 class="section-title">📝 Conseils d'Enseignement/Classe</h2>
+                <h2 class="section-title"><i class="fas fa-clipboard-list"></i> Conseils d'Enseignement/Classe</h2>
                 <form id="councilForm">
                     <div class="form-row">
                         <div class="form-group">
@@ -615,15 +701,19 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="reset" class="btn btn-danger">Annuler</button>
-                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        <button type="reset" class="btn btn-danger">
+                            <i class="fas fa-times"></i> Annuler
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-check"></i> Enregistrer
+                        </button>
                     </div>
                 </form>
             </div>
 
             <!-- Section Journées Pédagogiques -->
             <div class="section">
-                <h2 class="section-title">📅 Journées Pédagogiques</h2>
+                <h2 class="section-title"><i class="fas fa-calendar-alt"></i> Journées Pédagogiques</h2>
                 <form id="pedagogicalDayForm">
                     <div class="form-group">
                         <label for="pedagogicalDates">Dates (séparées par des virgules si plusieurs):</label>
@@ -636,15 +726,19 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="reset" class="btn btn-danger">Annuler</button>
-                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        <button type="reset" class="btn btn-danger">
+                            <i class="fas fa-times"></i> Annuler
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-check"></i> Enregistrer
+                        </button>
                     </div>
                 </form>
             </div>
 
             <!-- Section Jours Fériés et Évaluations -->
             <div class="section">
-                <h2 class="section-title">📆 Jours Fériés et Évaluations</h2>
+                <h2 class="section-title"><i class="fas fa-calendar-check"></i> Jours Fériés et Évaluations</h2>
                 <form id="evaluationForm">
                     <div class="form-group">
                         <label for="holidays">Jours fériés (dates séparées par des virgules):</label>
@@ -681,16 +775,22 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" onclick="addEvaluationField()">+ Ajouter une évaluation</button>
-                        <button type="reset" class="btn btn-danger">Annuler</button>
-                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        <button type="button" class="btn btn-secondary" onclick="addEvaluationField()">
+                            <i class="fas fa-plus"></i> Ajouter une évaluation
+                        </button>
+                        <button type="reset" class="btn btn-danger">
+                            <i class="fas fa-times"></i> Annuler
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-check"></i> Enregistrer
+                        </button>
                     </div>
                 </form>
             </div>
 
             <!-- Section Visualisation des Données -->
             <div class="section">
-                <h2 class="section-title">📊 Visualisation des Données</h2>
+                <h2 class="section-title"><i class="fas fa-chart-bar"></i> Visualisation des Données</h2>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="viewType">Type de données:</label>
@@ -722,21 +822,18 @@
         </div>
     </div>
 
-    <!-- Bouton Actualiser -->
-    <button onclick="window.location.reload()" class="refresh-button" aria-label="Actualiser la page">
-        <svg class="refresh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-        </svg>
+    <!-- Boutons flottants -->
+    <button onclick="window.location.reload()" class="floating-btn refresh-btn" aria-label="Actualiser la page">
+        <i class="fas fa-sync-alt"></i>
     </button>
 
-    <!-- Bouton Imprimer PDF flottant -->
-    <div class="print-btn" onclick="togglePrintPopup()">
+    <div class="floating-btn print-btn" onclick="togglePrintPopup()">
         <i class="fas fa-file-pdf"></i>
     </div>
 
     <!-- Popup d'impression PDF -->
     <div class="print-popup" id="printPopup">
-        <h3>Imprimer les données en PDF</h3>
+        <h3><i class="fas fa-print"></i> Imprimer les données en PDF</h3>
         <select id="printDataType">
             <option value="councils">Conseils</option>
             <option value="pedagogicalDays">Journées Pédagogiques</option>
@@ -934,7 +1031,9 @@
                     <label for="evalClasses${evaluationCounter}">Classes concernées (séparées par des virgules):</label>
                     <input type="text" id="evalClasses${evaluationCounter}" class="eval-classes">
                 </div>
-                <button type="button" class="btn btn-danger" onclick="removeEvaluationField(this)">Supprimer</button>
+                <button type="button" class="btn btn-danger btn-sm" onclick="removeEvaluationField(this)">
+                    <i class="fas fa-trash"></i> Supprimer
+                </button>
             `;
             container.appendChild(newEvaluation);
         }
@@ -1074,13 +1173,13 @@
                                 <strong>Participants:</strong> ${council.attendance.join(', ')}
                             </td>
                             <td>
-                                <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;" 
+                                <button class="btn btn-primary btn-sm" 
                                         onclick="showDetails('council', ${council.id})">
-                                    Détails
+                                    <i class="fas fa-eye"></i> Détails
                                 </button>
-                                <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8rem;" 
+                                <button class="btn btn-danger btn-sm" 
                                         onclick="deleteItem('council', ${council.id})">
-                                    Supprimer
+                                    <i class="fas fa-trash"></i> Supprimer
                                 </button>
                             </td>
                         `;
@@ -1097,13 +1196,13 @@
                             <td>${day.dates.map(d => formatDate(d)).join(', ')}</td>
                             <td>${day.themes}</td>
                             <td>
-                                <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;" 
+                                <button class="btn btn-primary btn-sm" 
                                         onclick="showDetails('pedagogicalDay', ${day.id})">
-                                    Détails
+                                    <i class="fas fa-eye"></i> Détails
                                 </button>
-                                <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8rem;" 
+                                <button class="btn btn-danger btn-sm" 
                                         onclick="deleteItem('pedagogicalDay', ${day.id})">
-                                    Supprimer
+                                    <i class="fas fa-trash"></i> Supprimer
                                 </button>
                             </td>
                         `;
@@ -1123,13 +1222,13 @@
                                 <strong>Classes:</strong> ${eval.classes.join(', ')}
                             </td>
                             <td>
-                                <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem;" 
+                                <button class="btn btn-primary btn-sm" 
                                         onclick="showDetails('evaluation', ${eval.id})">
-                                    Détails
+                                    <i class="fas fa-eye"></i> Détails
                                 </button>
-                                <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8rem;" 
+                                <button class="btn btn-danger btn-sm" 
                                         onclick="deleteItem('evaluation', ${eval.id})">
-                                    Supprimer
+                                    <i class="fas fa-trash"></i> Supprimer
                                 </button>
                             </td>
                         `;
@@ -1146,9 +1245,9 @@
                             <td>${formatDate(holiday.date)}</td>
                             <td>-</td>
                             <td>
-                                <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8rem;" 
+                                <button class="btn btn-danger btn-sm" 
                                         onclick="deleteItem('holiday', ${holiday.id})">
-                                    Supprimer
+                                    <i class="fas fa-trash"></i> Supprimer
                                 </button>
                             </td>
                         `;
@@ -1309,7 +1408,7 @@
             title.textContent = 'Rapport des Activités Pédagogiques - Lycée Niamtougou';
             title.style.textAlign = 'center';
             title.style.marginBottom = '20px';
-            title.style.color = '#4facfe';
+            title.style.color = 'var(--primary-color)';
             printContainer.appendChild(title);
             
             // Ajouter la date du rapport
@@ -1330,7 +1429,7 @@
                     
                     const councilTitle = document.createElement('h2');
                     councilTitle.textContent = 'CONSEILS D\'ENSEIGNEMENT/CLASSE';
-                    councilTitle.style.borderBottom = '2px solid #4facfe';
+                    councilTitle.style.borderBottom = '2px solid var(--primary-color)';
                     councilTitle.style.paddingBottom = '10px';
                     councilTitle.style.marginBottom = '20px';
                     printContainer.appendChild(councilTitle);
@@ -1364,7 +1463,7 @@
                     
                     const pedagogicalTitle = document.createElement('h2');
                     pedagogicalTitle.textContent = 'JOURNÉES PÉDAGOGIQUES';
-                    pedagogicalTitle.style.borderBottom = '2px solid #4facfe';
+                    pedagogicalTitle.style.borderBottom = '2px solid var(--primary-color)';
                     pedagogicalTitle.style.paddingBottom = '10px';
                     pedagogicalTitle.style.marginBottom = '20px';
                     printContainer.appendChild(pedagogicalTitle);
@@ -1389,7 +1488,7 @@
                     
                     const evaluationTitle = document.createElement('h2');
                     evaluationTitle.textContent = 'ÉVALUATIONS';
-                    evaluationTitle.style.borderBottom = '2px solid #4facfe';
+                    evaluationTitle.style.borderBottom = '2px solid var(--primary-color)';
                     evaluationTitle.style.paddingBottom = '10px';
                     evaluationTitle.style.marginBottom = '20px';
                     printContainer.appendChild(evaluationTitle);
@@ -1420,7 +1519,7 @@
                     
                     const holidayTitle = document.createElement('h2');
                     holidayTitle.textContent = 'JOURS FÉRIÉS';
-                    holidayTitle.style.borderBottom = '2px solid #4facfe';
+                    holidayTitle.style.borderBottom = '2px solid var(--primary-color)';
                     holidayTitle.style.paddingBottom = '10px';
                     holidayTitle.style.marginBottom = '20px';
                     printContainer.appendChild(holidayTitle);
@@ -1451,7 +1550,7 @@
                     if (councilsData.length > 0) {
                         const allCouncilTitle = document.createElement('h2');
                         allCouncilTitle.textContent = 'CONSEILS D\'ENSEIGNEMENT/CLASSE';
-                        allCouncilTitle.style.borderBottom = '2px solid #4facfe';
+                        allCouncilTitle.style.borderBottom = '2px solid var(--primary-color)';
                         allCouncilTitle.style.paddingBottom = '10px';
                         allCouncilTitle.style.marginBottom = '20px';
                         printContainer.appendChild(allCouncilTitle);
@@ -1481,7 +1580,7 @@
                     if (pedagogicalDaysData.length > 0) {
                         const allPedagogicalTitle = document.createElement('h2');
                         allPedagogicalTitle.textContent = 'JOURNÉES PÉDAGOGIQUES';
-                        allPedagogicalTitle.style.borderBottom = '2px solid #4facfe';
+                        allPedagogicalTitle.style.borderBottom = '2px solid var(--primary-color)';
                         allPedagogicalTitle.style.paddingBottom = '10px';
                         allPedagogicalTitle.style.marginBottom = '20px';
                         printContainer.appendChild(allPedagogicalTitle);
@@ -1502,7 +1601,7 @@
                     if (evaluationsData.length > 0) {
                         const allEvaluationTitle = document.createElement('h2');
                         allEvaluationTitle.textContent = 'ÉVALUATIONS';
-                        allEvaluationTitle.style.borderBottom = '2px solid #4facfe';
+                        allEvaluationTitle.style.borderBottom = '2px solid var(--primary-color)';
                         allEvaluationTitle.style.paddingBottom = '10px';
                         allEvaluationTitle.style.marginBottom = '20px';
                         printContainer.appendChild(allEvaluationTitle);
@@ -1529,7 +1628,7 @@
                     if (holidaysData.length > 0) {
                         const allHolidayTitle = document.createElement('h2');
                         allHolidayTitle.textContent = 'JOURS FÉRIÉS';
-                        allHolidayTitle.style.borderBottom = '2px solid #4facfe';
+                        allHolidayTitle.style.borderBottom = '2px solid var(--primary-color)';
                         allHolidayTitle.style.paddingBottom = '10px';
                         allHolidayTitle.style.marginBottom = '20px';
                         printContainer.appendChild(allHolidayTitle);
@@ -1580,12 +1679,12 @@
                             color: #333;
                         }
                         h1 {
-                            color: #4facfe;
+                            color: var(--primary-color);
                             text-align: center;
                         }
                         h2 {
-                            color: #4facfe;
-                            border-bottom: 2px solid #4facfe;
+                            color: var(--primary-color);
+                            border-bottom: 2px solid var(--primary-color);
                             padding-bottom: 10px;
                         }
                         h3 {
