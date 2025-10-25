@@ -1,242 +1,379 @@
 <!DOCTYPE html>
 <html lang="fr">
-     <style>
-  .btn-retour {
-    padding: 8px 16px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .btn-retour:hover {
-    background-color: #e0e0e0;
-  }
-</style>
-
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Élèves</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --border-color: #dee2e6;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
-            background-color: #f5f5f5;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
+            background-color: #f5f7fa;
             color: #333;
+            line-height: 1.6;
+            padding: 0;
         }
-        
-        .form-section, .filter-section, .students-list, .stats-section {
-            margin-bottom: 30px;
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
             padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
         }
-        
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-retour {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background-color: var(--light-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .btn-retour:hover {
+            background-color: #e9ecef;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 15px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
         h2 {
             margin-bottom: 15px;
             color: #444;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
+            font-size: 1.4rem;
         }
-        
+
+        h3 {
+            margin: 20px 0 15px;
+            color: #555;
+            font-size: 1.2rem;
+        }
+
         .form-row {
             display: flex;
             flex-wrap: wrap;
             margin: 0 -10px;
         }
-        
+
         .form-group {
             flex: 1 0 300px;
             margin: 0 10px 15px;
         }
-        
+
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: 600;
+            color: #555;
         }
-        
+
+        .required::after {
+            content: " *";
+            color: var(--danger-color);
+        }
+
         input, select {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
             font-size: 16px;
+            transition: var(--transition);
         }
-        
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
         .buttons {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
             margin-top: 20px;
             flex-wrap: wrap;
         }
-        
+
         button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             padding: 12px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
-            transition: background-color 0.3s;
+            transition: var(--transition);
         }
-        
+
         .btn-primary {
-            background-color: #4CAF50;
+            background-color: var(--secondary-color);
             color: white;
         }
-        
+
         .btn-primary:hover {
-            background-color: #45a049;
+            background-color: #27ae60;
         }
-        
+
         .btn-secondary {
-            background-color: #2196F3;
+            background-color: var(--primary-color);
             color: white;
         }
-        
+
         .btn-secondary:hover {
-            background-color: #0b7dda;
+            background-color: #2980b9;
         }
-        
+
         .btn-danger {
-            background-color: #f44336;
+            background-color: var(--danger-color);
             color: white;
         }
-        
+
         .btn-danger:hover {
-            background-color: #d32f2f;
+            background-color: #c0392b;
         }
-        
+
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+
         .filter-controls {
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
             margin-bottom: 15px;
         }
-        
+
         .filter-controls > div {
             flex: 1;
             min-width: 200px;
         }
-        
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
-        
+
         table, th, td {
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
         }
-        
+
         th, td {
             padding: 12px;
             text-align: left;
         }
-        
+
         th {
             background-color: #f2f2f2;
             position: sticky;
             top: 0;
+            font-weight: 600;
         }
-        
+
         tr:nth-child(even) {
             background-color: #f9f9f9;
         }
-        
+
         tr:hover {
             background-color: #f1f1f1;
         }
-        
+
         .action-btn {
             padding: 6px 10px;
             margin: 0 2px;
             font-size: 14px;
         }
-        
+
         .notification {
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: 15px;
-            border-radius: 4px;
+            padding: 15px 20px;
+            border-radius: 6px;
             color: white;
             opacity: 0;
             transition: opacity 0.5s;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--shadow);
         }
-        
+
         .success {
-            background-color: #4CAF50;
+            background-color: var(--secondary-color);
         }
-        
+
         .error {
-            background-color: #f44336;
+            background-color: var(--danger-color);
         }
-        
+
+        .warning {
+            background-color: var(--warning-color);
+        }
+
         .stats-container {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
             margin-top: 20px;
         }
-        
+
         .stats-box {
             flex: 1;
             min-width: 300px;
-            background-color: #f9f9f9;
-            padding: 15px;
+            background-color: var(--light-color);
+            padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--primary-color);
         }
-        
+
         .stats-box h3 {
             margin-bottom: 15px;
             color: #333;
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        
+
         .stats-item {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
+            padding: 10px 0;
             border-bottom: 1px solid #eee;
         }
-        
+
         .stats-item:last-child {
             border-bottom: none;
         }
-        
+
         .stats-total {
             font-weight: bold;
             margin-top: 10px;
             padding-top: 10px;
             border-top: 2px solid #ddd;
         }
-        
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #adb5bd;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .stats-box {
+                min-width: 250px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .stats-box {
+                min-width: 100%;
+            }
+        }
+
         @media (max-width: 768px) {
             .form-group {
                 flex: 1 0 100%;
@@ -254,78 +391,275 @@
                 min-width: 100%;
             }
             
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .card-header {
+                padding: 12px 15px;
+            }
+            
+            .card-body {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .btn-retour {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+            
+            .card-header {
+                padding: 10px 15px;
+                font-size: 1.1rem;
+            }
+            
+            .stats-container {
+                gap: 15px;
+            }
+            
             .stats-box {
-                min-width: 100%;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .card-header {
+                font-size: 1rem;
+            }
+            
+            .buttons {
+                gap: 10px;
+            }
+            
+            button {
+                padding: 10px 15px;
+                font-size: 14px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-         <button class="btn-retour" onclick="history.back()">← Retour</button>
-        <h1>Gestion des Élèves</h1>
+        <div class="header">
+            <h1><i class="fas fa-user-graduate"></i> Gestion des Élèves</h1>
+            <button class="btn-retour" onclick="history.back()">
+                <i class="fas fa-arrow-left"></i> Retour
+            </button>
+        </div>
         
         <!-- Formulaire d'inscription -->
-        <div class="form-section">
-            <h2>Inscription d'un Élève</h2>
-            <form id="studentForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="lastName">Nom de l'élève *</label>
-                        <input type="text" id="lastName" required>
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-user-plus"></i> Inscription d'un Élève
+            </div>
+            <div class="card-body">
+                <form id="studentForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="lastName" class="required">Nom de l'élève</label>
+                            <input type="text" id="lastName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstName" class="required">Prénom de l'élève</label>
+                            <input type="text" id="firstName" required>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="firstName">Prénom de l'élève *</label>
-                        <input type="text" id="firstName" required>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="registrationDate" class="required">Date d'inscription</label>
+                            <input type="date" id="registrationDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="birthDate" class="required">Date de naissance</label>
+                            <input type="date" id="birthDate" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="birthPlace" class="required">Lieu de naissance</label>
+                            <input type="text" id="birthPlace" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="age">Âge</label>
+                            <input type="number" id="age" min="0" readonly>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gender" class="required">Sexe</label>
+                            <select id="gender" required>
+                                <option value="">Sélectionner</option>
+                                <option value="M">Masculin</option>
+                                <option value="F">Féminin</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="status" class="required">Statut</label>
+                            <select id="status" required>
+                                <option value="">Sélectionner</option>
+                                <option value="Nouveau">Nouveau</option>
+                                <option value="Redoublant">Redoublant</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="class" class="required">Classe</label>
+                            <select id="class" required>
+                                <option value="">Sélectionner une classe</option>
+                                <option value="CP">CP</option>
+                                <option value="CE1">CE1</option>
+                                <option value="CE2">CE2</option>
+                                <option value="CM1">CM1</option>
+                                <option value="CM2">CM2</option>
+                                <option value="6ème">6ème</option>
+                                <option value="5ème">5ème</option>
+                                <option value="4ème">4ème</option>
+                                <option value="3ème">3ème</option>
+                                <option value="2nde">2nde</option>
+                                <option value="1ère">1ère</option>
+                                <option value="Terminale">Terminale</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <h3><i class="fas fa-users"></i> Informations du Parent/Tuteur</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="parentLastName" class="required">Nom du parent/tuteur</label>
+                            <input type="text" id="parentLastName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="parentFirstName" class="required">Prénom du parent/tuteur</label>
+                            <input type="text" id="parentFirstName" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="parentAddress" class="required">Adresse</label>
+                            <input type="text" id="parentAddress" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="parentContact" class="required">Contact</label>
+                            <input type="text" id="parentContact" required>
+                        </div>
+                    </div>
+                    
+                    <div class="buttons">
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Enregistrer
+                        </button>
+                        <button type="reset" class="btn-danger">
+                            <i class="fas fa-times"></i> Annuler
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Statistiques -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-chart-bar"></i> Statistiques des Élèves
+            </div>
+            <div class="card-body">
+                <div class="stats-container">
+                    <div class="stats-box">
+                        <h3><i class="fas fa-chalkboard-teacher"></i> Effectif par Classe</h3>
+                        <div id="statsByClass">
+                            <!-- Les statistiques par classe seront ajoutées ici -->
+                        </div>
+                    </div>
+                    
+                    <div class="stats-box">
+                        <h3><i class="fas fa-venus-mars"></i> Effectif par Sexe</h3>
+                        <div id="statsByGender">
+                            <!-- Les statistiques par sexe seront ajoutées ici -->
+                        </div>
+                    </div>
+                    
+                    <div class="stats-box">
+                        <h3><i class="fas fa-user-tag"></i> Effectif par Statut</h3>
+                        <div id="statsByStatus">
+                            <!-- Les statistiques par statut seront ajoutées ici -->
+                        </div>
                     </div>
                 </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="registrationDate">Date d'inscription *</label>
-                        <input type="date" id="registrationDate" required>
+            </div>
+        </div>
+        
+        <!-- Filtres et actions -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-filter"></i> Filtres et Actions
+            </div>
+            <div class="card-body">
+                <div class="filter-controls">
+                    <div>
+                        <label for="searchName"><i class="fas fa-search"></i> Rechercher par nom/prénom</label>
+                        <input type="text" id="searchName" placeholder="Entrez un nom ou prénom">
                     </div>
-                    <div class="form-group">
-                        <label for="birthDate">Date de naissance *</label>
-                        <input type="date" id="birthDate" required>
+                    <div>
+                        <label for="filterAge"><i class="fas fa-filter"></i> Filtrer par âge</label>
+                        <select id="filterAge">
+                            <option value="">Tous les âges</option>
+                            <option value="5">5 ans</option>
+                            <option value="6">6 ans</option>
+                            <option value="7">7 ans</option>
+                            <option value="8">8 ans</option>
+                            <option value="9">9 ans</option>
+                            <option value="10">10 ans</option>
+                            <option value="11">11 ans</option>
+                            <option value="12">12 ans</option>
+                            <option value="13">13 ans</option>
+                            <option value="14">14 ans</option>
+                            <option value="15">15 ans</option>
+                            <option value="16">16 ans</option>
+                            <option value="17">17 ans</option>
+                            <option value="18">18 ans</option>
+                        </select>
                     </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="birthPlace">Lieu de naissance *</label>
-                        <input type="text" id="birthPlace" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="age">Âge</label>
-                        <input type="number" id="age" min="0" readonly>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="gender">Sexe *</label>
-                        <select id="gender" required>
-                            <option value="">Sélectionner</option>
+                    <div>
+                        <label for="filterGender"><i class="fas fa-filter"></i> Filtrer par sexe</label>
+                        <select id="filterGender">
+                            <option value="">Tous</option>
                             <option value="M">Masculin</option>
                             <option value="F">Féminin</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="status">Statut *</label>
-                        <select id="status" required>
-                            <option value="">Sélectionner</option>
+                    <div>
+                        <label for="filterStatus"><i class="fas fa-filter"></i> Filtrer par statut</label>
+                        <select id="filterStatus">
+                            <option value="">Tous</option>
                             <option value="Nouveau">Nouveau</option>
                             <option value="Redoublant">Redoublant</option>
                         </select>
                     </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="class">Classe *</label>
-                        <select id="class" required>
-                            <option value="">Sélectionner une classe</option>
+                    <div>
+                        <label for="filterClass"><i class="fas fa-filter"></i> Filtrer par classe</label>
+                        <select id="filterClass">
+                            <option value="">Toutes les classes</option>
                             <option value="CP">CP</option>
                             <option value="CE1">CE1</option>
                             <option value="CE2">CE2</option>
@@ -342,159 +676,49 @@
                     </div>
                 </div>
                 
-                <h3 style="margin: 20px 0 15px; color: #555;">Informations du Parent/Tuteur</h3>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="parentLastName">Nom du parent/tuteur *</label>
-                        <input type="text" id="parentLastName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="parentFirstName">Prénom du parent/tuteur *</label>
-                        <input type="text" id="parentFirstName" required>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="parentAddress">Adresse *</label>
-                        <input type="text" id="parentAddress" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="parentContact">Contact *</label>
-                        <input type="text" id="parentContact" required>
-                    </div>
-                </div>
-                
                 <div class="buttons">
-                    <button type="submit" class="btn-primary">Enregistrer</button>
-                    <button type="reset" class="btn-danger">Annuler</button>
-                </div>
-            </form>
-        </div>
-        
-        <!-- Statistiques -->
-        <div class="stats-section">
-            <h2>Statistiques des Élèves</h2>
-            <div class="stats-container">
-                <div class="stats-box">
-                    <h3>Effectif par Classe</h3>
-                    <div id="statsByClass">
-                        <!-- Les statistiques par classe seront ajoutées ici -->
+                    <button id="generateJson" class="btn-secondary">
+                        <i class="fas fa-file-code"></i> Générer Fichiers JSON
+                    </button>
+                    <button id="exportData" class="btn-secondary">
+                        <i class="fas fa-file-export"></i> Exporter les Données
+                    </button>
+                    <div class="file-input-wrapper">
+                        <button id="importData" class="btn-warning">
+                            <i class="fas fa-file-import"></i> Importer des Données
+                        </button>
+                        <input type="file" id="importFile" accept=".json">
                     </div>
                 </div>
-                
-                <div class="stats-box">
-                    <h3>Effectif par Sexe</h3>
-                    <div id="statsByGender">
-                        <!-- Les statistiques par sexe seront ajoutées ici -->
-                    </div>
-                </div>
-                
-                <div class="stats-box">
-                    <h3>Effectif par Statut</h3>
-                    <div id="statsByStatus">
-                        <!-- Les statistiques par statut seront ajoutées ici -->
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Filtres et actions -->
-        <div class="filter-section">
-            <h2>Filtres et Actions</h2>
-            
-            <div class="filter-controls">
-                <div>
-                    <label for="searchName">Rechercher par nom/prénom</label>
-                    <input type="text" id="searchName" placeholder="Entrez un nom ou prénom">
-                </div>
-                <div>
-                    <label for="filterAge">Filtrer par âge</label>
-                    <select id="filterAge">
-                        <option value="">Tous les âges</option>
-                        <option value="5">5 ans</option>
-                        <option value="6">6 ans</option>
-                        <option value="7">7 ans</option>
-                        <option value="8">8 ans</option>
-                        <option value="9">9 ans</option>
-                        <option value="10">10 ans</option>
-                        <option value="11">11 ans</option>
-                        <option value="12">12 ans</option>
-                        <option value="13">13 ans</option>
-                        <option value="14">14 ans</option>
-                        <option value="15">15 ans</option>
-                        <option value="16">16 ans</option>
-                        <option value="17">17 ans</option>
-                        <option value="18">18 ans</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="filterGender">Filtrer par sexe</label>
-                    <select id="filterGender">
-                        <option value="">Tous</option>
-                        <option value="M">Masculin</option>
-                        <option value="F">Féminin</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="filterStatus">Filtrer par statut</label>
-                    <select id="filterStatus">
-                        <option value="">Tous</option>
-                        <option value="Nouveau">Nouveau</option>
-                        <option value="Redoublant">Redoublant</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="filterClass">Filtrer par classe</label>
-                    <select id="filterClass">
-                        <option value="">Toutes les classes</option>
-                        <option value="CP">CP</option>
-                        <option value="CE1">CE1</option>
-                        <option value="CE2">CE2</option>
-                        <option value="CM1">CM1</option>
-                        <option value="CM2">CM2</option>
-                        <option value="6ème">6ème</option>
-                        <option value="5ème">5ème</option>
-                        <option value="4ème">4ème</option>
-                        <option value="3ème">3ème</option>
-                        <option value="2nde">2nde</option>
-                        <option value="1ère">1ère</option>
-                        <option value="Terminale">Terminale</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="buttons">
-                <button id="generateJson" class="btn-secondary">Générer Fichiers JSON</button>
-                <button id="exportData" class="btn-secondary">Exporter les Données</button>
-                <button id="importData" class="btn-secondary">Importer des Données</button>
-                <input type="file" id="importFile" accept=".json" style="display: none;">
             </div>
         </div>
         
         <!-- Liste des élèves -->
-        <div class="students-list">
-            <h2>Liste des Élèves</h2>
-            <table id="studentsTable">
-                <thead>
-                    <tr>
-                        <th>Nom et Prénom</th>
-                        <th>Date d'inscription</th>
-                        <th>Date de naissance</th>
-                        <th>Âge</th>
-                        <th>Sexe</th>
-                        <th>Statut</th>
-                        <th>Classe</th>
-                        <th>Parent/Tuteur</th>
-                        <th>Contact</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="studentsTableBody">
-                    <!-- Les données seront ajoutées dynamiquement -->
-                </tbody>
-            </table>
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-list"></i> Liste des Élèves
+            </div>
+            <div class="card-body">
+                <table id="studentsTable">
+                    <thead>
+                        <tr>
+                            <th>Nom et Prénom</th>
+                            <th>Date d'inscription</th>
+                            <th>Date de naissance</th>
+                            <th>Âge</th>
+                            <th>Sexe</th>
+                            <th>Statut</th>
+                            <th>Classe</th>
+                            <th>Parent/Tuteur</th>
+                            <th>Contact</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsTableBody">
+                        <!-- Les données seront ajoutées dynamiquement -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     
@@ -621,7 +845,15 @@
             
             if (students.length === 0) {
                 const row = document.createElement('tr');
-                row.innerHTML = `<td colspan="10" style="text-align: center;">Aucun élève enregistré</td>`;
+                row.innerHTML = `
+                    <td colspan="10">
+                        <div class="empty-state">
+                            <i class="fas fa-user-graduate"></i>
+                            <h3>Aucun élève enregistré</h3>
+                            <p>Commencez par ajouter un élève via le formulaire d'inscription.</p>
+                        </div>
+                    </td>
+                `;
                 tableBody.appendChild(row);
                 return;
             }
@@ -639,7 +871,9 @@
                     <td>${student.parentLastName} ${student.parentFirstName}<br><small>${student.parentAddress}</small></td>
                     <td>${student.parentContact}</td>
                     <td>
-                        <button class="btn-danger action-btn" onclick="deleteStudent(${student.id})">Supprimer</button>
+                        <button class="btn-danger action-btn" onclick="deleteStudent(${student.id})">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
                     </td>
                 `;
                 tableBody.appendChild(row);
@@ -668,7 +902,12 @@
                 }
             });
             
-            classStatsHTML += `<div class="stats-total">Total: <span>${totalByClass}</span></div>`;
+            if (classStatsHTML === '') {
+                classStatsHTML = '<div class="stats-item">Aucun élève</div>';
+            } else {
+                classStatsHTML += `<div class="stats-total">Total: <span>${totalByClass}</span></div>`;
+            }
+            
             document.getElementById('statsByClass').innerHTML = classStatsHTML;
             
             // Statistiques par sexe
@@ -677,11 +916,17 @@
                 'F': students.filter(student => student.gender === 'F').length
             };
             
-            const genderStatsHTML = `
+            let genderStatsHTML = `
                 <div class="stats-item">Masculin: <span>${statsByGender['M']}</span></div>
                 <div class="stats-item">Féminin: <span>${statsByGender['F']}</span></div>
-                <div class="stats-total">Total: <span>${statsByGender['M'] + statsByGender['F']}</span></div>
             `;
+            
+            if (statsByGender['M'] === 0 && statsByGender['F'] === 0) {
+                genderStatsHTML = '<div class="stats-item">Aucun élève</div>';
+            } else {
+                genderStatsHTML += `<div class="stats-total">Total: <span>${statsByGender['M'] + statsByGender['F']}</span></div>`;
+            }
+            
             document.getElementById('statsByGender').innerHTML = genderStatsHTML;
             
             // Statistiques par statut
@@ -690,11 +935,17 @@
                 'Redoublant': students.filter(student => student.status === 'Redoublant').length
             };
             
-            const statusStatsHTML = `
+            let statusStatsHTML = `
                 <div class="stats-item">Nouveaux: <span>${statsByStatus['Nouveau']}</span></div>
                 <div class="stats-item">Redoublants: <span>${statsByStatus['Redoublant']}</span></div>
-                <div class="stats-total">Total: <span>${statsByStatus['Nouveau'] + statsByStatus['Redoublant']}</span></div>
             `;
+            
+            if (statsByStatus['Nouveau'] === 0 && statsByStatus['Redoublant'] === 0) {
+                statusStatsHTML = '<div class="stats-item">Aucun élève</div>';
+            } else {
+                statusStatsHTML += `<div class="stats-total">Total: <span>${statsByStatus['Nouveau'] + statsByStatus['Redoublant']}</span></div>`;
+            }
+            
             document.getElementById('statsByStatus').innerHTML = statusStatsHTML;
         }
         
@@ -737,7 +988,15 @@
             
             if (filteredStudents.length === 0) {
                 const row = document.createElement('tr');
-                row.innerHTML = `<td colspan="10" style="text-align: center;">Aucun élève ne correspond aux critères</td>`;
+                row.innerHTML = `
+                    <td colspan="10">
+                        <div class="empty-state">
+                            <i class="fas fa-search"></i>
+                            <h3>Aucun élève ne correspond aux critères</h3>
+                            <p>Essayez de modifier vos critères de recherche.</p>
+                        </div>
+                    </td>
+                `;
                 tableBody.appendChild(row);
                 return;
             }
@@ -756,7 +1015,9 @@
                     <td>${student.parentLastName} ${student.parentFirstName}<br><small>${student.parentAddress}</small></td>
                     <td>${student.parentContact}</td>
                     <td>
-                        <button class="btn-danger action-btn" onclick="deleteStudent(${student.id})">Supprimer</button>
+                        <button class="btn-danger action-btn" onclick="deleteStudent(${student.id})">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
                     </td>
                 `;
                 tableBody.appendChild(row);
@@ -886,6 +1147,13 @@
             const notification = document.getElementById('notification');
             notification.textContent = message;
             notification.className = `notification ${type}`;
+            
+            // Ajouter l'icône appropriée
+            const icon = type === 'success' ? 'fas fa-check-circle' : 
+                         type === 'error' ? 'fas fa-exclamation-circle' : 
+                         'fas fa-info-circle';
+            
+            notification.innerHTML = `<i class="${icon}"></i> ${message}`;
             notification.style.opacity = 1;
             
             setTimeout(() => {
