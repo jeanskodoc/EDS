@@ -4,15 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulaire d'Évaluation - Enseignants</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #3498db;
-            --secondary: #2c3e50;
-            --success: #2ecc71;
-            --warning: #f39c12;
-            --danger: #e74c3c;
-            --light: #ecf0f1;
-            --dark: #34495e;
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --border-color: #bdc3c7;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
         
         * {
@@ -30,22 +34,58 @@
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             background: white;
             border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow);
             overflow: hidden;
         }
         
-        header {
-            background: linear-gradient(135deg, var(--secondary), var(--primary));
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px;
+        }
+
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-retour {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background-color: var(--light-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .btn-retour:hover {
+            background-color: #e9ecef;
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
             color: white;
             padding: 25px;
             text-align: center;
         }
         
-        h1 {
+        .page-header h1 {
             font-size: 28px;
             margin-bottom: 10px;
         }
@@ -59,15 +99,33 @@
             display: flex;
             flex-wrap: wrap;
             padding: 20px;
+            gap: 20px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            padding: 15px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-body {
+            padding: 20px;
         }
         
         .config-panel {
             flex: 1;
             min-width: 300px;
-            padding: 20px;
-            background: var(--light);
-            border-radius: 8px;
-            margin-right: 20px;
         }
         
         .form-container {
@@ -83,15 +141,22 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: var(--dark);
+            color: var(--dark-color);
         }
         
         input, select, textarea {
             width: 100%;
             padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
             font-size: 16px;
+            transition: var(--transition);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
         }
         
         textarea {
@@ -99,45 +164,67 @@
             resize: vertical;
         }
         
-        .btn {
-            padding: 12px 25px;
-            background-color: var(--primary);
-            color: white;
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            transition: var(--transition);
         }
         
-        .btn:hover {
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
             background-color: #2980b9;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         
-        .btn i {
-            margin-right: 8px;
-        }
-        
         .btn-success {
-            background-color: var(--success);
+            background-color: var(--success-color);
+            color: white;
         }
         
         .btn-success:hover {
             background-color: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         
         .btn-danger {
-            background-color: var(--danger);
+            background-color: var(--danger-color);
+            color: white;
         }
         
         .btn-danger:hover {
             background-color: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background-color: #e67e22;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 14px;
         }
         
         .student-row {
@@ -148,8 +235,8 @@
             padding: 15px;
             background: #f9f9f9;
             border-radius: 8px;
-            border-left: 4px solid var(--primary);
-            transition: all 0.3s;
+            border-left: 4px solid var(--primary-color);
+            transition: var(--transition);
         }
         
         .student-row:hover {
@@ -184,13 +271,15 @@
             justify-content: space-between;
             margin-top: 30px;
             padding: 20px;
-            background: var(--light);
+            background: var(--light-color);
             border-radius: 8px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
         
         .alert {
             padding: 15px;
-            border-radius: 4px;
+            border-radius: 6px;
             margin-bottom: 20px;
             display: none;
         }
@@ -210,7 +299,7 @@
         .json-output {
             margin-top: 30px;
             padding: 20px;
-            background: #2c3e50;
+            background: var(--secondary-color);
             color: white;
             border-radius: 8px;
             display: none;
@@ -220,7 +309,7 @@
             white-space: pre-wrap;
             word-break: break-all;
             font-family: 'Courier New', monospace;
-            background: #34495e;
+            background: var(--dark-color);
             padding: 15px;
             border-radius: 4px;
             max-height: 300px;
@@ -231,145 +320,271 @@
             margin-top: 15px;
         }
         
-        .btn-retour {
-            padding: 8px 16px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-bottom: 20px;
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
         }
-        
-        .btn-retour:hover {
-            background-color: #e0e0e0;
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #adb5bd;
         }
-        
+
+        .stats-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+
         @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                margin: 0;
+                border-radius: 15px;
+            }
+
             .main-content {
                 flex-direction: column;
-            }
-            
-            .config-panel {
-                margin-right: 0;
-                margin-bottom: 20px;
             }
             
             .student-row {
                 flex-direction: column;
             }
+
+            .actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .card-body {
+                padding: 15px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card-header {
+                padding: 12px 15px;
+                font-size: 1.1rem;
+            }
         }
     </style>
 </head>
 <body>
-   
-    
     <div class="container">
-         <button class="btn-retour" onclick="history.back()">← Retour</button>
-        <header>
-            <h1>Formulaire d'Évaluation des Élèves</h1>
+        <div class="header">
+            <h1><i class="fas fa-chart-line"></i> Formulaire d'Évaluation des Élèves</h1>
+            <button class="btn-retour" onclick="history.back()">
+                <i class="fas fa-arrow-left"></i> Retour
+            </button>
+        </div>
+        
+        <div class="page-header">
+            <h1>Système d'Évaluation Scolaire</h1>
             <p class="description">Saisissez les notes et appréciations pour générer un fichier JSON d'analyse</p>
-        </header>
+        </div>
         
         <div class="alert alert-success" id="successAlert"></div>
         <div class="alert alert-danger" id="errorAlert"></div>
         
         <div class="main-content">
-            <div class="config-panel">
-                <h2>Configuration</h2>
-                <div class="form-group">
-                    <label for="classe">Classe</label>
-                    <select id="classe" required onchange="loadStudents()">
-                        <option value="">Sélectionnez une classe</option>
-                        <option value="6ème A">6ème A</option>
-                        <option value="6ème B">6ème B</option>
-                        <option value="5ème A">5ème A</option>
-                        <option value="5ème B">5ème B</option>
-                        <option value="4ème A">4ème A</option>
-                        <option value="4ème B">4ème B</option>
-                        <option value="3ème A">3ème A</option>
-                        <option value="3ème B">3ème B</option>
-                        <option value="2nde A">2nde A</option>
-                        <option value="2nde B">2nde B</option>
-                        <option value="1ère S">1ère S</option>
-                        <option value="1ère ES">1ère ES</option>
-                        <option value="1ère L">1ère L</option>
-                        <option value="Terminale S">Terminale S</option>
-                        <option value="Terminale ES">Terminale ES</option>
-                        <option value="Terminale L">Terminale L</option>
-                    </select>
+            <div class="config-panel card">
+                <div class="card-header">
+                    <i class="fas fa-cogs"></i> Configuration
                 </div>
-                
-                <div class="form-group">
-                    <label for="matiere">Matière</label>
-                    <select id="matiere" required>
-                        <option value="">Sélectionnez une matière</option>
-                        <option value="Mathématiques">Mathématiques</option>
-                        <option value="Français">Français</option>
-                        <option value="Histoire-Géographie">Histoire-Géographie</option>
-                        <option value="SVT">SVT</option>
-                        <option value="Physique-Chimie">Physique-Chimie</option>
-                        <option value="Anglais">Anglais</option>
-                        <option value="Espagnol">Espagnol</option>
-                        <option value="Allemand">Allemand</option>
-                        <option value="Philosophie">Philosophie</option>
-                        <option value="Éducation Physique et Sportive">Éducation Physique et Sportive</option>
-                        <option value="Technologie">Technologie</option>
-                        <option value="Sciences Économiques et Sociales">Sciences Économiques et Sociales</option>
-                    </select>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="classe"><i class="fas fa-users"></i> Classe</label>
+                        <select id="classe" required onchange="loadStudents()">
+                            <option value="">Sélectionnez une classe</option>
+                            <option value="6ème A">6ème A</option>
+                            <option value="6ème B">6ème B</option>
+                            <option value="5ème A">5ème A</option>
+                            <option value="5ème B">5ème B</option>
+                            <option value="4ème A">4ème A</option>
+                            <option value="4ème B">4ème B</option>
+                            <option value="3ème A">3ème A</option>
+                            <option value="3ème B">3ème B</option>
+                            <option value="2nde A">2nde A</option>
+                            <option value="2nde B">2nde B</option>
+                            <option value="1ère S">1ère S</option>
+                            <option value="1ère ES">1ère ES</option>
+                            <option value="1ère L">1ère L</option>
+                            <option value="Terminale S">Terminale S</option>
+                            <option value="Terminale ES">Terminale ES</option>
+                            <option value="Terminale L">Terminale L</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="matiere"><i class="fas fa-book"></i> Matière</label>
+                        <select id="matiere" required>
+                            <option value="">Sélectionnez une matière</option>
+                            <option value="Mathématiques">Mathématiques</option>
+                            <option value="Français">Français</option>
+                            <option value="Histoire-Géographie">Histoire-Géographie</option>
+                            <option value="SVT">SVT</option>
+                            <option value="Physique-Chimie">Physique-Chimie</option>
+                            <option value="Anglais">Anglais</option>
+                            <option value="Espagnol">Espagnol</option>
+                            <option value="Allemand">Allemand</option>
+                            <option value="Philosophie">Philosophie</option>
+                            <option value="Éducation Physique et Sportive">Éducation Physique et Sportive</option>
+                            <option value="Technologie">Technologie</option>
+                            <option value="Sciences Économiques et Sociales">Sciences Économiques et Sociales</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="enseignant"><i class="fas fa-user-tie"></i> Enseignant</label>
+                        <input type="text" id="enseignant" placeholder="Votre nom" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="date"><i class="fas fa-calendar-alt"></i> Date de l'évaluation</label>
+                        <input type="date" id="date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="type"><i class="fas fa-tasks"></i> Type d'évaluation</label>
+                        <select id="type">
+                            <option value="Contrôle">Contrôle</option>
+                            <option value="Devoir maison">Devoir maison</option>
+                            <option value="Interrogation">Interrogation</option>
+                            <option value="Examen">Examen</option>
+                            <option value="Projet">Projet</option>
+                            <option value="Oral">Oral</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn-primary" id="addStudent">
+                        <i class="fas fa-user-plus"></i> Ajouter un élève manuellement
+                    </button>
+
+                    <!-- Statistiques en temps réel -->
+                    <div class="stats-card">
+                        <h3><i class="fas fa-chart-bar"></i> Statistiques</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value" id="total-students">0</div>
+                                <div class="stat-label">Élèves</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="average-grade">-</div>
+                                <div class="stat-label">Moyenne</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="highest-grade">-</div>
+                                <div class="stat-label">Note max</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="lowest-grade">-</div>
+                                <div class="stat-label">Note min</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="enseignant">Enseignant</label>
-                    <input type="text" id="enseignant" placeholder="Votre nom" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="date">Date de l'évaluation</label>
-                    <input type="date" id="date" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="type">Type d'évaluation</label>
-                    <select id="type">
-                        <option value="Contrôle">Contrôle</option>
-                        <option value="Devoir maison">Devoir maison</option>
-                        <option value="Interrogation">Interrogation</option>
-                        <option value="Examen">Examen</option>
-                        <option value="Projet">Projet</option>
-                        <option value="Oral">Oral</option>
-                    </select>
-                </div>
-                
-                <button class="btn" id="addStudent">
-                    <i>+</i> Ajouter un élève manuellement
-                </button>
             </div>
             
-            <div class="form-container">
-                <h2>Évaluations des élèves</h2>
-                <div id="studentsContainer">
-                    <!-- Les lignes des élèves seront ajoutées ici dynamiquement -->
+            <div class="form-container card">
+                <div class="card-header">
+                    <i class="fas fa-clipboard-list"></i> Évaluations des élèves
+                </div>
+                <div class="card-body">
+                    <div id="studentsContainer">
+                        <div class="empty-state">
+                            <i class="fas fa-users"></i>
+                            <h3>Aucun élève ajouté</h3>
+                            <p>Sélectionnez une classe pour charger la liste des élèves ou ajoutez des élèves manuellement.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         
         <div class="actions">
-            <button class="btn btn-danger" id="resetForm">
-                <i>↺</i> Réinitialiser
+            <button class="btn-danger" id="resetForm">
+                <i class="fas fa-undo"></i> Réinitialiser
             </button>
             
-            <button class="btn btn-success" id="generateJson">
-                <i>{"}"}</i> Générer le JSON
+            <button class="btn-warning" id="generateStats">
+                <i class="fas fa-chart-pie"></i> Voir les statistiques
+            </button>
+            
+            <button class="btn-success" id="generateJson">
+                <i class="fas fa-file-code"></i> Générer le JSON
             </button>
         </div>
         
-        <div class="json-output" id="jsonOutput">
-            <h2>Fichier JSON généré</h2>
-            <pre id="jsonContent"></pre>
-            <button class="btn download-btn" id="downloadJson">
-                <i>⭳</i> Télécharger le fichier JSON
-            </button>
+        <div class="json-output card" id="jsonOutput">
+            <div class="card-header">
+                <i class="fas fa-file-export"></i> Fichier JSON généré
+            </div>
+            <div class="card-body">
+                <pre id="jsonContent"></pre>
+                <button class="btn-primary download-btn" id="downloadJson">
+                    <i class="fas fa-download"></i> Télécharger le fichier JSON
+                </button>
+            </div>
         </div>
     </div>
 
@@ -450,6 +665,7 @@
             const addStudentBtn = document.getElementById('addStudent');
             const resetFormBtn = document.getElementById('resetForm');
             const generateJsonBtn = document.getElementById('generateJson');
+            const generateStatsBtn = document.getElementById('generateStats');
             const downloadJsonBtn = document.getElementById('downloadJson');
             const studentsContainer = document.getElementById('studentsContainer');
             const jsonOutput = document.getElementById('jsonOutput');
@@ -465,6 +681,7 @@
             addStudentBtn.addEventListener('click', addStudentRow);
             resetFormBtn.addEventListener('click', resetForm);
             generateJsonBtn.addEventListener('click', generateJson);
+            generateStatsBtn.addEventListener('click', generateStats);
             downloadJsonBtn.addEventListener('click', downloadJson);
             
             // Fonction pour charger les élèves en fonction de la classe sélectionnée
@@ -481,6 +698,7 @@
                     });
                     
                     showSuccess(`Liste des élèves de ${selectedClass} chargée avec succès!`);
+                    updateStats();
                 }
             }
             
@@ -492,28 +710,28 @@
                 
                 row.innerHTML = `
                     <div class="student-name">
-                        <label for="name-${studentId}">Nom de l'élève</label>
+                        <label for="name-${studentId}"><i class="fas fa-user"></i> Nom de l'élève</label>
                         <input type="text" id="name-${studentId}" class="student-name-input" value="${name}" required>
                     </div>
                     
                     <div class="student-note">
-                        <label for="note-${studentId}">Note /20</label>
-                        <input type="number" id="note-${studentId}" class="student-note-input" min="0" max="20" step="0.5" required>
+                        <label for="note-${studentId}"><i class="fas fa-star"></i> Note /20</label>
+                        <input type="number" id="note-${studentId}" class="student-note-input" min="0" max="20" step="0.5" required oninput="updateStats()">
                     </div>
                     
                     <div class="student-points">
-                        <label for="points-forts-${studentId}">Points forts (séparés par des virgules)</label>
+                        <label for="points-forts-${studentId}"><i class="fas fa-thumbs-up"></i> Points forts (séparés par des virgules)</label>
                         <textarea id="points-forts-${studentId}" class="student-points-forts-input" placeholder="Ex: Calcul mental, Résolution de problèmes"></textarea>
                     </div>
                     
                     <div class="student-points">
-                        <label for="points-faibles-${studentId}">Points faibles (séparés par des virgules)</label>
+                        <label for="points-faibles-${studentId}"><i class="fas fa-thumbs-down"></i> Points faibles (séparés par des virgules)</label>
                         <textarea id="points-faibles-${studentId}" class="student-points-faibles-input" placeholder="Ex: Géométrie, Rédaction"></textarea>
                     </div>
                     
                     <div class="student-actions">
-                        <button class="btn btn-danger" onclick="removeStudent(${studentId})">
-                            <i>×</i>
+                        <button class="btn-danger btn-sm" onclick="removeStudent(${studentId})">
+                            <i class="fas fa-trash"></i>
                         </button>
                     </div>
                 `;
@@ -530,34 +748,35 @@
                 
                 row.innerHTML = `
                     <div class="student-name">
-                        <label for="name-${studentId}">Nom de l'élève</label>
+                        <label for="name-${studentId}"><i class="fas fa-user"></i> Nom de l'élève</label>
                         <input type="text" id="name-${studentId}" class="student-name-input" placeholder="Nom et prénom" required>
                     </div>
                     
                     <div class="student-note">
-                        <label for="note-${studentId}">Note /20</label>
-                        <input type="number" id="note-${studentId}" class="student-note-input" min="0" max="20" step="0.5" required>
+                        <label for="note-${studentId}"><i class="fas fa-star"></i> Note /20</label>
+                        <input type="number" id="note-${studentId}" class="student-note-input" min="0" max="20" step="0.5" required oninput="updateStats()">
                     </div>
                     
                     <div class="student-points">
-                        <label for="points-forts-${studentId}">Points forts (séparés par des virgules)</label>
+                        <label for="points-forts-${studentId}"><i class="fas fa-thumbs-up"></i> Points forts (séparés par des virgules)</label>
                         <textarea id="points-forts-${studentId}" class="student-points-forts-input" placeholder="Ex: Calcul mental, Résolution de problèmes"></textarea>
                     </div>
                     
                     <div class="student-points">
-                        <label for="points-faibles-${studentId}">Points faibles (séparés par des virgules)</label>
+                        <label for="points-faibles-${studentId}"><i class="fas fa-thumbs-down"></i> Points faibles (séparés par des virgules)</label>
                         <textarea id="points-faibles-${studentId}" class="student-points-faibles-input" placeholder="Ex: Géométrie, Rédaction"></textarea>
                     </div>
                     
                     <div class="student-actions">
-                        <button class="btn btn-danger" onclick="removeStudent(${studentId})">
-                            <i>×</i>
+                        <button class="btn-danger btn-sm" onclick="removeStudent(${studentId})">
+                            <i class="fas fa-trash"></i>
                         </button>
                     </div>
                 `;
                 
                 studentsContainer.appendChild(row);
                 studentId++;
+                updateStats();
             }
             
             // Fonction pour supprimer une ligne d'élève
@@ -565,13 +784,127 @@
                 const row = document.getElementById(`student-${id}`);
                 if (row) {
                     studentsContainer.removeChild(row);
+                    updateStats();
                 }
+            }
+            
+            // Fonction pour mettre à jour les statistiques
+            window.updateStats = function() {
+                const studentRows = document.getElementsByClassName('student-row');
+                const grades = [];
+                
+                for (let i = 0; i < studentRows.length; i++) {
+                    const id = studentRows[i].id.split('-')[1];
+                    const noteInput = document.getElementById(`note-${id}`);
+                    if (noteInput && noteInput.value) {
+                        grades.push(parseFloat(noteInput.value));
+                    }
+                }
+                
+                document.getElementById('total-students').textContent = studentRows.length;
+                
+                if (grades.length > 0) {
+                    const sum = grades.reduce((a, b) => a + b, 0);
+                    const avg = sum / grades.length;
+                    const max = Math.max(...grades);
+                    const min = Math.min(...grades);
+                    
+                    document.getElementById('average-grade').textContent = avg.toFixed(2);
+                    document.getElementById('highest-grade').textContent = max.toFixed(2);
+                    document.getElementById('lowest-grade').textContent = min.toFixed(2);
+                } else {
+                    document.getElementById('average-grade').textContent = '-';
+                    document.getElementById('highest-grade').textContent = '-';
+                    document.getElementById('lowest-grade').textContent = '-';
+                }
+            }
+            
+            // Fonction pour générer des statistiques détaillées
+            function generateStats() {
+                const studentRows = document.getElementsByClassName('student-row');
+                
+                if (studentRows.length === 0) {
+                    showError('Aucun élève à analyser. Veuillez ajouter des élèves d\'abord.');
+                    return;
+                }
+                
+                const grades = [];
+                const pointsForts = [];
+                const pointsFaibles = [];
+                
+                for (let i = 0; i < studentRows.length; i++) {
+                    const id = studentRows[i].id.split('-')[1];
+                    const note = document.getElementById(`note-${id}`).value;
+                    const forts = document.getElementById(`points-forts-${id}`).value.split(',').map(item => item.trim()).filter(item => item);
+                    const faibles = document.getElementById(`points-faibles-${id}`).value.split(',').map(item => item.trim()).filter(item => item);
+                    
+                    if (note) grades.push(parseFloat(note));
+                    pointsForts.push(...forts);
+                    pointsFaibles.push(...faibles);
+                }
+                
+                if (grades.length === 0) {
+                    showError('Aucune note saisie pour générer des statistiques.');
+                    return;
+                }
+                
+                // Calculer les statistiques
+                const sum = grades.reduce((a, b) => a + b, 0);
+                const avg = sum / grades.length;
+                const max = Math.max(...grades);
+                const min = Math.min(...grades);
+                
+                // Compter les occurrences des points forts et faibles
+                const fortsCount = {};
+                const faiblesCount = {};
+                
+                pointsForts.forEach(point => {
+                    fortsCount[point] = (fortsCount[point] || 0) + 1;
+                });
+                
+                pointsFaibles.forEach(point => {
+                    faiblesCount[point] = (faiblesCount[point] || 0) + 1;
+                });
+                
+                // Trier par fréquence
+                const topForts = Object.entries(fortsCount)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+                
+                const topFaibles = Object.entries(faiblesCount)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+                
+                // Afficher les statistiques
+                let statsMessage = `📊 Statistiques détaillées\n\n`;
+                statsMessage += `Nombre d'élèves: ${studentRows.length}\n`;
+                statsMessage += `Moyenne de la classe: ${avg.toFixed(2)}/20\n`;
+                statsMessage += `Meilleure note: ${max.toFixed(2)}/20\n`;
+                statsMessage += `Plus basse note: ${min.toFixed(2)}/20\n\n`;
+                
+                statsMessage += `📈 Points forts les plus fréquents:\n`;
+                topForts.forEach(([point, count]) => {
+                    statsMessage += `• ${point}: ${count} élève(s)\n`;
+                });
+                
+                statsMessage += `\n📉 Points faibles les plus fréquents:\n`;
+                topFaibles.forEach(([point, count]) => {
+                    statsMessage += `• ${point}: ${count} élève(s)\n`;
+                });
+                
+                alert(statsMessage);
             }
             
             // Fonction pour réinitialiser le formulaire
             function resetForm() {
                 if (confirm('Êtes-vous sûr de vouloir réinitialiser le formulaire? Toutes les données seront perdues.')) {
-                    studentsContainer.innerHTML = '';
+                    studentsContainer.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-users"></i>
+                            <h3>Aucun élève ajouté</h3>
+                            <p>Sélectionnez une classe pour charger la liste des élèves ou ajoutez des élèves manuellement.</p>
+                        </div>
+                    `;
                     document.getElementById('classe').value = '';
                     document.getElementById('matiere').value = '';
                     document.getElementById('enseignant').value = '';
@@ -582,6 +915,7 @@
                     errorAlert.style.display = 'none';
                     
                     studentId = 1;
+                    updateStats();
                 }
             }
             
@@ -603,6 +937,11 @@
                 // Récupérer les données des élèves
                 const students = [];
                 const studentRows = document.getElementsByClassName('student-row');
+                
+                if (studentRows.length === 0) {
+                    showError('Aucun élève ajouté. Veuillez ajouter au moins un élève.');
+                    return;
+                }
                 
                 for (let i = 0; i < studentRows.length; i++) {
                     const id = studentRows[i].id.split('-')[1];
