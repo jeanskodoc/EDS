@@ -18,30 +18,24 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            background: 
-                /* Overlay semi-transparent pour lisibilité */
-                linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-                /* Image EDS.jpeg en arrière-plan */
-                url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgMGgxMDB2MTAwSDB6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTAgMGgxMHYxMEgwek0xMCAxMGgxMHYxMEgxMHpNMjAgMjBoMTB2MTBIMjB6TTMwIDMwaDEwdjEwSDMwek00MCA0MGgxMHYxMEg0MHpNNTAgNTBoMTB2MTBINTB6TTYwIDYwaDEwdjEwSDYwek03MCA3MGgxMHYxMEg3MHpNODAgODBoMTB2MTBIODB6IiBmaWxsPSIjZWVlIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm4pIi8+PC9zdmc+')
-                /* Fallback en attendant le vrai fichier */
-                center/cover no-repeat fixed;
-            color: white;
+            /* Image EDS.jpeg visible en arrière-plan */
+            background: url('https://i.imgur.com/YOUR_IMAGE_ID.jpeg') center/cover no-repeat fixed;
+            /* NOTE: Remplacez l'URL ci-dessus par le chemin de votre image EDS.jpeg */
+            color: #333;
             position: relative;
         }
 
-        /* Remplacer l'URL ci-dessus par le chemin réel de votre image EDS.jpeg */
-        /* Exemple: background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('EDS.jpeg') center/cover no-repeat fixed; */
-
+        /* Overlay très léger pour lisibilité du texte */
         .container {
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
             text-align: center;
             padding: 40px 30px;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(5px);
             border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
             position: relative;
             z-index: 2;
         }
@@ -49,22 +43,21 @@
         h1 {
             font-size: 2.2rem;
             margin-bottom: 10px;
-            color: white;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            color: #2c3e50;
         }
 
         h2 {
             font-size: 1.5rem;
             margin-bottom: 30px;
-            color: #4FC3F7;
+            color: #3498db;
             font-weight: 400;
         }
 
         h3 {
             font-size: 1.8rem;
             margin: 40px 0 25px;
-            color: white;
-            border-bottom: 2px solid #4FC3F7;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
             padding-bottom: 10px;
             display: inline-block;
         }
@@ -77,21 +70,22 @@
         }
 
         .dashboard-item {
-            background: rgba(255, 255, 255, 0.1);
+            background: white;
             padding: 25px;
             border-radius: 15px;
-            border-left: 4px solid #4FC3F7;
+            border-left: 4px solid #3498db;
             text-align: left;
-            transition: transform 0.3s ease, background 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .dashboard-item:hover {
             transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
 
         .dashboard-item h4 {
-            color: #4FC3F7;
+            color: #2c3e50;
             font-size: 1.3rem;
             margin-bottom: 15px;
             display: flex;
@@ -106,8 +100,8 @@
 
         .dashboard-item li {
             padding: 8px 0;
-            color: rgba(255, 255, 255, 0.9);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #555;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -118,17 +112,17 @@
         }
 
         .dashboard-item li i {
-            color: #4FC3F7;
+            color: #3498db;
             font-size: 0.9rem;
         }
 
         /* Section emploi du temps */
         .timetable-section {
-            background: rgba(33, 150, 243, 0.2);
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(41, 128, 185, 0.1) 100%);
             border-radius: 15px;
             padding: 25px;
             margin: 30px 0;
-            border: 1px solid rgba(79, 195, 247, 0.3);
+            border: 1px solid rgba(52, 152, 219, 0.2);
         }
 
         .timetable-info {
@@ -137,12 +131,13 @@
             align-items: center;
             margin-top: 15px;
             padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            color: #2c3e50;
         }
 
         .time-details {
             font-size: 1.1rem;
-            color: #4FC3F7;
+            color: #3498db;
             font-weight: 600;
         }
 
@@ -155,22 +150,23 @@
         }
 
         .message-card, .agenda-card {
-            background: rgba(255, 255, 255, 0.1);
+            background: white;
             padding: 25px;
             border-radius: 15px;
             text-align: left;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         }
 
         .reminder-item {
-            background: rgba(255, 193, 7, 0.2);
+            background: rgba(255, 193, 7, 0.1);
             padding: 15px;
             border-radius: 10px;
             margin: 15px 0;
-            border-left: 3px solid #FFC107;
+            border-left: 3px solid #f1c40f;
         }
 
         .reminder-time {
-            color: #FFC107;
+            color: #e67e22;
             font-weight: 600;
             margin-bottom: 5px;
         }
@@ -184,22 +180,28 @@
         }
 
         .feature-item {
-            background: rgba(255, 255, 255, 0.08);
+            background: white;
             padding: 20px;
             border-radius: 12px;
             text-align: center;
             transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         }
 
         .feature-item:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: #f8f9fa;
             transform: scale(1.05);
         }
 
         .feature-item i {
             font-size: 2.5rem;
-            color: #4FC3F7;
+            color: #3498db;
             margin-bottom: 15px;
+        }
+
+        .feature-item h5 {
+            color: #2c3e50;
+            font-size: 1.1rem;
         }
 
         /* Bouton d'accès */
@@ -207,7 +209,7 @@
             display: inline-block;
             margin-top: 40px;
             padding: 18px 45px;
-            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
             color: white;
             text-decoration: none;
             border-radius: 12px;
@@ -216,15 +218,15 @@
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
             position: relative;
             overflow: hidden;
         }
 
         .access-button:hover {
             transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(33, 150, 243, 0.6);
-            background: linear-gradient(135deg, #1976D2 0%, #0D47A1 100%);
+            box-shadow: 0 12px 30px rgba(52, 152, 219, 0.6);
+            background: linear-gradient(135deg, #2980b9 0%, #1f618d 100%);
         }
 
         .access-button:active {
@@ -240,6 +242,7 @@
         @media (max-width: 768px) {
             body {
                 padding: 15px;
+                background-attachment: scroll;
             }
             
             .container {
@@ -276,8 +279,13 @@
         }
 
         @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
             .container {
                 padding: 25px 15px;
+                background: rgba(255, 255, 255, 0.9);
             }
             
             h1 {
@@ -299,12 +307,26 @@
 
         @media (min-width: 1200px) {
             .container {
-                max-width: 900px;
+                max-width: 1000px;
                 padding: 50px 40px;
             }
             
             h1 {
                 font-size: 2.5rem;
+            }
+        }
+
+        /* Mode paysage mobile */
+        @media (max-height: 600px) and (orientation: landscape) {
+            body {
+                padding: 10px;
+                align-items: flex-start;
+            }
+            
+            .container {
+                margin-top: 20px;
+                max-height: 90vh;
+                overflow-y: auto;
             }
         }
 
@@ -329,6 +351,27 @@
             .container, .dashboard-item, .access-button, .feature-item {
                 animation: none;
                 transition: none;
+            }
+        }
+
+        /* Mode sombre automatique */
+        @media (prefers-color-scheme: dark) {
+            .container {
+                background: rgba(30, 30, 30, 0.85);
+                color: #ecf0f1;
+            }
+            
+            .dashboard-item, .message-card, .agenda-card, .feature-item {
+                background: #2c3e50;
+                color: #ecf0f1;
+            }
+            
+            h1, h2, h3, .dashboard-item h4, .feature-item h5 {
+                color: #ecf0f1;
+            }
+            
+            .dashboard-item li {
+                color: #bdc3c7;
             }
         }
     </style>
@@ -454,30 +497,41 @@
     </div>
 
     <script>
-        // Script pour l'image de fond réelle
+        // Configuration pour l'image de fond
         document.addEventListener('DOMContentLoaded', function() {
-            // Remplacez cette URL par le chemin réel de votre image EDS.jpeg
-            const backgroundImage = 'EDS.jpeg'; // À modifier selon votre fichier
+            // IMPORTANT: Remplacez cette URL par le chemin de votre image EDS.jpeg
+            const backgroundImageUrl = 'https://i.imgur.com/YOUR_IMAGE_ID.jpeg';
             
-            // Appliquer l'image de fond
-            document.body.style.background = 
-                `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-                 url('${backgroundImage}') center/cover no-repeat fixed`;
+            // Appliquer l'image de fond visible
+            document.body.style.backgroundImage = `url('${backgroundImageUrl}')`;
             
-            // Vérifier si l'image existe
+            // Vérifier si l'image se charge correctement
             const testImage = new Image();
-            testImage.src = backgroundImage;
+            testImage.src = backgroundImageUrl;
+            
             testImage.onload = function() {
-                console.log('Image de fond EDS.jpeg chargée avec succès');
+                console.log('✅ Image EDS.jpeg chargée avec succès en arrière-plan');
+                // Réduire légèrement l'opacité du container sur les grands écrans pour mieux voir l'image
+                if (window.innerWidth > 1024) {
+                    document.querySelector('.container').style.background = 'rgba(255, 255, 255, 0.75)';
+                }
             };
+            
             testImage.onerror = function() {
-                console.warn('Image EDS.jpeg non trouvée, utilisation du fond par défaut');
-                // Garder le fond SVG par défaut
+                console.warn('⚠️ Image EDS.jpeg non trouvée');
+                console.log('Utilisez un des services suivants pour héberger votre image:');
+                console.log('1. Imgur: https://imgur.com/upload');
+                console.log('2. GitHub: Créez un repository et uploadez votre image');
+                console.log('3. Services cloud: Google Drive, Dropbox, etc.');
+                
+                // Fallback avec une image d'école générique
+                document.body.style.backgroundImage = 'url("https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80")';
             };
             
             // Effet de clic sur le bouton
             const accessButton = document.querySelector('.access-button');
             accessButton.addEventListener('click', function(e) {
+                // Effet visuel de clic
                 this.style.transform = 'scale(0.95)';
                 setTimeout(() => {
                     this.style.transform = '';
@@ -491,12 +545,16 @@
                 const container = document.querySelector('.container');
                 const width = window.innerWidth;
                 
-                if (width < 768) {
-                    container.style.padding = '25px 15px';
-                } else if (width < 1200) {
-                    container.style.padding = '35px 25px';
+                if (width < 480) {
+                    // Très petits écrans: container plus opaque
+                    container.style.background = 'rgba(255, 255, 255, 0.95)';
+                } else if (width < 768) {
+                    container.style.background = 'rgba(255, 255, 255, 0.9)';
+                } else if (width < 1024) {
+                    container.style.background = 'rgba(255, 255, 255, 0.85)';
                 } else {
-                    container.style.padding = '50px 40px';
+                    // Grands écrans: container plus transparent pour voir l'image
+                    container.style.background = 'rgba(255, 255, 255, 0.8)';
                 }
             }
             
@@ -511,6 +569,7 @@
             else greeting = "Bonsoir";
             
             console.log(`${greeting} ! Application de gestion scolaire prête.`);
+            console.log('Image de fond visible derrière l\'interface.');
         });
     </script>
 </body>
