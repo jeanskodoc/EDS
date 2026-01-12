@@ -18,34 +18,30 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            /* Image EDS.jpeg visible en arrière-plan */
-            background: url('EDS.jpeg') center/cover no-repeat fixed;
+            background: 
+                /* Overlay semi-transparent pour lisibilité */
+                linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                /* Image EDS.jpeg en arrière-plan */
+                url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgMGgxMDB2MTAwSDB6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTAgMGgxMHYxMEgwek0xMCAxMGgxMHYxMEgxMHpNMjAgMjBoMTB2MTBIMjB6TTMwIDMwaDEwdjEwSDMwek00MCA0MGgxMHYxMEg0MHpNNTAgNTBoMTB2MTBINTB6TTYwIDYwaDEwdjEwSDYwek03MCA3MGgxMHYxMEg3MHpNODAgODBoMTB2MTBIODB6IiBmaWxsPSIjZWVlIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm4pIi8+PC9zdmc+')
+                /* Fallback en attendant le vrai fichier */
+                center/cover no-repeat fixed;
             color: white;
             position: relative;
         }
 
-        /* Overlay très léger pour légèrement assombrir l'arrière-plan */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.3);
-            z-index: 1;
-        }
+        /* Remplacer l'URL ci-dessus par le chemin réel de votre image EDS.jpeg */
+        /* Exemple: background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('EDS.jpeg') center/cover no-repeat fixed; */
 
         .container {
             width: 100%;
             max-width: 800px;
             text-align: center;
             padding: 40px 30px;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
             position: relative;
             z-index: 2;
         }
@@ -54,11 +50,7 @@
             font-size: 2.2rem;
             margin-bottom: 10px;
             color: white;
-            text-shadow: 0 2px 15px rgba(0, 0, 0, 0.8);
-            background: rgba(0, 0, 0, 0.4);
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 10px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
 
         h2 {
@@ -66,21 +58,15 @@
             margin-bottom: 30px;
             color: #4FC3F7;
             font-weight: 400;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-            background: rgba(0, 0, 0, 0.3);
-            display: inline-block;
-            padding: 8px 16px;
-            border-radius: 8px;
         }
 
         h3 {
             font-size: 1.8rem;
             margin: 40px 0 25px;
             color: white;
-            border-bottom: 2px solid rgba(79, 195, 247, 0.8);
+            border-bottom: 2px solid #4FC3F7;
             padding-bottom: 10px;
             display: inline-block;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
         }
 
         .dashboard-grid {
@@ -91,19 +77,17 @@
         }
 
         .dashboard-item {
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.1);
             padding: 25px;
             border-radius: 15px;
-            border-left: 4px solid rgba(79, 195, 247, 0.8);
+            border-left: 4px solid #4FC3F7;
             text-align: left;
             transition: transform 0.3s ease, background 0.3s ease;
-            backdrop-filter: blur(5px);
         }
 
         .dashboard-item:hover {
             transform: translateY(-5px);
-            background: rgba(0, 0, 0, 0.6);
-            border-left: 4px solid #4FC3F7;
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .dashboard-item h4 {
@@ -113,7 +97,6 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
         }
 
         .dashboard-item ul {
@@ -123,12 +106,11 @@
 
         .dashboard-item li {
             padding: 8px 0;
-            color: rgba(255, 255, 255, 0.95);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             gap: 10px;
-            font-weight: 500;
         }
 
         .dashboard-item li:last-child {
@@ -142,12 +124,11 @@
 
         /* Section emploi du temps */
         .timetable-section {
-            background: rgba(33, 150, 243, 0.25);
+            background: rgba(33, 150, 243, 0.2);
             border-radius: 15px;
             padding: 25px;
             margin: 30px 0;
-            border: 1px solid rgba(79, 195, 247, 0.4);
-            backdrop-filter: blur(5px);
+            border: 1px solid rgba(79, 195, 247, 0.3);
         }
 
         .timetable-info {
@@ -156,14 +137,13 @@
             align-items: center;
             margin-top: 15px;
             padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .time-details {
             font-size: 1.1rem;
             color: #4FC3F7;
             font-weight: 600;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
         }
 
         /* Section messages et agenda */
@@ -175,26 +155,24 @@
         }
 
         .message-card, .agenda-card {
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.1);
             padding: 25px;
             border-radius: 15px;
             text-align: left;
-            backdrop-filter: blur(5px);
         }
 
         .reminder-item {
-            background: rgba(255, 193, 7, 0.25);
+            background: rgba(255, 193, 7, 0.2);
             padding: 15px;
             border-radius: 10px;
             margin: 15px 0;
-            border-left: 3px solid rgba(255, 193, 7, 0.8);
+            border-left: 3px solid #FFC107;
         }
 
         .reminder-time {
             color: #FFC107;
             font-weight: 600;
             margin-bottom: 5px;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
         }
 
         /* Section fonctionnalités */
@@ -206,16 +184,15 @@
         }
 
         .feature-item {
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.08);
             padding: 20px;
             border-radius: 12px;
             text-align: center;
             transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
         }
 
         .feature-item:hover {
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(255, 255, 255, 0.15);
             transform: scale(1.05);
         }
 
@@ -223,13 +200,6 @@
             font-size: 2.5rem;
             color: #4FC3F7;
             margin-bottom: 15px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-        }
-
-        .feature-item h5 {
-            color: white;
-            font-size: 1rem;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
         }
 
         /* Bouton d'accès */
@@ -237,7 +207,7 @@
             display: inline-block;
             margin-top: 40px;
             padding: 18px 45px;
-            background: linear-gradient(135deg, rgba(33, 150, 243, 0.9) 0%, rgba(25, 118, 210, 0.9) 100%);
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
             color: white;
             text-decoration: none;
             border-radius: 12px;
@@ -246,17 +216,15 @@
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
             position: relative;
             overflow: hidden;
-            border: 2px solid rgba(255, 255, 255, 0.3);
         }
 
         .access-button:hover {
             transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
-            background: linear-gradient(135deg, rgba(25, 118, 210, 0.95) 0%, rgba(13, 71, 161, 0.95) 100%);
-            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 12px 30px rgba(33, 150, 243, 0.6);
+            background: linear-gradient(135deg, #1976D2 0%, #0D47A1 100%);
         }
 
         .access-button:active {
@@ -281,12 +249,10 @@
             
             h1 {
                 font-size: 1.8rem;
-                padding: 8px 16px;
             }
             
             h2 {
                 font-size: 1.3rem;
-                padding: 6px 12px;
             }
             
             h3 {
@@ -329,10 +295,6 @@
             .timetable-section, .message-card, .agenda-card {
                 padding: 20px;
             }
-            
-            .features-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
         }
 
         @media (min-width: 1200px) {
@@ -343,27 +305,6 @@
             
             h1 {
                 font-size: 2.5rem;
-            }
-        }
-
-        /* Mode paysage mobile */
-        @media (max-height: 600px) and (orientation: landscape) {
-            body {
-                padding: 10px;
-                align-items: flex-start;
-            }
-            
-            .container {
-                margin-top: 20px;
-                padding: 25px;
-            }
-            
-            h1, h2 {
-                margin-bottom: 15px;
-            }
-            
-            .dashboard-grid {
-                margin-bottom: 25px;
             }
         }
 
@@ -383,44 +324,12 @@
             animation: fadeIn 0.8s ease-out;
         }
 
-        /* Effet de brillance sur le bouton */
-        @keyframes shine {
-            0% { background-position: -100px; }
-            100% { background-position: 200px; }
-        }
-
-        .access-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255, 255, 255, 0.2),
-                transparent
-            );
-            transform: skewX(-20deg);
-            animation: shine 3s infinite;
-        }
-
         /* Pour les préférences de mouvement réduit */
         @media (prefers-reduced-motion: reduce) {
             .container, .dashboard-item, .access-button, .feature-item {
                 animation: none;
                 transition: none;
             }
-            
-            .access-button::before {
-                animation: none;
-            }
-        }
-
-        /* Amélioration de la visibilité du texte */
-        p, li, .time-details, .reminder-time {
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -545,22 +454,25 @@
     </div>
 
     <script>
+        // Script pour l'image de fond réelle
         document.addEventListener('DOMContentLoaded', function() {
-            // Vérifier si l'image EDS.jpeg existe
+            // Remplacez cette URL par le chemin réel de votre image EDS.jpeg
+            const backgroundImage = 'EDS.jpeg'; // À modifier selon votre fichier
+            
+            // Appliquer l'image de fond
+            document.body.style.background = 
+                `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                 url('${backgroundImage}') center/cover no-repeat fixed`;
+            
+            // Vérifier si l'image existe
             const testImage = new Image();
-            testImage.src = 'EDS.jpeg';
-            
+            testImage.src = backgroundImage;
             testImage.onload = function() {
-                console.log('Image EDS.jpeg chargée avec succès en arrière-plan');
-                // L'image est déjà appliquée via CSS
+                console.log('Image de fond EDS.jpeg chargée avec succès');
             };
-            
             testImage.onerror = function() {
-                console.warn('Image EDS.jpeg non trouvée');
-                // Fallback si l'image n'existe pas
-                document.body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-                document.body.style.backgroundAttachment = 'fixed';
-                document.body.style.backgroundSize = 'cover';
+                console.warn('Image EDS.jpeg non trouvée, utilisation du fond par défaut');
+                // Garder le fond SVG par défaut
             };
             
             // Effet de clic sur le bouton
@@ -578,48 +490,18 @@
             function adaptLayout() {
                 const container = document.querySelector('.container');
                 const width = window.innerWidth;
-                const height = window.innerHeight;
                 
-                // Ajuster la transparence selon la taille de l'écran
                 if (width < 768) {
-                    container.style.background = 'rgba(0, 0, 0, 0.6)';
+                    container.style.padding = '25px 15px';
+                } else if (width < 1200) {
+                    container.style.padding = '35px 25px';
                 } else {
-                    container.style.background = 'rgba(0, 0, 0, 0.5)';
-                }
-                
-                // Ajustement pour mode paysage
-                if (height < 500 && width > height) {
-                    container.style.marginTop = '10px';
-                    container.style.padding = '20px 15px';
+                    container.style.padding = '50px 40px';
                 }
             }
             
             window.addEventListener('load', adaptLayout);
             window.addEventListener('resize', adaptLayout);
-            window.addEventListener('orientationchange', adaptLayout);
-            
-            // Animation des éléments au scroll
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-            
-            const observer = new IntersectionObserver(function(entries) {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
-            
-            // Observer les éléments du tableau de bord
-            document.querySelectorAll('.dashboard-item, .feature-item').forEach(item => {
-                item.style.opacity = '0';
-                item.style.transform = 'translateY(20px)';
-                item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                observer.observe(item);
-            });
             
             // Message de bienvenue
             const hours = new Date().getHours();
@@ -628,8 +510,7 @@
             else if (hours < 18) greeting = "Bon après-midi";
             else greeting = "Bonsoir";
             
-            console.log(`${greeting} ! Application de gestion scolaire chargée.`);
-            console.log('Image d\'arrière-plan: EDS.jpeg');
+            console.log(`${greeting} ! Application de gestion scolaire prête.`);
         });
     </script>
 </body>
