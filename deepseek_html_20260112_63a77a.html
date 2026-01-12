@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portail Éducatif - Collège & Lycée</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            background: url('https://raw.githubusercontent.com/Jeanskodoc/PHOTOS-/main/Universit%C3%A9_de_Mines_et_Technologie_de_Bok%C3%A9_(UMTB),_Campus_Principal.jpg') center/cover no-repeat fixed;
+            position: relative;
+        }
+        
+        /* Overlay très léger */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 10, 30, 0.2);
+            z-index: 0;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px) saturate(180%);
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            z-index: 1;
+            position: relative;
+        }
+        
+        h1 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            line-height: 1.3;
+        }
+        
+        .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+            font-weight: 400;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            padding: 0 10px;
+        }
+        
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 5px;
+        }
+        
+        .btn {
+            padding: 12px 18px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            height: 46px;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
+        }
+        
+        /* Bouton principal pour collège/lycée */
+        .btn-school {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.9) 0%, rgba(220, 53, 69, 0.95) 100%);
+            border-left: 4px solid rgba(255, 255, 255, 0.7);
+        }
+        
+        .btn-school:hover {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.95) 0%, rgba(220, 53, 69, 1) 100%);
+        }
+        
+        .btn-icon {
+            font-size: 1rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        footer {
+            margin-top: 25px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.75rem;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            line-height: 1.5;
+        }
+        
+        /* Flèche discrète pour liens */
+        .btn::after {
+            content: '›';
+            position: absolute;
+            right: 18px;
+            opacity: 0;
+            transition: all 0.25s ease;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .btn:hover::after {
+            opacity: 1;
+            right: 15px;
+        }
+        
+        /* Élément décoratif */
+        .decoration {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 15px 0;
+        }
+        
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Logo ou image d'en-tête */
+        .header-logo {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease;
+        }
+        
+        .header-logo:hover {
+            transform: scale(1.05);
+        }
+        
+        .header-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Badge éducatif */
+        .badge {
+            display: inline-block;
+            background: rgba(255, 193, 7, 0.9);
+            color: #333;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* === RESPONSIVE DESIGN COMPLET === */
+        
+        /* Très petits smartphones (portrait) */
+        @media (max-width: 360px) {
+            .container {
+                padding: 20px 16px;
+                max-width: 96%;
+                border-radius: 16px;
+            }
+            
+            h1 {
+                font-size: 1.35rem;
+                margin-bottom: 15px;
+            }
+            
+            .subtitle {
+                font-size: 0.9rem;
+                margin-bottom: 20px;
+            }
+            
+            .btn {
+                padding: 11px 15px;
+                font-size: 0.85rem;
+                height: 44px;
+                border-radius: 10px;
+            }
+            
+            .btn-icon {
+                font-size: 0.95rem;
+                width: 18px;
+            }
+            
+            .header-logo {
+                width: 80px;
+                height: 80px;
+                margin-bottom: 15px;
+            }
+            
+            footer {
+                font-size: 0.7rem;
+                margin-top: 20px;
+            }
+        }
+        
+        /* Smartphones moyens (portrait) */
+        @media (min-width: 361px) and (max-width: 480px) {
+            .container {
+                max-width: 94%;
+                padding: 22px 18px;
+            }
+            
+            h1 {
+                font-size: 1.4rem;
+            }
+            
+            .subtitle {
+                font-size: 0.92rem;
+            }
+        }
+        
+        /* Tablettes et petits écrans (portrait) */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .container {
+                max-width: 380px;
+                padding: 28px;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+                margin-bottom: 22px;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+                margin-bottom: 28px;
+            }
+            
+            .btn {
+                height: 48px;
+                font-size: 0.95rem;
+            }
+            
+            .header-logo {
+                width: 100px;
+                height: 100px;
+            }
+        }
+        
+        /* Mode paysage sur mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body {
+                padding: 10px;
+                align-items: flex-start;
+                min-height: auto;
+            }
+            
+            .container {
+                max-width: 92%;
+                padding: 20px;
+                margin-top: 10px;
+            }
+            
+            .buttons-container {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .btn {
+                flex: 1;
+                min-width: 150px;
+                height: 44px;
+                padding: 10px 15px;
+                justify-content: center;
+            }
+            
+            h1 {
+                margin-bottom: 15px;
+                font-size: 1.4rem;
+            }
+            
+            .subtitle {
+                margin-bottom: 20px;
+            }
+            
+            .header-logo {
+                width: 70px;
+                height: 70px;
+                margin-bottom: 15px;
+            }
+            
+            .btn-icon {
+                display: none;
+            }
+            
+            footer {
+                margin-top: 15px;
+            }
+        }
+        
+        /* Tablettes (paysage) */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .container {
+                max-width: 400px;
+                padding: 30px;
+            }
+            
+            h1 {
+                font-size: 1.7rem;
+            }
+            
+            .subtitle {
+                font-size: 1.05rem;
+            }
+            
+            .btn {
+                height: 50px;
+                font-size: 1rem;
+            }
+        }
+        
+        /* Ordinateurs portables */
+        @media (min-width: 1025px) and (max-width: 1366px) {
+            .container {
+                max-width: 380px;
+            }
+        }
+        
+        /* Grands écrans d'ordinateur */
+        @media (min-width: 1367px) and (max-width: 1920px) {
+            .container {
+                max-width: 400px;
+                padding: 30px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .btn {
+                height: 50px;
+                font-size: 0.98rem;
+            }
+            
+            .header-logo {
+                width: 110px;
+                height: 110px;
+            }
+        }
+        
+        /* Écrans très larges */
+        @media (min-width: 1921px) {
+            .container {
+                max-width: 420px;
+                padding: 35px;
+            }
+            
+            h1 {
+                font-size: 1.9rem;
+                margin-bottom: 25px;
+            }
+            
+            .btn {
+                height: 52px;
+                font-size: 1rem;
+            }
+            
+            .header-logo {
+                width: 120px;
+                height: 120px;
+            }
+        }
+        
+        /* Animation subtile */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .container {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        /* Animation du bouton */
+        @keyframes pulseSoft {
+            0% { box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4); }
+            50% { box-shadow: 0 4px 20px rgba(220, 53, 69, 0.6); }
+            100% { box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4); }
+        }
+        
+        .btn-school {
+            animation: pulseSoft 3s infinite;
+        }
+        
+        /* Pour les préférences de mouvement réduit */
+        @media (prefers-reduced-motion: reduce) {
+            .container, .btn, .header-logo {
+                animation: none;
+                transition: none;
+            }
+        }
+        
+        /* Mode sombre automatique */
+        @media (prefers-color-scheme: dark) {
+            .container {
+                background: rgba(0, 0, 0, 0.2);
+                border-color: rgba(255, 255, 255, 0.15);
+            }
+        }
+        
+        /* Très hautes résolutions (retina) */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .container {
+                border-width: 0.5px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="overlay"></div>
+    
+    <div class="container">
+        <div class="header-logo">
+            <img src="https://raw.githubusercontent.com/Jeanskodoc/PHOTOS-/main/Universit%C3%A9_de_Mines_et_Technologie_de_Bok%C3%A9_(UMTB),_Campus_Principal.jpg" alt="Logo Éducatif">
+        </div>
+        
+        <div class="badge">COLLÈGE & LYCÉE</div>
+        
+        <h1>Portail Éducatif</h1>
+        
+        <div class="subtitle">
+            Système de gestion des établissements secondaires
+        </div>
+        
+        <div class="decoration">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+        
+        <div class="buttons-container">
+            <a href="EDS.html" class="btn btn-school">
+                <i class="btn-icon fas fa-graduation-cap"></i>
+                ACCÉDER À EDS
+            </a>
+        </div>
+        
+        <footer>
+            <p>Accès au système Éducation Secondaire (EDS)</p>
+            <p style="margin-top: 5px; font-size: 0.7rem; opacity: 0.7;">Gestion des élèves, notes et emplois du temps</p>
+        </footer>
+    </div>
+
+    <script>
+        // Vérification de l'image de fond
+        window.addEventListener('load', function() {
+            const testImage = new Image();
+            testImage.src = 'https://raw.githubusercontent.com/Jeanskodoc/PHOTOS-/main/Universit%C3%A9_de_Mines_et_Technologie_de_Bok%C3%A9_(UMTB),_Campus_Principal.jpg';
+            testImage.onerror = function() {
+                // Fond alternatif adapté aux écoles
+                document.body.style.background = 'linear-gradient(135deg, #dc3545 0%, #fd7e14 50%, #ffc107 100%)';
+                document.querySelector('.overlay').style.display = 'none';
+                console.info("Image de fond non trouvée. Fond de substitution éducatif appliqué.");
+            };
+        });
+        
+        // Effet au clic sur le bouton
+        document.querySelector('.btn').addEventListener('click', function(e) {
+            // Effet visuel de clic amélioré
+            this.style.transform = 'scale(0.96)';
+            this.style.animation = 'none';
+            
+            setTimeout(() => {
+                this.style.transform = '';
+                setTimeout(() => {
+                    this.style.animation = 'pulseSoft 3s infinite';
+                }, 100);
+            }, 200);
+            
+            // Enregistrement dans la console
+            console.log('Navigation vers EDS (Système Éducatif Secondaire)');
+            
+            // Vérification si le fichier existe (optionnel)
+            const fileUrl = this.getAttribute('href');
+            fetch(fileUrl, {method: 'HEAD'})
+                .then(response => {
+                    if (!response.ok) {
+                        console.warn(`Le fichier ${fileUrl} n'existe pas encore.`);
+                    } else {
+                        console.log(`Fichier ${fileUrl} trouvé.`);
+                    }
+                })
+                .catch(() => {
+                    console.warn(`Impossible de vérifier l'existence de ${fileUrl}`);
+                });
+        });
+        
+        // Adaptation dynamique avancée
+        function adaptLayout() {
+            const container = document.querySelector('.container');
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            const isLandscape = screenWidth > screenHeight;
+            
+            // Adaptation pour très petits écrans
+            if (screenWidth < 300) {
+                container.style.maxWidth = '98%';
+                container.style.padding = '18px 14px';
+                
+                // Réduire la taille du logo
+                document.querySelector('.header-logo').style.width = '70px';
+                document.querySelector('.header-logo').style.height = '70px';
+                
+                // Cacher les icônes pour gagner de la place
+                document.querySelectorAll('.btn-icon').forEach(icon => {
+                    icon.style.display = 'none';
+                });
+            }
+            
+            // Mode paysage sur mobile
+            if (isLandscape && screenHeight < 500) {
+                container.style.maxWidth = '94%';
+                
+                // Ajuster la disposition
+                const buttonsContainer = document.querySelector('.buttons-container');
+                buttonsContainer.style.gridTemplateColumns = 'repeat(auto-fit, minmax(160px, 1fr))';
+                buttonsContainer.style.display = 'grid';
+                buttonsContainer.style.gap = '10px';
+            }
+            
+            // Réinitialiser les styles pour les écrans normaux
+            if (screenWidth > 480) {
+                document.querySelectorAll('.btn-icon').forEach(icon => {
+                    icon.style.display = 'block';
+                });
+                
+                if (screenWidth >= 300) {
+                    document.querySelector('.header-logo').style.width = '';
+                    document.querySelector('.header-logo').style.height = '';
+                }
+            }
+        }
+        
+        // Exécuter au chargement et au redimensionnement
+        window.addEventListener('load', adaptLayout);
+        window.addEventListener('resize', adaptLayout);
+        window.addEventListener('orientationchange', adaptLayout);
+        
+        // Affichage d'un message de bienvenue éducatif
+        window.addEventListener('load', function() {
+            console.log('Portail éducatif secondaire chargé avec succès');
+            console.log('Image source: https://raw.githubusercontent.com/Jeanskodoc/PHOTOS-/main/Université_de_Mines_et_Technologie_de_Boké_(UMTB),_Campus_Principal.jpg');
+            console.log('Destination: EDS.html (Système Éducatif Secondaire)');
+            
+            // Message de bienvenue dynamique
+            const hours = new Date().getHours();
+            let greeting;
+            if (hours < 12) greeting = "Bonjour";
+            else if (hours < 18) greeting = "Bon après-midi";
+            else greeting = "Bonsoir";
+            
+            console.log(`${greeting} ! Portail éducatif prêt.`);
+        });
+        
+        // Préchargement intelligent
+        if ('connection' in navigator && navigator.connection.saveData === false) {
+            const link = document.createElement('link');
+            link.rel = 'prefetch';
+            link.href = 'EDS.html';
+            document.head.appendChild(link);
+            console.log('Préchargement de EDS.html activé');
+        }
+        
+        // Effet de survol amélioré pour le logo
+        const logo = document.querySelector('.header-logo');
+        if (logo) {
+            logo.addEventListener('mouseenter', function() {
+                this.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.5)';
+            });
+            
+            logo.addEventListener('mouseleave', function() {
+                this.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.4)';
+            });
+        }
+    </script>
+</body>
+</html>
