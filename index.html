@@ -19,25 +19,36 @@
             align-items: center;
             padding: 20px;
             background: 
-                /* Overlay semi-transparent pour lisibilité */
-                linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-                /* Image EDS.jpeg en arrière-plan */
-                url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgMGgxMDB2MTAwSDB6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTAgMGgxMHYxMEgwek0xMCAxMGgxMHYxMEgxMHpNMjAgMjBoMTB2MTBIMjB6TTMwIDMwaDEwdjEwSDMwek00MCA0MGgxMHYxMEg0MHpNNTAgNTBoMTB2MTBINTB6TTYwIDYwaDEwdjEwSDYwek03MCA3MGgxMHYxMEg3MHpNODAgODBoMTB2MTBIODB6IiBmaWxsPSIjZWVlIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm4pIi8+PC9zdmc+')
-                /* Fallback en attendant le vrai fichier */
+                /* Overlay très léger pour lisibilité */
+                linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+                /* Image de fond complète */
+                url('EDS.jpeg')
                 center/cover no-repeat fixed;
             color: white;
             position: relative;
         }
 
-        /* Remplacer l'URL ci-dessus par le chemin réel de votre image EDS.jpeg */
-        /* Exemple: background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('EDS.jpeg') center/cover no-repeat fixed; */
+        /* Fallback si l'image ne charge pas */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+                url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgMGgxMDB2MTAwSDB6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTAgMGgxMHYxMEgwek0xMCAxMGgxMHYxMEgxMHpNMjAgMjBoMTB2MTBIMjB6TTMwIDMwaDEwdjEwSDMwek00MCA0MGgxMHYxMEg0MHpNNTAgNTBoMTB2MTBINTB6TTYwIDYwaDEwdjEwSDYwek03MCA3MGgxMHYxMEg3MHpNODAgODBoMTB2MTBIODB6IiBmaWxsPSIjZWVlIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm4pIi8+PC9zdmc+')
+                center/cover no-repeat fixed;
+            z-index: -2;
+        }
 
         .container {
             width: 100%;
             max-width: 800px;
             text-align: center;
             padding: 40px 30px;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -77,7 +88,7 @@
         }
 
         .dashboard-item {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             padding: 25px;
             border-radius: 15px;
             border-left: 4px solid #4FC3F7;
@@ -87,7 +98,7 @@
 
         .dashboard-item:hover {
             transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.12);
         }
 
         .dashboard-item h4 {
@@ -124,7 +135,7 @@
 
         /* Section emploi du temps */
         .timetable-section {
-            background: rgba(33, 150, 243, 0.2);
+            background: rgba(33, 150, 243, 0.15);
             border-radius: 15px;
             padding: 25px;
             margin: 30px 0;
@@ -155,14 +166,14 @@
         }
 
         .message-card, .agenda-card {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             padding: 25px;
             border-radius: 15px;
             text-align: left;
         }
 
         .reminder-item {
-            background: rgba(255, 193, 7, 0.2);
+            background: rgba(255, 193, 7, 0.15);
             padding: 15px;
             border-radius: 10px;
             margin: 15px 0;
@@ -184,7 +195,7 @@
         }
 
         .feature-item {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.06);
             padding: 20px;
             border-radius: 12px;
             text-align: center;
@@ -192,7 +203,7 @@
         }
 
         .feature-item:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.1);
             transform: scale(1.05);
         }
 
@@ -202,38 +213,58 @@
             margin-bottom: 15px;
         }
 
-        /* Bouton d'accès */
+        /* BOUTONS RÉDUITS */
         .access-button {
             display: inline-block;
             margin-top: 40px;
-            padding: 18px 45px;
+            padding: 14px 35px; /* Réduit la taille */
             background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
             color: white;
             text-decoration: none;
-            border-radius: 12px;
-            font-size: 1.2rem;
+            border-radius: 10px; /* Coins légèrement moins arrondis */
+            font-size: 1rem; /* Police réduite */
             font-weight: 600;
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3); /* Ombre réduite */
             position: relative;
             overflow: hidden;
         }
 
         .access-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(33, 150, 243, 0.6);
+            transform: translateY(-3px); /* Animation réduite */
+            box-shadow: 0 8px 20px rgba(33, 150, 243, 0.4);
             background: linear-gradient(135deg, #1976D2 0%, #0D47A1 100%);
         }
 
         .access-button:active {
-            transform: translateY(-2px);
+            transform: translateY(-1px);
         }
 
         .access-button i {
-            margin-right: 10px;
-            font-size: 1.3rem;
+            margin-right: 8px;
+            font-size: 1.1rem; /* Icône réduite */
+        }
+
+        /* Boutons secondaires réduits */
+        .button-small {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .button-small:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
         }
 
         /* Responsive Design */
@@ -269,8 +300,8 @@
             }
             
             .access-button {
-                padding: 16px 35px;
-                font-size: 1.1rem;
+                padding: 12px 25px; /* Réduit sur mobile */
+                font-size: 0.95rem;
                 width: 100%;
             }
         }
@@ -294,6 +325,11 @@
             
             .timetable-section, .message-card, .agenda-card {
                 padding: 20px;
+            }
+            
+            .access-button {
+                padding: 10px 20px;
+                font-size: 0.9rem;
             }
         }
 
@@ -456,12 +492,11 @@
     <script>
         // Script pour l'image de fond réelle
         document.addEventListener('DOMContentLoaded', function() {
-            // Remplacez cette URL par le chemin réel de votre image EDS.jpeg
             const backgroundImage = 'EDS.jpeg'; // À modifier selon votre fichier
             
-            // Appliquer l'image de fond
+            // Appliquer l'image de fond avec un overlay très léger
             document.body.style.background = 
-                `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), 
                  url('${backgroundImage}') center/cover no-repeat fixed`;
             
             // Vérifier si l'image existe
@@ -469,6 +504,10 @@
             testImage.src = backgroundImage;
             testImage.onload = function() {
                 console.log('Image de fond EDS.jpeg chargée avec succès');
+                // Réappliquer le style pour s'assurer qu'il est pris en compte
+                document.body.style.background = 
+                    `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), 
+                     url('${backgroundImage}') center/cover no-repeat fixed`;
             };
             testImage.onerror = function() {
                 console.warn('Image EDS.jpeg non trouvée, utilisation du fond par défaut');
