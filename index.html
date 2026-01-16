@@ -18,17 +18,11 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            background: 
-                /* Overlay très léger pour lisibilité */
-                linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
-                /* Image de fond complète */
-                url('EDS.jpeg')
-                center/cover no-repeat fixed;
             color: white;
             position: relative;
         }
 
-        /* Fallback si l'image ne charge pas */
+        /* Image de fond EDS.jpeg visible à 100% */
         body::before {
             content: '';
             position: fixed;
@@ -37,10 +31,9 @@
             width: 100%;
             height: 100%;
             background: 
-                linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
-                url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgMGgxMDB2MTAwSDB6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTAgMGgxMHYxMEgwek0xMCAxMGgxMHYxMEgxMHpNMjAgMjBoMTB2MTBIMjB6TTMwIDMwaDEwdjEwSDMwek00MCA0MGgxMHYxMEg0MHpNNTAgNTBoMTB2MTBINTB6TTYwIDYwaDEwdjEwSDYwek03MCA3MGgxMHYxMEg3MHpNODAgODBoMTB2MTBIODB6IiBmaWxsPSIjZWVlIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm4pIi8+PC9zdmc+')
-                center/cover no-repeat fixed;
-            z-index: -2;
+                linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
+                url('EDS.jpeg') center/cover no-repeat fixed;
+            z-index: -1;
         }
 
         .container {
@@ -48,11 +41,11 @@
             max-width: 800px;
             text-align: center;
             padding: 40px 30px;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(8px);
             border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
             position: relative;
             z-index: 2;
         }
@@ -61,7 +54,7 @@
             font-size: 2.2rem;
             margin-bottom: 10px;
             color: white;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
         }
 
         h2 {
@@ -69,6 +62,7 @@
             margin-bottom: 30px;
             color: #4FC3F7;
             font-weight: 400;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
         }
 
         h3 {
@@ -78,6 +72,7 @@
             border-bottom: 2px solid #4FC3F7;
             padding-bottom: 10px;
             display: inline-block;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
         }
 
         .dashboard-grid {
@@ -88,17 +83,18 @@
         }
 
         .dashboard-item {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.1);
             padding: 25px;
             border-radius: 15px;
             border-left: 4px solid #4FC3F7;
             text-align: left;
             transition: transform 0.3s ease, background 0.3s ease;
+            backdrop-filter: blur(5px);
         }
 
         .dashboard-item:hover {
             transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .dashboard-item h4 {
@@ -108,6 +104,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
         }
 
         .dashboard-item ul {
@@ -117,11 +114,12 @@
 
         .dashboard-item li {
             padding: 8px 0;
-            color: rgba(255, 255, 255, 0.9);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
             display: flex;
             align-items: center;
             gap: 10px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .dashboard-item li:last-child {
@@ -135,11 +133,12 @@
 
         /* Section emploi du temps */
         .timetable-section {
-            background: rgba(33, 150, 243, 0.15);
+            background: rgba(33, 150, 243, 0.2);
             border-radius: 15px;
             padding: 25px;
             margin: 30px 0;
-            border: 1px solid rgba(79, 195, 247, 0.3);
+            border: 1px solid rgba(79, 195, 247, 0.4);
+            backdrop-filter: blur(5px);
         }
 
         .timetable-info {
@@ -148,13 +147,14 @@
             align-items: center;
             margin-top: 15px;
             padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.25);
         }
 
         .time-details {
             font-size: 1.1rem;
             color: #4FC3F7;
             font-weight: 600;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
         }
 
         /* Section messages et agenda */
@@ -166,14 +166,15 @@
         }
 
         .message-card, .agenda-card {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.1);
             padding: 25px;
             border-radius: 15px;
             text-align: left;
+            backdrop-filter: blur(5px);
         }
 
         .reminder-item {
-            background: rgba(255, 193, 7, 0.15);
+            background: rgba(255, 193, 7, 0.2);
             padding: 15px;
             border-radius: 10px;
             margin: 15px 0;
@@ -184,6 +185,7 @@
             color: #FFC107;
             font-weight: 600;
             margin-bottom: 5px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
         }
 
         /* Section fonctionnalités */
@@ -195,15 +197,16 @@
         }
 
         .feature-item {
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.08);
             padding: 20px;
             border-radius: 12px;
             text-align: center;
             transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
         }
 
         .feature-item:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             transform: scale(1.05);
         }
 
@@ -217,54 +220,34 @@
         .access-button {
             display: inline-block;
             margin-top: 40px;
-            padding: 14px 35px; /* Réduit la taille */
+            padding: 12px 30px; /* Réduit */
             background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
             color: white;
             text-decoration: none;
-            border-radius: 10px; /* Coins légèrement moins arrondis */
-            font-size: 1rem; /* Police réduite */
+            border-radius: 8px; /* Réduit */
+            font-size: 0.95rem; /* Réduit */
             font-weight: 600;
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3); /* Ombre réduite */
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
             position: relative;
             overflow: hidden;
         }
 
         .access-button:hover {
-            transform: translateY(-3px); /* Animation réduite */
-            box-shadow: 0 8px 20px rgba(33, 150, 243, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
             background: linear-gradient(135deg, #1976D2 0%, #0D47A1 100%);
         }
 
         .access-button:active {
-            transform: translateY(-1px);
+            transform: translateY(0);
         }
 
         .access-button i {
             margin-right: 8px;
-            font-size: 1.1rem; /* Icône réduite */
-        }
-
-        /* Boutons secondaires réduits */
-        .button-small {
-            display: inline-block;
-            padding: 8px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .button-small:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
+            font-size: 1rem; /* Réduit */
         }
 
         /* Responsive Design */
@@ -300,8 +283,8 @@
             }
             
             .access-button {
-                padding: 12px 25px; /* Réduit sur mobile */
-                font-size: 0.95rem;
+                padding: 10px 25px;
+                font-size: 0.9rem;
                 width: 100%;
             }
         }
@@ -328,8 +311,8 @@
             }
             
             .access-button {
-                padding: 10px 20px;
-                font-size: 0.9rem;
+                padding: 8px 20px;
+                font-size: 0.85rem;
             }
         }
 
@@ -438,7 +421,7 @@
                 <p>Centre de communication unifié</p>
                 
                 <div class="reminder-item">
-                    <div class="reminder-time">13:00</div>
+                    <div class="reminder-time">15:00</div>
                     <div>Réunion Parents - Salle de conférence</div>
                 </div>
                 
@@ -490,28 +473,21 @@
     </div>
 
     <script>
-        // Script pour l'image de fond réelle
+        // Vérification du chargement de l'image de fond
         document.addEventListener('DOMContentLoaded', function() {
-            const backgroundImage = 'EDS.jpeg'; // À modifier selon votre fichier
-            
-            // Appliquer l'image de fond avec un overlay très léger
-            document.body.style.background = 
-                `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), 
-                 url('${backgroundImage}') center/cover no-repeat fixed`;
+            const backgroundImage = 'EDS.jpeg';
             
             // Vérifier si l'image existe
             const testImage = new Image();
             testImage.src = backgroundImage;
             testImage.onload = function() {
-                console.log('Image de fond EDS.jpeg chargée avec succès');
-                // Réappliquer le style pour s'assurer qu'il est pris en compte
-                document.body.style.background = 
-                    `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), 
-                     url('${backgroundImage}') center/cover no-repeat fixed`;
+                console.log('✅ Image de fond EDS.jpeg chargée avec succès');
+                // Forcer la réapplication du style
+                document.body.style.backgroundImage = `url('${backgroundImage}')`;
             };
             testImage.onerror = function() {
-                console.warn('Image EDS.jpeg non trouvée, utilisation du fond par défaut');
-                // Garder le fond SVG par défaut
+                console.warn('⚠️ Image EDS.jpeg non trouvée');
+                console.log('Placez le fichier EDS.jpeg dans le même dossier que ce fichier HTML');
             };
             
             // Effet de clic sur le bouton
@@ -521,26 +497,7 @@
                 setTimeout(() => {
                     this.style.transform = '';
                 }, 150);
-                
-                console.log('Navigation vers EDS.html');
             });
-            
-            // Adaptation responsive dynamique
-            function adaptLayout() {
-                const container = document.querySelector('.container');
-                const width = window.innerWidth;
-                
-                if (width < 768) {
-                    container.style.padding = '25px 15px';
-                } else if (width < 1200) {
-                    container.style.padding = '35px 25px';
-                } else {
-                    container.style.padding = '50px 40px';
-                }
-            }
-            
-            window.addEventListener('load', adaptLayout);
-            window.addEventListener('resize', adaptLayout);
             
             // Message de bienvenue
             const hours = new Date().getHours();
