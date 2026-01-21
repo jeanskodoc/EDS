@@ -1,325 +1,299 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head> 
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulaire d'Évaluation - Enseignants</title>
+    <title>Analyse des Résultats Scolaires</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #3498db;
-            --secondary-color: #2c3e50;
-            --success-color: #2ecc71;
-            --warning-color: #f39c12;
-            --danger-color: #e74c3c;
-            --light-color: #ecf0f1;
-            --dark-color: #34495e;
-            --border-color: #bdc3c7;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --danger: #ef233c;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --border: #dee2e6;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 8px rgba(0,0,0,0.12);
+            --radius: 8px;
         }
-        
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
         }
-        
+
         body {
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
-            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: var(--dark);
+            line-height: 1.5;
+            padding: 12px;
+            min-height: 100vh;
         }
-        
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
             background: white;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
             overflow: hidden;
         }
-        
+
         .header {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 16px 20px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-            padding: 20px;
-        }
-
-        .header h1 {
-            color: var(--primary-color);
-            font-size: 1.8rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-retour {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 16px;
-            background-color: var(--light-color);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: var(--transition);
-        }
-
-        .btn-retour:hover {
-            background-color: #e9ecef;
-        }
-        
-        .page-header {
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-            color: white;
-            padding: 25px;
-            text-align: center;
-        }
-        
-        .page-header h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-        
-        .description {
-            font-size: 16px;
-            opacity: 0.9;
-        }
-        
-        .main-content {
-            display: flex;
             flex-wrap: wrap;
-            padding: 20px;
-            gap: 20px;
-        }
-        
-        .card {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            margin-bottom: 20px;
+            gap: 12px;
         }
 
-        .card-header {
-            padding: 15px 20px;
-            background-color: var(--primary-color);
-            color: white;
+        .title {
             display: flex;
             align-items: center;
             gap: 10px;
+            color: var(--primary);
+            font-size: 1.4rem;
+            font-weight: 700;
         }
 
-        .card-body {
-            padding: 20px;
-        }
-        
-        .config-panel {
-            flex: 1;
-            min-width: 300px;
-        }
-        
-        .form-container {
-            flex: 3;
-            min-width: 500px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--dark-color);
-        }
-        
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 16px;
-            transition: var(--transition);
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-        }
-        
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-        
-        button {
-            display: flex;
+        .btn {
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            padding: 12px 20px;
+            gap: 6px;
+            padding: 8px 14px;
             border: none;
             border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
             font-weight: 600;
-            transition: var(--transition);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            min-height: 36px;
         }
-        
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            min-height: 32px;
+        }
+
         .btn-primary {
-            background-color: var(--primary-color);
+            background: var(--primary);
             color: white;
         }
-        
+
         .btn-primary:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background: var(--secondary);
+            transform: translateY(-1px);
         }
-        
+
         .btn-success {
-            background-color: var(--success-color);
+            background: var(--success);
             color: white;
-        }
-        
-        .btn-success:hover {
-            background-color: #27ae60;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .btn-danger {
-            background-color: var(--danger-color);
-            color: white;
-        }
-        
-        .btn-danger:hover {
-            background-color: #c0392b;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .btn-warning {
-            background-color: var(--warning-color);
+            background: var(--warning);
             color: white;
         }
-        
-        .btn-warning:hover {
-            background-color: #e67e22;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
         }
-        
-        .btn-sm {
-            padding: 8px 15px;
-            font-size: 14px;
+
+        .btn-light {
+            background: var(--light);
+            color: var(--dark);
+            border: 1px solid var(--border);
         }
-        
-        .student-row {
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 16px;
+            padding: 16px;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .card-header {
+            padding: 12px 16px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            font-weight: 600;
             display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 15px;
-            padding: 15px;
-            background: #f9f9f9;
-            border-radius: 8px;
-            border-left: 4px solid var(--primary-color);
-            transition: var(--transition);
+            align-items: center;
+            gap: 8px;
         }
-        
-        .student-row:hover {
-            background: #edf7ff;
+
+        .card-body {
+            padding: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: border 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .stat-item {
+            background: linear-gradient(135deg, #4361ee15, #3a0ca315);
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .student-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .student-card {
+            background: var(--light);
+            border-radius: var(--radius);
+            padding: 14px;
+            border-left: 4px solid var(--primary);
+            transition: transform 0.2s;
+        }
+
+        .student-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            background: #edf2ff;
         }
-        
+
+        .student-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
         .student-name {
             flex: 1;
             min-width: 200px;
         }
-        
+
         .student-note {
-            flex: 0 0 100px;
+            flex: 0 0 80px;
         }
-        
+
         .student-actions {
-            flex: 0 0 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            flex: 0 0 auto;
         }
-        
-        .student-points {
-            flex: 1;
-            min-width: 300px;
+
+        .points-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
         }
-        
-        .actions {
+
+        .footer-actions {
             display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-            padding: 20px;
-            background: var(--light-color);
-            border-radius: 8px;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 10px;
+            justify-content: center;
+            padding: 16px;
+            background: var(--light);
+            border-top: 1px solid var(--border);
         }
-        
-        .alert {
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
+
+        .json-output {
+            margin-top: 20px;
+            padding: 16px;
+            background: var(--dark);
+            color: white;
+            border-radius: var(--radius);
             display: none;
         }
-        
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin: 12px 0;
+            display: none;
+        }
+
         .alert-success {
-            background-color: #e8f5e9;
+            background: #d1f7c4;
             color: #2e7d32;
             border: 1px solid #a5d6a7;
         }
-        
-        .alert-danger {
-            background-color: #ffebee;
+
+        .alert-error {
+            background: #ffebee;
             color: #c62828;
             border: 1px solid #ef9a9a;
         }
-        
-        .json-output {
-            margin-top: 30px;
-            padding: 20px;
-            background: var(--secondary-color);
-            color: white;
-            border-radius: 8px;
-            display: none;
-        }
-        
-        pre {
-            white-space: pre-wrap;
-            word-break: break-all;
-            font-family: 'Courier New', monospace;
-            background: var(--dark-color);
-            padding: 15px;
-            border-radius: 4px;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        
-        .download-btn {
-            margin-top: 15px;
-        }
-        
+
         .empty-state {
             text-align: center;
             padding: 40px 20px;
@@ -327,104 +301,81 @@
         }
 
         .empty-state i {
-            font-size: 48px;
-            margin-bottom: 15px;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
             color: #adb5bd;
         }
 
-        .stats-card {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .stat-item {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 15px;
-            border-radius: 6px;
-            text-align: center;
-            backdrop-filter: blur(5px);
-        }
-
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-            .container {
-                padding: 15px;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
             }
         }
 
         @media (max-width: 768px) {
             body {
-                padding: 10px;
+                padding: 8px;
             }
 
-            .container {
-                margin: 0;
-                border-radius: 15px;
+            .header-top {
+                flex-direction: column;
+                align-items: stretch;
             }
 
-            .main-content {
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .points-row {
+                grid-template-columns: 1fr;
+            }
+
+            .student-header {
                 flex-direction: column;
             }
-            
-            .student-row {
+
+            .student-note {
+                width: 100%;
+            }
+
+            .footer-actions {
                 flex-direction: column;
-            }
-
-            .actions {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .card-body {
-                padding: 15px;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .page-header h1 {
-                font-size: 1.5rem;
             }
 
             .stats-grid {
                 grid-template-columns: 1fr;
             }
+        }
 
-            .card-header {
-                padding: 12px 15px;
-                font-size: 1.1rem;
+        @media (max-width: 480px) {
+            .card-body {
+                padding: 12px;
+            }
+
+            .header {
+                padding: 12px;
+            }
+
+            .title {
+                font-size: 1.2rem;
+            }
+
+            .form-control {
+                padding: 8px 10px;
+                font-size: 0.9rem;
+            }
+
+            .btn {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (min-width: 1600px) {
+            .container {
+                max-width: 95%;
             }
         }
     </style>
@@ -432,376 +383,275 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-chart-line"></i> Formulaire d'Évaluation des Élèves</h1>
-            <button class="btn-retour" onclick="history.back()">
-                <i class="fas fa-arrow-left"></i> Retour
-            </button>
-        </div>
-        
-        <div class="page-header">
-            <h1>Système d'Évaluation Scolaire</h1>
-            <p class="description">Saisissez les notes et appréciations pour générer un fichier JSON d'analyse</p>
-        </div>
-        
-        <div class="alert alert-success" id="successAlert"></div>
-        <div class="alert alert-danger" id="errorAlert"></div>
-        
-        <div class="main-content">
-            <div class="config-panel card">
-                <div class="card-header">
-                    <i class="fas fa-cogs"></i> Configuration
-                </div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="classe"><i class="fas fa-users"></i> Classe</label>
-                        <select id="classe" required onchange="loadStudents()">
-                            <option value="">Sélectionnez une classe</option>
-                            <option value="6ème A">6ème A</option>
-                            <option value="6ème B">6ème B</option>
-                            <option value="5ème A">5ème A</option>
-                            <option value="5ème B">5ème B</option>
-                            <option value="4ème A">4ème A</option>
-                            <option value="4ème B">4ème B</option>
-                            <option value="3ème A">3ème A</option>
-                            <option value="3ème B">3ème B</option>
-                            <option value="2nde A">2nde A</option>
-                            <option value="2nde B">2nde B</option>
-                            <option value="1ère S">1ère S</option>
-                            <option value="1ère ES">1ère ES</option>
-                            <option value="1ère L">1ère L</option>
-                            <option value="Terminale S">Terminale S</option>
-                            <option value="Terminale ES">Terminale ES</option>
-                            <option value="Terminale L">Terminale L</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="matiere"><i class="fas fa-book"></i> Matière</label>
-                        <select id="matiere" required>
-                            <option value="">Sélectionnez une matière</option>
-                            <option value="Mathématiques">Mathématiques</option>
-                            <option value="Français">Français</option>
-                            <option value="Histoire-Géographie">Histoire-Géographie</option>
-                            <option value="SVT">SVT</option>
-                            <option value="Physique-Chimie">Physique-Chimie</option>
-                            <option value="Anglais">Anglais</option>
-                            <option value="Espagnol">Espagnol</option>
-                            <option value="Allemand">Allemand</option>
-                            <option value="Philosophie">Philosophie</option>
-                            <option value="Éducation Physique et Sportive">Éducation Physique et Sportive</option>
-                            <option value="Technologie">Technologie</option>
-                            <option value="Sciences Économiques et Sociales">Sciences Économiques et Sociales</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="enseignant"><i class="fas fa-user-tie"></i> Enseignant</label>
-                        <input type="text" id="enseignant" placeholder="Votre nom" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="date"><i class="fas fa-calendar-alt"></i> Date de l'évaluation</label>
-                        <input type="date" id="date" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="type"><i class="fas fa-tasks"></i> Type d'évaluation</label>
-                        <select id="type">
-                            <option value="Contrôle">Contrôle</option>
-                            <option value="Devoir maison">Devoir maison</option>
-                            <option value="Interrogation">Interrogation</option>
-                            <option value="Examen">Examen</option>
-                            <option value="Projet">Projet</option>
-                            <option value="Oral">Oral</option>
-                        </select>
-                    </div>
-                    
-                    <button class="btn-primary" id="addStudent">
-                        <i class="fas fa-user-plus"></i> Ajouter un élève manuellement
-                    </button>
-
-                    <!-- Statistiques en temps réel -->
-                    <div class="stats-card">
-                        <h3><i class="fas fa-chart-bar"></i> Statistiques</h3>
-                        <div class="stats-grid">
-                            <div class="stat-item">
-                                <div class="stat-value" id="total-students">0</div>
-                                <div class="stat-label">Élèves</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value" id="average-grade">-</div>
-                                <div class="stat-label">Moyenne</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value" id="highest-grade">-</div>
-                                <div class="stat-label">Note max</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value" id="lowest-grade">-</div>
-                                <div class="stat-label">Note min</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="form-container card">
-                <div class="card-header">
-                    <i class="fas fa-clipboard-list"></i> Évaluations des élèves
-                </div>
-                <div class="card-body">
-                    <div id="studentsContainer">
-                        <div class="empty-state">
-                            <i class="fas fa-users"></i>
-                            <h3>Aucun élève ajouté</h3>
-                            <p>Sélectionnez une classe pour charger la liste des élèves ou ajoutez des élèves manuellement.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="actions">
-            <button class="btn-danger" id="resetForm">
-                <i class="fas fa-undo"></i> Réinitialiser
-            </button>
-            
-            <button class="btn-warning" id="generateStats">
-                <i class="fas fa-chart-pie"></i> Voir les statistiques
-            </button>
-            
-            <button class="btn-success" id="generateJson">
-                <i class="fas fa-file-code"></i> Générer le JSON
-            </button>
-        </div>
-        
-        <div class="json-output card" id="jsonOutput">
-            <div class="card-header">
-                <i class="fas fa-file-export"></i> Fichier JSON généré
-            </div>
-            <div class="card-body">
-                <pre id="jsonContent"></pre>
-                <button class="btn-primary download-btn" id="downloadJson">
-                    <i class="fas fa-download"></i> Télécharger le fichier JSON
+            <div class="header-top">
+                <h1 class="title">
+                    <i class="fas fa-chart-line"></i>
+                    Analyse des Résultats Scolaires
+                </h1>
+                <button class="btn btn-light" onclick="history.back()">
+                    <i class="fas fa-arrow-left"></i>
+                    Retour
                 </button>
             </div>
+            <p style="color: #666; font-size: 0.95rem;">
+                Saisissez les notes et appréciations pour générer un rapport d'analyse complet
+            </p>
+        </div>
+
+        <div class="alert alert-success" id="successAlert"></div>
+        <div class="alert alert-error" id="errorAlert"></div>
+
+        <div class="main-content">
+            <!-- Configuration Panel -->
+            <div class="card config-panel">
+                <div class="card-header">
+                    <i class="fas fa-cog"></i>
+                    Configuration
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="classe">
+                            <i class="fas fa-users"></i>
+                            Classe
+                        </label>
+                        <select id="classe" class="form-control" onchange="loadStudents()">
+                            <option value="">Sélectionnez...</option>
+                            <option value="6ème A">6ème A</option>
+                            <option value="5ème A">5ème A</option>
+                            <option value="4ème A">4ème A</option>
+                            <option value="3ème A">3ème A</option>
+                            <option value="2nde A">2nde A</option>
+                            <option value="1ère S">1ère S</option>
+                            <option value="Terminale S">Terminale S</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="matiere">
+                            <i class="fas fa-book"></i>
+                            Matière
+                        </label>
+                        <select id="matiere" class="form-control">
+                            <option value="">Sélectionnez...</option>
+                            <option value="Mathématiques">Mathématiques</option>
+                            <option value="Français">Français</option>
+                            <option value="Anglais">Anglais</option>
+                            <option value="SVT">SVT</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="enseignant">
+                            <i class="fas fa-user-tie"></i>
+                            Enseignant
+                        </label>
+                        <input type="text" id="enseignant" class="form-control" placeholder="Votre nom">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date">
+                            <i class="fas fa-calendar"></i>
+                            Date
+                        </label>
+                        <input type="date" id="date" class="form-control">
+                    </div>
+
+                    <button class="btn btn-primary" id="addStudent" style="width: 100%; margin-top: 10px;">
+                        <i class="fas fa-user-plus"></i>
+                        Ajouter un élève
+                    </button>
+
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value" id="total-students">0</div>
+                            <div class="stat-label">Élèves</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="average-grade">-</div>
+                            <div class="stat-label">Moyenne</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="highest-grade">-</div>
+                            <div class="stat-label">Max</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="lowest-grade">-</div>
+                            <div class="stat-label">Min</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students List -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-list-alt"></i>
+                    Évaluations des élèves
+                </div>
+                <div class="card-body">
+                    <div id="studentsContainer" class="student-grid">
+                        <div class="empty-state">
+                            <i class="fas fa-users"></i>
+                            <h3>Aucun élève</h3>
+                            <p>Sélectionnez une classe ou ajoutez manuellement</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="footer-actions">
+            <button class="btn btn-light" id="resetForm">
+                <i class="fas fa-redo"></i>
+                Réinitialiser
+            </button>
+            <button class="btn btn-warning" id="generateStats">
+                <i class="fas fa-chart-bar"></i>
+                Statistiques
+            </button>
+            <button class="btn btn-success" id="generateJson">
+                <i class="fas fa-file-export"></i>
+                Générer JSON
+            </button>
+        </div>
+
+        <!-- JSON Output -->
+        <div class="json-output" id="jsonOutput">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 style="font-size: 1rem;">
+                    <i class="fas fa-code"></i>
+                    Données JSON générées
+                </h3>
+                <button class="btn btn-primary btn-sm" id="downloadJson">
+                    <i class="fas fa-download"></i>
+                    Télécharger
+                </button>
+            </div>
+            <pre id="jsonContent" style="background: #2d3748; padding: 12px; border-radius: 6px; font-size: 0.85rem; overflow: auto; max-height: 300px;"></pre>
         </div>
     </div>
 
     <script>
-        // Base de données des élèves par classe
+        // Base de données des élèves
         const studentsDatabase = {
-            "6ème A": [
-                "Martin Dupont", "Léa Martin", "Hugo Bernard", "Emma Petit", 
-                "Lucas Moreau", "Chloé Durand", "Thomas Dubois", "Manon Richard"
-            ],
-            "6ème B": [
-                "Jules Laurent", "Inès Michel", "Noé Garcia", "Sarah Robert", 
-                "Maxime Leroy", "Lola Roux", "Adam Fournier", "Zoé Morel"
-            ],
-            "5ème A": [
-                "Raphaël Girard", "Louise Blanc", "Victor François", "Julie Gérard", 
-                "Nathan Lefebvre", "Camille Lopez", "Alexandre Sanchez", "Éva Perez"
-            ],
-            "5ème B": [
-                "Mathis Nguyen", "Clara Muller", "Tom Weber", "Léa Klein", 
-                "Enzo Schmidt", "Jade Fischer", "Théo Becker", "Maëlys Hoffmann"
-            ],
-            "4ème A": [
-                "Antoine Meyer", "Léna Wagner", "Baptiste Schneider", "Océane Richter", 
-                "Romain Schulz", "Émilie Neumann", "Quentin Braun", "Lilou Hofmann"
-            ],
-            "4ème B": [
-                "Sacha Zimmermann", "Romane Hartmann", "Gabin Krüger", "Louna Werner", 
-                "Nolan Lange", "Alicia Schmitz", "Eliott Köhler", "Lana Bauer"
-            ],
-            "3ème A": [
-                "Timothé Günther", "Lina Huber", "Mathias Walter", "Charlie Fuchs", 
-                "Raphaël Peters", "Léonie Vogel", "Noam Engel", "Élise Hahn"
-            ],
-            "3ème B": [
-                "Kylian Schubert", "Mya Roth", "Léonard Brandt", "Lily Wolf", 
-                "Aaron Sommer", "Nina Schröder", "Marceau Friedrich", "Eva Zimmermann"
-            ],
-            "2nde A": [
-                "Bryan Schwarz", "Lana Koch", "Rayan Böhm", "Léane Schäfer", 
-                "Matteo Berger", "Lyna Schröder", "Nino Ziegler", "Lilwenn Kuhn"
-            ],
-            "2nde B": [
-                "Ethan Frank", "Lana Keller", "Samuel Günther", "Lilou Becker", 
-                "Mathis Wagner", "Léna Bauer", "Tom Hartmann", "Lina Richter"
-            ],
-            "1ère S": [
-                "Alexandre Schuster", "Louna Vogel", "Maxence Winkler", "Lilou Haas", 
-                "Théophile Otto", "Léa Schmid", "Raphaël Lang", "Lyna Koch"
-            ],
-            "1ère ES": [
-                "Mathias Engel", "Léane Brandt", "Noam Pfeiffer", "Lina Wolf", 
-                "Kylian Horn", "Lilwenn Busch", "Marceau Ziegler", "Lyna Thomas"
-            ],
-            "1ère L": [
-                "Léonard Sommer", "Lily Kuhn", "Aaron Frank", "Léa Keller", 
-                "Rayan Günther", "Léna Becker", "Nino Wagner", "Lina Bauer"
-            ],
-            "Terminale S": [
-                "Matteo Hartmann", "Lyna Richter", "Bryan Schwarz", "Lana Koch", 
-                "Raphaël Böhm", "Léane Schäfer", "Tom Berger", "Lilou Schröder"
-            ],
-            "Terminale ES": [
-                "Ethan Ziegler", "Lilwenn Kuhn", "Samuel Frank", "Léa Keller", 
-                "Mathis Günther", "Léna Becker", "Noam Wagner", "Lina Bauer"
-            ],
-            "Terminale L": [
-                "Théophile Hartmann", "Louna Richter", "Maxence Schwarz", "Lilou Koch", 
-                "Raphaël Böhm", "Lyna Schäfer", "Alexandre Berger", "Léane Schröder"
-            ]
+            "6ème A": ["Martin Dupont", "Léa Martin", "Hugo Bernard", "Emma Petit"],
+            "5ème A": ["Raphaël Girard", "Louise Blanc", "Victor François", "Julie Gérard"],
+            "4ème A": ["Antoine Meyer", "Léna Wagner", "Baptiste Schneider", "Océane Richter"],
+            "3ème A": ["Timothé Günther", "Lina Huber", "Mathias Walter", "Charlie Fuchs"],
+            "2nde A": ["Bryan Schwarz", "Lana Koch", "Rayan Böhm", "Léane Schäfer"],
+            "1ère S": ["Alexandre Schuster", "Louna Vogel", "Maxence Winkler", "Lilou Haas"],
+            "Terminale S": ["Matteo Hartmann", "Lyna Richter", "Bryan Schwarz", "Lana Koch"]
         };
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialiser la date du jour
+            // Initialiser
             document.getElementById('date').valueAsDate = new Date();
-            
-            // Références aux éléments DOM
-            const addStudentBtn = document.getElementById('addStudent');
-            const resetFormBtn = document.getElementById('resetForm');
-            const generateJsonBtn = document.getElementById('generateJson');
-            const generateStatsBtn = document.getElementById('generateStats');
-            const downloadJsonBtn = document.getElementById('downloadJson');
-            const studentsContainer = document.getElementById('studentsContainer');
-            const jsonOutput = document.getElementById('jsonOutput');
-            const jsonContent = document.getElementById('jsonContent');
-            const successAlert = document.getElementById('successAlert');
-            const errorAlert = document.getElementById('errorAlert');
-            const classeSelect = document.getElementById('classe');
-            
-            // Compteur pour les IDs des élèves
             let studentId = 1;
-            
+
+            // Références
+            const elements = {
+                addStudent: document.getElementById('addStudent'),
+                resetForm: document.getElementById('resetForm'),
+                generateJson: document.getElementById('generateJson'),
+                generateStats: document.getElementById('generateStats'),
+                downloadJson: document.getElementById('downloadJson'),
+                studentsContainer: document.getElementById('studentsContainer'),
+                jsonOutput: document.getElementById('jsonOutput'),
+                jsonContent: document.getElementById('jsonContent'),
+                alerts: {
+                    success: document.getElementById('successAlert'),
+                    error: document.getElementById('errorAlert')
+                }
+            };
+
             // Événements
-            addStudentBtn.addEventListener('click', addStudentRow);
-            resetFormBtn.addEventListener('click', resetForm);
-            generateJsonBtn.addEventListener('click', generateJson);
-            generateStatsBtn.addEventListener('click', generateStats);
-            downloadJsonBtn.addEventListener('click', downloadJson);
-            
-            // Fonction pour charger les élèves en fonction de la classe sélectionnée
+            elements.addStudent.addEventListener('click', addStudentRow);
+            elements.resetForm.addEventListener('click', resetForm);
+            elements.generateJson.addEventListener('click', generateJson);
+            elements.generateStats.addEventListener('click', showStatistics);
+            elements.downloadJson.addEventListener('click', downloadJson);
+
+            // Fonctions
             window.loadStudents = function() {
-                const selectedClass = classeSelect.value;
-                if (selectedClass && studentsDatabase[selectedClass]) {
-                    // Vider le conteneur d'élèves
-                    studentsContainer.innerHTML = '';
+                const classe = document.getElementById('classe').value;
+                if (classe && studentsDatabase[classe]) {
+                    elements.studentsContainer.innerHTML = '';
                     studentId = 1;
-                    
-                    // Ajouter chaque élève de la classe
-                    studentsDatabase[selectedClass].forEach(studentName => {
-                        addStudentRowWithName(studentName);
-                    });
-                    
-                    showSuccess(`Liste des élèves de ${selectedClass} chargée avec succès!`);
+                    studentsDatabase[classe].forEach(name => addStudentRowWithName(name));
+                    showMessage(`Classe ${classe} chargée`, 'success');
                     updateStats();
                 }
-            }
-            
-            // Fonction pour ajouter une ligne d'élève avec un nom prédéfini
+            };
+
             function addStudentRowWithName(name) {
-                const row = document.createElement('div');
-                row.className = 'student-row';
-                row.id = `student-${studentId}`;
-                
-                row.innerHTML = `
-                    <div class="student-name">
-                        <label for="name-${studentId}"><i class="fas fa-user"></i> Nom de l'élève</label>
-                        <input type="text" id="name-${studentId}" class="student-name-input" value="${name}" required>
-                    </div>
-                    
-                    <div class="student-note">
-                        <label for="note-${studentId}"><i class="fas fa-star"></i> Note /20</label>
-                        <input type="number" id="note-${studentId}" class="student-note-input" min="0" max="20" step="0.5" required oninput="updateStats()">
-                    </div>
-                    
-                    <div class="student-points">
-                        <label for="points-forts-${studentId}"><i class="fas fa-thumbs-up"></i> Points forts (séparés par des virgules)</label>
-                        <textarea id="points-forts-${studentId}" class="student-points-forts-input" placeholder="Ex: Calcul mental, Résolution de problèmes"></textarea>
-                    </div>
-                    
-                    <div class="student-points">
-                        <label for="points-faibles-${studentId}"><i class="fas fa-thumbs-down"></i> Points faibles (séparés par des virgules)</label>
-                        <textarea id="points-faibles-${studentId}" class="student-points-faibles-input" placeholder="Ex: Géométrie, Rédaction"></textarea>
-                    </div>
-                    
-                    <div class="student-actions">
-                        <button class="btn-danger btn-sm" onclick="removeStudent(${studentId})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                `;
-                
-                studentsContainer.appendChild(row);
-                studentId++;
+                addStudentRow(name);
             }
-            
-            // Fonction pour ajouter une ligne d'élève vide
-            function addStudentRow() {
-                const row = document.createElement('div');
-                row.className = 'student-row';
-                row.id = `student-${studentId}`;
+
+            function addStudentRow(name = '') {
+                const card = document.createElement('div');
+                card.className = 'student-card';
+                card.id = `student-${studentId}`;
                 
-                row.innerHTML = `
-                    <div class="student-name">
-                        <label for="name-${studentId}"><i class="fas fa-user"></i> Nom de l'élève</label>
-                        <input type="text" id="name-${studentId}" class="student-name-input" placeholder="Nom et prénom" required>
+                card.innerHTML = `
+                    <div class="student-header">
+                        <div class="student-name">
+                            <input type="text" class="form-control" 
+                                   value="${name}" 
+                                   placeholder="Nom de l'élève"
+                                   oninput="updateStats()">
+                        </div>
+                        <div class="student-note">
+                            <input type="number" class="form-control" 
+                                   min="0" max="20" step="0.5" 
+                                   placeholder="Note /20"
+                                   oninput="updateStats()">
+                        </div>
+                        <div class="student-actions">
+                            <button class="btn btn-danger btn-sm" onclick="removeStudent(${studentId})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
                     </div>
-                    
-                    <div class="student-note">
-                        <label for="note-${studentId}"><i class="fas fa-star"></i> Note /20</label>
-                        <input type="number" id="note-${studentId}" class="student-note-input" min="0" max="20" step="0.5" required oninput="updateStats()">
-                    </div>
-                    
-                    <div class="student-points">
-                        <label for="points-forts-${studentId}"><i class="fas fa-thumbs-up"></i> Points forts (séparés par des virgules)</label>
-                        <textarea id="points-forts-${studentId}" class="student-points-forts-input" placeholder="Ex: Calcul mental, Résolution de problèmes"></textarea>
-                    </div>
-                    
-                    <div class="student-points">
-                        <label for="points-faibles-${studentId}"><i class="fas fa-thumbs-down"></i> Points faibles (séparés par des virgules)</label>
-                        <textarea id="points-faibles-${studentId}" class="student-points-faibles-input" placeholder="Ex: Géométrie, Rédaction"></textarea>
-                    </div>
-                    
-                    <div class="student-actions">
-                        <button class="btn-danger btn-sm" onclick="removeStudent(${studentId})">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                    <div class="points-row">
+                        <div>
+                            <textarea class="form-control" 
+                                      placeholder="Points forts (séparés par des virgules)"
+                                      rows="2"></textarea>
+                        </div>
+                        <div>
+                            <textarea class="form-control" 
+                                      placeholder="Points faibles (séparés par des virgules)"
+                                      rows="2"></textarea>
+                        </div>
                     </div>
                 `;
-                
-                studentsContainer.appendChild(row);
+
+                elements.studentsContainer.appendChild(card);
                 studentId++;
                 updateStats();
             }
-            
-            // Fonction pour supprimer une ligne d'élève
+
             window.removeStudent = function(id) {
-                const row = document.getElementById(`student-${id}`);
-                if (row) {
-                    studentsContainer.removeChild(row);
+                const card = document.getElementById(`student-${id}`);
+                if (card) {
+                    card.remove();
                     updateStats();
                 }
-            }
-            
-            // Fonction pour mettre à jour les statistiques
+            };
+
             window.updateStats = function() {
-                const studentRows = document.getElementsByClassName('student-row');
+                const cards = document.querySelectorAll('.student-card');
                 const grades = [];
                 
-                for (let i = 0; i < studentRows.length; i++) {
-                    const id = studentRows[i].id.split('-')[1];
-                    const noteInput = document.getElementById(`note-${id}`);
+                cards.forEach(card => {
+                    const noteInput = card.querySelector('input[type="number"]');
                     if (noteInput && noteInput.value) {
                         grades.push(parseFloat(noteInput.value));
                     }
-                }
-                
-                document.getElementById('total-students').textContent = studentRows.length;
+                });
+
+                document.getElementById('total-students').textContent = cards.length;
                 
                 if (grades.length > 0) {
                     const sum = grades.reduce((a, b) => a + b, 0);
@@ -809,227 +659,151 @@
                     const max = Math.max(...grades);
                     const min = Math.min(...grades);
                     
-                    document.getElementById('average-grade').textContent = avg.toFixed(2);
-                    document.getElementById('highest-grade').textContent = max.toFixed(2);
-                    document.getElementById('lowest-grade').textContent = min.toFixed(2);
+                    document.getElementById('average-grade').textContent = avg.toFixed(1);
+                    document.getElementById('highest-grade').textContent = max;
+                    document.getElementById('lowest-grade').textContent = min;
                 } else {
-                    document.getElementById('average-grade').textContent = '-';
-                    document.getElementById('highest-grade').textContent = '-';
-                    document.getElementById('lowest-grade').textContent = '-';
-                }
-            }
-            
-            // Fonction pour générer des statistiques détaillées
-            function generateStats() {
-                const studentRows = document.getElementsByClassName('student-row');
-                
-                if (studentRows.length === 0) {
-                    showError('Aucun élève à analyser. Veuillez ajouter des élèves d\'abord.');
-                    return;
-                }
-                
-                const grades = [];
-                const pointsForts = [];
-                const pointsFaibles = [];
-                
-                for (let i = 0; i < studentRows.length; i++) {
-                    const id = studentRows[i].id.split('-')[1];
-                    const note = document.getElementById(`note-${id}`).value;
-                    const forts = document.getElementById(`points-forts-${id}`).value.split(',').map(item => item.trim()).filter(item => item);
-                    const faibles = document.getElementById(`points-faibles-${id}`).value.split(',').map(item => item.trim()).filter(item => item);
-                    
-                    if (note) grades.push(parseFloat(note));
-                    pointsForts.push(...forts);
-                    pointsFaibles.push(...faibles);
-                }
-                
-                if (grades.length === 0) {
-                    showError('Aucune note saisie pour générer des statistiques.');
-                    return;
-                }
-                
-                // Calculer les statistiques
-                const sum = grades.reduce((a, b) => a + b, 0);
-                const avg = sum / grades.length;
-                const max = Math.max(...grades);
-                const min = Math.min(...grades);
-                
-                // Compter les occurrences des points forts et faibles
-                const fortsCount = {};
-                const faiblesCount = {};
-                
-                pointsForts.forEach(point => {
-                    fortsCount[point] = (fortsCount[point] || 0) + 1;
-                });
-                
-                pointsFaibles.forEach(point => {
-                    faiblesCount[point] = (faiblesCount[point] || 0) + 1;
-                });
-                
-                // Trier par fréquence
-                const topForts = Object.entries(fortsCount)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 5);
-                
-                const topFaibles = Object.entries(faiblesCount)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 5);
-                
-                // Afficher les statistiques
-                let statsMessage = `📊 Statistiques détaillées\n\n`;
-                statsMessage += `Nombre d'élèves: ${studentRows.length}\n`;
-                statsMessage += `Moyenne de la classe: ${avg.toFixed(2)}/20\n`;
-                statsMessage += `Meilleure note: ${max.toFixed(2)}/20\n`;
-                statsMessage += `Plus basse note: ${min.toFixed(2)}/20\n\n`;
-                
-                statsMessage += `📈 Points forts les plus fréquents:\n`;
-                topForts.forEach(([point, count]) => {
-                    statsMessage += `• ${point}: ${count} élève(s)\n`;
-                });
-                
-                statsMessage += `\n📉 Points faibles les plus fréquents:\n`;
-                topFaibles.forEach(([point, count]) => {
-                    statsMessage += `• ${point}: ${count} élève(s)\n`;
-                });
-                
-                alert(statsMessage);
-            }
-            
-            // Fonction pour réinitialiser le formulaire
-            function resetForm() {
-                if (confirm('Êtes-vous sûr de vouloir réinitialiser le formulaire? Toutes les données seront perdues.')) {
-                    studentsContainer.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-users"></i>
-                            <h3>Aucun élève ajouté</h3>
-                            <p>Sélectionnez une classe pour charger la liste des élèves ou ajoutez des élèves manuellement.</p>
-                        </div>
-                    `;
-                    document.getElementById('classe').value = '';
-                    document.getElementById('matiere').value = '';
-                    document.getElementById('enseignant').value = '';
-                    document.getElementById('date').valueAsDate = new Date();
-                    document.getElementById('type').value = 'Contrôle';
-                    jsonOutput.style.display = 'none';
-                    successAlert.style.display = 'none';
-                    errorAlert.style.display = 'none';
-                    
-                    studentId = 1;
-                    updateStats();
-                }
-            }
-            
-            // Fonction pour générer le JSON
-            function generateJson() {
-                // Récupérer les valeurs de configuration
-                const classe = document.getElementById('classe').value;
-                const matiere = document.getElementById('matiere').value;
-                const enseignant = document.getElementById('enseignant').value;
-                const date = document.getElementById('date').value;
-                const type = document.getElementById('type').value;
-                
-                // Valider les champs de configuration
-                if (!classe || !matiere || !enseignant || !date) {
-                    showError('Veuillez remplir tous les champs de configuration.');
-                    return;
-                }
-                
-                // Récupérer les données des élèves
-                const students = [];
-                const studentRows = document.getElementsByClassName('student-row');
-                
-                if (studentRows.length === 0) {
-                    showError('Aucun élève ajouté. Veuillez ajouter au moins un élève.');
-                    return;
-                }
-                
-                for (let i = 0; i < studentRows.length; i++) {
-                    const id = studentRows[i].id.split('-')[1];
-                    const name = document.getElementById(`name-${id}`).value;
-                    const note = document.getElementById(`note-${id}`).value;
-                    const pointsForts = document.getElementById(`points-forts-${id}`).value.split(',').map(item => item.trim()).filter(item => item);
-                    const pointsFaibles = document.getElementById(`points-faibles-${id}`).value.split(',').map(item => item.trim()).filter(item => item);
-                    
-                    // Valider les champs de l'élève
-                    if (!name || !note) {
-                        showError(`Veuillez remplir tous les champs pour l'élève ${i+1}.`);
-                        return;
-                    }
-                    
-                    students.push({
-                        classe: classe,
-                        matiere: matiere,
-                        eleve: name,
-                        note: parseFloat(note),
-                        pointsForts: pointsForts,
-                        pointsFaibles: pointsFaibles
+                    ['average-grade', 'highest-grade', 'lowest-grade'].forEach(id => {
+                        document.getElementById(id).textContent = '-';
                     });
                 }
-                
-                // Créer l'objet JSON
-                const jsonData = {
-                    meta: {
-                        enseignant: enseignant,
-                        date: date,
-                        type: type
-                    },
-                    evaluations: students
-                };
-                
-                // Afficher le JSON
-                jsonContent.textContent = JSON.stringify(jsonData, null, 2);
-                jsonOutput.style.display = 'block';
-                
-                // Faire défiler jusqu'au JSON
-                jsonOutput.scrollIntoView({ behavior: 'smooth' });
-                
-                showSuccess('Fichier JSON généré avec succès!');
-            }
-            
-            // Fonction pour télécharger le JSON
-            function downloadJson() {
-                const jsonString = jsonContent.textContent;
-                if (!jsonString) {
-                    showError('Aucune donnée à télécharger. Veuillez générer le JSON d\'abord.');
+            };
+
+            function showStatistics() {
+                const cards = document.querySelectorAll('.student-card');
+                if (cards.length === 0) {
+                    showMessage('Aucun élève à analyser', 'error');
                     return;
                 }
-                
-                const blob = new Blob([jsonString], { type: 'application/json' });
+
+                const stats = {
+                    total: cards.length,
+                    grades: [],
+                    forts: [],
+                    faibles: []
+                };
+
+                cards.forEach(card => {
+                    const note = card.querySelector('input[type="number"]').value;
+                    const forts = card.querySelectorAll('textarea')[0].value.split(',').map(s => s.trim()).filter(Boolean);
+                    const faibles = card.querySelectorAll('textarea')[1].value.split(',').map(s => s.trim()).filter(Boolean);
+                    
+                    if (note) stats.grades.push(parseFloat(note));
+                    stats.forts.push(...forts);
+                    stats.faibles.push(...faibles);
+                });
+
+                if (stats.grades.length === 0) {
+                    showMessage('Aucune note saisie', 'error');
+                    return;
+                }
+
+                const avg = (stats.grades.reduce((a, b) => a + b, 0) / stats.grades.length).toFixed(2);
+                const max = Math.max(...stats.grades);
+                const min = Math.min(...stats.grades);
+
+                alert(`📊 Statistiques\n\n` +
+                      `Élèves: ${stats.total}\n` +
+                      `Moyenne: ${avg}/20\n` +
+                      `Maximum: ${max}/20\n` +
+                      `Minimum: ${min}/20\n` +
+                      `Points forts: ${stats.forts.length > 0 ? stats.forts.slice(0,3).join(', ') : 'Aucun'}\n` +
+                      `Points faibles: ${stats.faibles.length > 0 ? stats.faibles.slice(0,3).join(', ') : 'Aucun'}`);
+            }
+
+            function generateJson() {
+                const config = {
+                    classe: document.getElementById('classe').value,
+                    matiere: document.getElementById('matiere').value,
+                    enseignant: document.getElementById('enseignant').value,
+                    date: document.getElementById('date').value,
+                    type: document.getElementById('type')?.value || 'Contrôle'
+                };
+
+                if (!config.classe || !config.matiere || !config.enseignant) {
+                    showMessage('Veuillez remplir la configuration', 'error');
+                    return;
+                }
+
+                const cards = document.querySelectorAll('.student-card');
+                if (cards.length === 0) {
+                    showMessage('Ajoutez au moins un élève', 'error');
+                    return;
+                }
+
+                const evaluations = [];
+                cards.forEach(card => {
+                    const name = card.querySelector('input[type="text"]').value;
+                    const note = card.querySelector('input[type="number"]').value;
+                    const forts = card.querySelectorAll('textarea')[0].value.split(',').map(s => s.trim()).filter(Boolean);
+                    const faibles = card.querySelectorAll('textarea')[1].value.split(',').map(s => s.trim()).filter(Boolean);
+                    
+                    if (name && note) {
+                        evaluations.push({
+                            eleve: name,
+                            note: parseFloat(note),
+                            pointsForts: forts,
+                            pointsFaibles: faibles
+                        });
+                    }
+                });
+
+                if (evaluations.length === 0) {
+                    showMessage('Remplissez les noms et notes', 'error');
+                    return;
+                }
+
+                const jsonData = {
+                    meta: config,
+                    evaluations: evaluations
+                };
+
+                elements.jsonContent.textContent = JSON.stringify(jsonData, null, 2);
+                elements.jsonOutput.style.display = 'block';
+                elements.jsonOutput.scrollIntoView({ behavior: 'smooth' });
+                showMessage('JSON généré avec succès', 'success');
+            }
+
+            function downloadJson() {
+                const json = elements.jsonContent.textContent;
+                if (!json) {
+                    showMessage('Générez d\'abord le JSON', 'error');
+                    return;
+                }
+
+                const blob = new Blob([json], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
-                
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `evaluations_${document.getElementById('classe').value}_${document.getElementById('matiere').value}_${document.getElementById('date').value}.json`;
-                document.body.appendChild(a);
+                a.download = `evaluations_${new Date().toISOString().slice(0,10)}.json`;
                 a.click();
-                
-                // Nettoyer
-                setTimeout(() => {
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                }, 100);
-                
-                showSuccess('Fichier téléchargé avec succès!');
+                URL.revokeObjectURL(url);
+                showMessage('Fichier téléchargé', 'success');
             }
-            
-            // Fonctions utilitaires pour afficher les messages
-            function showError(message) {
-                errorAlert.textContent = message;
-                errorAlert.style.display = 'block';
-                setTimeout(() => {
-                    errorAlert.style.display = 'none';
-                }, 5000);
-                
-                // Faire défiler jusqu'en haut pour voir l'erreur
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            function resetForm() {
+                if (confirm('Réinitialiser toutes les données ?')) {
+                    elements.studentsContainer.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-users"></i>
+                            <h3>Aucun élève</h3>
+                            <p>Sélectionnez une classe ou ajoutez manuellement</p>
+                        </div>`;
+                    studentId = 1;
+                    updateStats();
+                    elements.jsonOutput.style.display = 'none';
+                    ['classe', 'matiere', 'enseignant'].forEach(id => {
+                        document.getElementById(id).value = '';
+                    });
+                    document.getElementById('date').valueAsDate = new Date();
+                }
             }
-            
-            function showSuccess(message) {
-                successAlert.textContent = message;
-                successAlert.style.display = 'block';
-                setTimeout(() => {
-                    successAlert.style.display = 'none';
-                }, 5000);
+
+            function showMessage(text, type) {
+                const alert = elements.alerts[type === 'success' ? 'success' : 'error'];
+                alert.textContent = text;
+                alert.style.display = 'block';
+                setTimeout(() => alert.style.display = 'none', 4000);
             }
         });
     </script>
