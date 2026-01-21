@@ -1103,31 +1103,88 @@
         let db;
         let currentUser = null;
         let records = [];
-        let studentsByClass = {
-            "6eme": ["Jean Dupont", "Marie Kouassi", "Koffi Mensah"],
-            "5eme": ["Alice Johnson", "Bob Smith", "Charlie Brown"],
-            "4eme": ["David Wilson", "Eva Green", "Frank Ocean"],
-            "3eme": ["Grace Kelly", "Henry Ford", "Irene Adler"],
-            "seconde-l": ["Jack Sparrow", "Karen Smith", "Liam Neeson"],
-            "seconde-cd": ["Mona Lisa", "Nicolas Cage", "Olivia Pope"],
-            "premiere-a4": ["Paul Walker", "Queen Latifah", "Robert Downey"],
-            "premiere-a5": ["Steve Jobs", "Taylor Swift", "Uma Thurman"],
-            "premiere-c4": ["Vin Diesel", "Will Smith", "Xavier Dupont"],
-            "premiere-d": ["Yves Saint", "Zoe Saldana", "Adam Levine"],
-            "terminale-a4": ["Bruce Wayne", "Clark Kent", "Diana Prince"],
-            "terminale-a5": ["Edward Cullen", "Frodo Baggins", "Gandalf Grey"],
-            "terminale-c4": ["Harry Potter", "Iron Man", "James Bond"],
-            "terminale-d": ["Katniss Everdeen", "Luke Skywalker", "Mario Bros"]
-        };
-
-        const parentContacts = {
-            "Absebie KOLA": { name: "Absebie KOLA", phone: "+22892871605", email: "jeanskodoc22@gmail.com" }
+        let isDBInitialized = false;
+        
+        // Base de données des élèves avec leurs parents
+        const studentsByClass = {
+            "6eme": [
+                { name: "Jean Dupont", parentPhone: "+22890123456", parentName: "M. Dupont" },
+                { name: "Marie Kouassi", parentPhone: "+22890234567", parentName: "Mme Kouassi" },
+                { name: "Koffi Mensah", parentPhone: "+22890345678", parentName: "M. Mensah" }
+            ],
+            "5eme": [
+                { name: "Alice Johnson", parentPhone: "+22890456789", parentName: "M. Johnson" },
+                { name: "Bob Smith", parentPhone: "+22890567890", parentName: "Mme Smith" },
+                { name: "Charlie Brown", parentPhone: "+22890678901", parentName: "M. Brown" }
+            ],
+            "4eme": [
+                { name: "David Wilson", parentPhone: "+22890789012", parentName: "M. Wilson" },
+                { name: "Eva Green", parentPhone: "+22890890123", parentName: "Mme Green" },
+                { name: "Frank Ocean", parentPhone: "+22890901234", parentName: "M. Ocean" }
+            ],
+            "3eme": [
+                { name: "Grace Kelly", parentPhone: "+22891012345", parentName: "M. Kelly" },
+                { name: "Henry Ford", parentPhone: "+22891123456", parentName: "M. Ford" },
+                { name: "Irene Adler", parentPhone: "+22891234567", parentName: "Mme Adler" }
+            ],
+            "seconde-l": [
+                { name: "Jack Sparrow", parentPhone: "+22891345678", parentName: "M. Sparrow" },
+                { name: "Karen Smith", parentPhone: "+22891456789", parentName: "Mme Smith" },
+                { name: "Liam Neeson", parentPhone: "+22891567890", parentName: "M. Neeson" }
+            ],
+            "seconde-cd": [
+                { name: "Mona Lisa", parentPhone: "+22891678901", parentName: "M. Lisa" },
+                { name: "Nicolas Cage", parentPhone: "+22891789012", parentName: "M. Cage" },
+                { name: "Olivia Pope", parentPhone: "+22891890123", parentName: "Mme Pope" }
+            ],
+            "premiere-a4": [
+                { name: "Paul Walker", parentPhone: "+22891901234", parentName: "M. Walker" },
+                { name: "Queen Latifah", parentPhone: "+22892012345", parentName: "Mme Latifah" },
+                { name: "Robert Downey", parentPhone: "+22892123456", parentName: "M. Downey" }
+            ],
+            "premiere-a5": [
+                { name: "Steve Jobs", parentPhone: "+22892234567", parentName: "M. Jobs" },
+                { name: "Taylor Swift", parentPhone: "+22892345678", parentName: "Mme Swift" },
+                { name: "Uma Thurman", parentPhone: "+22892456789", parentName: "Mme Thurman" }
+            ],
+            "premiere-c4": [
+                { name: "Vin Diesel", parentPhone: "+22892567890", parentName: "M. Diesel" },
+                { name: "Will Smith", parentPhone: "+22892678901", parentName: "M. Smith" },
+                { name: "Xavier Dupont", parentPhone: "+22892789012", parentName: "M. Dupont" }
+            ],
+            "premiere-d": [
+                { name: "Yves Saint", parentPhone: "+22892890123", parentName: "M. Saint" },
+                { name: "Zoe Saldana", parentPhone: "+22892901234", parentName: "Mme Saldana" },
+                { name: "Adam Levine", parentPhone: "+22893012345", parentName: "M. Levine" }
+            ],
+            "terminale-a4": [
+                { name: "Bruce Wayne", parentPhone: "+22893123456", parentName: "M. Wayne" },
+                { name: "Clark Kent", parentPhone: "+22893234567", parentName: "M. Kent" },
+                { name: "Diana Prince", parentPhone: "+22893345678", parentName: "Mme Prince" }
+            ],
+            "terminale-a5": [
+                { name: "Edward Cullen", parentPhone: "+22893456789", parentName: "M. Cullen" },
+                { name: "Frodo Baggins", parentPhone: "+22893567890", parentName: "M. Baggins" },
+                { name: "Gandalf Grey", parentPhone: "+22893678901", parentName: "M. Grey" }
+            ],
+            "terminale-c4": [
+                { name: "Harry Potter", parentPhone: "+22893789012", parentName: "M. Potter" },
+                { name: "Iron Man", parentPhone: "+22893890123", parentName: "M. Stark" },
+                { name: "James Bond", parentPhone: "+22893901234", parentName: "M. Bond" }
+            ],
+            "terminale-d": [
+                { name: "Katniss Everdeen", parentPhone: "+22894012345", parentName: "Mme Everdeen" },
+                { name: "Luke Skywalker", parentPhone: "+22894123456", parentName: "M. Skywalker" },
+                { name: "Mario Bros", parentPhone: "+22894234567", parentName: "M. Bros" }
+            ]
         };
 
         // Initialiser la base de données IndexedDB
         function initDB() {
             return new Promise((resolve, reject) => {
-                const request = indexedDB.open('SurveillantDB', 1);
+                console.log("Initialisation de la base de données...");
+                
+                const request = indexedDB.open('SurveillantDB', 2);
                 
                 request.onerror = (event) => {
                     console.error("Erreur d'ouverture de la base de données", event);
@@ -1137,65 +1194,132 @@
                 request.onsuccess = (event) => {
                     db = event.target.result;
                     console.log("Base de données initialisée avec succès");
+                    isDBInitialized = true;
                     resolve(db);
                 };
                 
                 request.onupgradeneeded = (event) => {
+                    console.log("Mise à jour de la base de données nécessaire...");
                     const db = event.target.result;
                     
-                    // Créer le store pour les surveillants
-                    const supervisorStore = db.createObjectStore('supervisors', { keyPath: 'id', autoIncrement: true });
-                    supervisorStore.createIndex('username', 'username', { unique: true });
-                    supervisorStore.createIndex('email', 'email', { unique: true });
+                    // Vérifier si le store existe déjà
+                    if (!db.objectStoreNames.contains('supervisors')) {
+                        // Créer le store pour les surveillants
+                        const supervisorStore = db.createObjectStore('supervisors', { keyPath: 'id', autoIncrement: true });
+                        supervisorStore.createIndex('username', 'username', { unique: true });
+                        supervisorStore.createIndex('email', 'email', { unique: true });
+                        console.log("Store 'supervisors' créé");
+                    }
                     
-                    // Créer le store pour les enregistrements
-                    const recordStore = db.createObjectStore('records', { keyPath: 'id', autoIncrement: true });
-                    recordStore.createIndex('date', 'date');
-                    recordStore.createIndex('student', 'student');
-                    recordStore.createIndex('class', 'class');
-                    recordStore.createIndex('type', 'type');
+                    if (!db.objectStoreNames.contains('records')) {
+                        // Créer le store pour les enregistrements
+                        const recordStore = db.createObjectStore('records', { keyPath: 'id', autoIncrement: true });
+                        recordStore.createIndex('date', 'date');
+                        recordStore.createIndex('student', 'student');
+                        recordStore.createIndex('class', 'class');
+                        recordStore.createIndex('type', 'type');
+                        console.log("Store 'records' créé");
+                    }
                     
                     console.log("Structure de la base de données créée");
-                    
-                    // Ajouter un admin par défaut si nécessaire
-                    const transaction = event.target.transaction;
+                };
+            });
+        }
+
+        // Fonction pour vérifier et créer l'admin par défaut
+        async function createDefaultAdmin() {
+            return new Promise((resolve, reject) => {
+                try {
+                    const transaction = db.transaction(['supervisors'], 'readonly');
                     const store = transaction.objectStore('supervisors');
+                    const request = store.getAll();
                     
-                    const defaultAdmin = {
-                        name: "M. KOLA",
-                        email: "jeanskodoc22@gmail.com",
-                        phone: "+22892871605",
-                        username: "admin",
-                        password: "admin123"
+                    request.onsuccess = (event) => {
+                        const supervisors = event.target.result;
+                        
+                        // Vérifier si l'admin existe déjà
+                        const adminExists = supervisors.some(s => s.username === 'admin');
+                        
+                        if (!adminExists) {
+                            // Créer une nouvelle transaction pour ajouter l'admin
+                            const writeTransaction = db.transaction(['supervisors'], 'readwrite');
+                            const writeStore = writeTransaction.objectStore('supervisors');
+                            
+                            const defaultAdmin = {
+                                name: "M. KOLA",
+                                email: "jeanskodoc22@gmail.com",
+                                phone: "+22892871605",
+                                username: "admin",
+                                password: "admin123"
+                            };
+                            
+                            const addRequest = writeStore.add(defaultAdmin);
+                            
+                            addRequest.onsuccess = () => {
+                                console.log("Administrateur par défaut créé");
+                                resolve(true);
+                            };
+                            
+                            addRequest.onerror = (error) => {
+                                console.error("Erreur lors de la création de l'admin", error);
+                                reject(error);
+                            };
+                        } else {
+                            console.log("Administrateur existe déjà");
+                            resolve(true);
+                        }
                     };
                     
-                    store.add(defaultAdmin);
-                };
+                    request.onerror = (error) => {
+                        console.error("Erreur lors de la vérification de l'admin", error);
+                        reject(error);
+                    };
+                } catch (error) {
+                    console.error("Erreur dans createDefaultAdmin", error);
+                    reject(error);
+                }
             });
         }
 
         // Fonction pour vérifier les identifiants
         function checkCredentials(username, password) {
             return new Promise((resolve, reject) => {
-                const transaction = db.transaction(['supervisors'], 'readonly');
-                const store = transaction.objectStore('supervisors');
-                const index = store.index('username');
+                console.log("Vérification des identifiants pour:", username);
                 
-                const request = index.get(username);
+                if (!db || !isDBInitialized) {
+                    console.error("Base de données non initialisée");
+                    reject("Base de données non initialisée");
+                    return;
+                }
                 
-                request.onsuccess = (event) => {
-                    const supervisor = event.target.result;
-                    if (supervisor && supervisor.password === password) {
-                        resolve(supervisor);
-                    } else {
-                        resolve(null);
-                    }
-                };
-                
-                request.onerror = (event) => {
-                    console.error("Erreur de vérification des identifiants", event);
-                    reject("Erreur de vérification des identifiants");
-                };
+                try {
+                    const transaction = db.transaction(['supervisors'], 'readonly');
+                    const store = transaction.objectStore('supervisors');
+                    const index = store.index('username');
+                    
+                    const request = index.get(username);
+                    
+                    request.onsuccess = (event) => {
+                        const supervisor = event.target.result;
+                        console.log("Résultat de la requête:", supervisor);
+                        
+                        if (supervisor && supervisor.password === password) {
+                            console.log("Connexion réussie pour:", supervisor.name);
+                            resolve(supervisor);
+                        } else {
+                            console.log("Identifiants incorrects");
+                            resolve(null);
+                        }
+                    };
+                    
+                    request.onerror = (event) => {
+                        console.error("Erreur de vérification des identifiants", event);
+                        reject("Erreur de vérification des identifiants");
+                    };
+                } catch (error) {
+                    console.error("Exception dans checkCredentials:", error);
+                    reject(error);
+                }
             });
         }
 
@@ -1221,6 +1345,13 @@
         // Fonction pour charger tous les enregistrements
         function loadAllRecords() {
             return new Promise((resolve, reject) => {
+                if (!db) {
+                    console.warn("Base de données non disponible");
+                    records = [];
+                    resolve(records);
+                    return;
+                }
+                
                 const transaction = db.transaction(['records'], 'readonly');
                 const store = transaction.objectStore('records');
                 
@@ -1228,12 +1359,14 @@
                 
                 request.onsuccess = (event) => {
                     records = event.target.result || [];
+                    console.log(`${records.length} enregistrements chargés`);
                     resolve(records);
                 };
                 
                 request.onerror = (event) => {
                     console.error("Erreur de chargement des enregistrements", event);
-                    reject("Erreur de chargement des enregistrements");
+                    records = [];
+                    resolve(records);
                 };
             });
         }
@@ -1241,6 +1374,12 @@
         // Fonction pour ajouter ou mettre à jour un enregistrement
         function saveRecord(record) {
             return new Promise((resolve, reject) => {
+                if (!db) {
+                    console.error("Base de données non disponible");
+                    reject("Base de données non disponible");
+                    return;
+                }
+                
                 const transaction = db.transaction(['records'], 'readwrite');
                 const store = transaction.objectStore('records');
                 
@@ -1351,16 +1490,30 @@
             for (const [classId, students] of Object.entries(studentsByClass)) {
                 students.forEach(student => {
                     const option1 = document.createElement('option');
-                    option1.value = student;
-                    option1.textContent = student;
+                    option1.value = student.name;
+                    option1.textContent = student.name;
                     filterStudent.appendChild(option1);
                     
                     const option2 = document.createElement('option');
-                    option2.value = student;
-                    option2.textContent = student;
+                    option2.value = student.name;
+                    option2.textContent = student.name;
                     modalStudent.appendChild(option2);
                 });
             }
+        }
+
+        // Fonction pour obtenir les informations d'un élève
+        function getStudentInfo(studentName) {
+            for (const [classId, students] of Object.entries(studentsByClass)) {
+                const student = students.find(s => s.name === studentName);
+                if (student) {
+                    return {
+                        ...student,
+                        class: classId
+                    };
+                }
+            }
+            return null;
         }
 
         // Fonction pour afficher les enregistrements
@@ -1371,7 +1524,7 @@
             
             if (recordsToDisplay.length === 0) {
                 const row = document.createElement('tr');
-                row.innerHTML = `<td colspan="6" style="text-align: center;">Aucun enregistrement trouvé</td>`;
+                row.innerHTML = `<td colspan="6" style="text-align: center; padding: 20px;">Aucun enregistrement trouvé</td>`;
                 recordsList.appendChild(row);
                 return;
             }
@@ -1431,17 +1584,97 @@
                         <button onclick="deleteRecord(${record.id})" class="action-btn btn-sm danger" title="Supprimer">
                             <i class="fas fa-trash"></i>
                         </button>
-                        ${record.type === 'contact' ? '' : `<button onclick="contactParent('${record.student}')" class="action-btn btn-sm tertiary" title="Contacter parent">
-                            <i class="fas fa-phone"></i>
-                        </button>`}
-                        <button onclick="sendStudentViaWhatsApp('${record.student}')" class="action-btn btn-sm whatsapp" title="Envoyer WhatsApp">
+                        ${record.type === 'contact' ? '' : `<button onclick="sendWhatsAppToParent('${record.student}', '${record.type}', '${formattedDate}', '${record.reason}', ${record.justified || false}, '${record.time || ''}')" class="action-btn btn-sm whatsapp" title="Envoyer WhatsApp aux parents">
                             <i class="fab fa-whatsapp"></i>
-                        </button>
+                        </button>`}
                     </td>
                 `;
                 
                 recordsList.appendChild(row);
             });
+        }
+
+        // NOUVELLE FONCTION : Envoyer un message WhatsApp spécifique au parent
+        function sendWhatsAppToParent(studentName, recordType, date, reason, justified, time = '') {
+            const studentInfo = getStudentInfo(studentName);
+            
+            if (!studentInfo || !studentInfo.parentPhone) {
+                alert(`Aucune information de contact trouvée pour ${studentName}`);
+                return;
+            }
+            
+            // Préparer le message selon le type d'incident
+            let message = `*📚 Lycée Niamtougou - Notification Parentale*\n\n`;
+            message += `👨‍🎓 *Élève:* ${studentName}\n`;
+            message += `📅 *Date:* ${date}\n`;
+            message += `🏫 *Classe:* ${studentInfo.class}\n\n`;
+            
+            switch(recordType) {
+                case 'absence':
+                    message += `🚫 *Type:* Absence\n`;
+                    message += `📝 *Motif:* ${reason}\n`;
+                    message += `✅ *Justifié:* ${justified ? 'Oui' : 'Non'}\n\n`;
+                    message += `ℹ️ Veuillez fournir une justification écrite si nécessaire.\n`;
+                    break;
+                    
+                case 'retard':
+                    message += `⏰ *Type:* Retard\n`;
+                    if (time) message += `🕐 *Heure d'arrivée:* ${time}\n`;
+                    message += `📝 *Motif:* ${reason}\n`;
+                    message += `✅ *Justifié:* ${justified ? 'Oui' : 'Non'}\n\n`;
+                    message += `ℹ️ Les retards répétés peuvent entraîner des sanctions.\n`;
+                    break;
+                    
+                case 'maladie':
+                    message += `🤒 *Type:* Maladie déclarée\n`;
+                    message += `📝 *Symptômes:* ${reason}\n`;
+                    message += `✅ *Justifié:* ${justified ? 'Oui' : 'Non'}\n\n`;
+                    message += `ℹ️ Merci de nous informer pour le suivi médical.\n`;
+                    break;
+                    
+                case 'evaluation':
+                    message += `📝 *Type:* Évaluation manquée\n`;
+                    message += `📚 *Matière:* ${reason}\n`;
+                    message += `✅ *Justifié:* ${justified ? 'Oui' : 'Non'}\n\n`;
+                    message += `ℹ️ Une convocation pour rattrapage sera envoyée.\n`;
+                    break;
+            }
+            
+            message += `\n📞 *Surveillant:* ${currentUser ? currentUser.name : 'Équipe de surveillance'}\n`;
+            message += `🏫 *Établissement:* Lycée Niamtougou\n`;
+            message += `📅 *Envoyé le:* ${new Date().toLocaleDateString('fr-FR')}`;
+            
+            // Nettoyer le numéro de téléphone (enlever les + et espaces)
+            const cleanPhone = studentInfo.parentPhone.replace(/\D/g, '');
+            
+            // Encoder le message pour l'URL
+            const encodedMessage = encodeURIComponent(message);
+            
+            // Créer le lien WhatsApp
+            const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+            
+            // Demander confirmation avant d'envoyer
+            if (confirm(`Envoyer une notification WhatsApp au parent de ${studentName} (${studentInfo.parentName}) ?`)) {
+                // Ouvrir dans un nouvel onglet
+                window.open(whatsappUrl, '_blank');
+                
+                // Enregistrer automatiquement un contact
+                const contactRecord = {
+                    type: 'contact',
+                    date: new Date().toISOString().split('T')[0],
+                    student: studentName,
+                    class: studentInfo.class,
+                    reason: `Notification WhatsApp envoyée pour ${getTypeLabel(recordType)}`,
+                    contactDetails: `Message envoyé au parent: ${studentInfo.parentName} (${studentInfo.parentPhone})`
+                };
+                
+                saveRecord(contactRecord).then(() => {
+                    loadAllRecords().then(() => {
+                        displayRecords();
+                        updateStats();
+                    });
+                });
+            }
         }
 
         // Fonction pour mettre à jour les statistiques
@@ -1638,17 +1871,6 @@
             }
         }
 
-        // Fonction pour contacter un parent
-        function contactParent(studentName) {
-            const parent = parentContacts[studentName];
-            
-            if (parent) {
-                alert(`Contact parent pour ${studentName}:\nNom: ${parent.name}\nTéléphone: ${parent.phone}\nEmail: ${parent.email}`);
-            } else {
-                alert(`Aucun contact parent trouvé pour ${studentName}`);
-            }
-        }
-
         // Fonctions pour basculer entre les sections
         function showLoginSection() {
             document.getElementById('login-section').classList.remove('hidden');
@@ -1808,59 +2030,40 @@
             window.print();
         }
 
-        // Fonction pour envoyer les données par WhatsApp
+        // Fonction pour envoyer les données par WhatsApp (rapport général)
         function sendViaWhatsApp() {
             // Préparer le message avec les données
-            let message = "📊 Rapport des absences et retards - Lycée Niamtougou\n\n";
+            let message = "📊 *Rapport des absences et retards - Lycée Niamtougou*\n\n";
             
             // Ajouter les statistiques
-            message += `📌 Absences: ${records.filter(r => r.type === 'absence').length}\n`;
-            message += `⏱ Retards: ${records.filter(r => r.type === 'retard').length}\n`;
-            message += `📝 Évaluations manquées: ${records.filter(r => r.type === 'evaluation').length}\n\n`;
+            message += `📌 *Absences:* ${records.filter(r => r.type === 'absence').length}\n`;
+            message += `⏱ *Retards:* ${records.filter(r => r.type === 'retard').length}\n`;
+            message += `📝 *Évaluations manquées:* ${records.filter(r => r.type === 'evaluation').length}\n\n`;
             
             // Ajouter les 5 derniers enregistrements
-            message += "📋 Derniers enregistrements:\n";
+            message += "📋 *Derniers enregistrements:*\n";
             const recentRecords = [...records].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
             recentRecords.forEach(record => {
                 message += `- ${formatDate(record.date)}: ${record.student} (${record.class}) - ${getTypeLabel(record.type)}\n`;
             });
             
+            message += `\n📅 *Date du rapport:* ${new Date().toLocaleDateString('fr-FR')}\n`;
+            message += `👨‍🏫 *Surveillant:* ${currentUser ? currentUser.name : 'Système'}`;
+            
             // Encoder le message pour l'URL
             const encodedMessage = encodeURIComponent(message);
             
-            // Numéro de téléphone (avec le code pays pour le Togo)
+            // Numéro de téléphone par défaut
             const phoneNumber = "22892871605";
             
             // Créer le lien WhatsApp
             const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
             
-            // Ouvrir dans un nouvel onglet
-            window.open(whatsappUrl, '_blank');
-        }
-
-        // Fonction pour envoyer les données d'un élève spécifique par WhatsApp
-        function sendStudentViaWhatsApp(studentName) {
-            const studentRecords = records.filter(r => r.student === studentName);
-            const parent = parentContacts[studentName];
-            
-            let message = `📋 Rapport pour ${studentName}\n\n`;
-            
-            if (parent) {
-                message += `👨‍👩‍👧 Parent: ${parent.name}\n`;
-                message += `📞 Téléphone: ${parent.phone}\n`;
-                message += `📧 Email: ${parent.email}\n\n`;
+            // Demander confirmation
+            if (confirm("Envoyer un rapport WhatsApp des dernières activités ?")) {
+                // Ouvrir dans un nouvel onglet
+                window.open(whatsappUrl, '_blank');
             }
-            
-            message += "Historique récent:\n";
-            studentRecords.slice(0, 5).forEach(record => {
-                message += `- ${formatDate(record.date)}: ${getTypeLabel(record.type)} (${record.reason})\n`;
-            });
-            
-            const encodedMessage = encodeURIComponent(message);
-            const phoneNumber = "22892871605";
-            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-            
-            window.open(whatsappUrl, '_blank');
         }
 
         // Fonction pour générer le rapport mensuel
@@ -2023,6 +2226,17 @@
                     records.push(recordData);
                 }
                 
+                // Proposer d'envoyer un WhatsApp au parent pour les incidents importants
+                if (type !== 'contact' && !id) {
+                    const studentInfo = getStudentInfo(student);
+                    if (studentInfo && studentInfo.parentPhone) {
+                        if (confirm(`Voulez-vous envoyer une notification WhatsApp au parent de ${student} ?`)) {
+                            const formattedDate = formatDate(date);
+                            sendWhatsAppToParent(student, type, formattedDate, reason, justified, time);
+                        }
+                    }
+                }
+                
                 // Fermer le modal et actualiser l'affichage
                 closeModal();
                 displayRecords();
@@ -2045,34 +2259,64 @@
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const username = document.getElementById('username').value;
+            const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             
+            // Validation de base
+            if (!username || !password) {
+                showErrorMessage("Veuillez remplir tous les champs");
+                return;
+            }
+            
             try {
+                // Afficher l'indicateur de chargement
+                const submitBtn = e.target.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connexion...';
+                
+                console.log("Tentative de connexion avec:", username);
+                
+                // Vérifier que la base de données est initialisée
+                if (!isDBInitialized) {
+                    console.log("Base de données non initialisée, tentative d'initialisation...");
+                    await initDB();
+                    await createDefaultAdmin();
+                }
+                
+                // Vérifier les identifiants
                 const supervisor = await checkCredentials(username, password);
                 
                 if (supervisor) {
+                    console.log("Connexion réussie, affichage du contenu principal...");
                     await showMainContent(supervisor);
                 } else {
-                    const errorElement = document.getElementById('error-message');
-                    document.getElementById('error-text').textContent = "Identifiant ou mot de passe incorrect";
-                    errorElement.style.display = 'flex';
-                    
-                    setTimeout(() => {
-                        errorElement.style.display = 'none';
-                    }, 3000);
+                    console.log("Identifiants incorrects");
+                    showErrorMessage("Identifiant ou mot de passe incorrect");
                 }
             } catch (error) {
                 console.error("Erreur de connexion", error);
-                const errorElement = document.getElementById('error-message');
-                document.getElementById('error-text').textContent = "Erreur lors de la connexion";
-                errorElement.style.display = 'flex';
-                
-                setTimeout(() => {
-                    errorElement.style.display = 'none';
-                }, 3000);
+                showErrorMessage("Une erreur est survenue lors de la connexion. Veuillez réessayer.");
+            } finally {
+                // Réactiver le bouton
+                const submitBtn = e.target.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }
             }
         });
+
+        // Fonction utilitaire pour afficher les messages d'erreur
+        function showErrorMessage(message) {
+            const errorElement = document.getElementById('error-message');
+            document.getElementById('error-text').textContent = message;
+            errorElement.style.display = 'flex';
+            
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 3000);
+        }
 
         // Gestion de la soumission du formulaire d'inscription
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
@@ -2161,9 +2405,14 @@
 
         // Initialisation
         document.addEventListener('DOMContentLoaded', async function() {
+            console.log("Document chargé, initialisation...");
+            
             try {
                 // Initialiser la base de données
                 await initDB();
+                await createDefaultAdmin();
+                
+                console.log("Base de données et admin initialisés avec succès");
                 
                 // Mettre la date du jour dans le filtre par défaut
                 const today = new Date().toISOString().split('T')[0];
@@ -2172,8 +2421,30 @@
                 // Charger les données initiales
                 await loadAllRecords();
                 
+                console.log("Application prête à utiliser");
+                
+                // Afficher un message de bienvenue
+                const loginForm = document.getElementById('loginForm');
+                if (loginForm) {
+                    const welcomeMessage = document.createElement('div');
+                    welcomeMessage.className = 'success-message';
+                    welcomeMessage.style.display = 'flex';
+                    welcomeMessage.innerHTML = `
+                        <i class="fas fa-info-circle"></i>
+                        <span>Utilisez "admin" / "admin123" pour vous connecter</span>
+                    `;
+                    loginForm.insertBefore(welcomeMessage, loginForm.firstChild);
+                    
+                    // Masquer le message après 5 secondes
+                    setTimeout(() => {
+                        welcomeMessage.style.display = 'none';
+                    }, 5000);
+                }
+                
                 // Si nous voulons pré-remplir avec des données de démo (seulement si la base est vide)
                 if (records.length === 0) {
+                    console.log("Aucun enregistrement trouvé, création de données de démo...");
+                    
                     // Ajouter quelques enregistrements de démo
                     const demoRecords = [
                         {
@@ -2202,10 +2473,30 @@
                     
                     // Recharger les enregistrements
                     await loadAllRecords();
+                    console.log("Données de démo créées");
                 }
             } catch (error) {
                 console.error("Erreur d'initialisation", error);
-                alert("Une erreur est survenue lors de l'initialisation de l'application");
+                
+                // Afficher un message d'erreur convivial
+                const errorElement = document.getElementById('error-message');
+                if (errorElement) {
+                    document.getElementById('error-text').textContent = "Erreur d'initialisation. Veuillez actualiser la page.";
+                    errorElement.style.display = 'flex';
+                }
+                
+                // Ajouter un bouton de secours pour les identifiants
+                const loginForm = document.getElementById('loginForm');
+                if (loginForm) {
+                    const backupMessage = document.createElement('div');
+                    backupMessage.className = 'success-message';
+                    backupMessage.style.display = 'flex';
+                    backupMessage.innerHTML = `
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Mode de secours activé. Utilisez "admin" / "admin123"</span>
+                    `;
+                    loginForm.insertBefore(backupMessage, loginForm.firstChild);
+                }
             }
         });
     </script>
