@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Système de Gestion des Évaluations</title>
+    <title>Système de Gestion des Évaluations - Lycée Niamtougou</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -12,6 +12,7 @@
             --accent-color: #e74c3c;
             --success-color: #27ae60;
             --warning-color: #f39c12;
+            --info-color: #17a2b8;
             --light-color: #ecf0f1;
             --dark-color: #2c3e50;
             --border-color: #bdc3c7;
@@ -280,6 +281,15 @@
             background-color: #c0392b;
         }
 
+        .btn-info {
+            background-color: var(--info-color);
+            color: white;
+        }
+
+        .btn-info:hover {
+            background-color: #138496;
+        }
+
         .btn-secondary {
             background-color: #95a5a6;
             color: white;
@@ -306,6 +316,16 @@
 
         .success-message {
             background: var(--success-color);
+            color: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .info-message {
+            background: var(--info-color);
             color: white;
             padding: 15px;
             border-radius: 6px;
@@ -399,7 +419,7 @@
             color: white;
             padding: 15px 20px;
             display: grid;
-            grid-template-columns: 1fr 100px 150px 150px 80px;
+            grid-template-columns: 1fr 100px 150px 150px 150px 150px 80px;
             gap: 15px;
             font-weight: 600;
             align-items: center;
@@ -408,7 +428,7 @@
         .student-row {
             padding: 15px 20px;
             display: grid;
-            grid-template-columns: 1fr 100px 150px 150px 80px;
+            grid-template-columns: 1fr 100px 150px 150px 150px 150px 80px;
             gap: 15px;
             align-items: center;
             border-bottom: 1px solid var(--border-color);
@@ -423,7 +443,7 @@
             border-bottom: none;
         }
 
-        .grade-input, .comment-input {
+        .grade-input, .comment-input, .parent-input {
             width: 100%;
             padding: 8px 12px;
             border: 2px solid var(--border-color);
@@ -431,7 +451,7 @@
             transition: var(--transition);
         }
 
-        .grade-input:focus, .comment-input:focus {
+        .grade-input:focus, .comment-input:focus, .parent-input:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
         }
@@ -642,10 +662,152 @@
             color: #adb5bd;
         }
 
+        /* Analytics Dashboard */
+        .analytics-dashboard {
+            background: linear-gradient(135deg, #f8f9ff, #e8f4ff);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .analytics-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .analytics-title {
+            font-size: 1.2rem;
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-container {
+            height: 250px;
+            position: relative;
+            margin-top: 15px;
+        }
+
+        .distribution-bar {
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .distribution-fill {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            transition: width 1s ease;
+        }
+
+        .distribution-label {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .whatsapp-config {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .config-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #25D366;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(30px);
+        }
+
+        .whatsapp-preview {
+            background: white;
+            color: #333;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .whatsapp-status {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
         /* Responsive Design */
         @media (max-width: 1200px) {
             .container {
                 padding: 15px;
+            }
+            
+            .table-header, .student-row {
+                grid-template-columns: 1fr 100px 150px 150px 120px 120px 80px;
             }
         }
 
@@ -654,6 +816,11 @@
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 15px;
+            }
+            
+            .table-header, .student-row {
+                grid-template-columns: 1fr 80px 120px 120px 100px 100px 70px;
+                gap: 10px;
             }
         }
 
@@ -680,23 +847,19 @@
                 gap: 15px;
             }
 
-            .table-header, .student-row {
-                grid-template-columns: 1fr;
-                gap: 8px;
-                padding: 15px;
-            }
-
             .table-header {
                 display: none;
             }
 
             .student-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                padding: 15px;
                 border: 1px solid var(--border-color);
                 border-radius: 10px;
                 margin-bottom: 15px;
                 background: white;
                 position: relative;
-                padding: 15px;
                 display: block !important;
             }
 
@@ -728,6 +891,10 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
+
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 480px) {
@@ -743,6 +910,13 @@
             .card-header {
                 padding: 12px 15px;
                 font-size: 1.1rem;
+            }
+
+            .logout-btn {
+                top: 10px;
+                right: 10px;
+                padding: 8px 15px;
+                font-size: 14px;
             }
         }
 
@@ -764,10 +938,82 @@
             .form-section {
                 page-break-inside: avoid;
             }
+            
+            .student-row {
+                border: 1px solid #ddd !important;
+            }
+        }
+
+        /* Animation pour le chargement */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--dark-color);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+
+        .badge-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .badge-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        .badge-danger {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .badge-info {
+            background-color: var(--info-color);
+            color: white;
         }
     </style>
 </head>
-    
 <body>
     <!-- Bouton Actualiser -->
     <button onclick="window.location.reload()" class="refresh-button" aria-label="Actualiser la page">
@@ -820,6 +1066,31 @@
                         <div class="button-group">
                             <button type="button" class="btn-warning" onclick="showAdminPanel()">
                                 <i class="fas fa-cogs"></i> Panneau Administrateur
+                            </button>
+                            <button type="button" class="btn-info" onclick="showAnalyticsPanel()">
+                                <i class="fas fa-chart-bar"></i> Tableau de Bord Analytics
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Analytics -->
+        <div id="analytics-section" class="auth-section hidden">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-chart-bar"></i> Tableau de Bord Analytics
+                </div>
+                <div class="card-body">
+                    <div class="analytics-dashboard">
+                        <h2><i class="fas fa-chart-line"></i> Analyses Statistiques</h2>
+                        <div id="analytics-content">
+                            <!-- Le contenu analytics sera généré dynamiquement -->
+                        </div>
+                        <div class="button-group">
+                            <button type="button" class="btn-secondary" onclick="showLoginSection()">
+                                <i class="fas fa-arrow-left"></i> Retour à la connexion
                             </button>
                         </div>
                     </div>
@@ -940,10 +1211,13 @@
                             <h2 id="teacher-name-display">Nom de l'enseignant</h2>
                             <div>
                                 <button id="print-btn" class="btn-primary btn-sm no-print" onclick="printEvaluation()">
-                                    <i class="fas fa-print"></i> Imprimer l'évaluation
+                                    <i class="fas fa-print"></i> Imprimer
                                 </button>
                                 <button id="view-evaluations-btn" class="btn-primary btn-sm no-print" onclick="toggleEvaluationsView()">
-                                    <i class="fas fa-list"></i> Voir les évaluations
+                                    <i class="fas fa-list"></i> Évaluations
+                                </button>
+                                <button id="view-analytics-btn" class="btn-info btn-sm no-print" onclick="showTeacherAnalytics()">
+                                    <i class="fas fa-chart-bar"></i> Analytics
                                 </button>
                             </div>
                         </div>
@@ -964,6 +1238,27 @@
                                 <div class="detail-label">Dernière évaluation</div>
                                 <div class="detail-value" id="last-evaluation">-</div>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Configuration WhatsApp -->
+                    <div class="whatsapp-config no-print">
+                        <div class="config-toggle">
+                            <div>
+                                <h4><i class="fab fa-whatsapp"></i> Envoi automatique WhatsApp</h4>
+                                <p>Envoyer automatiquement les notes aux parents après enregistrement</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="whatsapp-auto-send" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="whatsapp-preview" id="whatsapp-preview">
+                            <strong>Prévisualisation du message WhatsApp :</strong><br>
+                            <div id="whatsapp-message-preview">Le message sera généré ici...</div>
+                        </div>
+                        <div class="whatsapp-status">
+                            <span id="whatsapp-status">Prêt à envoyer les notes aux parents</span>
                         </div>
                     </div>
 
@@ -1017,6 +1312,21 @@
                         </div>
                     </div>
 
+                    <!-- Analytics de l'enseignant -->
+                    <div id="teacher-analytics-view" class="hidden">
+                        <div class="analytics-dashboard">
+                            <h2><i class="fas fa-chart-line"></i> Analytics - Performance des Élèves</h2>
+                            <div id="teacher-analytics-content">
+                                <!-- Le contenu analytics de l'enseignant sera généré dynamiquement -->
+                            </div>
+                            <div class="button-group">
+                                <button class="btn-secondary" onclick="hideTeacherAnalytics()">
+                                    <i class="fas fa-arrow-left"></i> Retour au formulaire
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Formulaire d'évaluation -->
                     <div id="evaluation-form-view">
                         <div class="evaluation-form">
@@ -1041,7 +1351,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="class">Classe :</label>
-                                            <select id="class" name="class" required>
+                                            <select id="class" name="class" required onchange="updateWhatsAppPreview()">
                                                 <option value="">Sélectionner d'abord un cycle</option>
                                             </select>
                                         </div>
@@ -1053,11 +1363,11 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="evaluation-date">Date de l'évaluation :</label>
-                                            <input type="date" id="evaluation-date" name="evaluation-date" required>
+                                            <input type="date" id="evaluation-date" name="evaluation-date" required onchange="updateWhatsAppPreview()">
                                         </div>
                                         <div class="form-group">
                                             <label for="evaluation-type">Type d'évaluation :</label>
-                                            <select id="evaluation-type" name="evaluation-type" required>
+                                            <select id="evaluation-type" name="evaluation-type" required onchange="updateWhatsAppPreview()">
                                                 <option value="">Type d'évaluation</option>
                                                 <option value="controle">Contrôle écrit</option>
                                                 <option value="interrogation">Interrogation orale</option>
@@ -1068,7 +1378,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="max-grade">Note maximale :</label>
-                                            <select id="max-grade" name="max-grade" required>
+                                            <select id="max-grade" name="max-grade" required onchange="updateWhatsAppPreview()">
                                                 <option value="20">Sur 20</option>
                                                 <option value="10">Sur 10</option>
                                                 <option value="5">Sur 5</option>
@@ -1077,11 +1387,11 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="evaluation-title">Titre de l'évaluation :</label>
-                                        <input type="text" id="evaluation-title" name="evaluation-title" placeholder="Ex: Contrôle sur les fractions" required>
+                                        <input type="text" id="evaluation-title" name="evaluation-title" placeholder="Ex: Contrôle sur les fractions" required onchange="updateWhatsAppPreview()">
                                     </div>
                                     <div class="form-group">
                                         <label for="comments">Commentaires généraux :</label>
-                                        <textarea id="comments" name="comments" rows="3" placeholder="Observations sur l'évaluation..."></textarea>
+                                        <textarea id="comments" name="comments" rows="3" placeholder="Observations sur l'évaluation..." onchange="updateWhatsAppPreview()"></textarea>
                                     </div>
                                 </div>
 
@@ -1090,14 +1400,24 @@
                                     <h2 class="section-title">
                                         <i class="fas fa-users"></i> Notes des élèves
                                     </h2>
-                                    <button type="button" class="btn-success btn-sm no-print" onclick="addStudent()">
-                                        <i class="fas fa-plus"></i> Ajouter un élève
-                                    </button>
+                                    <div class="button-group no-print">
+                                        <button type="button" class="btn-success btn-sm" onclick="addStudent()">
+                                            <i class="fas fa-plus"></i> Ajouter un élève
+                                        </button>
+                                        <button type="button" class="btn-info btn-sm" onclick="importParentContacts()">
+                                            <i class="fas fa-upload"></i> Importer contacts parents
+                                        </button>
+                                        <button type="button" class="btn-warning btn-sm" onclick="sendTestWhatsApp()">
+                                            <i class="fab fa-whatsapp"></i> Test WhatsApp
+                                        </button>
+                                    </div>
                                     <div class="students-table">
                                         <div class="table-header">
                                             <div>Nom et Prénom de l'élève</div>
                                             <div>Note obtenue</div>
                                             <div>Appréciation</div>
+                                            <div>Nom du parent</div>
+                                            <div>Téléphone parent</div>
                                             <div>Commentaire</div>
                                             <div class="no-print">Action</div>
                                         </div>
@@ -1126,6 +1446,10 @@
                                                 <div class="stat-value" id="lowest-grade">-</div>
                                                 <div class="stat-label">Note min</div>
                                             </div>
+                                            <div class="stat-item">
+                                                <div class="stat-value" id="whatsapp-ready">0</div>
+                                                <div class="stat-label">Parents contactés</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1135,14 +1459,14 @@
                                         <button type="button" class="btn-warning" id="syncButton" onclick="syncData()">
                                             <i class="fas fa-sync"></i> Synchroniser
                                         </button>
-                                        <button type="button" class="btn-success" onclick="sendViaWhatsApp()">
-                                            <i class="fab fa-whatsapp"></i> Envoyer par WhatsApp
+                                        <button type="button" class="btn-success" onclick="sendAllWhatsApp()">
+                                            <i class="fab fa-whatsapp"></i> Envoyer à tous
                                         </button>
                                         <button type="button" class="btn-primary" onclick="saveCurrentEvaluation()">
                                             <i class="fas fa-save"></i> Sauvegarder
                                         </button>
                                         <button type="submit" class="btn-primary">
-                                            <i class="fas fa-paper-plane"></i> Envoyer
+                                            <i class="fas fa-paper-plane"></i> Enregistrer & Envoyer
                                         </button>
                                     </div>
                                 </div>
@@ -1155,58 +1479,84 @@
     </div>
 
     <script>
-        // Base de données des élèves par classe
+        // Base de données des élèves par classe avec contacts parents
         const studentsDatabase = {
             "6eme": [
-                { id: 1, name: "ADJOVI Kossi" },
-                { id: 2, name: "AGBANOU Akouvi" },
-                { id: 3, name: "AKAKPO Yao" },
-                { id: 4, name: "AMEGANVI Koffi" },
-                { id: 5, name: "ATCHO Komie" }
+                { 
+                    id: 1, 
+                    name: "ADJOVI Kossi",
+                    parentName: "ADJOVI Komi",
+                    parentPhone: "+22890123456"
+                },
+                { 
+                    id: 2, 
+                    name: "AGBANOU Akouvi",
+                    parentName: "AGBANOU Yao",
+                    parentPhone: "+22890123457"
+                },
+                { 
+                    id: 3, 
+                    name: "AKAKPO Yao",
+                    parentName: "AKAKPO Koffi",
+                    parentPhone: "+22890123458"
+                },
+                { 
+                    id: 4, 
+                    name: "AMEGANVI Koffi",
+                    parentName: "AMEGANVI Essowè",
+                    parentPhone: "+22890123459"
+                },
+                { 
+                    id: 5, 
+                    name: "ATCHO Komie",
+                    parentName: "ATCHO Mawuli",
+                    parentPhone: "+22890123460"
+                }
             ],
-            "5eme": [
-                // Ajouter les élèves de 5ème
-            ],
-            "4eme": [
-                // Ajouter les élèves de 4ème
-            ],
-            "3eme": [
-                // Ajouter les élèves de 3ème
-            ],
+            "5eme": [],
+            "4eme": [],
+            "3eme": [],
             "seconde-l": [
-                { id: 1, name: "KOMBATE Kossi" },
-                { id: 2, name: "KONOU Kafui" },
-                { id: 3, name: "KOSSI Mawuko" },
-                { id: 4, name: "KOUVAHEY Kossi" },
-                { id: 5, name: "LOKOSSOU Kossivi" }
+                { 
+                    id: 1, 
+                    name: "KOMBATE Kossi",
+                    parentName: "KOMBATE Mawunyo",
+                    parentPhone: "+22890123461"
+                },
+                { 
+                    id: 2, 
+                    name: "KONOU Kafui",
+                    parentName: "KONOU Dossou",
+                    parentPhone: "+22890123462"
+                },
+                { 
+                    id: 3, 
+                    name: "KOSSI Mawuko",
+                    parentName: "KOSSI Mensah",
+                    parentPhone: "+22890123463"
+                },
+                { 
+                    id: 4, 
+                    name: "KOUVAHEY Kossi",
+                    parentName: "KOUVAHEY Koffi",
+                    parentPhone: "+22890123464"
+                },
+                { 
+                    id: 5, 
+                    name: "LOKOSSOU Kossivi",
+                    parentName: "LOKOSSOU Yao",
+                    parentPhone: "+22890123465"
+                }
             ],
-            "seconde-cd": [
-                // Ajouter les élèves de Seconde CD
-            ],
-            "premiere-a4": [
-                // Ajouter les élèves de Première A4
-            ],
-            "premiere-a5": [
-                // Ajouter les élèves de Première A5
-            ],
-            "premiere-c4": [
-                // Ajouter les élèves de Première C4
-            ],
-            "premiere-d": [
-                // Ajouter les élèves de Première D
-            ],
-            "terminale-a4": [
-                // Ajouter les élèves de Terminale A4
-            ],
-            "terminale-a5": [
-                // Ajouter les élèves de Terminale A5
-            ],
-            "terminale-c4": [
-                // Ajouter les élèves de Terminale C4
-            ],
-            "terminale-d": [
-                // Ajouter les élèves de Terminale D
-            ]
+            "seconde-cd": [],
+            "premiere-a4": [],
+            "premiere-a5": [],
+            "premiere-c4": [],
+            "premiere-d": [],
+            "terminale-a4": [],
+            "terminale-a5": [],
+            "terminale-c4": [],
+            "terminale-d": []
         };
 
         // Enseignants pré-enregistrés
@@ -1218,22 +1568,58 @@
                 class: "6eme",
                 username: "math_6eme",
                 password: "math123",
-                evaluations: []
-            },
-            // Ajouter d'autres enseignants ici
+                evaluations: [],
+                whatsappEnabled: true
+            }
         ];
+
+        // Configuration WhatsApp
+        const whatsappConfig = {
+            enabled: true,
+            autoSend: true,
+            messageTemplate: `*Lycée Niamtougou - Résultat d'évaluation*
+
+👨‍🏫 Enseignant: {teacher}
+📚 Matière: {subject}
+👥 Classe: {class}
+📝 Évaluation: {title}
+📅 Date: {date}
+📊 Note: {grade}/{maxGrade}
+🎯 Appréciation: {appreciation}
+
+💬 Commentaire: {comment}
+
+📈 Statistiques classe:
+• Moyenne: {average}
+• Note max: {maxNote}
+• Note min: {minNote}
+
+🏫 *Lycée Niamtougou - Excellence et Discipline*`,
+            countryCode: '+228'
+        };
 
         // Charger les enseignants depuis le localStorage si disponibles
         function loadTeachersFromStorage() {
             const savedTeachers = localStorage.getItem('teachers');
+            const savedConfig = localStorage.getItem('whatsappConfig');
+            const savedStudents = localStorage.getItem('studentsDatabase');
+            
             if (savedTeachers) {
                 teachers = JSON.parse(savedTeachers);
+            }
+            if (savedConfig) {
+                Object.assign(whatsappConfig, JSON.parse(savedConfig));
+            }
+            if (savedStudents) {
+                Object.assign(studentsDatabase, JSON.parse(savedStudents));
             }
         }
 
         // Sauvegarder les enseignants dans le localStorage
         function saveTeachersToStorage() {
             localStorage.setItem('teachers', JSON.stringify(teachers));
+            localStorage.setItem('whatsappConfig', JSON.stringify(whatsappConfig));
+            localStorage.setItem('studentsDatabase', JSON.stringify(studentsDatabase));
         }
 
         // Fonction pour vérifier les identifiants
@@ -1248,6 +1634,7 @@
             const data = {
                 teachers: teachers,
                 students: studentsDatabase,
+                config: whatsappConfig,
                 exportedAt: new Date().toISOString()
             };
             
@@ -1280,6 +1667,10 @@
                         
                         if (data.teachers && data.students) {
                             teachers = data.teachers;
+                            Object.assign(studentsDatabase, data.students);
+                            if (data.config) {
+                                Object.assign(whatsappConfig, data.config);
+                            }
                             saveTeachersToStorage();
                             renderTeachersList();
                             showMessage('success', 'Base de données importée avec succès');
@@ -1348,6 +1739,11 @@
             
             // Afficher un message de confirmation
             showMessage('success', 'Évaluation sauvegardée avec succès');
+            
+            // Envoyer par WhatsApp si activé
+            if (whatsappConfig.autoSend && document.getElementById('whatsapp-auto-send').checked) {
+                sendWhatsAppToParents(evaluationData);
+            }
         }
 
         // Fonction pour collecter les données du formulaire
@@ -1377,18 +1773,32 @@
                     lowest: document.getElementById('lowest-grade').textContent,
                     count: document.getElementById('total-students').textContent
                 },
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                whatsappSent: false
             };
             
             // Récupérer les données des élèves
+            let whatsappReady = 0;
             document.querySelectorAll('.student-row').forEach(row => {
-                evaluationData.students.push({
+                const studentData = {
                     name: row.querySelector('.student-name').value,
                     grade: row.querySelector('.grade-input').value,
                     appreciation: row.querySelector('.appreciation').value,
+                    parentName: row.querySelector('.parent-name').value,
+                    parentPhone: row.querySelector('.parent-phone').value,
                     comment: row.querySelector('.comment-input').value
-                });
+                };
+                
+                evaluationData.students.push(studentData);
+                
+                // Vérifier si le parent peut être contacté
+                if (studentData.parentPhone && studentData.parentPhone.trim().length > 0) {
+                    whatsappReady++;
+                }
             });
+            
+            // Mettre à jour le compteur WhatsApp
+            document.getElementById('whatsapp-ready').textContent = whatsappReady;
             
             return evaluationData;
         }
@@ -1397,6 +1807,7 @@
         function showMainContent(teacher) {
             document.getElementById('login-section').classList.add('hidden');
             document.getElementById('admin-section').classList.add('hidden');
+            document.getElementById('analytics-section').classList.add('hidden');
             document.getElementById('main-content').classList.remove('hidden');
             
             // Mettre à jour les informations de l'enseignant
@@ -1404,6 +1815,9 @@
             document.getElementById('teacher-subject-display').textContent = getSubjectName(teacher.subject);
             document.getElementById('teacher-class-display').textContent = getClassName(teacher.class);
             document.getElementById('total-evaluations').textContent = teacher.evaluations.length;
+            
+            // Configurer WhatsApp
+            document.getElementById('whatsapp-auto-send').checked = teacher.whatsappEnabled !== false;
             
             // Dernière évaluation
             if (teacher.evaluations.length > 0) {
@@ -1432,6 +1846,8 @@
                 document.getElementById('class').value = teacher.class;
                 // Charger les élèves de cette classe
                 loadStudentsForClass(teacher.class);
+                // Mettre à jour la prévisualisation WhatsApp
+                updateWhatsAppPreview();
             }, 100);
         }
 
@@ -1491,6 +1907,8 @@
                 return;
             }
             
+            let whatsappReady = 0;
+            
             students.forEach(student => {
                 const studentId = `student-${classCode}-${student.id}`;
                 const studentRow = document.createElement('div');
@@ -1502,10 +1920,10 @@
                         <input type="text" class="student-name" value="${student.name}" readonly>
                     </div>
                     <div>
-                        <input type="number" class="grade-input" placeholder="Note" min="0" max="20" step="0.25" required>
+                        <input type="number" class="grade-input" placeholder="Note" min="0" max="20" step="0.25" required oninput="updateStats(); updateWhatsAppPreview()">
                     </div>
                     <div>
-                        <select class="appreciation">
+                        <select class="appreciation" onchange="updateWhatsAppPreview()">
                             <option value="">Choisir...</option>
                             <option value="excellent">Excellent</option>
                             <option value="tres-bien">Très bien</option>
@@ -1517,7 +1935,13 @@
                         </select>
                     </div>
                     <div>
-                        <textarea class="comment-input" placeholder="Commentaire sur l'élève..."></textarea>
+                        <input type="text" class="parent-name" placeholder="Nom du parent" value="${student.parentName || ''}" onchange="updateStats(); updateWhatsAppPreview()">
+                    </div>
+                    <div>
+                        <input type="tel" class="parent-phone" placeholder="Téléphone parent" value="${student.parentPhone || ''}" onchange="updateStats(); updateWhatsAppPreview()">
+                    </div>
+                    <div>
+                        <textarea class="comment-input" placeholder="Commentaire sur l'élève..." onchange="updateWhatsAppPreview()"></textarea>
                     </div>
                     <div class="no-print">
                         <button type="button" class="btn-danger btn-sm" onclick="removeStudent('${studentId}')">
@@ -1527,8 +1951,14 @@
                 `;
                 
                 studentsList.appendChild(studentRow);
+                
+                // Compter les parents avec téléphone
+                if (student.parentPhone && student.parentPhone.trim().length > 0) {
+                    whatsappReady++;
+                }
             });
             
+            document.getElementById('whatsapp-ready').textContent = whatsappReady;
             updateStats();
         }
 
@@ -1546,10 +1976,10 @@
                     <input type="text" class="student-name" placeholder="Nom et Prénom" required>
                 </div>
                 <div>
-                    <input type="number" class="grade-input" placeholder="Note" min="0" max="20" step="0.25" required>
+                    <input type="number" class="grade-input" placeholder="Note" min="0" max="20" step="0.25" required oninput="updateStats(); updateWhatsAppPreview()">
                 </div>
                 <div>
-                    <select class="appreciation">
+                    <select class="appreciation" onchange="updateWhatsAppPreview()">
                         <option value="">Choisir...</option>
                         <option value="excellent">Excellent</option>
                         <option value="tres-bien">Très bien</option>
@@ -1561,7 +1991,13 @@
                     </select>
                 </div>
                 <div>
-                    <textarea class="comment-input" placeholder="Commentaire sur l'élève..."></textarea>
+                    <input type="text" class="parent-name" placeholder="Nom du parent" onchange="updateStats(); updateWhatsAppPreview()">
+                </div>
+                <div>
+                    <input type="tel" class="parent-phone" placeholder="Téléphone parent" onchange="updateStats(); updateWhatsAppPreview()">
+                </div>
+                <div>
+                    <textarea class="comment-input" placeholder="Commentaire sur l'élève..." onchange="updateWhatsAppPreview()"></textarea>
                 </div>
                 <div class="no-print">
                     <button type="button" class="btn-danger btn-sm" onclick="removeStudent('${studentId}')">
@@ -1572,6 +2008,7 @@
             
             container.appendChild(studentRow);
             updateStats();
+            updateWhatsAppPreview();
         }
 
         // Fonction pour supprimer un élève
@@ -1580,6 +2017,7 @@
             if (element) {
                 element.remove();
                 updateStats();
+                updateWhatsAppPreview();
             }
         }
 
@@ -1587,15 +2025,23 @@
         function updateStats() {
             const students = document.querySelectorAll('.student-row');
             const grades = [];
+            let whatsappReady = 0;
             
             students.forEach(student => {
                 const gradeInput = student.querySelector('.grade-input');
+                const parentPhone = student.querySelector('.parent-phone');
+                
                 if (gradeInput && gradeInput.value) {
                     grades.push(parseFloat(gradeInput.value));
+                }
+                
+                if (parentPhone && parentPhone.value && parentPhone.value.trim().length > 0) {
+                    whatsappReady++;
                 }
             });
             
             document.getElementById('total-students').textContent = students.length;
+            document.getElementById('whatsapp-ready').textContent = whatsappReady;
             
             if (grades.length > 0) {
                 const sum = grades.reduce((a, b) => a + b, 0);
@@ -1640,6 +2086,7 @@
             classSelect.addEventListener('change', function() {
                 if (this.value) {
                     loadStudentsForClass(this.value);
+                    updateWhatsAppPreview();
                 }
             });
         }
@@ -1665,6 +2112,7 @@
                     <div class="credentials">
                         <div><strong>Identifiant:</strong> ${teacher.username}</div>
                         <div><strong>Mot de passe:</strong> ${teacher.password}</div>
+                        <div><strong>WhatsApp:</strong> ${teacher.whatsappEnabled !== false ? 'Activé' : 'Désactivé'}</div>
                     </div>
                 `;
                 
@@ -1692,7 +2140,8 @@
                 class: classCode,
                 username,
                 password,
-                evaluations: []
+                evaluations: [],
+                whatsappEnabled: true
             };
             
             teachers.push(newTeacher);
@@ -1729,42 +2178,147 @@
             window.print();
         }
 
-        // Fonction pour envoyer les données par WhatsApp
-        function sendViaWhatsApp() {
-            const evaluationData = collectEvaluationData();
-            if (!evaluationData) return;
+        // Fonction pour envoyer un message WhatsApp individuel
+        function sendIndividualWhatsApp(studentData, evaluationData) {
+            if (!studentData.parentPhone || studentData.parentPhone.trim().length === 0) {
+                return { success: false, reason: 'Pas de numéro de téléphone' };
+            }
+            
+            let phoneNumber = studentData.parentPhone.trim();
+            
+            // Ajouter le code pays si nécessaire
+            if (!phoneNumber.startsWith('+')) {
+                phoneNumber = whatsappConfig.countryCode + phoneNumber.replace(/^0+/, '');
+            }
             
             // Préparer le message
-            let message = `*Nouvelle évaluation - Lycée Niamtougou*\n\n`;
-            message += `*Enseignant:* ${evaluationData.teacher}\n`;
-            message += `*Matière:* ${getSubjectName(evaluationData.subject)}\n`;
-            message += `*Classe:* ${getClassName(evaluationData.class)}\n`;
-            message += `*Titre:* ${evaluationData.title}\n`;
-            message += `*Date:* ${formatDate(evaluationData.date)}\n`;
-            message += `*Note maximale:* ${evaluationData.maxGrade}\n\n`;
-            message += `*Notes des élèves:*\n`;
+            let message = whatsappConfig.messageTemplate
+                .replace('{teacher}', evaluationData.teacher)
+                .replace('{subject}', getSubjectName(evaluationData.subject))
+                .replace('{class}', getClassName(evaluationData.class))
+                .replace('{title}', evaluationData.title)
+                .replace('{date}', formatDate(evaluationData.date))
+                .replace('{grade}', studentData.grade || '-')
+                .replace('{maxGrade}', evaluationData.maxGrade)
+                .replace('{appreciation}', getAppreciationText(studentData.appreciation))
+                .replace('{comment}', studentData.comment || 'Aucun commentaire')
+                .replace('{average}', evaluationData.stats.average)
+                .replace('{maxNote}', evaluationData.stats.highest)
+                .replace('{minNote}', evaluationData.stats.lowest);
             
-            // Ajouter les notes des élèves
-            evaluationData.students.forEach((student, index) => {
-                const name = student.name || `Élève ${index+1}`;
-                const grade = student.grade || '-';
-                
-                message += `➡ ${name}: ${grade}/${evaluationData.maxGrade} (${getAppreciationText(student.appreciation)})\n`;
-                message += `   Commentaire: ${student.comment || 'Aucun commentaire'}\n\n`;
-            });
-            
-            // Ajouter les statistiques
-            message += `\n*Statistiques:*\n`;
-            message += `- Nombre d'élèves: ${evaluationData.stats.count}\n`;
-            message += `- Moyenne: ${evaluationData.stats.average}\n`;
-            message += `- Meilleure note: ${evaluationData.stats.highest}\n`;
-            message += `- Plus basse note: ${evaluationData.stats.lowest}\n`;
+            // Ajouter le nom de l'élève et du parent
+            message = `📋 *Résultat pour: ${studentData.name}*\n👨‍👩‍👧 Parent: ${studentData.parentName || 'Non spécifié'}\n\n` + message;
             
             // Encoder le message pour l'URL
             const encodedMessage = encodeURIComponent(message);
             
             // Ouvrir WhatsApp avec le message pré-rempli
-            window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
+            window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
+            
+            return { success: true, phoneNumber };
+        }
+
+        // Fonction pour envoyer à tous les parents
+        function sendAllWhatsApp() {
+            const evaluationData = collectEvaluationData();
+            if (!evaluationData) return;
+            
+            const students = evaluationData.students;
+            let sentCount = 0;
+            let failedCount = 0;
+            
+            document.getElementById('whatsapp-status').textContent = 'Envoi en cours...';
+            document.getElementById('whatsapp-status').style.color = 'orange';
+            
+            students.forEach((student, index) => {
+                setTimeout(() => {
+                    const result = sendIndividualWhatsApp(student, evaluationData);
+                    
+                    if (result.success) {
+                        sentCount++;
+                        showMessage('info', `Message envoyé au parent de ${student.name}`);
+                    } else {
+                        failedCount++;
+                        showMessage('warning', `Pas de numéro pour ${student.name}`);
+                    }
+                    
+                    // Mettre à jour le statut
+                    document.getElementById('whatsapp-status').textContent = 
+                        `Envoyés: ${sentCount} | Échoués: ${failedCount} | Total: ${students.length}`;
+                    
+                    if (sentCount + failedCount === students.length) {
+                        document.getElementById('whatsapp-status').textContent = 
+                            `Envoi terminé! ${sentCount} messages envoyés sur ${students.length}`;
+                        document.getElementById('whatsapp-status').style.color = sentCount > 0 ? 'white' : 'yellow';
+                        
+                        if (sentCount > 0) {
+                            showMessage('success', `${sentCount} messages WhatsApp envoyés avec succès!`);
+                        }
+                    }
+                }, index * 1000); // Délai de 1 seconde entre chaque envoi
+            });
+        }
+
+        // Fonction pour envoyer un test WhatsApp
+        function sendTestWhatsApp() {
+            const testStudent = {
+                name: "ÉLÈVE TEST",
+                grade: "15",
+                appreciation: "bien",
+                parentName: "PARENT TEST",
+                parentPhone: "+22890123456",
+                comment: "Ceci est un test d'envoi WhatsApp"
+            };
+            
+            const testEvaluation = {
+                teacher: document.getElementById('teacher').value || "Enseignant Test",
+                subject: document.getElementById('subject').value || "mathematiques",
+                class: document.getElementById('class').value || "6eme",
+                title: document.getElementById('evaluation-title').value || "Test d'évaluation",
+                date: document.getElementById('evaluation-date').value || new Date().toISOString().split('T')[0],
+                maxGrade: document.getElementById('max-grade').value || "20",
+                stats: {
+                    average: "14.5",
+                    highest: "18",
+                    lowest: "10"
+                }
+            };
+            
+            sendIndividualWhatsApp(testStudent, testEvaluation);
+            showMessage('info', 'Test WhatsApp ouvert dans une nouvelle fenêtre');
+        }
+
+        // Fonction pour envoyer automatiquement aux parents après sauvegarde
+        function sendWhatsAppToParents(evaluationData) {
+            if (!whatsappConfig.enabled || !document.getElementById('whatsapp-auto-send').checked) {
+                return;
+            }
+            
+            const studentsWithPhone = evaluationData.students.filter(s => s.parentPhone && s.parentPhone.trim().length > 0);
+            
+            if (studentsWithPhone.length === 0) {
+                showMessage('warning', 'Aucun numéro de parent disponible pour l\'envoi WhatsApp');
+                return;
+            }
+            
+            document.getElementById('whatsapp-status').textContent = 'Envoi automatique en cours...';
+            document.getElementById('whatsapp-status').style.color = 'orange';
+            
+            let sentCount = 0;
+            
+            studentsWithPhone.forEach((student, index) => {
+                setTimeout(() => {
+                    sendIndividualWhatsApp(student, evaluationData);
+                    sentCount++;
+                    
+                    if (sentCount === studentsWithPhone.length) {
+                        document.getElementById('whatsapp-status').textContent = 
+                            `${sentCount} messages WhatsApp envoyés automatiquement`;
+                        document.getElementById('whatsapp-status').style.color = 'lightgreen';
+                        showMessage('success', `${sentCount} messages WhatsApp envoyés aux parents!`);
+                    }
+                }, index * 2000); // Délai de 2 secondes entre chaque envoi
+            });
         }
 
         // Fonction pour obtenir le texte d'appréciation
@@ -1779,6 +2333,140 @@
                 'mediocre': '❌ Médiocre'
             };
             return appreciations[appreciation] || appreciation;
+        }
+
+        // Fonction pour mettre à jour la prévisualisation WhatsApp
+        function updateWhatsAppPreview() {
+            const teacher = document.getElementById('teacher').value || "Enseignant";
+            const subject = getSubjectName(document.getElementById('subject').value || "mathematiques");
+            const className = getClassName(document.getElementById('class').value || "6eme");
+            const title = document.getElementById('evaluation-title').value || "Titre de l'évaluation";
+            const date = document.getElementById('evaluation-date').value ? 
+                formatDate(document.getElementById('evaluation-date').value) : "Date non définie";
+            const maxGrade = document.getElementById('max-grade').value || "20";
+            
+            // Calculer les statistiques actuelles
+            const students = document.querySelectorAll('.student-row');
+            const grades = [];
+            students.forEach(student => {
+                const grade = student.querySelector('.grade-input');
+                if (grade && grade.value) grades.push(parseFloat(grade.value));
+            });
+            
+            const average = grades.length > 0 ? (grades.reduce((a, b) => a + b, 0) / grades.length).toFixed(2) : "N/A";
+            const maxNote = grades.length > 0 ? Math.max(...grades).toFixed(2) : "N/A";
+            const minNote = grades.length > 0 ? Math.min(...grades).toFixed(2) : "N/A";
+            
+            let preview = whatsappConfig.messageTemplate
+                .replace('{teacher}', teacher)
+                .replace('{subject}', subject)
+                .replace('{class}', className)
+                .replace('{title}', title)
+                .replace('{date}', date)
+                .replace('{grade}', 'XX')
+                .replace('{maxGrade}', maxGrade)
+                .replace('{appreciation}', 'Appréciation')
+                .replace('{comment}', 'Commentaire personnalisé')
+                .replace('{average}', average)
+                .replace('{maxNote}', maxNote)
+                .replace('{minNote}', minNote);
+            
+            preview = `📋 *Exemple de message pour un élève:*\n\n` + preview;
+            
+            document.getElementById('whatsapp-message-preview').textContent = preview;
+        }
+
+        // Fonction pour importer les contacts parents
+        function importParentContacts() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.csv,.json,.txt';
+            
+            input.onchange = e => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = event => {
+                    try {
+                        const content = event.target.result;
+                        let importedData = [];
+                        
+                        if (file.name.endsWith('.csv')) {
+                            // Parser CSV
+                            const lines = content.split('\n');
+                            const headers = lines[0].split(',').map(h => h.trim());
+                            
+                            for (let i = 1; i < lines.length; i++) {
+                                if (lines[i].trim() === '') continue;
+                                
+                                const values = lines[i].split(',');
+                                const student = {};
+                                
+                                headers.forEach((header, index) => {
+                                    student[header] = values[index] ? values[index].trim() : '';
+                                });
+                                
+                                importedData.push(student);
+                            }
+                        } else if (file.name.endsWith('.json')) {
+                            // Parser JSON
+                            importedData = JSON.parse(content);
+                        } else {
+                            // Format texte simple
+                            const lines = content.split('\n');
+                            lines.forEach(line => {
+                                if (line.trim() === '') return;
+                                
+                                const parts = line.split('|').map(p => p.trim());
+                                if (parts.length >= 3) {
+                                    importedData.push({
+                                        name: parts[0],
+                                        parentName: parts[1],
+                                        parentPhone: parts[2]
+                                    });
+                                }
+                            });
+                        }
+                        
+                        // Appliquer les contacts aux élèves actuels
+                        applyParentContacts(importedData);
+                        showMessage('success', `${importedData.length} contacts parents importés`);
+                        
+                    } catch (error) {
+                        showMessage('error', 'Erreur lors de l\'importation des contacts');
+                    }
+                };
+                
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+
+        // Fonction pour appliquer les contacts parents importés
+        function applyParentContacts(contacts) {
+            const studentRows = document.querySelectorAll('.student-row');
+            
+            studentRows.forEach(row => {
+                const studentName = row.querySelector('.student-name').value;
+                const contact = contacts.find(c => 
+                    c.name && studentName && 
+                    c.name.toLowerCase().includes(studentName.toLowerCase()) ||
+                    studentName.toLowerCase().includes(c.name.toLowerCase())
+                );
+                
+                if (contact) {
+                    if (contact.parentName) {
+                        row.querySelector('.parent-name').value = contact.parentName;
+                    }
+                    if (contact.parentPhone) {
+                        row.querySelector('.parent-phone').value = contact.parentPhone;
+                    }
+                }
+            });
+            
+            updateStats();
+            updateWhatsAppPreview();
         }
 
         // Fonction pour synchroniser les données
@@ -1802,7 +2490,7 @@
                 // Réactiver le bouton
                 syncButton.classList.remove('loading');
                 syncButton.disabled = false;
-            }, 1500); // Simule un délai réseau
+            }, 1500);
         }
 
         // Fonction pour afficher des messages
@@ -1822,15 +2510,409 @@
         function toggleEvaluationsView() {
             const evaluationsView = document.getElementById('evaluations-view');
             const evaluationFormView = document.getElementById('evaluation-form-view');
+            const analyticsView = document.getElementById('teacher-analytics-view');
             
             if (evaluationsView.classList.contains('hidden')) {
                 evaluationsView.classList.remove('hidden');
                 evaluationFormView.classList.add('hidden');
+                analyticsView.classList.add('hidden');
                 loadTeacherEvaluations();
             } else {
                 evaluationsView.classList.add('hidden');
                 evaluationFormView.classList.remove('hidden');
+                analyticsView.classList.add('hidden');
             }
+        }
+
+        // Fonction pour afficher les analytics de l'enseignant
+        function showTeacherAnalytics() {
+            const teacher = getCurrentTeacher();
+            if (!teacher) return;
+            
+            const analyticsView = document.getElementById('teacher-analytics-view');
+            const evaluationFormView = document.getElementById('evaluation-form-view');
+            const evaluationsView = document.getElementById('evaluations-view');
+            
+            analyticsView.classList.remove('hidden');
+            evaluationFormView.classList.add('hidden');
+            evaluationsView.classList.add('hidden');
+            
+            displayTeacherAnalytics(teacher);
+        }
+
+        // Fonction pour cacher les analytics
+        function hideTeacherAnalytics() {
+            document.getElementById('teacher-analytics-view').classList.add('hidden');
+            document.getElementById('evaluation-form-view').classList.remove('hidden');
+        }
+
+        // Fonction pour afficher le tableau de bord analytics global
+        function showAnalyticsPanel() {
+            document.getElementById('login-section').classList.add('hidden');
+            document.getElementById('admin-section').classList.add('hidden');
+            document.getElementById('main-content').classList.add('hidden');
+            document.getElementById('analytics-section').classList.remove('hidden');
+            
+            displayGlobalAnalytics();
+        }
+
+        // Fonction pour afficher les analytics globaux
+        function displayGlobalAnalytics() {
+            const container = document.getElementById('analytics-content');
+            
+            // Calculer les statistiques globales
+            let totalEvaluations = 0;
+            let totalStudents = 0;
+            let totalTeachers = teachers.length;
+            let subjectStats = {};
+            let classStats = {};
+            let gradeDistribution = { excellent: 0, good: 0, average: 0, poor: 0 };
+            let whatsappStats = { sent: 0, total: 0 };
+            
+            teachers.forEach(teacher => {
+                totalEvaluations += teacher.evaluations.length;
+                
+                teacher.evaluations.forEach(eval => {
+                    totalStudents += eval.students.length;
+                    
+                    // Statistiques par matière
+                    subjectStats[eval.subject] = (subjectStats[eval.subject] || 0) + 1;
+                    
+                    // Statistiques par classe
+                    classStats[eval.class] = (classStats[eval.class] || 0) + 1;
+                    
+                    // Distribution des notes
+                    eval.students.forEach(student => {
+                        const grade = parseFloat(student.grade);
+                        if (!isNaN(grade)) {
+                            if (grade >= 16) gradeDistribution.excellent++;
+                            else if (grade >= 12) gradeDistribution.good++;
+                            else if (grade >= 8) gradeDistribution.average++;
+                            else gradeDistribution.poor++;
+                        }
+                    });
+                    
+                    // Statistiques WhatsApp
+                    if (eval.whatsappSent) whatsappStats.sent++;
+                    whatsappStats.total++;
+                });
+            });
+            
+            const averageStudentsPerEval = totalEvaluations > 0 ? (totalStudents / totalEvaluations).toFixed(1) : 0;
+            const whatsappRate = whatsappStats.total > 0 ? ((whatsappStats.sent / whatsappStats.total) * 100).toFixed(1) : 0;
+            
+            container.innerHTML = `
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h3 class="analytics-title"><i class="fas fa-chart-pie"></i> Vue d'ensemble</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value">${totalTeachers}</div>
+                                <div class="stat-label">Enseignants</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${totalEvaluations}</div>
+                                <div class="stat-label">Évaluations</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${totalStudents}</div>
+                                <div class="stat-label">Notes saisies</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${averageStudentsPerEval}</div>
+                                <div class="stat-label">Moy/évaluation</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-card">
+                        <h3 class="analytics-title"><i class="fas fa-book"></i> Par matière</h3>
+                        <div id="subject-chart" class="chart-container">
+                            ${Object.entries(subjectStats).map(([subject, count]) => `
+                                <div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span>${getSubjectName(subject)}</span>
+                                        <span>${count}</span>
+                                    </div>
+                                    <div class="distribution-bar">
+                                        <div class="distribution-fill" style="width: ${(count / totalEvaluations * 100)}%"></div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-card">
+                        <h3 class="analytics-title"><i class="fas fa-graduation-cap"></i> Distribution des notes</h3>
+                        <div class="chart-container">
+                            <div class="distribution-label">
+                                <span>⭐ Excellent (16-20)</span>
+                                <span>${gradeDistribution.excellent}</span>
+                            </div>
+                            <div class="distribution-bar">
+                                <div class="distribution-fill" style="width: ${(gradeDistribution.excellent / totalStudents * 100)}%; background: #27ae60"></div>
+                            </div>
+                            
+                            <div class="distribution-label">
+                                <span>✅ Bon (12-15.9)</span>
+                                <span>${gradeDistribution.good}</span>
+                            </div>
+                            <div class="distribution-bar">
+                                <div class="distribution-fill" style="width: ${(gradeDistribution.good / totalStudents * 100)}%; background: #3498db"></div>
+                            </div>
+                            
+                            <div class="distribution-label">
+                                <span>😐 Moyen (8-11.9)</span>
+                                <span>${gradeDistribution.average}</span>
+                            </div>
+                            <div class="distribution-bar">
+                                <div class="distribution-fill" style="width: ${(gradeDistribution.average / totalStudents * 100)}%; background: #f39c12"></div>
+                            </div>
+                            
+                            <div class="distribution-label">
+                                <span>❌ Faible (0-7.9)</span>
+                                <span>${gradeDistribution.poor}</span>
+                            </div>
+                            <div class="distribution-bar">
+                                <div class="distribution-fill" style="width: ${(gradeDistribution.poor / totalStudents * 100)}%; background: #e74c3c"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-card">
+                        <h3 class="analytics-title"><i class="fab fa-whatsapp"></i> Communications WhatsApp</h3>
+                        <div style="text-align: center; padding: 20px;">
+                            <div style="font-size: 2.5rem; font-weight: bold; color: #25D366;">${whatsappRate}%</div>
+                            <div style="margin-top: 10px;">Taux d'envoi WhatsApp</div>
+                            <div style="margin-top: 20px; font-size: 0.9rem; color: #666;">
+                                ${whatsappStats.sent} / ${whatsappStats.total} évaluations
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-card">
+                        <h3 class="analytics-title"><i class="fas fa-calendar"></i> Activité par classe</h3>
+                        <div id="class-chart" class="chart-container">
+                            ${Object.entries(classStats).map(([cls, count]) => `
+                                <div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span>${getClassName(cls)}</span>
+                                        <span>${count}</span>
+                                    </div>
+                                    <div class="distribution-bar">
+                                        <div class="distribution-fill" style="width: ${(count / totalEvaluations * 100)}%; background: #9b59b6"></div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-card">
+                        <h3 class="analytics-title"><i class="fas fa-chart-line"></i> Recommandations</h3>
+                        <div style="padding: 10px;">
+                            <ul style="list-style-type: none; padding-left: 0;">
+                                ${gradeDistribution.poor > totalStudents * 0.3 ? 
+                                    '<li><i class="fas fa-exclamation-triangle text-warning"></i> <strong>Attention:</strong> Plus de 30% des notes sont faibles. Pensez à revoir la difficulté des évaluations.</li>' : 
+                                    '<li><i class="fas fa-check-circle text-success"></i> La distribution des notes est équilibrée.</li>'}
+                                
+                                ${whatsappRate < 50 ? 
+                                    '<li><i class="fas fa-comment-slash text-warning"></i> <strong>Amélioration:</strong> Seulement ' + whatsappRate + '% des évaluations sont communiquées par WhatsApp.</li>' : 
+                                    '<li><i class="fas fa-comment-check text-success"></i> Bon taux de communication avec les parents.</li>'}
+                                
+                                ${totalEvaluations < 5 ? 
+                                    '<li><i class="fas fa-clipboard-check text-info"></i> <strong>Suggestion:</strong> Encouragez les enseignants à enregistrer plus d\'évaluations.</li>' : 
+                                    '<li><i class="fas fa-clipboard-list text-success"></i> Bon niveau d\'activité des enseignants.</li>'}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Fonction pour afficher les analytics de l'enseignant
+        function displayTeacherAnalytics(teacher) {
+            const container = document.getElementById('teacher-analytics-content');
+            
+            if (teacher.evaluations.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-chart-line"></i><p>Aucune donnée d\'évaluation disponible pour l\'analyse.</p></div>';
+                return;
+            }
+            
+            // Calculer les statistiques de l'enseignant
+            let classStats = {};
+            let typeStats = {};
+            let monthlyStats = {};
+            let gradeTrend = [];
+            let studentPerformance = {};
+            
+            teacher.evaluations.forEach(eval => {
+                // Statistiques par classe
+                classStats[eval.class] = (classStats[eval.class] || 0) + 1;
+                
+                // Statistiques par type
+                typeStats[eval.type] = (typeStats[eval.type] || 0) + 1;
+                
+                // Statistiques mensuelles
+                const month = new Date(eval.date).toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' });
+                monthlyStats[month] = (monthlyStats[month] || 0) + 1;
+                
+                // Tendances des notes
+                gradeTrend.push({
+                    date: eval.date,
+                    average: parseFloat(eval.stats.average),
+                    highest: parseFloat(eval.stats.highest),
+                    lowest: parseFloat(eval.stats.lowest)
+                });
+                
+                // Performance des élèves
+                eval.students.forEach(student => {
+                    if (!studentPerformance[student.name]) {
+                        studentPerformance[student.name] = {
+                            grades: [],
+                            count: 0,
+                            average: 0
+                        };
+                    }
+                    
+                    const grade = parseFloat(student.grade);
+                    if (!isNaN(grade)) {
+                        studentPerformance[student.name].grades.push(grade);
+                        studentPerformance[student.name].count++;
+                        studentPerformance[student.name].average = 
+                            studentPerformance[student.name].grades.reduce((a, b) => a + b, 0) / 
+                            studentPerformance[student.name].grades.length;
+                    }
+                });
+            });
+            
+            // Trier les élèves par performance
+            const topStudents = Object.entries(studentPerformance)
+                .sort((a, b) => b[1].average - a[1].average)
+                .slice(0, 5);
+            
+            const bottomStudents = Object.entries(studentPerformance)
+                .sort((a, b) => a[1].average - b[1].average)
+                .slice(0, 5);
+            
+            // Trier les données par date
+            gradeTrend.sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            container.innerHTML = `
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h3 class="analytics-title"><i class="fas fa-chart-pie"></i> Vue d'ensemble</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value">${teacher.evaluations.length}</div>
+                                <div class="stat-label">Évaluations</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${Object.keys(classStats).length}</div>
+                                <div class="stat-label">Classes différentes</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${gradeTrend.length > 0 ? gradeTrend[gradeTrend.length-1].average.toFixed(1) : 'N/A'}</div>
+                                <div class="stat-label">Dernière moyenne</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${Object.keys(studentPerformance).length}</div>
+                                <div class="stat-label">Élèves évalués</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-card">
+                        <h3 class="analytics-title"><i class="fas fa-graduation-cap"></i> Meilleurs élèves</h3>
+                        <div style="padding: 10px;">
+                            ${topStudents.map(([name, data], index) => `
+                                <div style="margin-bottom: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span><strong>${index + 1}.</strong> ${name}</span>
+                                        <span style="font-weight: bold; color: #27ae60;">${data.average.toFixed(2)}/20</span>
+                                    </div>
+                                    <div style="font-size: 0.8rem; color: #666;">
+                                        ${data.count} évaluation${data.count > 1 ? 's' : ''}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-card">
+                        <h3 class="analytics-title"><i class="fas fa-chart-line"></i> Évolution des moyennes</h3>
+                        <div style="padding: 10px; height: 200px; position: relative;">
+                            <div style="position: absolute; bottom: 0; left: 0; right: 0; display: flex; height: 150px; align-items: flex-end;">
+                                ${gradeTrend.map((stat, index) => {
+                                    const height = (stat.average / 20 * 100) + '%';
+                                    const width = (100 / gradeTrend.length) + '%';
+                                    const color = stat.average >= 10 ? '#27ae60' : '#e74c3c';
+                                    return `
+                                        <div style="width: ${width}; text-align: center;">
+                                            <div style="height: ${height}; background: ${color}; margin: 0 2px; border-radius: 4px 4px 0 0;"></div>
+                                            <div style="font-size: 0.7rem; margin-top: 5px; transform: rotate(-45deg); white-space: nowrap;">
+                                                ${new Date(stat.date).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })}
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-card">
+                        <h3 class="analytics-title"><i class="fas fa-calendar-alt"></i> Activité mensuelle</h3>
+                        <div style="padding: 10px;">
+                            ${Object.entries(monthlyStats).map(([month, count]) => `
+                                <div style="margin-bottom: 8px;">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span>${month}</span>
+                                        <span>${count}</span>
+                                    </div>
+                                    <div class="distribution-bar">
+                                        <div class="distribution-fill" style="width: ${(count / Math.max(...Object.values(monthlyStats)) * 100)}%"></div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-card">
+                        <h3 class="analytics-title"><i class="fas fa-users"></i> Élèves à suivre</h3>
+                        <div style="padding: 10px;">
+                            ${bottomStudents.map(([name, data], index) => `
+                                <div style="margin-bottom: 10px; padding: 10px; background: #fff5f5; border-radius: 8px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span><strong>${index + 1}.</strong> ${name}</span>
+                                        <span style="font-weight: bold; color: #e74c3c;">${data.average.toFixed(2)}/20</span>
+                                    </div>
+                                    <div style="font-size: 0.8rem; color: #666;">
+                                        ${data.count} évaluation${data.count > 1 ? 's' : ''}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-card">
+                        <h3 class="analytics-title"><i class="fas fa-lightbulb"></i> Recommandations</h3>
+                        <div style="padding: 10px;">
+                            <ul style="list-style-type: none; padding-left: 0;">
+                                ${gradeTrend.length >= 2 && gradeTrend[gradeTrend.length-1].average < gradeTrend[gradeTrend.length-2].average ? 
+                                    '<li><i class="fas fa-arrow-down text-danger"></i> <strong>Attention:</strong> La dernière moyenne est en baisse par rapport à l\'évaluation précédente.</li>' : 
+                                    '<li><i class="fas fa-arrow-up text-success"></i> La performance des élèves est stable ou en amélioration.</li>'}
+                                
+                                ${bottomStudents.length > 0 && bottomStudents[0][1].average < 8 ? 
+                                    '<li><i class="fas fa-user-friends text-warning"></i> <strong>Suivi:</strong> ' + bottomStudents[0][0] + ' a une moyenne de ' + bottomStudents[0][1].average.toFixed(1) + '/20. Un suivi individuel est recommandé.</li>' : 
+                                    '<li><i class="fas fa-check-circle text-success"></i> Tous les élèves ont des résultats acceptables.</li>'}
+                                
+                                ${Object.keys(classStats).length === 1 ? 
+                                    '<li><i class="fas fa-chalkboard-teacher text-info"></i> <strong>Diversification:</strong> Vous n\'évaluez qu\'une seule classe. Pensez à diversifier si possible.</li>' : 
+                                    '<li><i class="fas fa-chalkboard text-success"></i> Bonne diversification des classes évaluées.</li>'}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         // Fonction pour charger les évaluations de l'enseignant
@@ -1884,6 +2966,9 @@
                         <div>
                             <strong>Note max:</strong> ${evaluation.maxGrade}
                         </div>
+                        <div>
+                            <strong>WhatsApp:</strong> ${evaluation.whatsappSent ? '✅ Envoyé' : '❌ Non envoyé'}
+                        </div>
                     </div>
                     <div class="evaluation-stats">
                         <strong>Statistiques:</strong> 
@@ -1895,6 +2980,11 @@
                     <button class="btn-primary btn-sm" onclick="viewEvaluationDetails('${teacher.id}', '${evaluation.timestamp}')">
                         <i class="fas fa-eye"></i> Voir détails
                     </button>
+                    ${!evaluation.whatsappSent ? `
+                        <button class="btn-success btn-sm" onclick="resendWhatsApp('${teacher.id}', '${evaluation.timestamp}')">
+                            <i class="fab fa-whatsapp"></i> Renvoyer WhatsApp
+                        </button>
+                    ` : ''}
                 `;
                 
                 evaluationsList.appendChild(evaluationItem);
@@ -1943,18 +3033,46 @@
             const evaluation = teacher.evaluations.find(e => e.timestamp === timestamp);
             if (!evaluation) return;
             
-            alert(`Détails de l'évaluation:\n\n` +
-                  `Titre: ${evaluation.title}\n` +
-                  `Classe: ${getClassName(evaluation.class)}\n` +
-                  `Date: ${formatDate(evaluation.date)}\n` +
-                  `Type: ${getEvaluationTypeName(evaluation.type)}\n` +
-                  `Note maximale: ${evaluation.maxGrade}\n\n` +
-                  `Commentaires: ${evaluation.comments || 'Aucun'}\n\n` +
-                  `Statistiques:\n` +
-                  `- Nombre d'élèves: ${evaluation.stats.count}\n` +
-                  `- Moyenne: ${evaluation.stats.average}\n` +
-                  `- Meilleure note: ${evaluation.stats.highest}\n` +
-                  `- Plus basse note: ${evaluation.stats.lowest}`);
+            let details = `Détails de l'évaluation:\n\n`;
+            details += `Titre: ${evaluation.title}\n`;
+            details += `Classe: ${getClassName(evaluation.class)}\n`;
+            details += `Date: ${formatDate(evaluation.date)}\n`;
+            details += `Type: ${getEvaluationTypeName(evaluation.type)}\n`;
+            details += `Note maximale: ${evaluation.maxGrade}\n\n`;
+            details += `Commentaires: ${evaluation.comments || 'Aucun'}\n\n`;
+            details += `Statistiques:\n`;
+            details += `- Nombre d'élèves: ${evaluation.stats.count}\n`;
+            details += `- Moyenne: ${evaluation.stats.average}\n`;
+            details += `- Meilleure note: ${evaluation.stats.highest}\n`;
+            details += `- Plus basse note: ${evaluation.stats.lowest}\n\n`;
+            details += `WhatsApp: ${evaluation.whatsappSent ? '✅ Envoyé aux parents' : '❌ Non envoyé'}\n\n`;
+            details += `Liste des élèves:\n`;
+            
+            evaluation.students.forEach((student, index) => {
+                details += `${index + 1}. ${student.name}: ${student.grade}/${evaluation.maxGrade} (${getAppreciationText(student.appreciation)})\n`;
+                details += `   Parent: ${student.parentName || 'Non spécifié'}\n`;
+                details += `   Téléphone: ${student.parentPhone || 'Non spécifié'}\n`;
+                details += `   Commentaire: ${student.comment || 'Aucun'}\n\n`;
+            });
+            
+            alert(details);
+        }
+
+        // Fonction pour renvoyer un message WhatsApp
+        function resendWhatsApp(teacherId, timestamp) {
+            const teacher = teachers.find(t => t.id == teacherId);
+            if (!teacher) return;
+            
+            const evaluation = teacher.evaluations.find(e => e.timestamp === timestamp);
+            if (!evaluation) return;
+            
+            if (confirm('Voulez-vous renvoyer cette évaluation par WhatsApp aux parents ?')) {
+                sendWhatsAppToParents(evaluation);
+                evaluation.whatsappSent = true;
+                saveTeachersToStorage();
+                loadTeacherEvaluations();
+                showMessage('success', 'WhatsApp envoyé à nouveau aux parents');
+            }
         }
 
         // Fonction pour obtenir l'enseignant connecté
@@ -1985,13 +3103,23 @@
             document.getElementById('last-evaluation').textContent = formatDate(evaluationData.date);
             
             // Afficher un message de confirmation
-            showMessage('success', 'Les notes ont été enregistrées et envoyées avec succès');
+            showMessage('success', 'Les notes ont été enregistrées avec succès');
+            
+            // Envoyer par WhatsApp si activé
+            if (whatsappConfig.autoSend && document.getElementById('whatsapp-auto-send').checked) {
+                sendWhatsAppToParents(evaluationData);
+                evaluationData.whatsappSent = true;
+            }
             
             // Réinitialiser le formulaire
             this.reset();
             
             // Recharger les élèves de la classe
             loadStudentsForClass(evaluationData.class);
+            
+            // Revenir à la date du jour
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('evaluation-date').value = today;
         });
 
         // Gestion de la soumission du formulaire de connexion
@@ -2016,10 +3144,20 @@
             }
         });
 
+        // Gestion du toggle WhatsApp
+        document.getElementById('whatsapp-auto-send').addEventListener('change', function() {
+            const teacher = getCurrentTeacher();
+            if (teacher) {
+                teacher.whatsappEnabled = this.checked;
+                saveTeachersToStorage();
+            }
+        });
+
         // Fonctions pour basculer entre les sections
         function showAdminPanel() {
             document.getElementById('login-section').classList.add('hidden');
             document.getElementById('admin-section').classList.remove('hidden');
+            document.getElementById('analytics-section').classList.add('hidden');
             document.getElementById('main-content').classList.add('hidden');
             
             // Charger la liste des enseignants
@@ -2029,6 +3167,7 @@
         function showLoginSection() {
             document.getElementById('login-section').classList.remove('hidden');
             document.getElementById('admin-section').classList.add('hidden');
+            document.getElementById('analytics-section').classList.add('hidden');
             document.getElementById('main-content').classList.add('hidden');
         }
 
@@ -2043,7 +3182,8 @@
             
             // Écouteurs d'événements pour mettre à jour les statistiques en temps réel
             document.getElementById('students-list').addEventListener('input', function(e) {
-                if (e.target.classList.contains('grade-input')) {
+                if (e.target.classList.contains('grade-input') || 
+                    e.target.classList.contains('parent-phone')) {
                     updateStats();
                 }
             });
@@ -2052,6 +3192,23 @@
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('evaluation-date').value = today;
             document.getElementById('filter-end-date').value = today;
+            
+            // Initialiser la prévisualisation WhatsApp
+            updateWhatsAppPreview();
+            
+            // Sauvegarder automatiquement toutes les 2 minutes
+            setInterval(() => {
+                const teacher = getCurrentTeacher();
+                if (teacher && document.getElementById('main-content') && 
+                    !document.getElementById('main-content').classList.contains('hidden')) {
+                    const evaluationData = collectEvaluationData();
+                    if (evaluationData) {
+                        // Sauvegarder une version temporaire
+                        localStorage.setItem('autosave_evaluation', JSON.stringify(evaluationData));
+                        console.log('Sauvegarde automatique effectuée à', new Date().toLocaleTimeString());
+                    }
+                }
+            }, 120000); // 2 minutes
         });
     </script>
 </body>
