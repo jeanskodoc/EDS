@@ -7,23 +7,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #667eea;
-            --secondary: #764ba2;
+            --primary: #006B3F;
+            --secondary: #FFCE00;
+            --red-tg: #D21034;
             --success: #43e97b;
             --danger: #ff6b6b;
             --warning: #f6d365;
             --info: #4facfe;
             --light: #ffffff;
             --dark: #2d3748;
-            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-success: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            --gradient-danger: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
-            --gradient-warning: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-            --gradient-info: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.2);
-            --radius: 16px;
-            --transition: all 0.3s ease;
+            --gradient-togolese: linear-gradient(135deg, #006B3F 0%, #FFCE00 50%, #D21034 100%);
+            --gradient-green-tg: linear-gradient(135deg, #006B3F 0%, #008C45 100%);
+            --gradient-yellow-tg: linear-gradient(135deg, #FFCE00 0%, #FFD93D 100%);
+            --gradient-red-tg: linear-gradient(135deg, #D21034 0%, #E63946 100%);
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --radius: 12px;
+            --transition: all 0.2s ease;
         }
 
         * {
@@ -34,23 +34,40 @@
         }
 
         body {
-            background: var(--gradient-primary);
+            background: 
+                linear-gradient(rgba(0, 107, 63, 0.85), rgba(255, 206, 0, 0.85), rgba(210, 16, 52, 0.85)),
+                url('EDS.jpeg') no-repeat center center fixed;
+            background-size: cover;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             color: white;
-            line-height: 1.5;
-            font-size: 16px;
+            line-height: 1.4;
+            font-size: 14px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: -1;
         }
 
         .header {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
+            background: rgba(0, 107, 63, 0.95);
+            padding: 10px 15px;
             text-align: center;
             backdrop-filter: blur(10px);
             box-shadow: var(--shadow);
-            position: relative;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid var(--secondary);
         }
 
         .header-content {
@@ -63,15 +80,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
-            margin-bottom: 12px;
+            gap: 12px;
+            margin-bottom: 8px;
             flex-wrap: wrap;
         }
 
         .school-logo {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #fff, #f0f8ff);
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-togolese);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -79,98 +96,124 @@
             box-shadow: var(--shadow);
             transition: var(--transition);
             flex-shrink: 0;
+            border: 2px solid white;
         }
 
         .school-logo-text {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: bold;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: white;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
 
         .school-info {
             text-align: center;
             flex: 1;
-            min-width: 200px;
+            min-width: 180px;
         }
 
         .school-name {
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            margin-bottom: 5px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            background: linear-gradient(135deg, #fff, #e0f7ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            margin-bottom: 4px;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+            color: white;
             line-height: 1.2;
         }
 
         .school-subtitle {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            margin-bottom: 3px;
+            font-size: 0.85rem;
+            opacity: 0.95;
+            margin-bottom: 2px;
             font-weight: 500;
+            color: var(--secondary);
         }
+
+        .flag-decoration {
+            display: flex;
+            justify-content: center;
+            margin: 6px 0 8px;
+            gap: 4px;
+        }
+
+        .flag-stripe {
+            width: 20px;
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        .stripe-green { background: #006B3F; }
+        .stripe-yellow { background: #FFCE00; }
+        .stripe-red { background: #D21034; }
+        .stripe-yellow2 { background: #FFCE00; }
+        .stripe-green2 { background: #006B3F; }
 
         .main-content {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
-            padding: 20px 15px;
+            padding: 15px;
             width: 100%;
         }
 
         .welcome-section {
             text-align: center;
-            margin-bottom: 30px;
-            max-width: 100%;
+            margin-bottom: 20px;
             width: 100%;
+            max-width: 1200px;
         }
 
         .welcome-badge {
             display: inline-block;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px 20px;
-            border-radius: 25px;
+            background: var(--gradient-togolese);
+            padding: 8px 16px;
+            border-radius: 20px;
             margin-bottom: 15px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid white;
             font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: var(--shadow);
         }
 
         .welcome-message h1 {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            font-size: 1.5rem;
+            margin-bottom: 12px;
             font-weight: 700;
             line-height: 1.3;
+            background: linear-gradient(135deg, #fff, #FFCE00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            padding: 0 10px;
         }
 
         .welcome-message p {
-            font-size: 1rem;
-            line-height: 1.5;
+            font-size: 0.95rem;
+            line-height: 1.4;
             opacity: 0.95;
-            font-weight: 300;
-            max-width: 100%;
+            font-weight: 400;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 12px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            margin: 0 auto;
+            max-width: 800px;
         }
 
         .portal-grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
             width: 100%;
-            max-width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .portal-card {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.12);
             border-radius: var(--radius);
-            padding: 25px 20px;
+            padding: 18px 15px;
             text-align: center;
             backdrop-filter: blur(8px);
             transition: var(--transition);
@@ -178,119 +221,155 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .portal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-togolese);
         }
 
         .portal-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.18);
             box-shadow: var(--shadow-hover);
+            border-color: var(--secondary);
         }
 
         .portal-icon {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            width: 70px;
-            height: 70px;
+            font-size: 1.8rem;
+            background: rgba(255, 255, 255, 0.15);
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
+            margin: 0 auto 12px;
             transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            flex-shrink: 0;
         }
 
         .portal-card:hover .portal-icon {
             transform: scale(1.05);
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.25);
+            border-color: var(--secondary);
         }
 
         .portal-card h2 {
-            font-size: 1.4rem;
-            margin-bottom: 15px;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
             font-weight: 600;
-            line-height: 1.3;
+            line-height: 1.2;
+            color: white;
+            min-height: 2.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .portal-card p {
-            font-size: 0.95rem;
-            margin-bottom: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
             opacity: 0.9;
-            line-height: 1.4;
+            line-height: 1.3;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            padding: 12px 20px;
-            background: rgba(255, 255, 255, 0.25);
+            gap: 6px;
+            padding: 8px 16px;
             color: white;
-            border-radius: 25px;
+            border-radius: 20px;
             text-decoration: none;
             font-weight: 600;
             transition: var(--transition);
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             cursor: pointer;
-            margin: 3px;
-            font-size: 0.9rem;
-            width: 100%;
-            max-width: 200px;
+            font-size: 0.85rem;
+            width: auto;
+            min-width: 120px;
+            max-width: 180px;
+            margin: 0 auto;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            height: 36px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .btn:hover {
-            background: rgba(255, 255, 255, 0.35);
             transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
         }
 
         .btn-parents {
-            background: var(--gradient-info);
+            background: var(--gradient-green-tg);
         }
 
         .btn-teachers {
-            background: var(--gradient-success);
+            background: var(--gradient-yellow-tg);
         }
 
         .btn-admin {
-            background: var(--gradient-danger);
+            background: var(--gradient-red-tg);
         }
         
         .btn-payment {
-            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            background: linear-gradient(135deg, #006B3F 0%, #008C45 100%);
+            min-width: 140px;
         }
         
         .btn-whatsapp {
             background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            min-width: 140px;
         }
 
         .btn-refresh {
-            background: var(--gradient-warning);
-            padding: 10px 15px;
-            font-size: 0.9rem;
+            background: var(--gradient-togolese);
+            padding: 6px 12px;
+            font-size: 0.85rem;
             width: auto;
-            margin: 10px auto 0;
-            display: block;
+            margin: 5px auto 0;
+            border: 1px solid white;
+            height: 32px;
+            min-width: 100px;
         }
 
         .payment-buttons {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-top: 15px;
+            gap: 8px;
+            margin-top: 12px;
         }
 
         .payment-buttons .btn {
+            min-width: 140px;
             max-width: 100%;
+            margin: 0 auto;
         }
 
         .footer {
             text-align: center;
-            padding: 20px 15px;
-            background: rgba(0, 0, 0, 0.2);
-            font-size: 0.9rem;
-            backdrop-filter: blur(5px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            background: rgba(0, 107, 63, 0.9);
+            font-size: 0.85rem;
+            border-top: 2px solid var(--secondary);
+            margin-top: 20px;
         }
 
         .footer-content {
@@ -299,17 +378,22 @@
         }
 
         .footer p {
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .footer .heart {
+            color: #FFCE00;
         }
 
         .back-to-top {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--gradient-info);
+            bottom: 15px;
+            right: 15px;
+            background: var(--gradient-togolese);
             color: white;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -317,9 +401,9 @@
             box-shadow: var(--shadow);
             z-index: 1000;
             transition: var(--transition);
-            border: none;
+            border: 1px solid white;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1rem;
             opacity: 0;
             visibility: hidden;
         }
@@ -330,14 +414,14 @@
         }
 
         .back-to-top:hover {
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
 
         .stats-bar {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
-            margin: 20px 0;
+            margin: 15px 0;
             width: 100%;
             max-width: 400px;
         }
@@ -345,16 +429,21 @@
         .stat-item {
             text-align: center;
             background: rgba(255, 255, 255, 0.1);
-            padding: 15px 10px;
-            border-radius: 12px;
-            backdrop-filter: blur(5px);
+            padding: 12px 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: var(--transition);
+        }
+
+        .stat-item:hover {
+            border-color: var(--secondary);
         }
 
         .stat-number {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 700;
-            margin-bottom: 5px;
-            background: linear-gradient(135deg, #fff, #e0f7ff);
+            margin-bottom: 4px;
+            background: var(--gradient-togolese);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -362,223 +451,36 @@
 
         .stat-label {
             font-size: 0.8rem;
-            opacity: 0.8;
+            opacity: 0.9;
+            font-weight: 500;
+            color: var(--secondary);
         }
 
-        /* ========== STYLES RESPONSIVE ========== */
+        .togolese-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(45deg, transparent 48%, rgba(255, 206, 0, 0.08) 50%, transparent 52%),
+                linear-gradient(-45deg, transparent 48%, rgba(210, 16, 52, 0.08) 50%, transparent 52%);
+            background-size: 30px 30px;
+            pointer-events: none;
+            z-index: -1;
+        }
 
-        /* Petits écrans mobiles (jusqu'à 360px) */
-        @media (max-width: 360px) {
-            .header {
-                padding: 12px 10px;
-            }
-            
-            .school-logo {
-                width: 60px;
-                height: 60px;
-            }
-            
-            .school-logo-text {
-                font-size: 1.3rem;
-            }
-            
-            .school-name {
-                font-size: 1.4rem;
-            }
-            
-            .school-subtitle {
-                font-size: 0.8rem;
-            }
-            
-            .welcome-message h1 {
-                font-size: 1.5rem;
-            }
-            
-            .welcome-message p {
-                font-size: 0.9rem;
+        /* ========== RESPONSIVE DESIGN ========== */
+
+        /* Très petits écrans (moins de 320px) */
+        @media (max-width: 320px) {
+            .portal-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
             }
             
             .portal-card {
-                padding: 20px 15px;
-            }
-            
-            .portal-icon {
-                width: 60px;
-                height: 60px;
-                font-size: 2rem;
-            }
-            
-            .portal-card h2 {
-                font-size: 1.2rem;
-            }
-            
-            .portal-card p {
-                font-size: 0.85rem;
-            }
-            
-            .btn {
-                padding: 10px 15px;
-                font-size: 0.85rem;
-            }
-            
-            .stats-bar {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 8px;
-            }
-            
-            .stat-item {
-                padding: 12px 8px;
-            }
-            
-            .stat-number {
-                font-size: 1.3rem;
-            }
-            
-            .stat-label {
-                font-size: 0.75rem;
-            }
-            
-            .back-to-top {
-                width: 45px;
-                height: 45px;
-                bottom: 15px;
-                right: 15px;
-            }
-        }
-
-        /* Mobiles standards (361px à 480px) */
-        @media (min-width: 361px) and (max-width: 480px) {
-            .school-name {
-                font-size: 1.5rem;
-            }
-            
-            .welcome-message h1 {
-                font-size: 1.6rem;
-            }
-            
-            .portal-grid {
-                gap: 15px;
-            }
-        }
-
-        /* Tablettes petites (481px à 600px) */
-        @media (min-width: 481px) and (max-width: 600px) {
-            .portal-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 15px;
-            }
-            
-            .portal-card {
-                padding: 20px;
-            }
-            
-            .school-name {
-                font-size: 1.7rem;
-            }
-            
-            .welcome-message h1 {
-                font-size: 1.8rem;
-            }
-        }
-
-        /* Tablettes moyennes (601px à 768px) */
-        @media (min-width: 601px) and (max-width: 768px) {
-            .header {
-                padding: 20px;
-            }
-            
-            .main-content {
-                padding: 25px 20px;
-            }
-            
-            .portal-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
-            }
-            
-            .school-name {
-                font-size: 1.8rem;
-            }
-            
-            .welcome-message h1 {
-                font-size: 2rem;
-            }
-            
-            .welcome-message p {
-                font-size: 1.1rem;
-            }
-            
-            .stats-bar {
-                max-width: 500px;
-            }
-            
-            .stat-number {
-                font-size: 1.8rem;
-            }
-        }
-
-        /* Tablettes grandes (769px à 1024px) */
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .portal-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 20px;
-            }
-            
-            .header {
-                padding: 25px;
-            }
-            
-            .main-content {
-                padding: 30px 25px;
-            }
-            
-            .school-name {
-                font-size: 2rem;
-            }
-        }
-
-        /* Améliorations pour le tactile */
-        @media (hover: none) and (pointer: coarse) {
-            .portal-card:hover {
-                transform: none;
-            }
-            
-            .btn:hover {
-                transform: none;
-            }
-            
-            .portal-card:active {
-                background: rgba(255, 255, 255, 0.25);
-                transform: scale(0.98);
-            }
-            
-            .btn:active {
-                background: rgba(255, 255, 255, 0.4);
-                transform: scale(0.95);
-            }
-        }
-
-        /* Mode paysage sur mobile */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .header {
-                padding: 10px 15px;
-            }
-            
-            .main-content {
-                padding: 15px;
-            }
-            
-            .welcome-section {
-                margin-bottom: 20px;
-            }
-            
-            .portal-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 15px;
-            }
-            
-            .portal-card {
-                padding: 15px;
+                padding: 15px 12px;
             }
             
             .portal-icon {
@@ -590,21 +492,243 @@
             
             .portal-card h2 {
                 font-size: 1.1rem;
-                margin-bottom: 8px;
+                min-height: 2.2rem;
+            }
+            
+            .btn {
+                min-width: 100px;
+                padding: 7px 12px;
+                font-size: 0.8rem;
+                height: 32px;
+            }
+            
+            .school-name {
+                font-size: 1.2rem;
+            }
+            
+            .welcome-message h1 {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* Petits mobiles (321px à 480px) */
+        @media (min-width: 321px) and (max-width: 480px) {
+            .portal-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 12px;
+            }
+            
+            .welcome-message h1 {
+                font-size: 1.4rem;
+            }
+            
+            .btn {
+                min-width: 110px;
+                max-width: 160px;
+            }
+        }
+
+        /* Mobiles paysage (481px à 767px) */
+        @media (min-width: 481px) and (max-width: 767px) {
+            .portal-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                gap: 15px;
+            }
+            
+            .portal-card {
+                padding: 16px;
+            }
+            
+            .school-name {
+                font-size: 1.5rem;
+            }
+            
+            .welcome-message h1 {
+                font-size: 1.6rem;
+            }
+        }
+
+        /* Tablettes (768px à 1024px) */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .portal-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 18px;
+            }
+            
+            .header {
+                padding: 12px 20px;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .school-name {
+                font-size: 1.6rem;
+            }
+            
+            .welcome-message h1 {
+                font-size: 1.8rem;
+            }
+            
+            .portal-icon {
+                width: 65px;
+                height: 65px;
+                font-size: 2rem;
+            }
+            
+            .btn {
+                min-width: 130px;
+                padding: 9px 18px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Ordinateurs portables (1025px à 1440px) */
+        @media (min-width: 1025px) and (max-width: 1440px) {
+            .portal-grid {
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+                gap: 20px;
+            }
+            
+            .portal-card {
+                padding: 20px;
+            }
+            
+            .portal-icon {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .btn {
+                min-width: 140px;
+            }
+        }
+
+        /* Grands écrans (1441px et plus) */
+        @media (min-width: 1441px) {
+            .portal-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 25px;
+                max-width: 1600px;
+            }
+            
+            .main-content {
+                padding: 30px;
+            }
+            
+            .btn {
+                min-width: 150px;
+                padding: 10px 20px;
+            }
+        }
+
+        /* Hauteur limitée */
+        @media (max-height: 600px) {
+            .portal-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                gap: 12px;
+            }
+            
+            .portal-card {
+                padding: 15px;
+            }
+            
+            .portal-card h2 {
+                font-size: 1.1rem;
+                min-height: auto;
             }
             
             .portal-card p {
                 font-size: 0.8rem;
-                margin-bottom: 12px;
+                margin-bottom: 10px;
             }
             
             .btn {
-                padding: 8px 12px;
-                font-size: 0.8rem;
+                height: 32px;
+                padding: 6px 14px;
+                min-width: 110px;
             }
         }
 
-        /* Support pour les préférences de contraste élevé */
+        /* Mode tactile */
+        @media (hover: none) and (pointer: coarse) {
+            .portal-card:hover {
+                transform: none;
+            }
+            
+            .btn:hover {
+                transform: none;
+            }
+            
+            .portal-card:active {
+                background: rgba(255, 255, 255, 0.2);
+                transform: scale(0.98);
+            }
+            
+            .btn:active {
+                background: rgba(255, 255, 255, 0.4);
+                transform: scale(0.95);
+            }
+            
+            .btn {
+                min-height: 44px;
+            }
+            
+            .portal-card {
+                min-height: 180px;
+            }
+        }
+
+        /* Mode paysage */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .header {
+                padding: 8px 15px;
+            }
+            
+            .main-content {
+                padding: 10px 15px;
+            }
+            
+            .welcome-section {
+                margin-bottom: 15px;
+            }
+            
+            .portal-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 10px;
+            }
+            
+            .portal-card {
+                padding: 12px;
+            }
+            
+            .portal-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+                margin-bottom: 8px;
+            }
+            
+            .portal-card h2 {
+                font-size: 1rem;
+                margin-bottom: 6px;
+            }
+            
+            .portal-card p {
+                font-size: 0.8rem;
+                margin-bottom: 10px;
+            }
+            
+            .btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+                min-width: 100px;
+                height: 32px;
+            }
+        }
+
+        /* Contraste élevé */
         @media (prefers-contrast: high) {
             .portal-card {
                 border: 2px solid white;
@@ -615,12 +739,14 @@
             }
         }
 
-        /* Support pour la réduction des animations */
+        /* Réduction des animations */
         @media (prefers-reduced-motion: reduce) {
             .portal-card,
             .btn,
             .back-to-top,
-            .school-logo {
+            .school-logo,
+            .stat-item,
+            .portal-icon {
                 transition: none;
             }
             
@@ -629,35 +755,42 @@
             }
         }
 
-        /* Empêcher le zoom sur iOS */
+        /* Prévention zoom iOS */
         @media screen and (max-width: 768px) {
-            input, select, textarea {
+            input, select, textarea, button {
                 font-size: 16px !important;
             }
         }
 
-        /* Amélioration de la lisibilité sur petits écrans */
-        .portal-card h2,
-        .portal-card p,
-        .btn {
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-
-        /* Optimisation des espacements pour mobile */
+        /* Optimisation tactile */
         .mobile-optimized {
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Amélioration des cibles tactiles */
         .btn,
         .portal-card {
-            min-height: 44px;
+            touch-action: manipulation;
+        }
+
+        /* Amélioration performance */
+        .portal-card h2,
+        .portal-card p,
+        .btn {
+            word-break: break-word;
+            hyphens: auto;
+        }
+
+        /* Grid auto-fit pour meilleur remplissage */
+        @media (min-width: 768px) {
+            .portal-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
         }
     </style>
 </head>
     
 <body class="mobile-optimized">
+    <div class="togolese-pattern"></div>
     
     <header class="header">
         <div class="header-content">
@@ -669,6 +802,13 @@
                     <h1 class="school-name">Lycée Niamtougou</h1>
                     <p class="school-subtitle">République Togolaise</p>
                     <p class="school-subtitle">DRE-KARA-IESG-NIAMTOUGOU</p>
+                    <div class="flag-decoration">
+                        <div class="flag-stripe stripe-green"></div>
+                        <div class="flag-stripe stripe-yellow"></div>
+                        <div class="flag-stripe stripe-red"></div>
+                        <div class="flag-stripe stripe-yellow2"></div>
+                        <div class="flag-stripe stripe-green2"></div>
+                    </div>
                 </div>
             </div>
             <button class="btn btn-refresh" id="refreshBtn">
@@ -682,14 +822,14 @@
         <div class="welcome-section">
             <div class="welcome-badge">
                 <i class="fas fa-graduation-cap"></i>
-                Portail Scolaire Numérique
+                Portail Numérique
             </div>
             
             <div class="welcome-message">
-                <h1>Bienvenue sur le Portail Scolaire</h1>
+                <h1>Portail Scolaire Lycée Niamtougou</h1>
                 <p>
-                    Le Lycée Niamtougou met à votre disposition cette plateforme numérique innovante 
-                    pour faciliter le suivi scolaire et la communication entre tous les acteurs.
+                    Plateforme numérique innovante pour faciliter le suivi scolaire et la communication.
+                    <strong>Ensemble pour l'excellence éducative au Togo !</strong>
                 </p>
             </div>
 
@@ -710,13 +850,13 @@
         </div>
 
         <div class="portal-grid">
-            <!-- Espace Parents et Communication -->
+            <!-- Cartes avec boutons compacts -->
             <div class="portal-card">
                 <div class="portal-icon">
                     <i class="fas fa-users"></i>
                 </div>
                 <h2>Espace Parents</h2>
-                <p>Notes, évaluations et informations scolaires en temps réel</p>
+                <p>Notes et informations scolaires</p>
                 <a href="PARENTS.html" class="btn btn-parents">
                     <i class="fas fa-arrow-right"></i>
                     Accéder
@@ -727,21 +867,20 @@
                 <div class="portal-icon">
                     <i class="fas fa-comments"></i>
                 </div>
-                <h2>Espace Discussion</h2>
-                <p>Discussions et échanges entre la communauté éducative</p>
+                <h2>Discussion</h2>
+                <p>Échanges communautaires</p>
                 <a href="chat122.html" class="btn btn-parents">
                     <i class="fas fa-arrow-right"></i>
                     Accéder
                 </a>
             </div>
 
-            <!-- Espace Enseignants -->
             <div class="portal-card">
                 <div class="portal-icon">
                     <i class="fas fa-chalkboard-teacher"></i>
                 </div>
-                <h2>Espace Enseignants</h2>
-                <p>Saisie des notes et évaluations des élèves</p>
+                <h2>Enseignants</h2>
+                <p>Saisie des notes</p>
                 <a href="enseignante.html" class="btn btn-teachers">
                     <i class="fas fa-arrow-right"></i>
                     Accéder
@@ -752,8 +891,8 @@
                 <div class="portal-icon">
                     <i class="fas fa-calendar-alt"></i>
                 </div>
-                <h2>Cahier de Service</h2>
-                <p>Emploi du temps numérique personnalisé</p>
+                <h2>Cahier Service</h2>
+                <p>Emploi du temps</p>
                 <a href="cahier de charge.html" class="btn btn-teachers">
                     <i class="fas fa-arrow-right"></i>
                     Accéder
@@ -764,8 +903,8 @@
                 <div class="portal-icon">
                     <i class="fas fa-book"></i>
                 </div>
-                <h2>Cahier de Texte</h2>
-                <p>Thèmes, leçons et contrôle des présences</p>
+                <h2>Cahier Texte</h2>
+                <p>Leçons et présences</p>
                 <a href="Cahier de texte.html" class="btn btn-teachers">
                     <i class="fas fa-arrow-right"></i>
                     Accéder
@@ -776,8 +915,8 @@
                 <div class="portal-icon">
                     <i class="fas fa-file-alt"></i>
                 </div>
-                <h2>Fiche de Leçon</h2>
-                <p>Saisie et organisation des leçons</p>
+                <h2>Fiche Leçon</h2>
+                <p>Organisation des leçons</p>
                 <a href="mes.html" class="btn btn-teachers">
                     <i class="fas fa-arrow-right"></i>
                     Accéder
@@ -788,8 +927,8 @@
                 <div class="portal-icon">
                     <i class="fas fa-edit"></i>
                 </div>
-                <h2>Fiche d'Épreuve</h2>
-                <p>Création et gestion des épreuves</p>
+                <h2>Fiche Épreuve</h2>
+                <p>Création épreuves</p>
                 <a href="saisie epreuve.html" class="btn btn-teachers">
                     <i class="fas fa-arrow-right"></i>
                     Accéder
@@ -801,20 +940,19 @@
                     <i class="fas fa-chart-bar"></i>
                 </div>
                 <h2>Analyse Résultats</h2>
-                <p>Gestion des notes et rapports statistiques</p>
+                <p>Statistiques notes</p>
                 <a href="Analyse des résultats.html" class="btn btn-admin">
                     <i class="fas fa-arrow-right"></i>
                     Accéder
                 </a>
             </div>
 
-            <!-- Espace Administration -->
             <div class="portal-card">
                 <div class="portal-icon">
                     <i class="fas fa-user-graduate"></i>
                 </div>
                 <h2>Gestion Élèves</h2>
-                <p>Gestion par classe et statut administratif</p>
+                <p>Administration classes</p>
                 <a href="gestion.html" class="btn btn-admin">
                     <i class="fas fa-arrow-right"></i>
                     Accéder
@@ -826,7 +964,7 @@
                     <i class="fas fa-user-tie"></i>
                 </div>
                 <h2>Gestion Personnel</h2>
-                <p>Administration du personnel enseignant</p>
+                <p>Admin enseignants</p>
                 <a href="gestion ens.html" class="btn btn-admin">
                     <i class="fas fa-arrow-right"></i>
                     Accéder
@@ -837,8 +975,8 @@
                 <div class="portal-icon">
                     <i class="fas fa-tachometer-alt"></i>
                 </div>
-                <h2>Tableau de Bord</h2>
-                <p>Statistiques et élèves en difficulté</p>
+                <h2>Tableau Bord</h2>
+                <p>Statistiques complètes</p>
                 <a href="donnees.html" class="btn btn-admin">
                     <i class="fas fa-arrow-right"></i>
                     Accéder
@@ -849,8 +987,8 @@
                 <div class="portal-icon">
                     <i class="fas fa-clipboard-check"></i>
                 </div>
-                <h2>Espace Surveillant</h2>
-                <p>Retards, absences et cas de maladie</p>
+                <h2>Surveillant</h2>
+                <p>Absences et retards</p>
                 <a href="urveillant.html" class="btn btn-admin">
                     <i class="fas fa-arrow-right"></i>
                     Accéder
@@ -861,8 +999,8 @@
                 <div class="portal-icon">
                     <i class="fas fa-tasks"></i>
                 </div>
-                <h2>Activités Pédagogiques</h2>
-                <p>Programmation des activités de l'établissement</p>
+                <h2>Activités</h2>
+                <p>Programmation activités</p>
                 <a href="ACTIVITE.html" class="btn btn-admin">
                     <i class="fas fa-arrow-right"></i>
                     Accéder
@@ -873,8 +1011,8 @@
                 <div class="portal-icon">
                     <i class="fas fa-id-card"></i>
                 </div>
-                <h2>Informations Admin</h2>
-                <p>Informations administratives enseignants</p>
+                <h2>Info Admin</h2>
+                <p>Informations enseignants</p>
                 <a href="Renseignements.html" class="btn btn-teachers">
                     <i class="fas fa-arrow-right"></i>
                     Accéder
@@ -885,8 +1023,8 @@
                 <div class="portal-icon">
                     <i class="fas fa-file-pdf"></i>
                 </div>
-                <h2>Générateur Bulletin</h2>
-                <p>Générateur automatique de bulletins</p>
+                <h2>Bulletins</h2>
+                <p>Générateur automatique</p>
                 <a href="Saisi.html" class="btn btn-teachers">
                     <i class="fas fa-arrow-right"></i>
                     Accéder
@@ -898,7 +1036,7 @@
                     <i class="fas fa-user-plus"></i>
                 </div>
                 <h2>Inscriptions</h2>
-                <p>Gestion inscriptions élèves en difficulté</p>
+                <p>Gestion nouveaux élèves</p>
                 <a href="scolarite.html" class="btn btn-admin">
                     <i class="fas fa-arrow-right"></i>
                     Accéder
@@ -909,8 +1047,8 @@
                 <div class="portal-icon">
                     <i class="fas fa-laptop-code"></i>
                 </div>
-                <h2>Cours Soutien Élèves</h2>
-                <p>Plateforme cours de soutien en ligne</p>
+                <h2>Soutien Élèves</h2>
+                <p>Cours en ligne</p>
                 <a href="COURS DE SOUTIEN.html" class="btn btn-teachers">
                     <i class="fas fa-arrow-right"></i>
                     Accéder
@@ -921,29 +1059,28 @@
                 <div class="portal-icon">
                     <i class="fas fa-chalkboard"></i>
                 </div>
-                <h2>Cours Soutien Enseignants</h2>
-                <p>Interface enseignants cours de soutien</p>
+                <h2>Soutien Enseignants</h2>
+                <p>Interface cours soutien</p>
                 <a href="cse.html" class="btn btn-teachers">
                     <i class="fas fa-arrow-right"></i>
                     Accéder
                 </a>
             </div>
             
-            <!-- Paiement en ligne -->
             <div class="portal-card">
                 <div class="portal-icon">
                     <i class="fas fa-credit-card"></i>
                 </div>
-                <h2>Paiement en Ligne</h2>
-                <p>Paiements scolaires sécurisés en ligne</p>
+                <h2>Paiement</h2>
+                <p>Paiements sécurisés</p>
                 <div class="payment-buttons">
                     <a href="https://me.fedapay.com/ZRFU62iT" target="_blank" class="btn btn-payment">
                         <i class="fas fa-credit-card"></i>
-                        Payer maintenant
+                        Payer
                     </a>
-                    <a href="https://wa.me/22892871605?text=Bonjour,%20j'ai%20effectué%20mon%20paiement%20avec%20succès." target="_blank" class="btn btn-whatsapp">
+                    <a href="https://wa.me/22892871605?text=Paiement%20effectué" target="_blank" class="btn btn-whatsapp">
                         <i class="fab fa-whatsapp"></i>
-                        Confirmer WhatsApp
+                        Confirmer
                     </a>
                 </div>
             </div>
@@ -956,74 +1093,77 @@
     
     <footer class="footer">
         <div class="footer-content">
-            <p>&copy; 2025-2026 Lycée Niamtougou - Tous droits réservés</p>
-            <p><i class="fas fa-star"></i> E.D.S " Écoles Dignes du Siècle " <i class="fas fa-star"></i></p>
-            <p>Plateforme développée avec <i class="fas fa-heart" style="color: #ff6b6b;"></i> pour l'éducation</p>
+            <p>&copy; 2025-2026 Lycée Niamtougou</p>
+            <p><i class="fas fa-star" style="color: #FFCE00;"></i> E.D.S "Écoles Dignes du Siècle" <i class="fas fa-star" style="color: #FFCE00;"></i></p>
+            <p>Développé avec <i class="fas fa-heart heart"></i> pour l'éducation au Togo</p>
         </div>
     </footer>
 
     <script>
-        // Gestion du bouton rafraîchissement
+        // Rafraîchissement
         document.getElementById('refreshBtn').addEventListener('click', function() {
             const btn = this;
-            const originalContent = btn.innerHTML;
-            
-            // Animation de chargement
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span> Chargement...</span>';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
             btn.disabled = true;
             
-            // Simuler un temps de chargement
             setTimeout(() => {
                 location.reload();
-            }, 1000);
+            }, 800);
         });
 
-        // Gestion du bouton retour en haut
+        // Bouton retour en haut
         window.addEventListener('scroll', () => {
             const backToTop = document.querySelector('.back-to-top');
-            if (window.scrollY > 300) {
-                backToTop.classList.add('visible');
-            } else {
-                backToTop.classList.remove('visible');
-            }
+            backToTop.classList.toggle('visible', window.scrollY > 300);
         });
 
-        // Optimisation pour le tactile
+        // Animation cartes
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.portal-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            observer.observe(card);
+        });
+
+        // Optimisation mobile
         document.addEventListener('touchstart', function() {}, {passive: true});
 
-        // Amélioration des performances sur mobile
-        let ticking = false;
-        window.addEventListener('scroll', function() {
-            if (!ticking) {
-                requestAnimationFrame(function() {
-                    // Code d'animation éventuel
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        });
-
-        // Prévention du zoom double-tap sur iOS
+        // Prévenir zoom double-tap
         let lastTouchEnd = 0;
         document.addEventListener('touchend', function(event) {
-            const now = (new Date()).getTime();
+            const now = Date.now();
             if (now - lastTouchEnd <= 300) {
                 event.preventDefault();
             }
             lastTouchEnd = now;
         }, false);
 
-        // Optimisation de l'affichage sur mobile
-        document.addEventListener('DOMContentLoaded', function() {
-            // Ajustement de la hauteur pour mobile
+        // Ajustement hauteur mobile
+        function setVH() {
             const vh = window.innerHeight * 0.01;
             document.documentElement.style.setProperty('--vh', `${vh}px`);
-        });
+        }
 
-        // Recalcul sur redimensionnement
-        window.addEventListener('resize', function() {
-            const vh = window.innerHeight * 0.01;
-            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        document.addEventListener('DOMContentLoaded', setVH);
+        window.addEventListener('resize', setVH);
+
+        // Feedback tactile
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(0.95)';
+            });
+            btn.addEventListener('touchend', function() {
+                this.style.transform = '';
+            });
         });
     </script>
 </body>
