@@ -64,6 +64,40 @@
             padding: 15px;
         }
 
+        /* Navigation des onglets */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e1e8ed;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 10px 16px;
+            background: #f8f9fa;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--gray-color);
+            transition: var(--transition);
+            font-size: 0.9rem;
+            flex: 1;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .tab:hover {
+            background: #e9ecef;
+            color: var(--dark-color);
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            background: white;
+        }
+
         /* Boutons compacts */
         .controls {
             display: flex;
@@ -155,170 +189,193 @@
             font-size: 1rem;
         }
 
-        .file-input {
+        /* Conteneurs principaux */
+        .tab-content {
             display: none;
+            animation: fadeIn 0.3s ease;
         }
 
-        .meta-info {
-            background: #f8f9ff;
-            padding: 15px;
-            border-radius: var(--border-radius);
-            margin-bottom: 15px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            font-size: 0.85rem;
+        .tab-content.active {
+            display: block;
         }
 
-        .meta-item {
-            background: white;
-            padding: 10px;
-            border-radius: 6px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
-        .meta-label {
-            font-size: 0.8rem;
-            color: var(--gray-color);
-            margin-bottom: 3px;
-        }
-
-        .meta-value {
-            font-weight: 600;
-            color: var(--dark-color);
-        }
-
-        .evaluations-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
+        /* Vue par Classe */
+        .class-container {
+            margin-bottom: 25px;
             background: white;
             border-radius: var(--border-radius);
-            overflow: hidden;
             box-shadow: var(--box-shadow);
-            font-size: 0.85rem;
+            overflow: hidden;
         }
 
-        .evaluations-table th, .evaluations-table td {
-            padding: 10px 8px;
-            text-align: left;
-            border-bottom: 1px solid #e1e8ed;
-        }
-
-        .evaluations-table th {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        .class-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             color: white;
+            padding: 15px;
+            font-size: 1.1rem;
             font-weight: 600;
-            font-size: 0.85rem;
-        }
-
-        .evaluations-table tr:hover {
-            background-color: #f8f9ff;
-        }
-
-        .grade-excellent { color: #28a745; font-weight: bold; }
-        .grade-good { color: #17a2b8; font-weight: bold; }
-        .grade-average { color: var(--warning-color); font-weight: bold; }
-        .grade-poor { color: #dc3545; font-weight: bold; }
-
-        .loading {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
         }
 
-        .loading-content {
-            background: white;
-            padding: 20px;
+        .class-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+        }
+
+        .class-stat {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .subject-section {
+            margin: 15px;
+            border: 1px solid #e1e8ed;
             border-radius: var(--border-radius);
-            text-align: center;
+            overflow: hidden;
         }
 
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .message {
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            text-align: center;
-            font-weight: 500;
-            display: none;
-            font-size: 0.85rem;
-        }
-
-        .error-message {
-            background: var(--danger-color);
-            color: white;
-        }
-
-        .success-message {
-            background: var(--success-color);
-            color: white;
-        }
-
-        .filters {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
+        .subject-header {
             background: #f8f9ff;
-            padding: 12px;
-            border-radius: 6px;
-        }
-
-        .filter-group {
+            padding: 12px 15px;
+            font-weight: 600;
+            color: var(--dark-color);
+            border-bottom: 1px solid #e1e8ed;
             display: flex;
-            flex-direction: column;
-            min-width: 120px;
-            flex: 1 1 auto;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .filter-label {
-            font-size: 0.8rem;
+        .subject-meta {
+            font-size: 0.85rem;
             color: var(--gray-color);
-            margin-bottom: 3px;
         }
 
-        .filter-select, .filter-input {
-            padding: 8px;
+        .students-list {
+            padding: 10px;
+        }
+
+        .student-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 2fr 2fr 1fr;
+            padding: 10px;
+            border-bottom: 1px solid #f1f1f1;
+            align-items: center;
+        }
+
+        .student-row:hover {
+            background: #f8f9ff;
+        }
+
+        .student-row.header {
+            font-weight: 600;
+            background: #f1f5f9;
+            border-bottom: 2px solid #e1e8ed;
+        }
+
+        .student-name {
+            font-weight: 500;
+        }
+
+        .student-grade {
+            font-weight: 600;
+            padding: 4px 8px;
             border-radius: 4px;
-            border: 1px solid #ddd;
+            text-align: center;
+            min-width: 50px;
+        }
+
+        .grade-excellent { background: #d4edda; color: #155724; }
+        .grade-good { background: #c3e6cb; color: #155724; }
+        .grade-average { background: #ffeeba; color: #856404; }
+        .grade-poor { background: #f5c6cb; color: #721c24; }
+        .grade-very-poor { background: #f8d7da; color: #721c24; }
+
+        .student-status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+
+        .status-excellent { background: #28a745; color: white; }
+        .status-good { background: #20c997; color: white; }
+        .status-average { background: #ffc107; color: #212529; }
+        .status-poor { background: #fd7e14; color: white; }
+        .status-very-poor { background: #dc3545; color: white; }
+
+        /* Vue par Matière */
+        .subject-container {
+            margin-bottom: 25px;
             background: white;
-            font-size: 0.85rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
         }
 
-        .reset-btn {
-            align-self: flex-end;
-            padding: 8px 12px;
-            background: #6c757d;
+        .subject-container-header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.2s;
-            font-size: 0.85rem;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
         }
 
+        /* Élèves en Difficulté */
+        .difficulty-container {
+            margin-bottom: 15px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        .difficulty-header {
+            background: linear-gradient(135deg, var(--danger-color), #ff8e8e);
+            color: white;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .student-difficulty-card {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 2fr;
+            padding: 15px;
+            border-bottom: 1px solid #f1f1f1;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .student-difficulty-card:hover {
+            background: #fff5f5;
+        }
+
+        .student-difficulty-card.header {
+            font-weight: 600;
+            background: #f8f9ff;
+            border-bottom: 2px solid #e1e8ed;
+        }
+
+        .low-grade {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        /* Statistiques */
         .stats-container {
             background: #f8f9ff;
             padding: 15px;
@@ -358,7 +415,74 @@
             color: var(--gray-color);
         }
 
-        .confirmation-dialog {
+        /* Évaluations récentes */
+        .evaluation-summary {
+            margin: 15px 0;
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: var(--border-radius);
+        }
+
+        .evaluation-card {
+            background: white;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .evaluation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .evaluation-title {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .evaluation-date {
+            font-size: 0.85rem;
+            color: var(--gray-color);
+        }
+
+        .evaluation-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: var(--gray-color);
+        }
+
+        /* Messages */
+        .message {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+            font-size: 0.85rem;
+        }
+
+        .error-message {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .success-message {
+            background: var(--success-color);
+            color: white;
+        }
+
+        /* Autres éléments */
+        .file-input {
+            display: none;
+        }
+
+        .loading {
             display: none;
             position: fixed;
             top: 0;
@@ -366,27 +490,46 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
-            z-index: 1001;
+            z-index: 1000;
             justify-content: center;
             align-items: center;
         }
-        
-        .confirmation-content {
+
+        .loading-content {
             background: white;
             padding: 20px;
             border-radius: var(--border-radius);
-            max-width: 400px;
-            width: 90%;
-            font-size: 0.9rem;
-        }
-        
-        .confirmation-buttons {
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
-            margin-top: 15px;
+            text-align: center;
         }
 
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: white;
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+
+        /* Authentication */
         .auth-container {
             display: flex;
             justify-content: center;
@@ -467,272 +610,92 @@
             display: none;
         }
 
-        .file-list {
-            margin: 12px 0;
-            padding: 12px;
-            background: #f8f9ff;
-            border-radius: 6px;
-            font-size: 0.85rem;
-        }
-
-        .file-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px;
-            background: white;
-            margin-bottom: 6px;
-            border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        .file-name {
-            flex-grow: 1;
-            font-size: 0.85rem;
-        }
-
-        .file-status {
-            margin-left: 8px;
-            padding: 2px 6px;
-            border-radius: 10px;
-            font-size: 0.75rem;
-        }
-
-        .status-success { background: #d4edda; color: #155724; }
-        .status-error { background: #f8d7da; color: #721c24; }
-        .status-processing { background: #fff3cd; color: #856404; }
-
-        .students-difficulty {
-            margin: 15px 0;
-            background: #fff8f8;
-            border-radius: var(--border-radius);
-            padding: 15px;
-            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
-        }
-
-        .students-difficulty h3 {
-            color: #dc3545;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 1rem;
-        }
-
-        .student-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 12px;
-        }
-
-        .student-card {
-            background: white;
-            border-radius: 6px;
-            padding: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            border-left: 3px solid #dc3545;
-            font-size: 0.85rem;
-        }
-
-        .student-name {
-            font-weight: bold;
-            font-size: 0.95rem;
-        }
-
-        .student-class {
-            background: #f0f0f0;
-            padding: 2px 6px;
-            border-radius: 10px;
-            font-size: 0.75rem;
-        }
-
-        .student-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin: 8px 0;
-        }
-
-        .stat-value {
-            font-size: 1rem;
-        }
-
-        .low-grade {
-            color: #dc3545;
-        }
-
-        .evaluation-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            font-size: 0.8rem;
-        }
-
-        .toggle-details {
-            background: none;
-            border: none;
-            color: var(--primary-color);
-            cursor: pointer;
-            font-size: 0.8rem;
-            margin-top: 8px;
-            text-decoration: underline;
-        }
-
-        .file-analysis {
-            margin: 15px 0;
-            background: #f8f9ff;
-            border-radius: var(--border-radius);
-            padding: 15px;
-            font-size: 0.85rem;
-        }
-
-        .analysis-results {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 12px;
-        }
-
-        .analysis-card {
-            background: white;
-            border-radius: 6px;
-            padding: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            color: white;
-            cursor: pointer;
-            position: absolute;
-            top: 15px;
-            right: 15px;
-        }
-
-        /* Responsive optimisations */
+        /* Responsive */
         @media (max-width: 768px) {
-            .btn {
-                flex: 1 0 calc(50% - 8px);
-                min-width: calc(50% - 8px);
-            }
-            
-            .btn-icon {
-                flex: 0 0 auto;
-                width: 40px;
-            }
-            
-            .controls {
-                gap: 6px;
-            }
-            
-            .filters {
+            .tabs {
                 flex-direction: column;
             }
             
-            .filter-group {
+            .tab {
+                min-width: 100%;
+                text-align: left;
+                padding: 12px 15px;
+            }
+            
+            .student-row, .student-difficulty-card {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                padding: 12px;
+            }
+            
+            .student-row.header, .student-difficulty-card.header {
+                display: none;
+            }
+            
+            .student-row > div::before {
+                content: attr(data-label) ": ";
+                font-weight: 600;
+                color: var(--gray-color);
+                margin-right: 8px;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .btn {
                 width: 100%;
-            }
-            
-            .evaluations-table {
-                display: block;
-                overflow-x: auto;
-            }
-            
-            .student-cards, .analysis-results {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .meta-info {
-                grid-template-columns: 1fr;
+                margin-bottom: 5px;
             }
             
             .mobile-menu-btn {
                 display: block;
             }
-        }
-
-        @media (max-width: 480px) {
-            .btn {
-                flex: 1 0 100%;
-                min-width: 100%;
-            }
-            
-            .header h1 {
-                font-size: 1.3rem;
-            }
-            
-            .header p {
-                font-size: 0.8rem;
-            }
-            
-            .content {
-                padding: 10px;
-            }
-            
-            .btn {
-                padding: 7px 10px;
-                font-size: 0.8rem;
-            }
             
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
-        }
-
-        @media (max-width: 360px) {
-            .btn i {
-                margin-right: 0;
-            }
             
-            .btn span {
-                display: none;
-            }
-            
-            .btn-icon {
-                width: 36px;
-                height: 36px;
-            }
-            
-            .btn-icon i {
-                font-size: 1rem;
-            }
-            
-            .auth-box {
-                padding: 15px;
-            }
-            
-            .student-stats {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Pour les très petits écrans */
-        @media (max-width: 320px) {
-            .controls {
+            .subject-header {
                 flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
             }
             
-            .btn {
-                width: 100%;
+            .subject-meta {
+                align-self: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.3rem;
             }
             
-            .filters {
+            .class-stats {
+                flex-direction: column;
+                gap: 5px;
+                align-items: flex-end;
+            }
+            
+            .class-stat {
+                font-size: 0.75rem;
+                padding: 2px 6px;
+            }
+            
+            .subject-header {
                 padding: 10px;
+                font-size: 0.9rem;
             }
             
-            .filter-select, .filter-input {
-                padding: 6px;
+            .stat-item {
+                padding: 8px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Authentification -->
     <div id="auth-container" class="auth-container">
         <div class="auth-box">
             <h2 class="auth-title" id="auth-title">Connexion</h2>
@@ -772,16 +735,37 @@
         </div>
     </div>
 
+    <!-- Application principale -->
     <div id="app-container" class="container hidden">
         <div class="header">
             <button class="mobile-menu-btn" id="mobile-menu-btn">
                 <i class="fas fa-bars"></i>
             </button>
             <h1>Gestion des Évaluations</h1>
-            <p>Importation et visualisation des données</p>
+            <p>Analyse des performances par classe et matière</p>
         </div>
 
         <div class="content">
+            <!-- Navigation par onglets -->
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('by-class')">
+                    <i class="fas fa-users"></i> Par Classe
+                </button>
+                <button class="tab" onclick="showTab('by-subject')">
+                    <i class="fas fa-book"></i> Par Matière
+                </button>
+                <button class="tab" onclick="showTab('difficulty')">
+                    <i class="fas fa-exclamation-triangle"></i> Difficultés
+                </button>
+                <button class="tab" onclick="showTab('stats')">
+                    <i class="fas fa-chart-bar"></i> Statistiques
+                </button>
+                <button class="tab" onclick="showTab('recent')">
+                    <i class="fas fa-history"></i> Évaluations
+                </button>
+            </div>
+
+            <!-- Contrôles -->
             <div class="controls">
                 <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">
                     <i class="fas fa-file-import"></i> <span>Importer JSON</span>
@@ -789,11 +773,11 @@
                 <button class="btn btn-success" onclick="saveToDatabase()">
                     <i class="fas fa-save"></i> <span>Enregistrer</span>
                 </button>
-                <button class="btn btn-warning" onclick="showDeleteConfirmation()">
-                    <i class="fas fa-trash-alt"></i> <span>Supprimer</span>
-                </button>
                 <button class="btn btn-secondary" onclick="loadFromDatabase()">
                     <i class="fas fa-sync-alt"></i> <span>Charger</span>
+                </button>
+                <button class="btn btn-danger" onclick="showDeleteConfirmation()">
+                    <i class="fas fa-trash-alt"></i> <span>Supprimer</span>
                 </button>
                 <button class="btn btn-secondary btn-icon" onclick="logout()" title="Déconnexion">
                     <i class="fas fa-sign-out-alt"></i>
@@ -802,90 +786,49 @@
 
             <input type="file" id="file-input" class="file-input" accept=".json" multiple>
 
-            <div id="file-list-container" class="file-list" style="display: none;">
-                <h3>Fichiers importés</h3>
-                <div id="file-list"></div>
-            </div>
-
+            <!-- Messages -->
             <div id="error-message" class="message error-message"></div>
             <div id="success-message" class="message success-message"></div>
 
-            <div id="file-analysis-section" class="file-analysis" style="display: none;">
-                <h3>Analyse des fichiers</h3>
-                <div id="file-analysis-results" class="analysis-results"></div>
+            <!-- Onglet: Vue par Classe -->
+            <div id="tab-by-class" class="tab-content active">
+                <div id="classes-container"></div>
             </div>
 
-            <div id="stats-section" class="stats-container" style="display: none;">
-                <h3 class="stats-title">Statistiques</h3>
-                <div class="stats-grid" id="stats-grid"></div>
+            <!-- Onglet: Vue par Matière -->
+            <div id="tab-by-subject" class="tab-content">
+                <div id="subjects-container"></div>
             </div>
 
-            <div id="students-difficulty-section" class="students-difficulty" style="display: none;">
-                <h3><i class="fas fa-exclamation-triangle"></i> Élèves en difficulté</h3>
-                <div id="students-difficulty-cards" class="student-cards"></div>
+            <!-- Onglet: Élèves en Difficulté -->
+            <div id="tab-difficulty" class="tab-content">
+                <div id="difficulty-container"></div>
             </div>
 
-            <div id="filters-section" class="filters" style="display: none;">
-                <div class="filter-group">
-                    <label class="filter-label">Classe</label>
-                    <select id="class-filter" class="filter-select" onchange="filterEvaluations()">
-                        <option value="">Toutes</option>
-                    </select>
+            <!-- Onglet: Statistiques -->
+            <div id="tab-stats" class="tab-content">
+                <div class="stats-container">
+                    <h3 class="stats-title">Statistiques Globales</h3>
+                    <div class="stats-grid" id="stats-grid"></div>
                 </div>
-                <div class="filter-group">
-                    <label class="filter-label">Élève</label>
-                    <select id="student-filter" class="filter-select" onchange="filterEvaluations()">
-                        <option value="">Tous</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label class="filter-label">Type</label>
-                    <select id="type-filter" class="filter-select" onchange="filterEvaluations()">
-                        <option value="">Tous</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label class="filter-label">Enseignant</label>
-                    <select id="teacher-filter" class="filter-select" onchange="filterEvaluations()">
-                        <option value="">Tous</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label class="filter-label">Note min</label>
-                    <input type="number" id="grade-min-filter" class="filter-input" min="0" step="0.5" placeholder="0" onchange="filterEvaluations()">
-                </div>
-                <div class="filter-group">
-                    <label class="filter-label">Note max</label>
-                    <input type="number" id="grade-max-filter" class="filter-input" min="0" step="0.5" placeholder="20" onchange="filterEvaluations()">
-                </div>
-                <button class="reset-btn" onclick="resetFilters()">Réinit.</button>
             </div>
 
-            <table id="evaluations-table" class="evaluations-table" style="display: none;">
-                <thead>
-                    <tr>
-                        <th>Élève</th>
-                        <th>Classe</th>
-                        <th>Type</th>
-                        <th>Titre</th>
-                        <th>Date</th>
-                        <th>Note</th>
-                        <th>Appréciation</th>
-                        <th>Commentaires</th>
-                        <th>Enseignant</th>
-                    </tr>
-                </thead>
-                <tbody id="evaluations-body"></tbody>
-            </table>
+            <!-- Onglet: Évaluations récentes -->
+            <div id="tab-recent" class="tab-content">
+                <div id="recent-evaluations"></div>
+            </div>
 
+            <!-- Message quand aucune donnée -->
             <div id="no-data" style="text-align: center; padding: 30px; color: var(--gray-color); display: none;">
                 <i class="fas fa-info-circle" style="font-size: 2rem; margin-bottom: 10px;"></i>
                 <p>Aucune donnée à afficher. Importez un fichier JSON pour commencer.</p>
+                <p style="font-size: 0.9rem; margin-top: 10px;">Format attendu: fichier d'évaluation avec structure JSON</p>
             </div>
         </div>
     </div>
 
-    <div id="confirmation-dialog" class="confirmation-dialog">
+    <!-- Dialog de confirmation -->
+    <div id="confirmation-dialog" class="confirmation-dialog hidden">
         <div class="confirmation-content">
             <h3><i class="fas fa-exclamation-triangle"></i> Confirmation</h3>
             <p>Supprimer toutes les données ? Cette action est irréversible.</p>
@@ -896,6 +839,7 @@
         </div>
     </div>
 
+    <!-- Loading overlay -->
     <div id="loading" class="loading">
         <div class="loading-content">
             <div class="loading-spinner"></div>
@@ -904,25 +848,29 @@
     </div>
 
     <script>
-        // (Le JavaScript reste identique à la version précédente, seule la partie CSS a été modifiée)
-        // Pour économiser de l'espace, je ne répète pas tout le code JavaScript ici
-        // Il est identique à la version que vous avez fournie
-        
+        // Variables globales
         let jsonData = null;
         let databaseName = "evaluationsDatabase";
         let allEvaluations = [];
         let currentUser = null;
         const usersDatabaseName = "usersDatabase";
-        let importedFiles = [];
+        let studentsByClass = {};
+        let studentsBySubject = {};
         let studentsDifficulty = [];
-        let fileAnalysisResults = [];
+        let globalStats = {};
+        let recentEvaluations = [];
 
+        // Système d'authentification
         function initUserDatabase() {
             if (!localStorage.getItem(usersDatabaseName)) {
                 const defaultUsers = {
                     'admin': {
                         password: 'admin123',
                         isAdmin: true
+                    },
+                    'professeur': {
+                        password: 'prof123',
+                        isAdmin: false
                     }
                 };
                 localStorage.setItem(usersDatabaseName, JSON.stringify(defaultUsers));
@@ -1012,65 +960,63 @@
             showLoginForm();
         }
 
+        // Gestion des fichiers JSON
         document.getElementById('file-input').addEventListener('change', function(e) {
             const files = e.target.files;
             if (!files || files.length === 0) return;
 
             showLoading();
-            importedFiles = [];
-            document.getElementById('file-list').innerHTML = '';
-            document.getElementById('file-list-container').style.display = 'block';
             
-            const fileReaders = [];
-            let processedFiles = 0;
+            // Réinitialiser les données existantes si c'est un nouveau fichier
+            if (files.length === 1) {
+                jsonData = null;
+                allEvaluations = [];
+                studentsByClass = {};
+                studentsBySubject = {};
+            }
+            
+            let filesProcessed = 0;
+            const totalFiles = files.length;
             
             Array.from(files).forEach(file => {
                 const fileReader = new FileReader();
-                const fileId = Date.now() + Math.random().toString(36).substr(2, 5);
-                
-                addFileToList(file.name, fileId, 'processing', 'En cours');
                 
                 fileReader.onload = function(e) {
                     try {
                         const fileData = JSON.parse(e.target.result);
-                        importedFiles.push({
-                            id: fileId,
-                            name: file.name,
-                            data: fileData,
-                            status: 'success',
-                            message: 'Importé'
-                        });
-                        updateFileStatus(fileId, 'success', 'Importé');
+                        processJSONData(fileData, file.name);
+                        filesProcessed++;
+                        
+                        if (filesProcessed === totalFiles) {
+                            // Trier et organiser les données après import
+                            sortDataAlphabetically();
+                            identifyStudentsInDifficulty();
+                            calculateGlobalStats();
+                            
+                            // Afficher les données
+                            displayByClass();
+                            displayBySubject();
+                            displayStudentsDifficulty();
+                            displayStats();
+                            displayRecentEvaluations();
+                            
+                            document.getElementById('no-data').style.display = 'none';
+                            showSuccess(`${totalFiles} fichier(s) importé(s) avec succès !`);
+                            hideLoading();
+                        }
                     } catch (error) {
-                        importedFiles.push({
-                            id: fileId,
-                            name: file.name,
-                            data: null,
-                            status: 'error',
-                            message: 'Erreur'
-                        });
-                        updateFileStatus(fileId, 'error', 'Erreur');
-                    }
-                    
-                    processedFiles++;
-                    if (processedFiles === files.length) {
-                        mergeImportedFiles();
-                        hideLoading();
+                        filesProcessed++;
+                        showError(`Erreur avec le fichier ${file.name}: ${error.message}`);
+                        if (filesProcessed === totalFiles) {
+                            hideLoading();
+                        }
                     }
                 };
                 
                 fileReader.onerror = function() {
-                    importedFiles.push({
-                        id: fileId,
-                        name: file.name,
-                        data: null,
-                        status: 'error',
-                        message: 'Erreur'
-                    });
-                    updateFileStatus(fileId, 'error', 'Erreur');
-                    processedFiles++;
-                    if (processedFiles === files.length) {
-                        mergeImportedFiles();
+                    filesProcessed++;
+                    showError(`Erreur de lecture du fichier ${file.name}`);
+                    if (filesProcessed === totalFiles) {
                         hideLoading();
                     }
                 };
@@ -1079,691 +1025,845 @@
             });
         });
 
-        function addFileToList(fileName, fileId, status, message) {
-            const fileList = document.getElementById('file-list');
-            const fileItem = document.createElement('div');
-            fileItem.className = 'file-item';
-            fileItem.id = 'file-' + fileId;
-            fileItem.innerHTML = `
-                <div class="file-name">${fileName}</div>
-                <div class="file-status status-${status}">${message}</div>
-            `;
-            fileList.appendChild(fileItem);
-        }
-
-        function updateFileStatus(fileId, status, message) {
-            const fileElement = document.getElementById('file-' + fileId);
-            if (fileElement) {
-                const statusElement = fileElement.querySelector('.file-status');
-                statusElement.className = 'file-status status-' + status;
-                statusElement.textContent = message;
-            }
-        }
-
-        function mergeImportedFiles() {
-            const validFiles = importedFiles.filter(file => file.status === 'success' && file.data);
-            
-            if (validFiles.length === 0) {
-                showError("Aucun fichier valide importé.");
-                return;
-            }
-            
-            fileAnalysisResults = [];
-            validFiles.forEach(file => {
-                const analysis = analyzeFile(file.name, file.data);
-                fileAnalysisResults.push(analysis);
-            });
-            
-            displayFileAnalysis();
-            
-            const mergedData = {
-                teachers: [],
-                students: {}
-            };
-            
-            validFiles.forEach(file => {
-                const data = file.data;
+        // Traitement des données JSON (format spécifique fourni)
+        function processJSONData(data, fileName) {
+            // Vérifier si c'est le format d'évaluation fourni
+            if (data.evaluation) {
+                const evaluation = data.evaluation;
+                const metadata = data.metadata || {};
                 
-                if (data.teachers && Array.isArray(data.teachers)) {
-                    data.teachers.forEach(teacher => {
-                        const existingTeacherIndex = mergedData.teachers.findIndex(t => t.name === teacher.name);
-                        
-                        if (existingTeacherIndex >= 0) {
-                            if (teacher.evaluations && Array.isArray(teacher.evaluations)) {
-                                teacher.evaluations.forEach(evaluation => {
-                                    mergedData.teachers[existingTeacherIndex].evaluations.push(evaluation);
-                                });
-                            }
-                        } else {
-                            mergedData.teachers.push(teacher);
-                        }
-                    });
-                    
-                    if (data.students && typeof data.students === 'object') {
-                        Object.keys(data.students).forEach(classe => {
-                            if (!mergedData.students[classe]) {
-                                mergedData.students[classe] = [];
-                            }
-                            
-                            data.students[classe].forEach(student => {
-                                if (!mergedData.students[classe].find(s => s.name === student.name)) {
-                                    mergedData.students[classe].push(student);
-                                }
-                            });
-                        });
-                    }
-                } else if (data.meta && data.evaluations) {
-                    const teacherName = data.meta.enseignant;
-                    const evaluationDate = data.meta.date;
-                    const evaluationType = data.meta.type;
-                    
-                    let teacher = mergedData.teachers.find(t => t.name === teacherName);
-                    if (!teacher) {
-                        teacher = {
-                            name: teacherName,
-                            subject: "",
-                            class: "",
-                            evaluations: []
-                        };
-                        mergedData.teachers.push(teacher);
-                    }
-                    
-                    data.evaluations.forEach(evaluation => {
-                        const newEvaluation = {
-                            teacher: teacherName,
-                            cycle: "college",
-                            class: evaluation.classe,
-                            subject: evaluation.matiere,
-                            date: evaluationDate,
-                            type: evaluationType,
-                            maxGrade: "20",
-                            title: `${evaluation.matiere} - ${evaluationType}`,
-                            comments: "",
-                            students: [
-                                {
-                                    name: evaluation.eleve,
-                                    grade: evaluation.note.toString(),
-                                    appreciation: "",
-                                    comment: ""
-                                }
-                            ],
-                            stats: {
-                                average: evaluation.note.toString(),
-                                highest: evaluation.note.toString(),
-                                lowest: evaluation.note.toString(),
-                                count: "1"
-                            },
-                            timestamp: new Date().toISOString()
-                        };
-                        
-                        teacher.evaluations.push(newEvaluation);
-                        
-                        if (!mergedData.students[evaluation.classe]) {
-                            mergedData.students[evaluation.classe] = [];
-                        }
-                        
-                        if (!mergedData.students[evaluation.classe].find(s => s.name === evaluation.eleve)) {
-                            mergedData.students[evaluation.classe].push({
-                                id: mergedData.students[evaluation.classe].length + 1,
-                                name: evaluation.eleve
-                            });
-                        }
-                    });
-                }
-            });
-            
-            jsonData = mergedData;
-            processData(jsonData);
-            showSuccess(`${validFiles.length} fichier(s) importé(s) !`);
-        }
-
-        function analyzeFile(fileName, fileData) {
-            let analysis = {
-                fileName: fileName,
-                fileType: "Inconnu",
-                evaluationCount: 0,
-                studentCount: 0,
-                teacherCount: 0,
-                classCount: 0,
-                averageGrade: 0,
-                dateRange: "N/A",
-                hasPoints: false
-            };
-            
-            if (fileData.teachers && Array.isArray(fileData.teachers)) {
-                analysis.fileType = "Format EVM6";
-                analysis.teacherCount = fileData.teachers.length;
-                
-                let totalGrade = 0;
-                let gradeCount = 0;
-                const classes = new Set();
-                const students = new Set();
-                
-                fileData.teachers.forEach(teacher => {
-                    if (teacher.evaluations && Array.isArray(teacher.evaluations)) {
-                        analysis.evaluationCount += teacher.evaluations.length;
-                        
-                        teacher.evaluations.forEach(evaluation => {
-                            classes.add(evaluation.class);
-                            
-                            if (evaluation.students && Array.isArray(evaluation.students)) {
-                                evaluation.students.forEach(student => {
-                                    students.add(student.name);
-                                    
-                                    if (student.grade) {
-                                        totalGrade += parseFloat(student.grade);
-                                        gradeCount++;
-                                    }
-                                });
-                            }
-                            
-                            if (evaluation.stats && evaluation.stats.average) {
-                                totalGrade += parseFloat(evaluation.stats.average);
-                                gradeCount++;
-                            }
-                        });
-                    }
+                // Ajouter aux évaluations récentes
+                recentEvaluations.push({
+                    id: Date.now() + Math.random(),
+                    title: evaluation.title,
+                    teacher: evaluation.teacher,
+                    class: evaluation.class,
+                    subject: evaluation.subject || "Non spécifié",
+                    date: evaluation.date,
+                    type: evaluation.type,
+                    stats: evaluation.stats,
+                    studentCount: evaluation.students.length,
+                    fileName: fileName,
+                    timestamp: evaluation.timestamp || metadata.exportedAt || new Date().toISOString()
                 });
                 
-                analysis.studentCount = students.size;
-                analysis.classCount = classes.size;
-                analysis.averageGrade = gradeCount > 0 ? (totalGrade / gradeCount).toFixed(2) : 0;
-                
-                if (fileData.students && typeof fileData.students === 'object') {
-                    let totalStudents = 0;
-                    Object.keys(fileData.students).forEach(classe => {
-                        totalStudents += fileData.students[classe].length;
-                    });
-                    analysis.studentCount = Math.max(analysis.studentCount, totalStudents);
-                }
-                
-            } else if (fileData.meta && fileData.evaluations) {
-                analysis.fileType = "Format Simple";
-                analysis.evaluationCount = fileData.evaluations.length;
-                analysis.teacherCount = 1;
-                
-                const students = new Set();
-                const classes = new Set();
-                let totalGrade = 0;
-                
-                fileData.evaluations.forEach(evaluation => {
-                    students.add(evaluation.eleve);
-                    classes.add(evaluation.classe);
-                    totalGrade += evaluation.note;
+                // Traiter chaque élève
+                evaluation.students.forEach(student => {
+                    // Créer une évaluation normalisée pour chaque élève
+                    const normalizedEval = {
+                        id: Date.now() + Math.random(),
+                        evaluationId: evaluation.timestamp || metadata.exportedAt,
+                        teacher: evaluation.teacher,
+                        cycle: evaluation.cycle,
+                        class: evaluation.class,
+                        subject: evaluation.subject || "Non spécifié",
+                        date: evaluation.date,
+                        type: evaluation.type,
+                        maxGrade: parseFloat(evaluation.maxGrade) || 20,
+                        title: evaluation.title,
+                        comments: evaluation.comments || "",
+                        studentName: student.name,
+                        grade: parseFloat(student.grade) || 0,
+                        appreciation: student.appreciation || "",
+                        parentName: student.parentName || "",
+                        parentPhone: student.parentPhone || "",
+                        comment: student.comment || "",
+                        timestamp: evaluation.timestamp,
+                        whatsappSent: evaluation.whatsappSent || false
+                    };
                     
-                    if (evaluation.pointsForts || evaluation.pointsFaibles) {
-                        analysis.hasPoints = true;
+                    allEvaluations.push(normalizedEval);
+                    
+                    // Organiser par classe
+                    const className = normalizedEval.class;
+                    if (!studentsByClass[className]) {
+                        studentsByClass[className] = {};
                     }
+                    
+                    if (!studentsByClass[className][normalizedEval.studentName]) {
+                        studentsByClass[className][normalizedEval.studentName] = {
+                            evaluations: [],
+                            subjects: new Set(),
+                            parentInfo: {
+                                name: normalizedEval.parentName,
+                                phone: normalizedEval.parentPhone
+                            }
+                        };
+                    }
+                    
+                    studentsByClass[className][normalizedEval.studentName].evaluations.push(normalizedEval);
+                    studentsByClass[className][normalizedEval.studentName].subjects.add(normalizedEval.subject);
+                    
+                    // Mettre à jour les informations parentales si nécessaire
+                    if (normalizedEval.parentName) {
+                        studentsByClass[className][normalizedEval.studentName].parentInfo.name = normalizedEval.parentName;
+                    }
+                    if (normalizedEval.parentPhone) {
+                        studentsByClass[className][normalizedEval.studentName].parentInfo.phone = normalizedEval.parentPhone;
+                    }
+                    
+                    // Organiser par matière
+                    const subjectName = normalizedEval.subject || "Non spécifié";
+                    if (!studentsBySubject[subjectName]) {
+                        studentsBySubject[subjectName] = {};
+                    }
+                    
+                    if (!studentsBySubject[subjectName][normalizedEval.studentName]) {
+                        studentsBySubject[subjectName][normalizedEval.studentName] = {
+                            evaluations: [],
+                            classes: new Set(),
+                            teachers: new Set()
+                        };
+                    }
+                    
+                    studentsBySubject[subjectName][normalizedEval.studentName].evaluations.push(normalizedEval);
+                    studentsBySubject[subjectName][normalizedEval.studentName].classes.add(normalizedEval.class);
+                    studentsBySubject[subjectName][normalizedEval.studentName].teachers.add(normalizedEval.teacher);
                 });
-                
-                analysis.studentCount = students.size;
-                analysis.classCount = classes.size;
-                analysis.averageGrade = (totalGrade / analysis.evaluationCount).toFixed(2);
-                analysis.dateRange = fileData.meta.date;
+            } else {
+                showError(`Format JSON non reconnu dans ${fileName}`);
             }
-            
-            return analysis;
         }
 
-        function displayFileAnalysis() {
-            const container = document.getElementById('file-analysis-results');
-            container.innerHTML = '';
-            
-            if (fileAnalysisResults.length === 0) {
-                container.innerHTML = '<p>Aucune analyse</p>';
-                return;
-            }
-            
-            fileAnalysisResults.forEach(analysis => {
-                const card = document.createElement('div');
-                card.className = 'analysis-card';
-                card.innerHTML = `
-                    <h4>${analysis.fileName}</h4>
-                    <div class="analysis-stats">
-                        <div class="analysis-stat">
-                            <div class="analysis-stat-value">${analysis.evaluationCount}</div>
-                            <div class="analysis-stat-label">Éval.</div>
-                        </div>
-                        <div class="analysis-stat">
-                            <div class="analysis-stat-value">${analysis.studentCount}</div>
-                            <div class="analysis-stat-label">Élèves</div>
-                        </div>
-                        <div class="analysis-stat">
-                            <div class="analysis-stat-value">${analysis.averageGrade}</div>
-                            <div class="analysis-stat-label">Moy.</div>
-                        </div>
-                        <div class="analysis-stat">
-                            <div class="analysis-stat-value">${analysis.classCount}</div>
-                            <div class="analysis-stat-label">Classes</div>
-                        </div>
-                    </div>
-                    <p><strong>Type:</strong> ${analysis.fileType}</p>
-                `;
-                container.appendChild(card);
-            });
-            
-            document.getElementById('file-analysis-section').style.display = 'block';
-        }
-
-        function processData(data) {
-            if (!data || !data.teachers) {
-                showError("Format invalide.");
-                return;
-            }
-
-            allEvaluations = [];
-            data.teachers.forEach(teacher => {
-                if (teacher.evaluations && teacher.evaluations.length > 0) {
-                    teacher.evaluations.forEach(evaluation => {
-                        evaluation.students.forEach(student => {
-                            allEvaluations.push({
-                                teacher: teacher.name,
-                                subject: evaluation.subject || teacher.subject,
-                                class: evaluation.class,
-                                cycle: evaluation.cycle,
-                                type: evaluation.type,
-                                title: evaluation.title,
-                                date: evaluation.date,
-                                maxGrade: evaluation.maxGrade,
-                                studentName: student.name,
-                                grade: student.grade,
-                                appreciation: student.appreciation,
-                                comment: student.comment,
-                                evaluationComments: evaluation.comments,
-                                stats: evaluation.stats
-                            });
-                        });
-                    });
+        // Trier les données alphabétiquement
+        function sortDataAlphabetically() {
+            // Trier les classes
+            const sortedClasses = Object.keys(studentsByClass).sort((a, b) => {
+                // Trier par niveau (6eme, 5eme, etc.) puis par lettre
+                const levelA = a.match(/^(\d+)/);
+                const levelB = b.match(/^(\d+)/);
+                if (levelA && levelB) {
+                    if (parseInt(levelA[1]) !== parseInt(levelB[1])) {
+                        return parseInt(levelA[1]) - parseInt(levelB[1]);
+                    }
                 }
+                return a.localeCompare(b);
             });
-
-            identifyStudentsInDifficulty();
-            displayData(allEvaluations);
-            populateFilters(data);
-            displayStats(data);
-            displayStudentsDifficulty();
+            
+            const sortedByClass = {};
+            sortedClasses.forEach(className => {
+                const students = studentsByClass[className];
+                const sortedStudents = Object.keys(students).sort();
+                const sortedStudentData = {};
+                sortedStudents.forEach(studentName => {
+                    sortedStudentData[studentName] = students[studentName];
+                    // Trier les évaluations de chaque élève par date (plus récent d'abord)
+                    sortedStudentData[studentName].evaluations.sort((a, b) => 
+                        new Date(b.date) - new Date(a.date)
+                    );
+                });
+                sortedByClass[className] = sortedStudentData;
+            });
+            studentsByClass = sortedByClass;
+            
+            // Trier les matières
+            const sortedSubjects = Object.keys(studentsBySubject).sort();
+            const sortedBySubject = {};
+            sortedSubjects.forEach(subject => {
+                const students = studentsBySubject[subject];
+                const sortedStudents = Object.keys(students).sort();
+                const sortedStudentData = {};
+                sortedStudents.forEach(studentName => {
+                    sortedStudentData[studentName] = students[studentName];
+                    // Trier les évaluations par date
+                    sortedStudentData[studentName].evaluations.sort((a, b) => 
+                        new Date(b.date) - new Date(a.date)
+                    );
+                });
+                sortedBySubject[subject] = sortedStudentData;
+            });
+            studentsBySubject = sortedBySubject;
+            
+            // Trier les évaluations récentes par date
+            recentEvaluations.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
         }
 
+        // Identifier les élèves en difficulté
         function identifyStudentsInDifficulty() {
             studentsDifficulty = [];
-            const evaluationsByStudent = {};
             
-            allEvaluations.forEach(evaluation => {
-                if (!evaluationsByStudent[evaluation.studentName]) {
-                    evaluationsByStudent[evaluation.studentName] = [];
-                }
-                evaluationsByStudent[evaluation.studentName].push(evaluation);
-            });
-            
-            for (const studentName in evaluationsByStudent) {
-                const evaluations = evaluationsByStudent[studentName];
-                const classNames = [...new Set(evaluations.map(e => e.class))];
+            Object.keys(studentsByClass).forEach(className => {
+                const students = studentsByClass[className];
                 
-                let totalGrade = 0;
-                let count = 0;
-                let lowGradesCount = 0;
-                
-                evaluations.forEach(evaluation => {
-                    if (evaluation.grade !== undefined && evaluation.grade !== null) {
-                        const grade = parseFloat(evaluation.grade);
-                        const maxGrade = parseFloat(evaluation.maxGrade);
-                        const percentage = (grade / maxGrade) * 100;
-                        
-                        totalGrade += percentage;
+                Object.keys(students).forEach(studentName => {
+                    const studentData = students[studentName];
+                    
+                    if (studentData.evaluations.length === 0) return;
+                    
+                    // Calculer la moyenne générale de l'élève
+                    let totalGrade = 0;
+                    let count = 0;
+                    let lowGrades = 0;
+                    const subjectProblems = {};
+                    let worstSubject = null;
+                    let worstAverage = 20;
+                    
+                    // Calculer par matière
+                    const subjectGrades = {};
+                    studentData.evaluations.forEach(evaluation => {
+                        totalGrade += evaluation.grade;
                         count++;
                         
-                        if (percentage < 50) {
-                            lowGradesCount++;
+                        if (evaluation.grade < 10) {
+                            lowGrades++;
                         }
+                        
+                        // Regrouper par matière
+                        if (!subjectGrades[evaluation.subject]) {
+                            subjectGrades[evaluation.subject] = {
+                                total: 0,
+                                count: 0,
+                                evaluations: []
+                            };
+                        }
+                        subjectGrades[evaluation.subject].total += evaluation.grade;
+                        subjectGrades[evaluation.subject].count++;
+                        subjectGrades[evaluation.subject].evaluations.push(evaluation);
+                    });
+                    
+                    // Identifier les matières problématiques
+                    Object.keys(subjectGrades).forEach(subject => {
+                        const subjectData = subjectGrades[subject];
+                        const subjectAverage = subjectData.total / subjectData.count;
+                        
+                        if (subjectAverage < 10) {
+                            subjectProblems[subject] = {
+                                average: subjectAverage.toFixed(2),
+                                count: subjectData.count,
+                                lowGrades: subjectData.evaluations.filter(e => e.grade < 10).length
+                            };
+                            
+                            if (subjectAverage < worstAverage) {
+                                worstAverage = subjectAverage;
+                                worstSubject = subject;
+                            }
+                        }
+                    });
+                    
+                    const average = totalGrade / count;
+                    
+                    // Critères pour être en difficulté:
+                    // 1. Moyenne générale < 10
+                    // 2. Plus de 50% des notes < 10
+                    // 3. Au moins une matière avec moyenne < 8
+                    if (average < 10 || lowGrades >= count * 0.5 || worstAverage < 8) {
+                        studentsDifficulty.push({
+                            name: studentName,
+                            class: className,
+                            average: average.toFixed(2),
+                            totalEvaluations: count,
+                            lowGrades: lowGrades,
+                            lowGradePercentage: ((lowGrades / count) * 100).toFixed(1),
+                            subjectProblems: subjectProblems,
+                            worstSubject: worstSubject,
+                            worstAverage: worstAverage.toFixed(2),
+                            parentInfo: studentData.parentInfo,
+                            lastEvaluation: studentData.evaluations[0] // La plus récente
+                        });
                     }
                 });
-                
-                const average = count > 0 ? totalGrade / count : 0;
-                
-                if (average < 50 || lowGradesCount >= Math.ceil(count * 0.4)) {
-                    studentsDifficulty.push({
-                        name: studentName,
-                        classes: classNames,
-                        average: average.toFixed(1),
-                        totalEvaluations: count,
-                        lowGradesCount: lowGradesCount,
-                        evaluations: evaluations
-                    });
-                }
-            }
+            });
             
+            // Trier par moyenne (la plus basse d'abord)
             studentsDifficulty.sort((a, b) => a.average - b.average);
         }
 
+        // Calculer les statistiques globales
+        function calculateGlobalStats() {
+            let totalStudents = 0;
+            let totalEvaluations = 0;
+            let totalGrade = 0;
+            let totalClasses = Object.keys(studentsByClass).length;
+            let totalSubjects = Object.keys(studentsBySubject).length;
+            
+            Object.keys(studentsByClass).forEach(className => {
+                const students = studentsByClass[className];
+                totalStudents += Object.keys(students).length;
+                
+                Object.keys(students).forEach(studentName => {
+                    const studentData = students[studentName];
+                    totalEvaluations += studentData.evaluations.length;
+                    
+                    studentData.evaluations.forEach(evaluation => {
+                        totalGrade += evaluation.grade;
+                    });
+                });
+            });
+            
+            globalStats = {
+                totalStudents: totalStudents,
+                totalEvaluations: totalEvaluations,
+                totalClasses: totalClasses,
+                totalSubjects: totalSubjects,
+                averageGrade: totalEvaluations > 0 ? (totalGrade / totalEvaluations).toFixed(2) : 0,
+                studentsInDifficulty: studentsDifficulty.length,
+                recentEvaluations: recentEvaluations.length
+            };
+        }
+
+        // Affichage par classe
+        function displayByClass() {
+            const container = document.getElementById('classes-container');
+            container.innerHTML = '';
+            
+            if (Object.keys(studentsByClass).length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 30px; color: var(--gray-color);">
+                        <i class="fas fa-users" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                        <p>Aucune donnée de classe disponible</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            Object.keys(studentsByClass).forEach(className => {
+                const classDiv = document.createElement('div');
+                classDiv.className = 'class-container';
+                
+                // Calculer les stats de la classe
+                const classStudents = studentsByClass[className];
+                const studentCount = Object.keys(classStudents).length;
+                let classTotalGrade = 0;
+                let classEvaluationCount = 0;
+                let classLowGrades = 0;
+                
+                Object.keys(classStudents).forEach(studentName => {
+                    const studentData = classStudents[studentName];
+                    classEvaluationCount += studentData.evaluations.length;
+                    studentData.evaluations.forEach(evaluation => {
+                        classTotalGrade += evaluation.grade;
+                        if (evaluation.grade < 10) {
+                            classLowGrades++;
+                        }
+                    });
+                });
+                
+                const classAverage = classEvaluationCount > 0 ? (classTotalGrade / classEvaluationCount).toFixed(2) : 0;
+                const lowGradePercentage = classEvaluationCount > 0 ? ((classLowGrades / classEvaluationCount) * 100).toFixed(1) : 0;
+                
+                classDiv.innerHTML = `
+                    <div class="class-header">
+                        <span>Classe: ${className}</span>
+                        <div class="class-stats">
+                            <span class="class-stat">${studentCount} élèves</span>
+                            <span class="class-stat">${classEvaluationCount} notes</span>
+                            <span class="class-stat">Moy: ${classAverage}/20</span>
+                            <span class="class-stat">${lowGradePercentage}% < 10</span>
+                        </div>
+                    </div>
+                `;
+                
+                // Grouper par matière
+                const subjectsInClass = {};
+                Object.keys(classStudents).forEach(studentName => {
+                    const studentData = classStudents[studentName];
+                    studentData.evaluations.forEach(evaluation => {
+                        if (!subjectsInClass[evaluation.subject]) {
+                            subjectsInClass[evaluation.subject] = [];
+                        }
+                        
+                        // Ne garder que la dernière note par matière par élève
+                        const existingIndex = subjectsInClass[evaluation.subject].findIndex(s => s.student === studentName);
+                        if (existingIndex === -1) {
+                            subjectsInClass[evaluation.subject].push({
+                                student: studentName,
+                                grade: evaluation.grade,
+                                appreciation: evaluation.appreciation,
+                                date: evaluation.date,
+                                evaluationTitle: evaluation.title,
+                                parentInfo: studentData.parentInfo
+                            });
+                        } else {
+                            // Garder la note la plus récente
+                            const existingDate = new Date(subjectsInClass[evaluation.subject][existingIndex].date);
+                            const newDate = new Date(evaluation.date);
+                            if (newDate > existingDate) {
+                                subjectsInClass[evaluation.subject][existingIndex] = {
+                                    student: studentName,
+                                    grade: evaluation.grade,
+                                    appreciation: evaluation.appreciation,
+                                    date: evaluation.date,
+                                    evaluationTitle: evaluation.title,
+                                    parentInfo: studentData.parentInfo
+                                };
+                            }
+                        }
+                    });
+                });
+                
+                // Afficher chaque matière
+                Object.keys(subjectsInClass).sort().forEach(subjectName => {
+                    if (!subjectName) return; // Ignorer les matières non spécifiées
+                    
+                    const subjectSection = document.createElement('div');
+                    subjectSection.className = 'subject-section';
+                    
+                    // Calculer la moyenne de la matière
+                    const subjectEvals = subjectsInClass[subjectName];
+                    const subjectAverage = subjectEvals.length > 0 ? 
+                        (subjectEvals.reduce((sum, eval) => sum + eval.grade, 0) / subjectEvals.length).toFixed(2) : 0;
+                    
+                    subjectSection.innerHTML = `
+                        <div class="subject-header">
+                            <span>${subjectName}</span>
+                            <div class="subject-meta">
+                                Moyenne: ${subjectAverage}/20 • ${subjectEvals.length} élèves
+                            </div>
+                        </div>
+                        <div class="students-list">
+                            <div class="student-row header">
+                                <div data-label="Élève">Élève</div>
+                                <div data-label="Note">Note</div>
+                                <div data-label="Appréciation">Appréciation</div>
+                                <div data-label="Dernière évaluation">Dernière évaluation</div>
+                                <div data-label="Statut">Statut</div>
+                            </div>
+                    `;
+                    
+                    // Trier les élèves par nom
+                    subjectEvals.sort((a, b) => a.student.localeCompare(b.student));
+                    
+                    subjectEvals.forEach(studentEval => {
+                        const gradeClass = getGradeClass(studentEval.grade);
+                        const statusClass = getStatusClass(studentEval.grade);
+                        const statusText = getStatusText(studentEval.grade);
+                        
+                        subjectSection.innerHTML += `
+                            <div class="student-row">
+                                <div data-label="Élève" class="student-name">${studentEval.student}</div>
+                                <div data-label="Note">
+                                    <span class="student-grade ${gradeClass}">${studentEval.grade.toFixed(1)}/20</span>
+                                </div>
+                                <div data-label="Appréciation">
+                                    ${studentEval.appreciation || "-"}
+                                </div>
+                                <div data-label="Dernière évaluation">
+                                    ${formatDate(studentEval.date)}
+                                    <div style="font-size: 0.8rem; color: var(--gray-color);">${studentEval.evaluationTitle || ""}</div>
+                                </div>
+                                <div data-label="Statut">
+                                    <span class="student-status ${statusClass}">${statusText}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    subjectSection.innerHTML += '</div>';
+                    classDiv.appendChild(subjectSection);
+                });
+                
+                container.appendChild(classDiv);
+            });
+        }
+
+        // Affichage par matière
+        function displayBySubject() {
+            const container = document.getElementById('subjects-container');
+            container.innerHTML = '';
+            
+            if (Object.keys(studentsBySubject).length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 30px; color: var(--gray-color);">
+                        <i class="fas fa-book" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                        <p>Aucune donnée de matière disponible</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            Object.keys(studentsBySubject).sort().forEach(subjectName => {
+                if (!subjectName || subjectName === "Non spécifié") return;
+                
+                const subjectDiv = document.createElement('div');
+                subjectDiv.className = 'subject-container';
+                
+                // Calculer les stats de la matière
+                const subjectStudents = studentsBySubject[subjectName];
+                const studentCount = Object.keys(subjectStudents).length;
+                let subjectTotalGrade = 0;
+                let subjectEvaluationCount = 0;
+                let subjectLowGrades = 0;
+                const teachers = new Set();
+                const classes = new Set();
+                
+                Object.keys(subjectStudents).forEach(studentName => {
+                    const studentData = subjectStudents[studentName];
+                    subjectEvaluationCount += studentData.evaluations.length;
+                    
+                    studentData.evaluations.forEach(evaluation => {
+                        subjectTotalGrade += evaluation.grade;
+                        if (evaluation.grade < 10) {
+                            subjectLowGrades++;
+                        }
+                        teachers.add(evaluation.teacher);
+                        classes.add(evaluation.class);
+                    });
+                });
+                
+                const subjectAverage = subjectEvaluationCount > 0 ? (subjectTotalGrade / subjectEvaluationCount).toFixed(2) : 0;
+                const lowGradePercentage = subjectEvaluationCount > 0 ? ((subjectLowGrades / subjectEvaluationCount) * 100).toFixed(1) : 0;
+                
+                subjectDiv.innerHTML = `
+                    <div class="subject-container-header">
+                        <span>${subjectName}</span>
+                        <div style="font-size: 0.85rem; opacity: 0.9; margin-top: 5px;">
+                            ${studentCount} élèves • ${subjectEvaluationCount} notes • Moyenne: ${subjectAverage}/20
+                            <br>
+                            ${Array.from(teachers).join(', ')} • Classes: ${Array.from(classes).join(', ')}
+                        </div>
+                    </div>
+                    <div class="students-list">
+                        <div class="student-row header">
+                            <div data-label="Élève">Élève</div>
+                            <div data-label="Classe">Classe</div>
+                            <div data-label="Moyenne">Moyenne</div>
+                            <div data-label="Dernière note">Dernière note</div>
+                            <div data-label="Évaluations">Évaluations</div>
+                        </div>
+                `;
+                
+                // Trier les élèves par nom
+                const sortedStudents = Object.keys(subjectStudents).sort();
+                
+                sortedStudents.forEach(studentName => {
+                    const studentData = subjectStudents[studentName];
+                    const averageGrade = studentData.evaluations.length > 0 ? 
+                        studentData.evaluations.reduce((sum, eval) => sum + eval.grade, 0) / studentData.evaluations.length : 0;
+                    
+                    const lastEval = studentData.evaluations[0]; // La plus récente (déjà triée)
+                    const gradeClass = getGradeClass(averageGrade);
+                    
+                    subjectDiv.innerHTML += `
+                        <div class="student-row">
+                            <div data-label="Élève" class="student-name">${studentName}</div>
+                            <div data-label="Classe">${Array.from(studentData.classes).join(', ')}</div>
+                            <div data-label="Moyenne">
+                                <span class="student-grade ${gradeClass}">${averageGrade.toFixed(1)}/20</span>
+                            </div>
+                            <div data-label="Dernière note">
+                                ${lastEval ? `${lastEval.grade.toFixed(1)}/20` : '-'}
+                                <div style="font-size: 0.8rem; color: var(--gray-color);">${formatDate(lastEval?.date)}</div>
+                            </div>
+                            <div data-label="Évaluations">
+                                ${studentData.evaluations.length} note(s)
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                subjectDiv.innerHTML += '</div>';
+                container.appendChild(subjectDiv);
+            });
+        }
+
+        // Affichage des élèves en difficulté
         function displayStudentsDifficulty() {
-            const container = document.getElementById('students-difficulty-cards');
+            const container = document.getElementById('difficulty-container');
             container.innerHTML = '';
             
             if (studentsDifficulty.length === 0) {
                 container.innerHTML = `
-                    <div class="no-difficulty">
-                        <p>Aucun élève en difficulté</p>
+                    <div class="difficulty-container">
+                        <div class="difficulty-header" style="background: linear-gradient(135deg, #28a745, #20c997);">
+                            <span><i class="fas fa-check-circle"></i> Aucun élève en difficulté identifié</span>
+                        </div>
+                        <div style="padding: 20px; text-align: center; color: var(--gray-color);">
+                            <p>Tous les élèves ont des résultats satisfaisants !</p>
+                        </div>
                     </div>
                 `;
-                document.getElementById('students-difficulty-section').style.display = 'block';
                 return;
             }
             
+            const difficultyDiv = document.createElement('div');
+            difficultyDiv.className = 'difficulty-container';
+            
+            difficultyDiv.innerHTML = `
+                <div class="difficulty-header">
+                    <span><i class="fas fa-exclamation-triangle"></i> Élèves en Difficulté</span>
+                    <span>${studentsDifficulty.length} élève(s)</span>
+                </div>
+                <div class="students-list">
+                    <div class="student-difficulty-card header">
+                        <div data-label="Élève">Élève</div>
+                        <div data-label="Classe">Classe</div>
+                        <div data-label="Moyenne">Moyenne</div>
+                        <div data-label="Notes < 10">Notes < 10</div>
+                        <div data-label="Problèmes">Problèmes identifiés</div>
+                    </div>
+            `;
+            
             studentsDifficulty.forEach(student => {
-                const recentLowGrades = [...student.evaluations]
-                    .filter(e => e.grade !== undefined && e.grade !== null)
-                    .sort((a, b) => {
-                        const aGrade = parseFloat(a.grade) / parseFloat(a.maxGrade);
-                        const bGrade = parseFloat(b.grade) / parseFloat(b.maxGrade);
-                        return aGrade - bGrade;
-                    })
-                    .slice(0, 3);
+                const difficultSubjects = Object.keys(student.subjectProblems);
+                const hasParentInfo = student.parentInfo && (student.parentInfo.name || student.parentInfo.phone);
                 
-                const card = document.createElement('div');
-                card.className = 'student-card';
-                card.innerHTML = `
-                    <div class="student-card-header">
-                        <div class="student-name">${student.name}</div>
-                        <div class="student-class">${student.classes.join(', ')}</div>
-                    </div>
-                    <div class="student-stats">
-                        <div class="stat">
-                            <div class="stat-value low-grade">${student.average}%</div>
-                            <div class="stat-label">Moyenne</div>
+                let problemsText = '';
+                if (difficultSubjects.length > 0) {
+                    problemsText = difficultSubjects.map(subject => {
+                        const problem = student.subjectProblems[subject];
+                        return `${subject}: ${problem.average}/20 (${problem.lowGrades}/${problem.count} notes < 10)`;
+                    }).join('<br>');
+                } else if (student.lowGrades > 0) {
+                    problemsText = `${student.lowGrades} note(s) < 10 sur ${student.totalEvaluations}`;
+                }
+                
+                difficultyDiv.innerHTML += `
+                    <div class="student-difficulty-card">
+                        <div data-label="Élève" class="student-name">
+                            ${student.name}
+                            ${hasParentInfo ? `
+                                <div style="font-size: 0.8rem; color: var(--gray-color); margin-top: 2px;">
+                                    ${student.parentInfo.name ? `Parent: ${student.parentInfo.name}` : ''}
+                                    ${student.parentInfo.phone ? ` • Tel: ${student.parentInfo.phone}` : ''}
+                                </div>
+                            ` : ''}
                         </div>
-                        <div class="stat">
-                            <div class="stat-value">${student.totalEvaluations}</div>
-                            <div class="stat-label">Éval.</div>
+                        <div data-label="Classe">${student.class}</div>
+                        <div data-label="Moyenne" class="low-grade">${student.average}/20</div>
+                        <div data-label="Notes < 10" class="low-grade">
+                            ${student.lowGrades}/${student.totalEvaluations}
+                            <div style="font-size: 0.8rem;">(${student.lowGradePercentage}%)</div>
                         </div>
-                        <div class="stat">
-                            <div class="stat-value low-grade">${student.lowGradesCount}</div>
-                            <div class="stat-label">&lt; 50%</div>
+                        <div data-label="Problèmes">
+                            ${problemsText || 'Moyenne générale basse'}
+                            ${student.worstSubject ? `<div style="margin-top: 5px; font-size: 0.8rem; color: #dc3545;">
+                                <i class="fas fa-exclamation-circle"></i> Plus faible en ${student.worstSubject}: ${student.worstAverage}/20
+                            </div>` : ''}
                         </div>
                     </div>
-                    <div class="student-evaluations">
-                        <p>Notes basses:</p>
-                        ${recentLowGrades.map(evaluation => `
-                            <div class="evaluation-item">
-                                <span class="evaluation-subject">${evaluation.title}</span>
-                                <span class="evaluation-grade low-grade">${evaluation.grade}/${evaluation.maxGrade}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <button class="toggle-details" onclick="toggleStudentDetails('${student.name.replace(/'/g, "\\'")}')">
-                        Voir détails
-                    </button>
-                    <div class="student-details" id="details-${student.name}"></div>
                 `;
-                container.appendChild(card);
             });
             
-            document.getElementById('students-difficulty-section').style.display = 'block';
+            difficultyDiv.innerHTML += '</div>';
+            container.appendChild(difficultyDiv);
         }
 
-        function toggleStudentDetails(studentName) {
-            const detailsElement = document.getElementById(`details-${studentName}`);
-            const button = detailsElement.previousElementSibling;
+        // Affichage des évaluations récentes
+        function displayRecentEvaluations() {
+            const container = document.getElementById('recent-evaluations');
+            container.innerHTML = '';
             
-            if (detailsElement.classList.contains('show')) {
-                detailsElement.classList.remove('show');
-                button.textContent = 'Voir détails';
-            } else {
-                if (detailsElement.innerHTML === '') {
-                    const student = studentsDifficulty.find(s => s.name === studentName);
-                    if (student) {
-                        detailsElement.innerHTML = `
-                            <h4>Évaluations de ${studentName}</h4>
-                            ${student.evaluations.map(evaluation => {
-                                const percentage = (parseFloat(evaluation.grade) / parseFloat(evaluation.maxGrade)) * 100;
-                                const gradeClass = percentage < 50 ? 'low-grade' : '';
-                                return `
-                                    <div class="evaluation-item">
-                                        <div><strong>${evaluation.title}</strong></div>
-                                        <div>Note: <span class="${gradeClass}">${evaluation.grade}/${evaluation.maxGrade}</span></div>
-                                        <div>Date: ${formatDate(evaluation.date)}</div>
-                                    </div>
-                                `;
-                            }).join('')}
-                        `;
-                    }
-                }
-                detailsElement.classList.add('show');
-                button.textContent = 'Masquer';
+            if (recentEvaluations.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 30px; color: var(--gray-color);">
+                        <i class="fas fa-history" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                        <p>Aucune évaluation récente</p>
+                    </div>
+                `;
+                return;
             }
+            
+            container.innerHTML = '<h3 style="margin-bottom: 15px; color: var(--dark-color);">Évaluations récentes</h3>';
+            
+            recentEvaluations.forEach(evaluation => {
+                const evaluationCard = document.createElement('div');
+                evaluationCard.className = 'evaluation-card';
+                
+                // Déterminer la couleur de la bordure en fonction de la moyenne
+                const avg = parseFloat(evaluation.stats.average);
+                let borderColor = '';
+                if (avg >= 14) borderColor = '#28a745';
+                else if (avg >= 10) borderColor = '#ffc107';
+                else borderColor = '#dc3545';
+                
+                evaluationCard.style.borderLeftColor = borderColor;
+                
+                evaluationCard.innerHTML = `
+                    <div class="evaluation-header">
+                        <div class="evaluation-title">${evaluation.title || 'Évaluation'}</div>
+                        <div class="evaluation-date">${formatDate(evaluation.date)}</div>
+                    </div>
+                    <div style="margin-bottom: 8px;">
+                        <span style="font-weight: 500;">${evaluation.teacher}</span> • 
+                        ${evaluation.class} • ${evaluation.subject}
+                        <div style="font-size: 0.85rem; color: var(--gray-color); margin-top: 3px;">
+                            ${evaluation.type} • ${evaluation.studentCount} élèves
+                        </div>
+                    </div>
+                    <div class="evaluation-stats">
+                        <div>
+                            <i class="fas fa-chart-line"></i> Moyenne: <strong>${evaluation.stats.average}/20</strong>
+                        </div>
+                        <div>
+                            <i class="fas fa-arrow-up"></i> Max: ${evaluation.stats.highest}/20
+                        </div>
+                        <div>
+                            <i class="fas fa-arrow-down"></i> Min: ${evaluation.stats.lowest}/20
+                        </div>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 0.8rem; color: var(--gray-color);">
+                        <i class="fas fa-file"></i> ${evaluation.fileName || 'Importé'} • 
+                        ${formatDateTime(evaluation.timestamp)}
+                    </div>
+                `;
+                
+                container.appendChild(evaluationCard);
+            });
         }
 
-        function displayStats(data) {
+        // Affichage des statistiques
+        function displayStats() {
             const statsGrid = document.getElementById('stats-grid');
             statsGrid.innerHTML = '';
-
-            if (!data.teachers || data.teachers.length === 0) return;
-
-            let totalEvaluations = 0;
-            data.teachers.forEach(teacher => {
-                totalEvaluations += teacher.evaluations ? teacher.evaluations.length : 0;
-            });
-
-            let totalStudents = 0;
-            for (const classe in data.students) {
-                totalStudents += data.students[classe].length;
-            }
-
-            let totalGrade = 0;
-            let countGrades = 0;
-            allEvaluations.forEach(evaluation => {
-                if (evaluation.grade !== undefined && evaluation.grade !== null) {
-                    totalGrade += parseFloat(evaluation.grade);
-                    countGrades++;
-                }
-            });
-            const averageGrade = countGrades > 0 ? (totalGrade / countGrades).toFixed(2) : 0;
-
+            
             const stats = [
-                { label: "Enseignants", value: data.teachers.length },
-                { label: "Élèves", value: totalStudents },
-                { label: "Évaluations", value: totalEvaluations },
-                { label: "Classes", value: Object.keys(data.students).length },
-                { label: "Moyenne", value: averageGrade },
-                { label: "En difficulté", value: studentsDifficulty.length }
+                { 
+                    label: "Élèves total", 
+                    value: globalStats.totalStudents,
+                    icon: "fas fa-users"
+                },
+                { 
+                    label: "Évaluations", 
+                    value: globalStats.totalEvaluations,
+                    icon: "fas fa-file-alt"
+                },
+                { 
+                    label: "Classes", 
+                    value: globalStats.totalClasses,
+                    icon: "fas fa-school"
+                },
+                { 
+                    label: "Matières", 
+                    value: globalStats.totalSubjects,
+                    icon: "fas fa-book"
+                },
+                { 
+                    label: "Moyenne générale", 
+                    value: globalStats.averageGrade + "/20",
+                    icon: "fas fa-chart-line"
+                },
+                { 
+                    label: "Élèves en difficulté", 
+                    value: globalStats.studentsInDifficulty, 
+                    highlight: globalStats.studentsInDifficulty > 0,
+                    icon: "fas fa-exclamation-triangle"
+                },
+                { 
+                    label: "Évaluations récentes", 
+                    value: globalStats.recentEvaluations,
+                    icon: "fas fa-history"
+                }
             ];
-
+            
             stats.forEach(stat => {
                 const statItem = document.createElement('div');
                 statItem.className = 'stat-item';
+                if (stat.highlight) {
+                    statItem.style.borderLeft = '3px solid var(--danger-color)';
+                }
                 statItem.innerHTML = `
+                    <div style="font-size: 1rem; color: var(--primary-color); margin-bottom: 5px;">
+                        <i class="${stat.icon}"></i>
+                    </div>
                     <div class="stat-value">${stat.value}</div>
                     <div class="stat-label">${stat.label}</div>
                 `;
                 statsGrid.appendChild(statItem);
             });
-
-            document.getElementById('stats-section').style.display = 'block';
         }
 
-        function populateFilters(data) {
-            const classSelect = document.getElementById('class-filter');
-            const studentSelect = document.getElementById('student-filter');
-            const typeSelect = document.getElementById('type-filter');
-            const teacherSelect = document.getElementById('teacher-filter');
-
-            classSelect.innerHTML = '<option value="">Toutes</option>';
-            studentSelect.innerHTML = '<option value="">Tous</option>';
-            typeSelect.innerHTML = '<option value="">Tous</option>';
-            teacherSelect.innerHTML = '<option value="">Tous</option>';
-
-            const classes = new Set();
-            const students = new Set();
-            const types = new Set();
-            const teachers = new Set();
-
-            allEvaluations.forEach(evaluation => {
-                classes.add(evaluation.class);
-                students.add(evaluation.studentName);
-                types.add(evaluation.type);
-                teachers.add(evaluation.teacher);
-            });
-
-            classes.forEach(classe => {
-                const option = document.createElement('option');
-                option.value = classe;
-                option.textContent = classe;
-                classSelect.appendChild(option);
-            });
-
-            students.forEach(student => {
-                const option = document.createElement('option');
-                option.value = student;
-                option.textContent = student;
-                studentSelect.appendChild(option);
-            });
-
-            types.forEach(type => {
-                const option = document.createElement('option');
-                option.value = type;
-                option.textContent = type;
-                typeSelect.appendChild(option);
-            });
-
-            teachers.forEach(teacher => {
-                const option = document.createElement('option');
-                option.value = teacher;
-                option.textContent = teacher;
-                teacherSelect.appendChild(option);
-            });
-
-            document.getElementById('filters-section').style.display = 'flex';
+        // Utilitaires
+        function getGradeClass(grade) {
+            if (grade >= 16) return 'grade-excellent';
+            if (grade >= 14) return 'grade-good';
+            if (grade >= 12) return 'grade-average';
+            if (grade >= 10) return 'grade-poor';
+            return 'grade-very-poor';
         }
 
-        function filterEvaluations() {
-            const classFilter = document.getElementById('class-filter').value;
-            const studentFilter = document.getElementById('student-filter').value;
-            const typeFilter = document.getElementById('type-filter').value;
-            const teacherFilter = document.getElementById('teacher-filter').value;
-            const gradeMinFilter = document.getElementById('grade-min-filter').value;
-            const gradeMaxFilter = document.getElementById('grade-max-filter').value;
-
-            let filteredEvaluations = [...allEvaluations];
-
-            if (classFilter) filteredEvaluations = filteredEvaluations.filter(e => e.class === classFilter);
-            if (studentFilter) filteredEvaluations = filteredEvaluations.filter(e => e.studentName === studentFilter);
-            if (typeFilter) filteredEvaluations = filteredEvaluations.filter(e => e.type === typeFilter);
-            if (teacherFilter) filteredEvaluations = filteredEvaluations.filter(e => e.teacher === teacherFilter);
-            if (gradeMinFilter) filteredEvaluations = filteredEvaluations.filter(e => parseFloat(e.grade) >= parseFloat(gradeMinFilter));
-            if (gradeMaxFilter) filteredEvaluations = filteredEvaluations.filter(e => parseFloat(e.grade) <= parseFloat(gradeMaxFilter));
-
-            displayEvaluations(filteredEvaluations);
+        function getStatusClass(grade) {
+            if (grade >= 16) return 'status-excellent';
+            if (grade >= 14) return 'status-good';
+            if (grade >= 12) return 'status-average';
+            if (grade >= 10) return 'status-poor';
+            return 'status-very-poor';
         }
 
-        function resetFilters() {
-            document.getElementById('class-filter').value = '';
-            document.getElementById('student-filter').value = '';
-            document.getElementById('type-filter').value = '';
-            document.getElementById('teacher-filter').value = '';
-            document.getElementById('grade-min-filter').value = '';
-            document.getElementById('grade-max-filter').value = '';
-            filterEvaluations();
+        function getStatusText(grade) {
+            if (grade >= 16) return 'Excellent';
+            if (grade >= 14) return 'Très bien';
+            if (grade >= 12) return 'Bien';
+            if (grade >= 10) return 'Passable';
+            return 'Insuffisant';
         }
 
-        function displayEvaluations(evaluations) {
-            const tbody = document.getElementById('evaluations-body');
-            tbody.innerHTML = '';
-
-            if (evaluations.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center;">Aucune évaluation</td></tr>';
-                return;
+        function formatDate(dateString) {
+            if (!dateString) return "-";
+            try {
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) {
+                    return dateString;
+                }
+                return date.toLocaleDateString('fr-FR', { 
+                    day: '2-digit', 
+                    month: '2-digit', 
+                    year: 'numeric' 
+                });
+            } catch (e) {
+                return dateString;
             }
-
-            evaluations.forEach(evaluation => {
-                const row = document.createElement('tr');
-                const percentage = (parseFloat(evaluation.grade) / parseFloat(evaluation.maxGrade)) * 100;
-                let gradeClass = "";
-                if (percentage >= 80) gradeClass = "grade-excellent";
-                else if (percentage >= 60) gradeClass = "grade-good";
-                else if (percentage >= 40) gradeClass = "grade-average";
-                else gradeClass = "grade-poor";
-
-                row.innerHTML = `
-                    <td>${evaluation.studentName}</td>
-                    <td>${evaluation.class}</td>
-                    <td>${evaluation.type}</td>
-                    <td>${evaluation.title}</td>
-                    <td>${formatDate(evaluation.date)}</td>
-                    <td class="${gradeClass}">${evaluation.grade}/${evaluation.maxGrade}</td>
-                    <td>${evaluation.appreciation || "-"}</td>
-                    <td>${evaluation.comment || "-"}</td>
-                    <td>${evaluation.teacher}</td>
-                `;
-                tbody.appendChild(row);
-            });
         }
 
-        function displayData(evaluations) {
-            if (!evaluations || evaluations.length === 0) {
-                document.getElementById('no-data').style.display = 'block';
-                document.getElementById('evaluations-table').style.display = 'none';
-                document.getElementById('filters-section').style.display = 'none';
-                document.getElementById('stats-section').style.display = 'none';
-                document.getElementById('file-list-container').style.display = 'none';
-                document.getElementById('students-difficulty-section').style.display = 'none';
-                document.getElementById('file-analysis-section').style.display = 'none';
-                return;
+        function formatDateTime(dateTimeString) {
+            if (!dateTimeString) return "-";
+            try {
+                const date = new Date(dateTimeString);
+                if (isNaN(date.getTime())) {
+                    return dateTimeString;
+                }
+                return date.toLocaleDateString('fr-FR', { 
+                    day: '2-digit', 
+                    month: '2-digit', 
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch (e) {
+                return dateTimeString;
             }
-
-            displayEvaluations(evaluations);
-            document.getElementById('evaluations-table').style.display = 'table';
-            document.getElementById('no-data').style.display = 'none';
-            document.getElementById('file-list-container').style.display = 'block';
         }
 
+        // Gestion des onglets
+        function showTab(tabId) {
+            // Désactiver tous les onglets
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Désactiver tous les contenus
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Activer l'onglet sélectionné
+            const tabButton = document.querySelector(`[onclick="showTab('${tabId}')"]`);
+            if (tabButton) {
+                tabButton.classList.add('active');
+            }
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+        }
+
+        // Sauvegarde et chargement
         function saveToDatabase() {
-            if (!jsonData) {
+            if (allEvaluations.length === 0) {
                 showError("Aucune donnée à enregistrer.");
                 return;
             }
 
             showLoading();
             try {
-                localStorage.setItem(databaseName, JSON.stringify(jsonData));
+                const dataToSave = {
+                    allEvaluations: allEvaluations,
+                    studentsByClass: studentsByClass,
+                    studentsBySubject: studentsBySubject,
+                    studentsDifficulty: studentsDifficulty,
+                    globalStats: globalStats,
+                    recentEvaluations: recentEvaluations,
+                    savedAt: new Date().toISOString(),
+                    savedBy: currentUser?.username || 'anonymous'
+                };
+                localStorage.setItem(databaseName, JSON.stringify(dataToSave));
                 showSuccess("Données enregistrées !");
-            } catch (error) {
-                showError("Erreur : " + error.message);
-            } finally {
-                hideLoading();
-            }
-        }
-
-        function showDeleteConfirmation() {
-            if (!localStorage.getItem(databaseName)) {
-                showError("Aucune donnée à supprimer.");
-                return;
-            }
-            document.getElementById('confirmation-dialog').style.display = 'flex';
-        }
-
-        function hideDeleteConfirmation() {
-            document.getElementById('confirmation-dialog').style.display = 'none';
-        }
-
-        function deleteDatabase() {
-            hideDeleteConfirmation();
-            showLoading();
-            try {
-                localStorage.removeItem(databaseName);
-                jsonData = null;
-                allEvaluations = [];
-                importedFiles = [];
-                studentsDifficulty = [];
-                fileAnalysisResults = [];
-                
-                document.getElementById('evaluations-table').style.display = 'none';
-                document.getElementById('filters-section').style.display = 'none';
-                document.getElementById('stats-section').style.display = 'none';
-                document.getElementById('file-list-container').style.display = 'none';
-                document.getElementById('students-difficulty-section').style.display = 'none';
-                document.getElementById('file-analysis-section').style.display = 'none';
-                document.getElementById('file-list').innerHTML = '';
-                document.getElementById('no-data').style.display = 'block';
-                showSuccess("Base de données supprimée.");
             } catch (error) {
                 showError("Erreur : " + error.message);
             } finally {
@@ -1776,12 +1876,70 @@
             try {
                 const savedData = localStorage.getItem(databaseName);
                 if (savedData) {
-                    jsonData = JSON.parse(savedData);
-                    processData(jsonData);
+                    const data = JSON.parse(savedData);
+                    
+                    allEvaluations = data.allEvaluations || [];
+                    studentsByClass = data.studentsByClass || {};
+                    studentsBySubject = data.studentsBySubject || {};
+                    studentsDifficulty = data.studentsDifficulty || [];
+                    globalStats = data.globalStats || {};
+                    recentEvaluations = data.recentEvaluations || [];
+                    
+                    // Afficher les données
+                    displayByClass();
+                    displayBySubject();
+                    displayStudentsDifficulty();
+                    displayStats();
+                    displayRecentEvaluations();
+                    
+                    document.getElementById('no-data').style.display = 'none';
                     showSuccess("Données chargées !");
                 } else {
-                    showError("Aucune donnée trouvée.");
+                    document.getElementById('no-data').style.display = 'block';
                 }
+            } catch (error) {
+                showError("Erreur : " + error.message);
+                document.getElementById('no-data').style.display = 'block';
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Gestion de la suppression
+        function showDeleteConfirmation() {
+            if (!localStorage.getItem(databaseName)) {
+                showError("Aucune donnée à supprimer.");
+                return;
+            }
+            document.getElementById('confirmation-dialog').classList.remove('hidden');
+        }
+
+        function hideDeleteConfirmation() {
+            document.getElementById('confirmation-dialog').classList.add('hidden');
+        }
+
+        function deleteDatabase() {
+            hideDeleteConfirmation();
+            showLoading();
+            try {
+                localStorage.removeItem(databaseName);
+                jsonData = null;
+                allEvaluations = [];
+                studentsByClass = {};
+                studentsBySubject = {};
+                studentsDifficulty = [];
+                globalStats = {};
+                recentEvaluations = [];
+                
+                // Réinitialiser l'affichage
+                document.getElementById('classes-container').innerHTML = '';
+                document.getElementById('subjects-container').innerHTML = '';
+                document.getElementById('difficulty-container').innerHTML = '';
+                document.getElementById('stats-grid').innerHTML = '';
+                document.getElementById('recent-evaluations').innerHTML = '';
+                document.getElementById('no-data').style.display = 'block';
+                
+                showSuccess("Base de données supprimée.");
             } catch (error) {
                 showError("Erreur : " + error.message);
             } finally {
@@ -1789,24 +1947,19 @@
             }
         }
 
-        function formatDate(dateString) {
-            if (!dateString) return "-";
-            const options = { day: 'numeric', month: 'short', year: 'numeric' };
-            return new Date(dateString).toLocaleDateString('fr-FR', options);
-        }
-
+        // Messages
         function showError(message) {
             const element = document.getElementById('error-message');
             element.textContent = message;
             element.style.display = 'block';
-            setTimeout(() => element.style.display = 'none', 4000);
+            setTimeout(() => element.style.display = 'none', 5000);
         }
 
         function showSuccess(message) {
             const element = document.getElementById('success-message');
             element.textContent = message;
             element.style.display = 'block';
-            setTimeout(() => element.style.display = 'none', 4000);
+            setTimeout(() => element.style.display = 'none', 3000);
         }
 
         function showLoading() {
@@ -1817,6 +1970,7 @@
             document.getElementById('loading').style.display = 'none';
         }
 
+        // Initialisation
         function initApp() {
             initUserDatabase();
             document.getElementById('login-form').addEventListener('submit', handleLogin);
