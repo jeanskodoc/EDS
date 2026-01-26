@@ -2977,18 +2977,58 @@
                         Max: ${evaluation.stats.highest} - 
                         Min: ${evaluation.stats.lowest}
                     </div>
-                    <button class="btn-primary btn-sm" onclick="viewEvaluationDetails('${teacher.id}', '${evaluation.timestamp}')">
-                        <i class="fas fa-eye"></i> Voir détails
-                    </button>
-                    ${!evaluation.whatsappSent ? `
-                        <button class="btn-success btn-sm" onclick="resendWhatsApp('${teacher.id}', '${evaluation.timestamp}')">
-                            <i class="fab fa-whatsapp"></i> Renvoyer WhatsApp
+                    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-primary btn-sm" onclick="viewEvaluationDetails('${teacher.id}', '${evaluation.timestamp}')">
+                            <i class="fas fa-eye"></i> Voir détails
                         </button>
-                    ` : ''}
+                        ${!evaluation.whatsappSent ? `
+                            <button class="btn-success btn-sm" onclick="resendWhatsApp('${teacher.id}', '${evaluation.timestamp}')">
+                                <i class="fab fa-whatsapp"></i> Renvoyer WhatsApp
+                            </button>
+                        ` : ''}
+                        <button class="btn-info btn-sm" onclick="exportEvaluationAsJson('${teacher.id}', '${evaluation.timestamp}')">
+                            <i class="fas fa-file-export"></i> Exporter en JSON
+                        </button>
+                    </div>
                 `;
                 
                 evaluationsList.appendChild(evaluationItem);
             });
+        }
+
+        // Fonction pour exporter une évaluation en JSON
+        function exportEvaluationAsJson(teacherId, timestamp) {
+            const teacher = teachers.find(t => t.id == teacherId);
+            if (!teacher) return;
+            
+            const evaluation = teacher.evaluations.find(e => e.timestamp === timestamp);
+            if (!evaluation) return;
+            
+            // Préparer les données pour l'export
+            const exportData = {
+                evaluation: evaluation,
+                metadata: {
+                    exportedAt: new Date().toISOString(),
+                    exportedBy: teacher.name,
+                    version: "1.0"
+                }
+            };
+            
+            // Convertir en JSON
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            // Générer un nom de fichier
+            const fileName = `evaluation_${evaluation.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${evaluation.date}.json`;
+            
+            // Créer un lien de téléchargement
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', fileName);
+            linkElement.click();
+            
+            // Afficher un message de confirmation
+            showMessage('success', 'Évaluation exportée en format JSON');
         }
 
         // Fonction pour obtenir le nom du type d'évaluation
