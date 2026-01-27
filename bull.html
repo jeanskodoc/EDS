@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Fichier Excel - Importation Élèves</title>
+    <!-- SheetJS pour générer le fichier Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e3e8f7 100%);
+            color: #343a40;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            padding: 30px;
+            border: 2px solid #006400;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #FF0000;
+        }
+
+        .header h1 {
+            color: #006400;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .togo-flag {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+            padding: 8px 20px;
+            background: rgba(0, 100, 0, 0.1);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+        }
+
+        .flag-stripe {
+            width: 25px;
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        .stripe-red { background-color: #FF0000; }
+        .stripe-yellow { background-color: #FFD700; }
+        .stripe-green { background-color: #006400; }
+
+        .instructions {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 4px solid #006400;
+        }
+
+        .instructions h2 {
+            color: #006400;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .instructions ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .instructions li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #006400;
+            font-weight: bold;
+        }
+
+        .data-preview {
+            margin: 30px 0;
+            overflow-x: auto;
+        }
+
+        .data-preview h3 {
+            color: #006400;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: linear-gradient(135deg, #006400, #004d00);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+
+        th:last-child {
+            border-right: none;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #dee2e6;
+            border-right: 1px solid #dee2e6;
+        }
+
+        td:last-child {
+            border-right: none;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        tr:hover {
+            background: #e8f5e9;
+        }
+
+        .note {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        .note strong {
+            color: #856404;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #006400, #004d00);
+            color: white;
+            border: 2px solid #FF0000;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #004d00, #006400);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 100, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #5a6268, #6c757d);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #218838);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #218838, #28a745);
+            transform: translateY(-2px);
+        }
+
+        .download-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #006400;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .download-link:hover {
+            text-decoration: underline;
+        }
+
+        .template-options {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #e9ecef;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #006400;
+            box-shadow: 0 0 0 3px rgba(0, 100, 0, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-group input {
+            width: auto;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            table {
+                font-size: 14px;
+            }
+            
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="togo-flag">
+                <div class="flag-stripe stripe-red"></div>
+                <div class="flag-stripe stripe-yellow"></div>
+                <div class="flag-stripe stripe-green"></div>
+                <span>République Togolaise</span>
+            </div>
+            <h1>Générateur de Fichier Excel pour Importation des Élèves</h1>
+            <p>Système de Gestion Scolaire - Ministère des Enseignements Primaire, Secondaire et Technique</p>
+        </div>
+
+        <div class="instructions">
+            <h2><i class="fas fa-info-circle"></i> Instructions d'utilisation</h2>
+            <ul>
+                <li>Téléchargez le fichier Excel modèle ci-dessous</li>
+                <li>Remplissez le fichier avec les données de vos élèves</li>
+                <li>Conservez l'ordre des colonnes et les en-têtes</li>
+                <li>Importez le fichier rempli dans le système de gestion scolaire</li>
+                <li>Les champs marqués d'un astérisque (*) sont obligatoires</li>
+            </ul>
+        </div>
+
+        <div class="template-options">
+            <h3><i class="fas fa-cog"></i> Options du modèle</h3>
+            <div class="form-group">
+                <label for="classLevel">Niveau de la classe *</label>
+                <select id="classLevel" onchange="updateTemplate()">
+                    <option value="college">Collège</option>
+                    <option value="lycee">Lycée</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="className">Nom de la classe *</label>
+                <input type="text" id="className" value="6ème" oninput="updateTemplate()" placeholder="Ex: 6ème, 2nd, 1ère A...">
+            </div>
+            <div class="form-group">
+                <label for="studentCount">Nombre d'élèves dans le modèle</label>
+                <input type="number" id="studentCount" value="5" min="1" max="100" oninput="updateTemplate()">
+            </div>
+            <div class="form-group">
+                <label>Options supplémentaires</label>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="includeExamples" checked onchange="updateTemplate()">
+                    <label for="includeExamples">Inclure des exemples de données</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="data-preview">
+            <h3><i class="fas fa-table"></i> Aperçu du modèle Excel</h3>
+            <div id="tablePreview">
+                <!-- Le tableau sera généré dynamiquement ici -->
+            </div>
+        </div>
+
+        <div class="note">
+            <strong><i class="fas fa-lightbulb"></i> Note importante :</strong> 
+            Le système accepte les formats Excel (.xlsx, .xls) et CSV. Pour de meilleurs résultats, 
+            utilisez le modèle Excel généré ci-dessous qui respecte le format attendu par le système.
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary" onclick="generateExcelFile()">
+                <i class="fas fa-file-excel"></i> Télécharger le Modèle Excel
+            </button>
+            <button class="btn btn-success" onclick="generateCSVFile()">
+                <i class="fas fa-file-csv"></i> Télécharger le Modèle CSV
+            </button>
+            <button class="btn btn-secondary" onclick="showImportInstructions()">
+                <i class="fas fa-question-circle"></i> Instructions d'Importation
+            </button>
+        </div>
+
+        <a href="#" class="download-link" onclick="downloadSampleData()">
+            <i class="fas fa-download"></i> Télécharger un jeu de données d'exemple complet
+        </a>
+
+        <div class="footer">
+            <p>© 2024 Ministère des Enseignements Primaire, Secondaire et Technique - République Togolaise</p>
+            <p style="font-size: 12px; margin-top: 5px;">Version du générateur : 1.0 | Compatible avec le Système de Gestion Scolaire Togolais</p>
+        </div>
+    </div>
+
+    <!-- Modal pour les instructions -->
+    <div id="instructionsModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: white; border-radius: 10px; padding: 30px; max-width: 600px; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.3); border: 3px solid #006400;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #FF0000;">
+                <h2 style="color: #006400; margin: 0;"><i class="fas fa-file-import"></i> Instructions d'Importation</h2>
+                <button onclick="closeInstructions()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #666;">×</button>
+            </div>
+            <div id="instructionsContent">
+                <!-- Contenu des instructions -->
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button onclick="closeInstructions()" style="padding: 10px 30px; background: #006400; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;">Fermer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Données d'exemple pour le modèle
+        const sampleData = {
+            college: [
+                {
+                    lastName: "KOUMA",
+                    firstName: "Koffi",
+                    studentId: "MAT-2024-001",
+                    gender: "M",
+                    birthDate: "2010-05-15",
+                    birthPlace: "Lomé",
+                    status: "Nouveau",
+                    guardianName: "Jean KOUMA",
+                    guardianPhone: "+228 90 12 34 56",
+                    class: "6ème"
+                },
+                {
+                    lastName: "ADJOA",
+                    firstName: "Afi",
+                    studentId: "MAT-2024-002",
+                    gender: "F",
+                    birthDate: "2010-08-22",
+                    birthPlace: "Kara",
+                    status: "Nouvelle",
+                    guardianName: "Marie ADJOA",
+                    guardianPhone: "+228 91 23 45 67",
+                    class: "6ème"
+                },
+                {
+                    lastName: "GBEASSOR",
+                    firstName: "Komi",
+                    studentId: "MAT-2024-003",
+                    gender: "M",
+                    birthDate: "2009-12-10",
+                    birthPlace: "Atakpamé",
+                    status: "Redoublant",
+                    guardianName: "Pierre GBEASSOR",
+                    guardianPhone: "+228 92 34 56 78",
+                    class: "6ème"
+                },
+                {
+                    lastName: "ASSIMA",
+                    firstName: "Mawulé",
+                    studentId: "MAT-2024-004",
+                    gender: "F",
+                    birthDate: "2010-03-30",
+                    birthPlace: "Sokodé",
+                    status: "Nouvelle",
+                    guardianName: "Alice ASSIMA",
+                    guardianPhone: "+228 93 45 67 89",
+                    class: "6ème"
+                },
+                {
+                    lastName: "AKAKPO",
+                    firstName: "Yao",
+                    studentId: "MAT-2024-005",
+                    gender: "M",
+                    birthDate: "2010-11-05",
+                    birthPlace: "Dapaong",
+                    status: "Nouveau",
+                    guardianName: "Paul AKAKPO",
+                    guardianPhone: "+228 94 56 78 90",
+                    class: "6ème"
+                }
+            ],
+            lycee: [
+                {
+                    lastName: "SAGBO",
+                    firstName: "Kodjo",
+                    studentId: "MAT-LYC-001",
+                    gender: "M",
+                    birthDate: "2006-07-18",
+                    birthPlace: "Lomé",
+                    status: "Redoublant",
+                    guardianName: "Victor SAGBO",
+                    guardianPhone: "+228 95 67 89 01",
+                    class: "2nd",
+                    series: "C"
+                },
+                {
+                    lastName: "DOSSOU",
+                    firstName: "Élodie",
+                    studentId: "MAT-LYC-002",
+                    gender: "F",
+                    birthDate: "2007-02-14",
+                    birthPlace: "Kpalimé",
+                    status: "Nouvelle",
+                    guardianName: "Sophie DOSSOU",
+                    guardianPhone: "+228 96 78 90 12",
+                    class: "2nd",
+                    series: "A"
+                },
+                {
+                    lastName: "AGBA",
+                    firstName: "Mawussé",
+                    studentId: "MAT-LYC-003",
+                    gender: "M",
+                    birthDate: "2006-11-25",
+                    birthPlace: "Aného",
+                    status: "Nouveau",
+                    guardianName: "Jacques AGBA",
+                    guardianPhone: "+228 97 89 01 23",
+                    class: "2nd",
+                    series: "D"
+                },
+                {
+                    lastName: "MULLER",
+                    firstName: "Anna",
+                    studentId: "MAT-LYC-004",
+                    gender: "F",
+                    birthDate: "2007-04-08",
+                    birthPlace: "Badou",
+                    status: "Nouvelle",
+                    guardianName: "Claire MULLER",
+                    guardianPhone: "+228 98 90 12 34",
+                    class: "2nd",
+                    series: "A"
+                },
+                {
+                    lastName: "KOFFI",
+                    firstName: "Éric",
+                    studentId: "MAT-LYC-005",
+                    gender: "M",
+                    birthDate: "2006-09-12",
+                    birthPlace: "Notsé",
+                    status: "Redoublant",
+                    guardianName: "Daniel KOFFI",
+                    guardianPhone: "+228 99 01 23 45",
+                    class: "2nd",
+                    series: "C"
+                }
+            ]
+        };
+
+        // En-têtes des colonnes
+        const baseHeaders = [
+            { key: 'lastName', label: 'Nom*', description: 'Nom de famille de l\'élève' },
+            { key: 'firstName', label: 'Prénom*', description: 'Prénom de l\'élève' },
+            { key: 'studentId', label: 'Matricule', description: 'Numéro de matricule (optionnel)' },
+            { key: 'gender', label: 'Sexe*', description: 'M (Masculin) ou F (Féminin)' },
+            { key: 'birthDate', label: 'Date de Naissance', description: 'Format: AAAA-MM-JJ' },
+            { key: 'birthPlace', label: 'Lieu de Naissance', description: 'Ville de naissance' },
+            { key: 'status', label: 'Statut*', description: 'Nouveau/Nouvelle/Redoublant/Redoublante' },
+            { key: 'guardianName', label: 'Nom du Tuteur', description: 'Nom du parent/tuteur' },
+            { key: 'guardianPhone', label: 'Téléphone Tuteur', description: 'Numéro de téléphone' },
+            { key: 'class', label: 'Classe*', description: 'Ex: 6ème, 2nd, 1ère' }
+        ];
+
+        const lyceeHeaders = [
+            ...baseHeaders,
+            { key: 'series', label: 'Série', description: 'Pour lycée: A, C, D, E' }
+        ];
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTemplate();
+        });
+
+        function updateTemplate() {
+            const classLevel = document.getElementById('classLevel').value;
+            const className = document.getElementById('className').value || '6ème';
+            const studentCount = parseInt(document.getElementById('studentCount').value) || 5;
+            const includeExamples = document.getElementById('includeExamples').checked;
+            
+            const headers = classLevel === 'lycee' ? lyceeHeaders : baseHeaders;
+            const data = includeExamples ? sampleData[classLevel] : [];
+            
+            // Limiter les données d'exemple au nombre demandé
+            const exampleData = data.slice(0, Math.min(studentCount, data.length));
+            
+            // Générer l'aperçu du tableau
+            const tablePreview = document.getElementById('tablePreview');
+            tablePreview.innerHTML = '';
+            
+            const table = document.createElement('table');
+            
+            // En-têtes
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header.label;
+                th.title = header.description;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+            
+            // Corps du tableau
+            const tbody = document.createElement('tbody');
+            
+            if (includeExamples && exampleData.length > 0) {
+                exampleData.forEach(student => {
+                    const row = document.createElement('tr');
+                    headers.forEach(header => {
+                        const td = document.createElement('td');
+                        let value = student[header.key] || '';
+                        
+                        // Mettre à jour la classe
+                        if (header.key === 'class') {
+                            value = className;
+                        }
+                        
+                        td.textContent = value;
+                        row.appendChild(td);
+                    });
+                    tbody.appendChild(row);
+                });
+            } else {
+                // Lignes vides
+                for (let i = 0; i < studentCount; i++) {
+                    const row = document.createElement('tr');
+                    headers.forEach(header => {
+                        const td = document.createElement('td');
+                        if (header.key === 'class') {
+                            td.textContent = className;
+                        }
+                        row.appendChild(td);
+                    });
+                    tbody.appendChild(row);
+                }
+            }
+            
+            table.appendChild(tbody);
+            tablePreview.appendChild(table);
+        }
+
+        function generateExcelFile() {
+            const classLevel = document.getElementById('classLevel').value;
+            const className = document.getElementById('className').value || '6ème';
+            const headers = classLevel === 'lycee' ? lyceeHeaders : baseHeaders;
+            
+            // Créer les données pour le fichier Excel
+            const data = [];
+            
+            // Ajouter les en-têtes
+            const headerRow = headers.map(h => h.label);
+            data.push(headerRow);
+            
+            // Ajouter une ligne d'exemple
+            const exampleRow = headers.map(header => {
+                switch(header.key) {
+                    case 'lastName': return 'KOUMA';
+                    case 'firstName': return 'Koffi';
+                    case 'studentId': return 'MAT-2024-001';
+                    case 'gender': return 'M';
+                    case 'birthDate': return '2010-05-15';
+                    case 'birthPlace': return 'Lomé';
+                    case 'status': return 'Nouveau';
+                    case 'guardianName': return 'Jean KOUMA';
+                    case 'guardianPhone': return '+228 90 12 34 56';
+                    case 'class': return className;
+                    case 'series': return classLevel === 'lycee' ? 'C' : '';
+                    default: return '';
+                }
+            });
+            data.push(exampleRow);
+            
+            // Ajouter des lignes vides pour remplissage
+            for (let i = 0; i < 4; i++) {
+                const emptyRow = headers.map(header => header.key === 'class' ? className : '');
+                data.push(emptyRow);
+            }
+            
+            // Créer la feuille de calcul
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            
+            // Ajuster la largeur des colonnes
+            const wscols = headers.map(() => ({wch: 20}));
+            ws['!cols'] = wscols;
+            
+            // Ajouter des validations de données
+            const validations = {
+                D2: { // Sexe
+                    type: 'list',
+                    formulae: ['"M,F"']
+                },
+                G2: { // Statut
+                    type: 'list',
+                    formulae: ['"Nouveau,Nouvelle,Redoublant,Redoublante"']
+                }
+            };
+            
+            if (classLevel === 'lycee') {
+                validations.K2 = { // Série
+                    type: 'list',
+                    formulae: ['"A,C,D,E"']
+                };
+            }
+            
+            // Créer le classeur
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Élèves');
+            
+            // Ajouter une feuille d'instructions
+            const instructionsData = [
+                ['INSTRUCTIONS POUR LE REMPLISSAGE DU FICHIER'],
+                [''],
+                ['1. CONSERVEZ LES EN-TÊTES DE COLONNES'],
+                ['2. REMPLISSEZ LES DONNÉES DES ÉLÈVES'],
+                ['3. LES CHAMPS OBLIGATOIRES SONT MARQUÉS D\'UN *'],
+                ['4. FORMATS RECOMMANDÉS :'],
+                ['   - Date : AAAA-MM-JJ'],
+                ['   - Téléphone : +228 XX XX XX XX'],
+                ['   - Sexe : M ou F'],
+                [''],
+                ['COLONNES OBLIGATOIRES :'],
+                ...headers.filter(h => h.label.includes('*')).map(h => [`   - ${h.label.replace('*', '')} : ${h.description}`]),
+                [''],
+                ['CONSEILS :'],
+                ['• Ne modifiez pas l\'ordre des colonnes'],
+                ['• Utilisez les listes déroulantes pour les champs avec options'],
+                ['• Enregistrez le fichier avant importation']
+            ];
+            
+            const wsInstructions = XLSX.utils.aoa_to_sheet(instructionsData);
+            const instructionCols = [{wch: 80}];
+            wsInstructions['!cols'] = instructionCols;
+            XLSX.utils.book_append_sheet(wb, wsInstructions, 'Instructions');
+            
+            // Générer le nom du fichier
+            const fileName = `Modele_Import_Eleves_${className.replace('/', '_')}_${new Date().toISOString().slice(0, 10)}.xlsx`;
+            
+            // Télécharger le fichier
+            XLSX.writeFile(wb, fileName);
+            
+            showNotification('Modèle Excel généré avec succès !', 'success');
+        }
+
+        function generateCSVFile() {
+            const classLevel = document.getElementById('classLevel').value;
+            const className = document.getElementById('className').value || '6ème';
+            const headers = classLevel === 'lycee' ? lyceeHeaders : baseHeaders;
+            
+            // Créer le contenu CSV
+            let csvContent = 'data:text/csv;charset=utf-8,';
+            
+            // Ajouter les en-têtes
+            csvContent += headers.map(h => `"${h.label}"`).join(',') + '\n';
+            
+            // Ajouter une ligne d'exemple
+            const exampleRow = headers.map(header => {
+                switch(header.key) {
+                    case 'lastName': return 'KOUMA';
+                    case 'firstName': return 'Koffi';
+                    case 'studentId': return 'MAT-2024-001';
+                    case 'gender': return 'M';
+                    case 'birthDate': return '2010-05-15';
+                    case 'birthPlace': return 'Lomé';
+                    case 'status': return 'Nouveau';
+                    case 'guardianName': return 'Jean KOUMA';
+                    case 'guardianPhone': return '+228 90 12 34 56';
+                    case 'class': return className;
+                    case 'series': return classLevel === 'lycee' ? 'C' : '';
+                    default: return '';
+                }
+            });
+            csvContent += exampleRow.map(val => `"${val}"`).join(',') + '\n';
+            
+            // Ajouter des lignes vides
+            for (let i = 0; i < 4; i++) {
+                const emptyRow = headers.map(header => header.key === 'class' ? className : '');
+                csvContent += emptyRow.map(val => `"${val}"`).join(',') + '\n';
+            }
+            
+            // Créer le lien de téléchargement
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', `Modele_Import_Eleves_${className.replace('/', '_')}_${new Date().toISOString().slice(0, 10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showNotification('Modèle CSV généré avec succès !', 'success');
+        }
+
+        function showImportInstructions() {
+            const modal = document.getElementById('instructionsModal');
+            const content = document.getElementById('instructionsContent');
+            
+            const instructions = `
+                <h3 style="color: #006400; margin-bottom: 15px;">📋 Étapes d'importation :</h3>
+                <ol style="margin-bottom: 20px; padding-left: 20px;">
+                    <li style="margin-bottom: 10px;"><strong>Téléchargez le modèle Excel ou CSV</strong></li>
+                    <li style="margin-bottom: 10px;"><strong>Remplissez le fichier avec vos données</strong>
+                        <ul style="margin-top: 5px; padding-left: 20px;">
+                            <li>Conservez les en-têtes de colonnes</li>
+                            <li>Remplissez toutes les colonnes obligatoires (*)</li>
+                            <li>Utilisez le format de date : AAAA-MM-JJ</li>
+                        </ul>
+                    </li>
+                    <li style="margin-bottom: 10px;"><strong>Enregistrez le fichier</strong>
+                        <ul style="margin-top: 5px; padding-left: 20px;">
+                            <li>Excel : .xlsx ou .xls</li>
+                            <li>CSV : .csv (encodage UTF-8)</li>
+                        </ul>
+                    </li>
+                    <li style="margin-bottom: 10px;"><strong>Importez dans le système</strong>
+                        <ul style="margin-top: 5px; padding-left: 20px;">
+                            <li>Accédez à l'onglet "Gestion Classe"</li>
+                            <li>Cliquez sur "Importer Liste"</li>
+                            <li>Sélectionnez votre fichier rempli</li>
+                        </ul>
+                    </li>
+                </ol>
+                
+                <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                    <h4 style="color: #006400; margin-bottom: 10px;">✅ Formats acceptés :</h4>
+                    <ul style="margin-bottom: 10px; padding-left: 20px;">
+                        <li>Microsoft Excel (.xlsx, .xls)</li>
+                        <li>CSV (.csv) - recommandé pour les grandes listes</li>
+                        <li>Fichier texte (.txt) avec séparateur virgule</li>
+                    </ul>
+                </div>
+                
+                <div style="background: #fff3cd; padding: 15px; border-radius: 8px;">
+                    <h4 style="color: #856404; margin-bottom: 10px;">⚠️ Points d'attention :</h4>
+                    <ul style="margin-bottom: 10px; padding-left: 20px;">
+                        <li>Vérifiez l'orthographe des noms et prénoms</li>
+                        <li>Assurez-vous que les dates sont au bon format</li>
+                        <li>Les numéros de téléphone doivent inclure l'indicatif +228</li>
+                        <li>Le système génère automatiquement un matricule si non fourni</li>
+                    </ul>
+                </div>
+                
+                <div style="margin-top: 20px; text-align: center;">
+                    <p style="color: #666; font-style: italic;">
+                        Pour toute assistance, contactez le support technique du Ministère
+                    </p>
+                </div>
+            `;
+            
+            content.innerHTML = instructions;
+            modal.style.display = 'flex';
+        }
+
+        function closeInstructions() {
+            document.getElementById('instructionsModal').style.display = 'none';
+        }
+
+        function downloadSampleData() {
+            const classLevel = document.getElementById('classLevel').value;
+            const className = document.getElementById('className').value || '6ème';
+            const headers = classLevel === 'lycee' ? lyceeHeaders : baseHeaders;
+            
+            // Créer un jeu de données complet
+            const data = sampleData[classLevel];
+            
+            // Mettre à jour la classe dans toutes les données
+            data.forEach(student => {
+                student.class = className;
+            });
+            
+            // Créer le contenu Excel
+            const wsData = [];
+            
+            // Ajouter les en-têtes
+            wsData.push(headers.map(h => h.label));
+            
+            // Ajouter toutes les données
+            data.forEach(student => {
+                const row = headers.map(header => student[header.key] || '');
+                wsData.push(row);
+            });
+            
+            // Créer la feuille de calcul
+            const ws = XLSX.utils.aoa_to_sheet(wsData);
+            
+            // Ajuster la largeur des colonnes
+            const wscols = headers.map(() => ({wch: 20}));
+            ws['!cols'] = wscols;
+            
+            // Créer le classeur
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Élèves Exemple');
+            
+            // Générer le nom du fichier
+            const fileName = `Donnees_Exemple_${className.replace('/', '_')}_Complet.xlsx`;
+            
+            // Télécharger le fichier
+            XLSX.writeFile(wb, fileName);
+            
+            showNotification('Jeu de données exemple téléchargé !', 'success');
+        }
+
+        function showNotification(message, type = 'info') {
+            // Créer la notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#28a745' : '#17a2b8'};
+                color: white;
+                padding: 15px 25px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 1001;
+                animation: slideIn 0.3s ease;
+                border-left: 4px solid ${type === 'success' ? '#1e7e34' : '#138496'};
+            `;
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}" style="font-size: 18px;"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            // Ajouter l'animation CSS
+            if (!document.querySelector('#notification-anim')) {
+                const style = document.createElement('style');
+                style.id = 'notification-anim';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOut {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            document.body.appendChild(notification);
+            
+            // Supprimer après 5 secondes
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+
+        // Fermer la modal en cliquant à l'extérieur
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('instructionsModal');
+            if (event.target === modal) {
+                closeInstructions();
+            }
+        });
+    </script>
+
+    <!-- Font Awesome pour les icônes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</body>
+</html>
