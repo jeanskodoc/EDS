@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Générateur de Fichier Excel - Importation Élèves</title>
+    <title>Saisie des Élèves - Importation</title>
     <!-- SheetJS pour générer le fichier Excel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
@@ -23,7 +23,7 @@
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             background: white;
             border-radius: 12px;
@@ -104,74 +104,76 @@
             font-weight: bold;
         }
 
-        .data-preview {
-            margin: 30px 0;
-            overflow-x: auto;
+        .data-sections {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
         }
 
-        .data-preview h3 {
-            color: #006400;
-            margin-bottom: 15px;
-            font-size: 18px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        th {
-            background: linear-gradient(135deg, #006400, #004d00);
-            color: white;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-            border-right: 1px solid rgba(255,255,255,0.1);
-        }
-
-        th:last-child {
-            border-right: none;
-        }
-
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #dee2e6;
-            border-right: 1px solid #dee2e6;
-        }
-
-        td:last-child {
-            border-right: none;
-        }
-
-        tr:nth-child(even) {
+        .entry-form {
+            flex: 1;
             background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            border: 2px solid #dee2e6;
         }
 
-        tr:hover {
-            background: #e8f5e9;
+        .preview-section {
+            flex: 2;
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+            max-height: 600px;
+            overflow-y: auto;
         }
 
-        .note {
-            background: #fff3cd;
-            border: 1px solid #ffc107;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 20px 0;
-            font-size: 14px;
+        .entry-form h3, .preview-section h3 {
+            color: #006400;
+            margin-bottom: 20px;
+            font-size: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #FF0000;
         }
 
-        .note strong {
-            color: #856404;
+        .form-group {
+            margin-bottom: 20px;
         }
 
-        .actions {
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .required::after {
+            content: '*';
+            color: #FF0000;
+            margin-left: 4px;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #006400;
+            box-shadow: 0 0 0 3px rgba(0, 100, 0, 0.1);
+        }
+
+        .form-row {
             display: flex;
             gap: 15px;
-            justify-content: center;
-            margin-top: 30px;
-            flex-wrap: wrap;
+        }
+
+        .form-row .form-group {
+            flex: 1;
         }
 
         .btn {
@@ -185,7 +187,7 @@
             align-items: center;
             gap: 8px;
             font-size: 16px;
-            min-width: 200px;
+            width: 100%;
             justify-content: center;
         }
 
@@ -195,7 +197,7 @@
             border: 2px solid #FF0000;
         }
 
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
             background: linear-gradient(135deg, #004d00, #006400);
             transform: translateY(-2px);
             box-shadow: 0 6px 15px rgba(0, 100, 0, 0.2);
@@ -221,6 +223,143 @@
             transform: translateY(-2px);
         }
 
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107, #e0a800);
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background: linear-gradient(135deg, #e0a800, #ffc107);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #c82333, #dc3545);
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: linear-gradient(135deg, #006400, #004d00);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            position: sticky;
+            top: 0;
+        }
+
+        th:last-child {
+            border-right: none;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+            border-right: 1px solid #dee2e6;
+            vertical-align: middle;
+        }
+
+        td:last-child {
+            border-right: none;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        tr:hover {
+            background: #e8f5e9;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .edit-btn {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background: #138496;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        .data-count {
+            background: #006400;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .note {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        .note strong {
+            color: #856404;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .export-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
         .download-link {
             display: block;
             text-align: center;
@@ -234,49 +373,6 @@
             text-decoration: underline;
         }
 
-        .template-options {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            border: 2px solid #e9ecef;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #495057;
-        }
-
-        select, input {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #dee2e6;
-            border-radius: 6px;
-            font-size: 16px;
-        }
-
-        select:focus, input:focus {
-            outline: none;
-            border-color: #006400;
-            box-shadow: 0 0 0 3px rgba(0, 100, 0, 0.1);
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .checkbox-group input {
-            width: auto;
-        }
-
         .footer {
             text-align: center;
             margin-top: 30px;
@@ -284,6 +380,37 @@
             border-top: 1px solid #dee2e6;
             color: #666;
             font-size: 14px;
+        }
+
+        .student-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-nouveau { background: #d4edda; color: #155724; }
+        .status-nouvelle { background: #d4edda; color: #155724; }
+        .status-redoublant { background: #fff3cd; color: #856404; }
+        .status-redoublante { background: #fff3cd; color: #856404; }
+
+        .empty-message {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        @media (max-width: 992px) {
+            .data-sections {
+                flex-direction: column;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -306,6 +433,11 @@
             th, td {
                 padding: 8px;
             }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 5px;
+            }
         }
     </style>
 </head>
@@ -318,102 +450,580 @@
                 <div class="flag-stripe stripe-green"></div>
                 <span>République Togolaise</span>
             </div>
-            <h1>Générateur de Fichier Excel pour Importation des Élèves</h1>
-            <p>Système de Gestion Scolaire - Ministère des Enseignements Primaire, Secondaire et Technique</p>
+            <h1>Saisie des Élèves - Système d'Importation</h1>
+            <p>Ministère des Enseignements Primaire, Secondaire et Technique</p>
         </div>
 
         <div class="instructions">
-            <h2><i class="fas fa-info-circle"></i> Instructions d'utilisation</h2>
+            <h2><i class="fas fa-info-circle"></i> Instructions de saisie</h2>
             <ul>
-                <li>Téléchargez le fichier Excel modèle ci-dessous</li>
-                <li>Remplissez le fichier avec les données de vos élèves</li>
-                <li>Conservez l'ordre des colonnes et les en-têtes</li>
-                <li>Importez le fichier rempli dans le système de gestion scolaire</li>
+                <li>Saisissez les informations de chaque élève dans le formulaire</li>
+                <li>Cliquez sur "Enregistrer l'élève" pour ajouter à la liste</li>
+                <li>Modifiez ou supprimez des élèves dans le tableau de droite</li>
+                <li>Exportez les données vers Excel ou CSV une fois la saisie terminée</li>
                 <li>Les champs marqués d'un astérisque (*) sont obligatoires</li>
             </ul>
         </div>
 
-        <div class="template-options">
-            <h3><i class="fas fa-cog"></i> Options du modèle</h3>
-            <div class="form-group">
-                <label for="classLevel">Niveau de la classe *</label>
-                <select id="classLevel" onchange="updateTemplate()">
-                    <option value="college">Collège</option>
-                    <option value="lycee">Lycée</option>
-                </select>
+        <div class="data-sections">
+            <!-- Formulaire de saisie -->
+            <div class="entry-form">
+                <h3><i class="fas fa-user-plus"></i> Formulaire de saisie</h3>
+                
+                <div class="form-group">
+                    <label for="classLevel" class="required">Niveau scolaire</label>
+                    <select id="classLevel" onchange="updateClassOptions()">
+                        <option value="college">Collège</option>
+                        <option value="lycee">Lycée</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="className" class="required">Classe</label>
+                    <select id="className">
+                        <!-- Options seront générées dynamiquement -->
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="lastName" class="required">Nom</label>
+                        <input type="text" id="lastName" placeholder="Nom de famille">
+                    </div>
+                    <div class="form-group">
+                        <label for="firstName" class="required">Prénom</label>
+                        <input type="text" id="firstName" placeholder="Prénom">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="gender" class="required">Sexe</label>
+                        <select id="gender">
+                            <option value="">Sélectionner</option>
+                            <option value="M">Masculin (M)</option>
+                            <option value="F">Féminin (F)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="status" class="required">Statut</label>
+                        <select id="status">
+                            <option value="">Sélectionner</option>
+                            <option value="Nouveau">Nouveau</option>
+                            <option value="Nouvelle">Nouvelle</option>
+                            <option value="Redoublant">Redoublant</option>
+                            <option value="Redoublante">Redoublante</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="studentId">Matricule</label>
+                    <input type="text" id="studentId" placeholder="MAT-2024-001">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="birthDate">Date de naissance</label>
+                        <input type="date" id="birthDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="birthPlace">Lieu de naissance</label>
+                        <input type="text" id="birthPlace" placeholder="Lomé, Kara, etc.">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="guardianName">Nom du tuteur</label>
+                    <input type="text" id="guardianName" placeholder="Nom du parent/tuteur">
+                </div>
+
+                <div class="form-group">
+                    <label for="guardianPhone">Téléphone tuteur</label>
+                    <input type="tel" id="guardianPhone" placeholder="+228 XX XX XX XX">
+                </div>
+
+                <div class="form-group" id="seriesField" style="display: none;">
+                    <label for="series">Série (Lycée)</label>
+                    <select id="series">
+                        <option value="">Sélectionner</option>
+                        <option value="A">Série A</option>
+                        <option value="C">Série C</option>
+                        <option value="D">Série D</option>
+                        <option value="E">Série E</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-success" onclick="addStudent()" id="addStudentBtn">
+                        <i class="fas fa-save"></i> Enregistrer l'élève
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-secondary" onclick="clearForm()">
+                        <i class="fas fa-times"></i> Effacer le formulaire
+                    </button>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="className">Nom de la classe *</label>
-                <input type="text" id="className" value="6ème" oninput="updateTemplate()" placeholder="Ex: 6ème, 2nd, 1ère A...">
-            </div>
-            <div class="form-group">
-                <label for="studentCount">Nombre d'élèves dans le modèle</label>
-                <input type="number" id="studentCount" value="5" min="1" max="100" oninput="updateTemplate()">
-            </div>
-            <div class="form-group">
-                <label>Options supplémentaires</label>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="includeExamples" checked onchange="updateTemplate()">
-                    <label for="includeExamples">Inclure des exemples de données</label>
+
+            <!-- Aperçu des données -->
+            <div class="preview-section">
+                <h3><i class="fas fa-list"></i> Liste des élèves enregistrés</h3>
+                <div class="data-count" id="studentCount">0 élève(s)</div>
+                
+                <div id="studentTableContainer">
+                    <!-- Le tableau sera généré dynamiquement ici -->
                 </div>
             </div>
         </div>
 
-        <div class="data-preview">
-            <h3><i class="fas fa-table"></i> Aperçu du modèle Excel</h3>
-            <div id="tablePreview">
-                <!-- Le tableau sera généré dynamiquement ici -->
-            </div>
-        </div>
-
         <div class="note">
-            <strong><i class="fas fa-lightbulb"></i> Note importante :</strong> 
-            Le système accepte les formats Excel (.xlsx, .xls) et CSV. Pour de meilleurs résultats, 
-            utilisez le modèle Excel généré ci-dessous qui respecte le format attendu par le système.
+            <strong><i class="fas fa-lightbulb"></i> Important :</strong> 
+            Toutes les données sont automatiquement sauvegardées dans votre navigateur. 
+            Vous pouvez ajouter, modifier ou supprimer des élèves à tout moment.
         </div>
 
         <div class="actions">
-            <button class="btn btn-primary" onclick="generateExcelFile()">
-                <i class="fas fa-file-excel"></i> Télécharger le Modèle Excel
+            <button class="btn btn-primary" onclick="exportToExcel()">
+                <i class="fas fa-file-excel"></i> Exporter vers Excel
             </button>
-            <button class="btn btn-success" onclick="generateCSVFile()">
-                <i class="fas fa-file-csv"></i> Télécharger le Modèle CSV
+            <button class="btn btn-success" onclick="exportToCSV()">
+                <i class="fas fa-file-csv"></i> Exporter vers CSV
             </button>
-            <button class="btn btn-secondary" onclick="showImportInstructions()">
-                <i class="fas fa-question-circle"></i> Instructions d'Importation
+            <button class="btn btn-warning" onclick="loadSampleData()">
+                <i class="fas fa-magic"></i> Charger des données d'exemple
+            </button>
+            <button class="btn btn-danger" onclick="clearAllData()">
+                <i class="fas fa-trash"></i> Effacer toutes les données
             </button>
         </div>
-
-        <a href="#" class="download-link" onclick="downloadSampleData()">
-            <i class="fas fa-download"></i> Télécharger un jeu de données d'exemple complet
-        </a>
 
         <div class="footer">
             <p>© 2024 Ministère des Enseignements Primaire, Secondaire et Technique - République Togolaise</p>
-            <p style="font-size: 12px; margin-top: 5px;">Version du générateur : 1.0 | Compatible avec le Système de Gestion Scolaire Togolais</p>
-        </div>
-    </div>
-
-    <!-- Modal pour les instructions -->
-    <div id="instructionsModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-        <div style="background: white; border-radius: 10px; padding: 30px; max-width: 600px; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.3); border: 3px solid #006400;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #FF0000;">
-                <h2 style="color: #006400; margin: 0;"><i class="fas fa-file-import"></i> Instructions d'Importation</h2>
-                <button onclick="closeInstructions()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #666;">×</button>
-            </div>
-            <div id="instructionsContent">
-                <!-- Contenu des instructions -->
-            </div>
-            <div style="text-align: center; margin-top: 20px;">
-                <button onclick="closeInstructions()" style="padding: 10px 30px; background: #006400; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;">Fermer</button>
-            </div>
+            <p style="font-size: 12px; margin-top: 5px;">Version 2.0 | Saisie manuelle des élèves</p>
         </div>
     </div>
 
     <script>
-        // Données d'exemple pour le modèle
-        const sampleData = {
-            college: [
+        // Données stockées localement
+        let students = [];
+        let editingIndex = -1;
+        
+        // Niveaux de classes disponibles
+        const classLevels = {
+            college: ['6ème', '5ème', '4ème', '3ème'],
+            lycee: ['2nd', '1ère', 'Terminale']
+        };
+
+        // Options de série pour le lycée
+        const seriesOptions = {
+            '2nd': [''],
+            '1ère': ['A', 'C', 'D', 'E'],
+            'Terminale': ['A', 'C', 'D', 'E']
+        };
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Charger les données sauvegardées
+            loadSavedData();
+            
+            // Initialiser les options de classe
+            updateClassOptions();
+            
+            // Mettre à jour l'affichage
+            updateStudentTable();
+        });
+
+        function updateClassOptions() {
+            const classLevel = document.getElementById('classLevel').value;
+            const classNameSelect = document.getElementById('className');
+            const seriesField = document.getElementById('seriesField');
+            
+            // Afficher/masquer le champ série
+            seriesField.style.display = classLevel === 'lycee' ? 'block' : 'none';
+            
+            // Mettre à jour les options de classe
+            classNameSelect.innerHTML = '';
+            classLevels[classLevel].forEach(className => {
+                const option = document.createElement('option');
+                option.value = className;
+                option.textContent = className;
+                classNameSelect.appendChild(option);
+            });
+            
+            // Mettre à jour les options de série
+            updateSeriesOptions();
+        }
+
+        function updateSeriesOptions() {
+            const className = document.getElementById('className').value;
+            const seriesSelect = document.getElementById('series');
+            const classLevel = document.getElementById('classLevel').value;
+            
+            if (classLevel === 'lycee') {
+                seriesSelect.innerHTML = '<option value="">Sélectionner</option>';
+                seriesOptions[className].forEach(series => {
+                    const option = document.createElement('option');
+                    option.value = series;
+                    option.textContent = series ? `Série ${series}` : 'Non applicable';
+                    seriesSelect.appendChild(option);
+                });
+            }
+        }
+
+        function validateForm() {
+            const requiredFields = [
+                'lastName', 'firstName', 'gender', 'status', 'className'
+            ];
+            
+            for (const fieldId of requiredFields) {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    showNotification(`Le champ "${field.previousElementSibling.textContent}" est requis`, 'error');
+                    field.focus();
+                    return false;
+                }
+            }
+            
+            // Validation spécifique
+            const gender = document.getElementById('gender').value;
+            if (!['M', 'F'].includes(gender)) {
+                showNotification('Le sexe doit être M ou F', 'error');
+                return false;
+            }
+            
+            const status = document.getElementById('status').value;
+            const validStatuses = ['Nouveau', 'Nouvelle', 'Redoublant', 'Redoublante'];
+            if (!validStatuses.includes(status)) {
+                showNotification('Statut invalide', 'error');
+                return false;
+            }
+            
+            return true;
+        }
+
+        function addStudent() {
+            if (!validateForm()) {
+                return;
+            }
+            
+            const student = {
+                lastName: document.getElementById('lastName').value.trim(),
+                firstName: document.getElementById('firstName').value.trim(),
+                studentId: document.getElementById('studentId').value.trim(),
+                gender: document.getElementById('gender').value,
+                birthDate: document.getElementById('birthDate').value,
+                birthPlace: document.getElementById('birthPlace').value.trim(),
+                status: document.getElementById('status').value,
+                guardianName: document.getElementById('guardianName').value.trim(),
+                guardianPhone: document.getElementById('guardianPhone').value.trim(),
+                classLevel: document.getElementById('classLevel').value,
+                className: document.getElementById('className').value,
+                series: document.getElementById('classLevel').value === 'lycee' ? 
+                       document.getElementById('series').value : ''
+            };
+            
+            if (editingIndex === -1) {
+                // Ajouter un nouvel élève
+                students.push(student);
+                showNotification('Élève ajouté avec succès', 'success');
+            } else {
+                // Mettre à jour un élève existant
+                students[editingIndex] = student;
+                showNotification('Élève modifié avec succès', 'success');
+                editingIndex = -1;
+                
+                // Changer le texte du bouton
+                const addBtn = document.getElementById('addStudentBtn');
+                addBtn.innerHTML = '<i class="fas fa-save"></i> Enregistrer l\'élève';
+            }
+            
+            // Réinitialiser le formulaire
+            clearForm();
+            
+            // Mettre à jour le tableau et sauvegarder
+            updateStudentTable();
+            saveData();
+        }
+
+        function clearForm() {
+            document.getElementById('lastName').value = '';
+            document.getElementById('firstName').value = '';
+            document.getElementById('studentId').value = '';
+            document.getElementById('gender').value = '';
+            document.getElementById('birthDate').value = '';
+            document.getElementById('birthPlace').value = '';
+            document.getElementById('status').value = '';
+            document.getElementById('guardianName').value = '';
+            document.getElementById('guardianPhone').value = '';
+            document.getElementById('series').value = '';
+            
+            editingIndex = -1;
+            const addBtn = document.getElementById('addStudentBtn');
+            addBtn.innerHTML = '<i class="fas fa-save"></i> Enregistrer l\'élève';
+        }
+
+        function editStudent(index) {
+            const student = students[index];
+            
+            // Remplir le formulaire
+            document.getElementById('classLevel').value = student.classLevel;
+            updateClassOptions();
+            document.getElementById('className').value = student.className;
+            document.getElementById('lastName').value = student.lastName;
+            document.getElementById('firstName').value = student.firstName;
+            document.getElementById('studentId').value = student.studentId || '';
+            document.getElementById('gender').value = student.gender;
+            document.getElementById('birthDate').value = student.birthDate || '';
+            document.getElementById('birthPlace').value = student.birthPlace || '';
+            document.getElementById('status').value = student.status;
+            document.getElementById('guardianName').value = student.guardianName || '';
+            document.getElementById('guardianPhone').value = student.guardianPhone || '';
+            
+            if (student.classLevel === 'lycee') {
+                document.getElementById('series').value = student.series || '';
+            }
+            
+            // Mettre à jour les options de série
+            updateSeriesOptions();
+            
+            // Changer le mode d'édition
+            editingIndex = index;
+            
+            // Changer le texte du bouton
+            const addBtn = document.getElementById('addStudentBtn');
+            addBtn.innerHTML = '<i class="fas fa-edit"></i> Modifier l\'élève';
+            
+            // Faire défiler vers le formulaire
+            document.querySelector('.entry-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function deleteStudent(index) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cet élève ?')) {
+                students.splice(index, 1);
+                updateStudentTable();
+                saveData();
+                showNotification('Élève supprimé avec succès', 'success');
+            }
+        }
+
+        function updateStudentTable() {
+            const container = document.getElementById('studentTableContainer');
+            
+            if (students.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-message">
+                        <i class="fas fa-users fa-3x" style="color: #dee2e6; margin-bottom: 15px;"></i>
+                        <p>Aucun élève enregistré</p>
+                        <p style="font-size: 14px;">Commencez par ajouter des élèves en utilisant le formulaire</p>
+                    </div>
+                `;
+                document.getElementById('studentCount').textContent = '0 élève(s)';
+                return;
+            }
+            
+            let tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nom & Prénom</th>
+                            <th>Classe</th>
+                            <th>Sexe</th>
+                            <th>Statut</th>
+                            <th>Matricule</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            students.forEach((student, index) => {
+                const fullName = `${student.lastName} ${student.firstName}`;
+                const className = student.classLevel === 'lycee' && student.series ? 
+                                 `${student.className} ${student.series}` : student.className;
+                
+                tableHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td><strong>${fullName}</strong></td>
+                        <td>${className}</td>
+                        <td>${student.gender}</td>
+                        <td><span class="student-status status-${student.status.toLowerCase()}">${student.status}</span></td>
+                        <td>${student.studentId || 'Non attribué'}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn edit-btn" onclick="editStudent(${index})">
+                                    <i class="fas fa-edit"></i> Modifier
+                                </button>
+                                <button class="action-btn delete-btn" onclick="deleteStudent(${index})">
+                                    <i class="fas fa-trash"></i> Supprimer
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = tableHTML;
+            document.getElementById('studentCount').textContent = `${students.length} élève(s)`;
+        }
+
+        function saveData() {
+            const saveData = {
+                students: students,
+                lastSave: new Date().toISOString()
+            };
+            
+            try {
+                localStorage.setItem('studentData', JSON.stringify(saveData));
+                console.log('Données sauvegardées');
+            } catch (e) {
+                console.error('Erreur lors de la sauvegarde:', e);
+            }
+        }
+
+        function loadSavedData() {
+            try {
+                const savedData = localStorage.getItem('studentData');
+                if (savedData) {
+                    const parsedData = JSON.parse(savedData);
+                    students = parsedData.students || [];
+                    console.log('Données chargées:', students.length, 'élèves');
+                }
+            } catch (e) {
+                console.error('Erreur lors du chargement:', e);
+            }
+        }
+
+        function exportToExcel() {
+            if (students.length === 0) {
+                showNotification('Aucun élève à exporter', 'error');
+                return;
+            }
+            
+            // Préparer les données pour l'export
+            const headers = [
+                'Nom', 'Prénom', 'Matricule', 'Sexe', 'Date de Naissance', 
+                'Lieu de Naissance', 'Statut', 'Nom du Tuteur', 'Téléphone Tuteur',
+                'Niveau', 'Classe', 'Série'
+            ];
+            
+            const data = [headers];
+            
+            students.forEach(student => {
+                const row = [
+                    student.lastName,
+                    student.firstName,
+                    student.studentId || '',
+                    student.gender,
+                    student.birthDate || '',
+                    student.birthPlace || '',
+                    student.status,
+                    student.guardianName || '',
+                    student.guardianPhone || '',
+                    student.classLevel === 'college' ? 'Collège' : 'Lycée',
+                    student.className,
+                    student.series || ''
+                ];
+                data.push(row);
+            });
+            
+            // Créer la feuille de calcul
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            
+            // Ajuster la largeur des colonnes
+            const wscols = headers.map(() => ({wch: 20}));
+            ws['!cols'] = wscols;
+            
+            // Créer le classeur
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Élèves');
+            
+            // Ajouter une feuille d'instructions
+            const instructionsData = [
+                ['FICHIER D\'EXPORTATION DES ÉLÈVES'],
+                [''],
+                ['Date d\'exportation :', new Date().toLocaleDateString('fr-FR')],
+                ['Nombre d\'élèves :', students.length],
+                [''],
+                ['INFORMATIONS :'],
+                ['• Ce fichier a été généré depuis le système de saisie manuelle'],
+                ['• Toutes les données ont été validées'],
+                ['• Prêt pour l\'importation dans le système de gestion scolaire']
+            ];
+            
+            const wsInstructions = XLSX.utils.aoa_to_sheet(instructionsData);
+            XLSX.utils.book_append_sheet(wb, wsInstructions, 'Informations');
+            
+            // Générer le nom du fichier
+            const fileName = `Eleves_Export_${new Date().toISOString().slice(0, 10)}.xlsx`;
+            
+            // Télécharger le fichier
+            XLSX.writeFile(wb, fileName);
+            
+            showNotification('Export Excel réussi !', 'success');
+        }
+
+        function exportToCSV() {
+            if (students.length === 0) {
+                showNotification('Aucun élève à exporter', 'error');
+                return;
+            }
+            
+            const headers = [
+                'Nom', 'Prénom', 'Matricule', 'Sexe', 'Date de Naissance', 
+                'Lieu de Naissance', 'Statut', 'Nom du Tuteur', 'Téléphone Tuteur',
+                'Niveau', 'Classe', 'Série'
+            ];
+            
+            // Créer le contenu CSV
+            let csvContent = 'data:text/csv;charset=utf-8,';
+            csvContent += headers.join(',') + '\n';
+            
+            students.forEach(student => {
+                const row = [
+                    `"${student.lastName}"`,
+                    `"${student.firstName}"`,
+                    `"${student.studentId || ''}"`,
+                    `"${student.gender}"`,
+                    `"${student.birthDate || ''}"`,
+                    `"${student.birthPlace || ''}"`,
+                    `"${student.status}"`,
+                    `"${student.guardianName || ''}"`,
+                    `"${student.guardianPhone || ''}"`,
+                    `"${student.classLevel === 'college' ? 'Collège' : 'Lycée'}"`,
+                    `"${student.className}"`,
+                    `"${student.series || ''}"`
+                ];
+                csvContent += row.join(',') + '\n';
+            });
+            
+            // Créer le lien de téléchargement
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', `Eleves_Export_${new Date().toISOString().slice(0, 10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showNotification('Export CSV réussi !', 'success');
+        }
+
+        function loadSampleData() {
+            if (students.length > 0 && !confirm('Voulez-vous remplacer les données existantes par des données d\'exemple ?')) {
+                return;
+            }
+            
+            // Données d'exemple réalistes
+            students = [
                 {
                     lastName: "KOUMA",
                     firstName: "Koffi",
@@ -424,7 +1034,9 @@
                     status: "Nouveau",
                     guardianName: "Jean KOUMA",
                     guardianPhone: "+228 90 12 34 56",
-                    class: "6ème"
+                    classLevel: "college",
+                    className: "6ème",
+                    series: ""
                 },
                 {
                     lastName: "ADJOA",
@@ -436,46 +1048,10 @@
                     status: "Nouvelle",
                     guardianName: "Marie ADJOA",
                     guardianPhone: "+228 91 23 45 67",
-                    class: "6ème"
+                    classLevel: "college",
+                    className: "5ème",
+                    series: ""
                 },
-                {
-                    lastName: "GBEASSOR",
-                    firstName: "Komi",
-                    studentId: "MAT-2024-003",
-                    gender: "M",
-                    birthDate: "2009-12-10",
-                    birthPlace: "Atakpamé",
-                    status: "Redoublant",
-                    guardianName: "Pierre GBEASSOR",
-                    guardianPhone: "+228 92 34 56 78",
-                    class: "6ème"
-                },
-                {
-                    lastName: "ASSIMA",
-                    firstName: "Mawulé",
-                    studentId: "MAT-2024-004",
-                    gender: "F",
-                    birthDate: "2010-03-30",
-                    birthPlace: "Sokodé",
-                    status: "Nouvelle",
-                    guardianName: "Alice ASSIMA",
-                    guardianPhone: "+228 93 45 67 89",
-                    class: "6ème"
-                },
-                {
-                    lastName: "AKAKPO",
-                    firstName: "Yao",
-                    studentId: "MAT-2024-005",
-                    gender: "M",
-                    birthDate: "2010-11-05",
-                    birthPlace: "Dapaong",
-                    status: "Nouveau",
-                    guardianName: "Paul AKAKPO",
-                    guardianPhone: "+228 94 56 78 90",
-                    class: "6ème"
-                }
-            ],
-            lycee: [
                 {
                     lastName: "SAGBO",
                     firstName: "Kodjo",
@@ -486,8 +1062,9 @@
                     status: "Redoublant",
                     guardianName: "Victor SAGBO",
                     guardianPhone: "+228 95 67 89 01",
-                    class: "2nd",
-                    series: "C"
+                    classLevel: "lycee",
+                    className: "2nd",
+                    series: ""
                 },
                 {
                     lastName: "DOSSOU",
@@ -499,423 +1076,51 @@
                     status: "Nouvelle",
                     guardianName: "Sophie DOSSOU",
                     guardianPhone: "+228 96 78 90 12",
-                    class: "2nd",
+                    classLevel: "lycee",
+                    className: "1ère",
                     series: "A"
-                },
-                {
-                    lastName: "AGBA",
-                    firstName: "Mawussé",
-                    studentId: "MAT-LYC-003",
-                    gender: "M",
-                    birthDate: "2006-11-25",
-                    birthPlace: "Aného",
-                    status: "Nouveau",
-                    guardianName: "Jacques AGBA",
-                    guardianPhone: "+228 97 89 01 23",
-                    class: "2nd",
-                    series: "D"
-                },
-                {
-                    lastName: "MULLER",
-                    firstName: "Anna",
-                    studentId: "MAT-LYC-004",
-                    gender: "F",
-                    birthDate: "2007-04-08",
-                    birthPlace: "Badou",
-                    status: "Nouvelle",
-                    guardianName: "Claire MULLER",
-                    guardianPhone: "+228 98 90 12 34",
-                    class: "2nd",
-                    series: "A"
-                },
-                {
-                    lastName: "KOFFI",
-                    firstName: "Éric",
-                    studentId: "MAT-LYC-005",
-                    gender: "M",
-                    birthDate: "2006-09-12",
-                    birthPlace: "Notsé",
-                    status: "Redoublant",
-                    guardianName: "Daniel KOFFI",
-                    guardianPhone: "+228 99 01 23 45",
-                    class: "2nd",
-                    series: "C"
                 }
-            ]
-        };
-
-        // En-têtes des colonnes
-        const baseHeaders = [
-            { key: 'lastName', label: 'Nom*', description: 'Nom de famille de l\'élève' },
-            { key: 'firstName', label: 'Prénom*', description: 'Prénom de l\'élève' },
-            { key: 'studentId', label: 'Matricule', description: 'Numéro de matricule (optionnel)' },
-            { key: 'gender', label: 'Sexe*', description: 'M (Masculin) ou F (Féminin)' },
-            { key: 'birthDate', label: 'Date de Naissance', description: 'Format: AAAA-MM-JJ' },
-            { key: 'birthPlace', label: 'Lieu de Naissance', description: 'Ville de naissance' },
-            { key: 'status', label: 'Statut*', description: 'Nouveau/Nouvelle/Redoublant/Redoublante' },
-            { key: 'guardianName', label: 'Nom du Tuteur', description: 'Nom du parent/tuteur' },
-            { key: 'guardianPhone', label: 'Téléphone Tuteur', description: 'Numéro de téléphone' },
-            { key: 'class', label: 'Classe*', description: 'Ex: 6ème, 2nd, 1ère' }
-        ];
-
-        const lyceeHeaders = [
-            ...baseHeaders,
-            { key: 'series', label: 'Série', description: 'Pour lycée: A, C, D, E' }
-        ];
-
-        // Initialisation
-        document.addEventListener('DOMContentLoaded', function() {
-            updateTemplate();
-        });
-
-        function updateTemplate() {
-            const classLevel = document.getElementById('classLevel').value;
-            const className = document.getElementById('className').value || '6ème';
-            const studentCount = parseInt(document.getElementById('studentCount').value) || 5;
-            const includeExamples = document.getElementById('includeExamples').checked;
-            
-            const headers = classLevel === 'lycee' ? lyceeHeaders : baseHeaders;
-            const data = includeExamples ? sampleData[classLevel] : [];
-            
-            // Limiter les données d'exemple au nombre demandé
-            const exampleData = data.slice(0, Math.min(studentCount, data.length));
-            
-            // Générer l'aperçu du tableau
-            const tablePreview = document.getElementById('tablePreview');
-            tablePreview.innerHTML = '';
-            
-            const table = document.createElement('table');
-            
-            // En-têtes
-            const thead = document.createElement('thead');
-            const headerRow = document.createElement('tr');
-            headers.forEach(header => {
-                const th = document.createElement('th');
-                th.textContent = header.label;
-                th.title = header.description;
-                headerRow.appendChild(th);
-            });
-            thead.appendChild(headerRow);
-            table.appendChild(thead);
-            
-            // Corps du tableau
-            const tbody = document.createElement('tbody');
-            
-            if (includeExamples && exampleData.length > 0) {
-                exampleData.forEach(student => {
-                    const row = document.createElement('tr');
-                    headers.forEach(header => {
-                        const td = document.createElement('td');
-                        let value = student[header.key] || '';
-                        
-                        // Mettre à jour la classe
-                        if (header.key === 'class') {
-                            value = className;
-                        }
-                        
-                        td.textContent = value;
-                        row.appendChild(td);
-                    });
-                    tbody.appendChild(row);
-                });
-            } else {
-                // Lignes vides
-                for (let i = 0; i < studentCount; i++) {
-                    const row = document.createElement('tr');
-                    headers.forEach(header => {
-                        const td = document.createElement('td');
-                        if (header.key === 'class') {
-                            td.textContent = className;
-                        }
-                        row.appendChild(td);
-                    });
-                    tbody.appendChild(row);
-                }
-            }
-            
-            table.appendChild(tbody);
-            tablePreview.appendChild(table);
-        }
-
-        function generateExcelFile() {
-            const classLevel = document.getElementById('classLevel').value;
-            const className = document.getElementById('className').value || '6ème';
-            const headers = classLevel === 'lycee' ? lyceeHeaders : baseHeaders;
-            
-            // Créer les données pour le fichier Excel
-            const data = [];
-            
-            // Ajouter les en-têtes
-            const headerRow = headers.map(h => h.label);
-            data.push(headerRow);
-            
-            // Ajouter une ligne d'exemple
-            const exampleRow = headers.map(header => {
-                switch(header.key) {
-                    case 'lastName': return 'KOUMA';
-                    case 'firstName': return 'Koffi';
-                    case 'studentId': return 'MAT-2024-001';
-                    case 'gender': return 'M';
-                    case 'birthDate': return '2010-05-15';
-                    case 'birthPlace': return 'Lomé';
-                    case 'status': return 'Nouveau';
-                    case 'guardianName': return 'Jean KOUMA';
-                    case 'guardianPhone': return '+228 90 12 34 56';
-                    case 'class': return className;
-                    case 'series': return classLevel === 'lycee' ? 'C' : '';
-                    default: return '';
-                }
-            });
-            data.push(exampleRow);
-            
-            // Ajouter des lignes vides pour remplissage
-            for (let i = 0; i < 4; i++) {
-                const emptyRow = headers.map(header => header.key === 'class' ? className : '');
-                data.push(emptyRow);
-            }
-            
-            // Créer la feuille de calcul
-            const ws = XLSX.utils.aoa_to_sheet(data);
-            
-            // Ajuster la largeur des colonnes
-            const wscols = headers.map(() => ({wch: 20}));
-            ws['!cols'] = wscols;
-            
-            // Ajouter des validations de données
-            const validations = {
-                D2: { // Sexe
-                    type: 'list',
-                    formulae: ['"M,F"']
-                },
-                G2: { // Statut
-                    type: 'list',
-                    formulae: ['"Nouveau,Nouvelle,Redoublant,Redoublante"']
-                }
-            };
-            
-            if (classLevel === 'lycee') {
-                validations.K2 = { // Série
-                    type: 'list',
-                    formulae: ['"A,C,D,E"']
-                };
-            }
-            
-            // Créer le classeur
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Élèves');
-            
-            // Ajouter une feuille d'instructions
-            const instructionsData = [
-                ['INSTRUCTIONS POUR LE REMPLISSAGE DU FICHIER'],
-                [''],
-                ['1. CONSERVEZ LES EN-TÊTES DE COLONNES'],
-                ['2. REMPLISSEZ LES DONNÉES DES ÉLÈVES'],
-                ['3. LES CHAMPS OBLIGATOIRES SONT MARQUÉS D\'UN *'],
-                ['4. FORMATS RECOMMANDÉS :'],
-                ['   - Date : AAAA-MM-JJ'],
-                ['   - Téléphone : +228 XX XX XX XX'],
-                ['   - Sexe : M ou F'],
-                [''],
-                ['COLONNES OBLIGATOIRES :'],
-                ...headers.filter(h => h.label.includes('*')).map(h => [`   - ${h.label.replace('*', '')} : ${h.description}`]),
-                [''],
-                ['CONSEILS :'],
-                ['• Ne modifiez pas l\'ordre des colonnes'],
-                ['• Utilisez les listes déroulantes pour les champs avec options'],
-                ['• Enregistrez le fichier avant importation']
             ];
             
-            const wsInstructions = XLSX.utils.aoa_to_sheet(instructionsData);
-            const instructionCols = [{wch: 80}];
-            wsInstructions['!cols'] = instructionCols;
-            XLSX.utils.book_append_sheet(wb, wsInstructions, 'Instructions');
-            
-            // Générer le nom du fichier
-            const fileName = `Modele_Import_Eleves_${className.replace('/', '_')}_${new Date().toISOString().slice(0, 10)}.xlsx`;
-            
-            // Télécharger le fichier
-            XLSX.writeFile(wb, fileName);
-            
-            showNotification('Modèle Excel généré avec succès !', 'success');
+            updateStudentTable();
+            saveData();
+            showNotification('Données d\'exemple chargées', 'success');
         }
 
-        function generateCSVFile() {
-            const classLevel = document.getElementById('classLevel').value;
-            const className = document.getElementById('className').value || '6ème';
-            const headers = classLevel === 'lycee' ? lyceeHeaders : baseHeaders;
-            
-            // Créer le contenu CSV
-            let csvContent = 'data:text/csv;charset=utf-8,';
-            
-            // Ajouter les en-têtes
-            csvContent += headers.map(h => `"${h.label}"`).join(',') + '\n';
-            
-            // Ajouter une ligne d'exemple
-            const exampleRow = headers.map(header => {
-                switch(header.key) {
-                    case 'lastName': return 'KOUMA';
-                    case 'firstName': return 'Koffi';
-                    case 'studentId': return 'MAT-2024-001';
-                    case 'gender': return 'M';
-                    case 'birthDate': return '2010-05-15';
-                    case 'birthPlace': return 'Lomé';
-                    case 'status': return 'Nouveau';
-                    case 'guardianName': return 'Jean KOUMA';
-                    case 'guardianPhone': return '+228 90 12 34 56';
-                    case 'class': return className;
-                    case 'series': return classLevel === 'lycee' ? 'C' : '';
-                    default: return '';
-                }
-            });
-            csvContent += exampleRow.map(val => `"${val}"`).join(',') + '\n';
-            
-            // Ajouter des lignes vides
-            for (let i = 0; i < 4; i++) {
-                const emptyRow = headers.map(header => header.key === 'class' ? className : '');
-                csvContent += emptyRow.map(val => `"${val}"`).join(',') + '\n';
+        function clearAllData() {
+            if (students.length === 0) {
+                showNotification('Aucune donnée à effacer', 'info');
+                return;
             }
             
-            // Créer le lien de téléchargement
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement('a');
-            link.setAttribute('href', encodedUri);
-            link.setAttribute('download', `Modele_Import_Eleves_${className.replace('/', '_')}_${new Date().toISOString().slice(0, 10)}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            showNotification('Modèle CSV généré avec succès !', 'success');
+            if (confirm(`Êtes-vous sûr de vouloir supprimer les ${students.length} élève(s) ? Cette action est irréversible.`)) {
+                students = [];
+                updateStudentTable();
+                saveData();
+                showNotification('Toutes les données ont été effacées', 'success');
+            }
         }
 
-        function showImportInstructions() {
-            const modal = document.getElementById('instructionsModal');
-            const content = document.getElementById('instructionsContent');
-            
-            const instructions = `
-                <h3 style="color: #006400; margin-bottom: 15px;">📋 Étapes d'importation :</h3>
-                <ol style="margin-bottom: 20px; padding-left: 20px;">
-                    <li style="margin-bottom: 10px;"><strong>Téléchargez le modèle Excel ou CSV</strong></li>
-                    <li style="margin-bottom: 10px;"><strong>Remplissez le fichier avec vos données</strong>
-                        <ul style="margin-top: 5px; padding-left: 20px;">
-                            <li>Conservez les en-têtes de colonnes</li>
-                            <li>Remplissez toutes les colonnes obligatoires (*)</li>
-                            <li>Utilisez le format de date : AAAA-MM-JJ</li>
-                        </ul>
-                    </li>
-                    <li style="margin-bottom: 10px;"><strong>Enregistrez le fichier</strong>
-                        <ul style="margin-top: 5px; padding-left: 20px;">
-                            <li>Excel : .xlsx ou .xls</li>
-                            <li>CSV : .csv (encodage UTF-8)</li>
-                        </ul>
-                    </li>
-                    <li style="margin-bottom: 10px;"><strong>Importez dans le système</strong>
-                        <ul style="margin-top: 5px; padding-left: 20px;">
-                            <li>Accédez à l'onglet "Gestion Classe"</li>
-                            <li>Cliquez sur "Importer Liste"</li>
-                            <li>Sélectionnez votre fichier rempli</li>
-                        </ul>
-                    </li>
-                </ol>
-                
-                <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                    <h4 style="color: #006400; margin-bottom: 10px;">✅ Formats acceptés :</h4>
-                    <ul style="margin-bottom: 10px; padding-left: 20px;">
-                        <li>Microsoft Excel (.xlsx, .xls)</li>
-                        <li>CSV (.csv) - recommandé pour les grandes listes</li>
-                        <li>Fichier texte (.txt) avec séparateur virgule</li>
-                    </ul>
-                </div>
-                
-                <div style="background: #fff3cd; padding: 15px; border-radius: 8px;">
-                    <h4 style="color: #856404; margin-bottom: 10px;">⚠️ Points d'attention :</h4>
-                    <ul style="margin-bottom: 10px; padding-left: 20px;">
-                        <li>Vérifiez l'orthographe des noms et prénoms</li>
-                        <li>Assurez-vous que les dates sont au bon format</li>
-                        <li>Les numéros de téléphone doivent inclure l'indicatif +228</li>
-                        <li>Le système génère automatiquement un matricule si non fourni</li>
-                    </ul>
-                </div>
-                
-                <div style="margin-top: 20px; text-align: center;">
-                    <p style="color: #666; font-style: italic;">
-                        Pour toute assistance, contactez le support technique du Ministère
-                    </p>
-                </div>
-            `;
-            
-            content.innerHTML = instructions;
-            modal.style.display = 'flex';
-        }
-
-        function closeInstructions() {
-            document.getElementById('instructionsModal').style.display = 'none';
-        }
-
-        function downloadSampleData() {
-            const classLevel = document.getElementById('classLevel').value;
-            const className = document.getElementById('className').value || '6ème';
-            const headers = classLevel === 'lycee' ? lyceeHeaders : baseHeaders;
-            
-            // Créer un jeu de données complet
-            const data = sampleData[classLevel];
-            
-            // Mettre à jour la classe dans toutes les données
-            data.forEach(student => {
-                student.class = className;
-            });
-            
-            // Créer le contenu Excel
-            const wsData = [];
-            
-            // Ajouter les en-têtes
-            wsData.push(headers.map(h => h.label));
-            
-            // Ajouter toutes les données
-            data.forEach(student => {
-                const row = headers.map(header => student[header.key] || '');
-                wsData.push(row);
-            });
-            
-            // Créer la feuille de calcul
-            const ws = XLSX.utils.aoa_to_sheet(wsData);
-            
-            // Ajuster la largeur des colonnes
-            const wscols = headers.map(() => ({wch: 20}));
-            ws['!cols'] = wscols;
-            
-            // Créer le classeur
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Élèves Exemple');
-            
-            // Générer le nom du fichier
-            const fileName = `Donnees_Exemple_${className.replace('/', '_')}_Complet.xlsx`;
-            
-            // Télécharger le fichier
-            XLSX.writeFile(wb, fileName);
-            
-            showNotification('Jeu de données exemple téléchargé !', 'success');
-        }
-
-        function showNotification(message, type = 'info') {
+        function showNotification(message, type = 'success') {
             // Créer la notification
             const notification = document.createElement('div');
             notification.style.cssText = `
                 position: fixed;
                 top: 20px;
                 right: 20px;
-                background: ${type === 'success' ? '#28a745' : '#17a2b8'};
+                background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#17a2b8'};
                 color: white;
                 padding: 15px 25px;
                 border-radius: 8px;
                 box-shadow: 0 4px 12px rgba(0,0,0,0.15);
                 z-index: 1001;
                 animation: slideIn 0.3s ease;
-                border-left: 4px solid ${type === 'success' ? '#1e7e34' : '#138496'};
+                border-left: 4px solid ${type === 'success' ? '#1e7e34' : type === 'error' ? '#c82333' : '#138496'};
             `;
             
             notification.innerHTML = `
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}" style="font-size: 18px;"></i>
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'}" style="font-size: 18px;"></i>
                     <span>${message}</span>
                 </div>
             `;
@@ -946,11 +1151,14 @@
             }, 5000);
         }
 
-        // Fermer la modal en cliquant à l'extérieur
-        window.addEventListener('click', function(event) {
-            const modal = document.getElementById('instructionsModal');
-            if (event.target === modal) {
-                closeInstructions();
+        // Écouteurs d'événements
+        document.getElementById('className').addEventListener('change', updateSeriesOptions);
+        document.getElementById('classLevel').addEventListener('change', updateSeriesOptions);
+        
+        // Sauvegarder avant de quitter la page
+        window.addEventListener('beforeunload', function(e) {
+            if (students.length > 0) {
+                saveData();
             }
         });
     </script>
