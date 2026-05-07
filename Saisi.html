@@ -100,8 +100,8 @@
         .alert-info { background: #d1ecf1; color: #0c5460; border-color: var(--info-color); }
         .alert-warning { background: #fff3cd; color: #856404; border-color: var(--warning-color); }
 
-        .bulletin-preview-container { background: #e9ecef; border-radius: 8px; padding: 2rem; position: relative; }
-        .bulletin-actions { position: absolute; top: 1rem; right: 1rem; display: flex; gap: 0.5rem; z-index: 10; flex-wrap: wrap; }
+        .bulletin-preview-container { background: #e9ecef; border-radius: 8px; padding: 2rem; position: relative; overflow-x: auto; }
+        .bulletin-actions { position: sticky; top: 0; right: 0; display: flex; gap: 0.5rem; z-index: 10; flex-wrap: wrap; justify-content: flex-end; margin-bottom: 1rem; background: #e9ecef; padding: 10px; border-radius: 8px; }
         
         .bulletin-togo {
             background: white;
@@ -114,6 +114,8 @@
             font-family: 'Times New Roman', 'Segoe UI', serif;
             position: relative;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            page-break-after: avoid;
+            page-break-inside: avoid;
         }
         
         .bulletin-togo.with-watermark {
@@ -165,12 +167,34 @@
         .file-import-area { border: 2px dashed var(--primary-color); border-radius: 8px; padding: 2rem; text-align: center; cursor: pointer; background: var(--primary-light); margin-bottom: 1.5rem; transition: all 0.3s ease; }
         .file-import-area:hover { background: #d4edda; transform: scale(1.01); }
         
+        /* Styles d'impression optimisés */
         @media print {
             .no-print { display: none !important; }
             body { background: white !important; padding: 0 !important; margin: 0 !important; }
-            .container { box-shadow: none !important; margin: 0 !important; padding: 0 !important; }
-            .bulletin-togo { margin: 0 !important; box-shadow: none !important; page-break-after: always !important; border: 1px solid #000 !important; }
-            .watermark { opacity: 0.08 !important; }
+            .container { box-shadow: none !important; margin: 0 !important; padding: 0 !important; max-width: 100% !important; }
+            .main-content { padding: 0 !important; margin: 0 !important; }
+            .tab-content { display: block !important; }
+            .tab-content:not(#tab4) { display: none !important; }
+            .bulletin-togo { 
+                margin: 0 auto !important; 
+                box-shadow: none !important; 
+                page-break-after: always !important;
+                page-break-inside: avoid !important;
+                border: 1px solid #000 !important;
+                width: 100% !important;
+                max-width: 21cm !important;
+            }
+            .watermark { opacity: 0.1 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .grades-table th, .grades-table td { border: 1px solid #000 !important; }
+            .signature-line { border-top: 1px solid #000 !important; }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .main-content { padding: 1rem; }
+            .summary-grid { grid-template-columns: repeat(2, 1fr); }
+            .student-info-bulletin { grid-template-columns: repeat(2, 1fr); }
+            .school-info-bulletin { grid-template-columns: repeat(2, 1fr); }
+            .bulletin-togo { width: 100%; padding: 0.5cm; }
         }
         
         .d-flex { display: flex; }
@@ -179,14 +203,6 @@
         .mt-2 { margin-top: 1rem; }
         .mt-3 { margin-top: 1.5rem; }
         .text-center { text-align: center; }
-        
-        @media (max-width: 768px) {
-            .main-content { padding: 1rem; }
-            .summary-grid { grid-template-columns: repeat(2, 1fr); }
-            .student-info-bulletin { grid-template-columns: repeat(2, 1fr); }
-            .school-info-bulletin { grid-template-columns: repeat(2, 1fr); }
-            .bulletin-actions { position: static; margin-bottom: 1rem; justify-content: center; }
-        }
     </style>
 </head>
 <body>
@@ -348,9 +364,14 @@
                         <button class="btn btn-warning" onclick="exportPDF()"><i class="fas fa-file-pdf"></i> PDF</button>
                     </div>
                     <div class="bulletin-preview-container">
+                        <div class="bulletin-actions no-print">
+                            <button class="btn btn-sm btn-primary" onclick="generateBulletin()"><i class="fas fa-sync"></i> Rafraîchir</button>
+                            <button class="btn btn-sm btn-success" onclick="printSingleBulletin()"><i class="fas fa-print"></i> Imprimer</button>
+                            <button class="btn btn-sm btn-warning" onclick="exportPDF()"><i class="fas fa-file-pdf"></i> PDF</button>
+                        </div>
                         <div id="bulletinPreview" class="bulletin-togo with-watermark">
                             <div class="watermark">RÉPUBLIQUE TOGOLAISE</div>
-                            <div class="alert alert-info text-center">Cliquez sur "Générer" pour créer le bulletin</div>
+                            <div class="alert alert-info text-center">📄 Cliquez sur "Générer" pour créer le bulletin</div>
                         </div>
                     </div>
                 </div>
@@ -417,15 +438,12 @@
                     const data = JSON.parse(e.target.result);
                     let importedStudents = [];
                     
-                    // Format 1: Tableau simple d'élèves
                     if(Array.isArray(data) && data.length > 0 && (data[0].lastName || data[0].nom)) {
                         importedStudents = data;
                     }
-                    // Format 2: Objet avec propriété students
                     else if(data.students && Array.isArray(data.students)) {
                         importedStudents = data.students;
                     }
-                    // Format 3: Objet avec propriété data.students
                     else if(data.data && data.data.students) {
                         importedStudents = data.data.students;
                     }
@@ -482,7 +500,7 @@
             input.value = '';
         }
 
-        // Drag & drop pour l'import JSON
+        // Drag & drop
         function setupDragAndDrop() {
             const dropZone = document.querySelector('.file-import-area');
             if(!dropZone) return;
@@ -513,7 +531,6 @@
             });
         }
         
-        // Appeler setupDragAndDrop après chargement
         setTimeout(setupDragAndDrop, 100);
 
         // ==================== GESTION DES ÉLÈVES ====================
@@ -537,7 +554,6 @@
             });
             grades[students[students.length-1].id] = {};
             
-            // Réinitialiser formulaire
             document.getElementById('studentLastName').value = '';
             document.getElementById('studentFirstName').value = '';
             document.getElementById('studentId').value = '';
@@ -839,6 +855,8 @@
             let inspection = document.getElementById('inspection').value || 'IESG-Niamtougou';
             let schoolCode = document.getElementById('schoolCode').value || '-';
             let editionDate = document.getElementById('editionDate').value ? new Date(document.getElementById('editionDate').value).toLocaleDateString('fr-FR') : new Date().toLocaleDateString('fr-FR');
+            let schoolStatus = document.getElementById('schoolStatus').value || 'Public';
+            let regionalDirection = document.getElementById('regionalDirection').value || 'DRE-KARA';
             
             let scientificSubjects = subjects.filter(s => s.category === 'Scientifique');
             let literarySubjects = subjects.filter(s => s.category === 'Littéraire');
@@ -887,9 +905,10 @@
                     <div><strong>Classe:</strong> ${className}</div>
                     <div><strong>Inspection:</strong> ${inspection}</div>
                     <div><strong>Ville:</strong> ${city}</div>
+                    <div><strong>Direction:</strong> ${regionalDirection}</div>
                     <div><strong>Effectif:</strong> ${students.length} élèves</div>
+                    <div><strong>Statut:</strong> ${schoolStatus}</div>
                     <div><strong>Date édition:</strong> ${editionDate}</div>
-                    <div><strong>Statut:</strong> ${document.getElementById('schoolStatus').value || 'Public'}</div>
                 </div>
                 
                 <div class="student-info-bulletin">
@@ -965,18 +984,98 @@
             return "🔻 RÉSULTATS INSUFFISANTS. Un soutien scolaire est nécessaire.";
         }
         
-        // ==================== IMPRESSION ET PDF ====================
+        // ==================== IMPRESSION CORRIGÉE ====================
         function printSingleBulletin() {
             if(!currentStudentForBulletin && students.length > 0) generateBulletin();
             if(!currentStudentForBulletin) { showNotification('Générez d\'abord un bulletin', 'warning'); return; }
             let student = students.find(s => s.id === currentStudentForBulletin);
             if(student) {
-                let printWindow = window.open('', '_blank');
+                // Récupérer le contenu exact du bulletin généré
+                let bulletinContent = document.getElementById('bulletinPreview').cloneNode(true);
+                let printWindow = window.open('', '_blank', 'width=800,height=600,toolbar=yes,menubar=yes,scrollbars=yes');
+                
                 printWindow.document.write(`
-                    <!DOCTYPE html><html><head><title>Bulletin - ${student.lastName} ${student.firstName}</title>
-                    <meta charset="UTF-8"><style>${document.querySelector('style').innerHTML} .no-print{display:none;} body{margin:0;padding:20px;background:white;} .bulletin-togo{margin:0 auto;box-shadow:none;} @media print{body{padding:0;margin:0;}}</style>
-                    </head><body><div class="bulletin-togo ${currentSettings.showWatermark ? 'with-watermark' : ''}">${createBulletinHTML(student)}</div>
-                    <script>window.onload = function() { window.print(); setTimeout(function() { window.close(); }, 500); };<\/script></body></html>
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Bulletin Scolaire - ${student.lastName} ${student.firstName}</title>
+                        <meta charset="UTF-8">
+                        <style>
+                            /* Copie de tous les styles */
+                            * { margin: 0; padding: 0; box-sizing: border-box; }
+                            :root {
+                                --primary-color: #006400;
+                                --secondary-color: #FF0000;
+                                --tertiary-color: #FFD700;
+                                --border-color: #dee2e6;
+                            }
+                            body { 
+                                background: white; 
+                                padding: 20px; 
+                                margin: 0;
+                                font-family: 'Times New Roman', 'Segoe UI', serif;
+                            }
+                            .bulletin-togo {
+                                background: white;
+                                width: 21cm;
+                                min-height: 29.7cm;
+                                margin: 0 auto;
+                                padding: 0.8cm;
+                                border: 2px solid var(--primary-color);
+                                position: relative;
+                            }
+                            .bulletin-togo.with-watermark {
+                                background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="400" height="400" opacity="0.04"><path d="M50,10 C30,10 10,30 10,50 C10,70 30,90 50,90 C70,90 90,70 90,50 C90,30 70,10 50,10 Z M50,30 C63,30 70,43 70,50 C70,57 63,70 50,70 C37,70 30,57 30,50 C30,43 37,30 50,30 Z" fill="%23006400"/><circle cx="50" cy="50" r="15" fill="%23006400"/></svg>');
+                                background-repeat: no-repeat;
+                                background-position: center;
+                                background-size: 350px;
+                            }
+                            .bulletin-header { text-align: center; margin-bottom: 20px; border-bottom: 3px double var(--secondary-color); padding-bottom: 10px; }
+                            .republic-togo { font-size: 14px; font-weight: bold; color: var(--primary-color); text-transform: uppercase; }
+                            .motto-togo { font-size: 11px; font-style: italic; margin: 3px 0; }
+                            .ministry-togo { font-size: 10px; margin: 5px 0; }
+                            .title-togo { font-size: 20px; font-weight: bold; color: var(--secondary-color); margin: 8px 0; text-transform: uppercase; }
+                            .school-info-bulletin { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 15px 0; padding: 10px; background: #e8f5e9; border-radius: 5px; border-left: 4px solid var(--secondary-color); font-size: 11px; }
+                            .student-info-bulletin { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 15px 0; padding: 10px; background: #f8f9fa; border-radius: 5px; border: 1px solid var(--border-color); font-size: 11px; }
+                            .category-header { font-weight: bold; padding: 6px 10px; margin: 15px 0 8px 0; border-radius: 5px; font-size: 12px; }
+                            .category-scientific { background: #bbdefb; color: #1565c0; border-left: 4px solid #1565c0; }
+                            .category-literary { background: #e1bee7; color: #6a1b9a; border-left: 4px solid #6a1b9a; }
+                            .category-other { background: #dcedc8; color: #33691e; border-left: 4px solid #33691e; }
+                            .grades-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 10px; }
+                            .grades-table th { background: var(--primary-color); color: white; padding: 6px; text-align: center; border: 1px solid #004d00; }
+                            .grades-table td { padding: 6px; border: 1px solid var(--border-color); text-align: center; }
+                            .grades-table td:first-child { text-align: left; font-weight: bold; }
+                            .summary-section { background: linear-gradient(135deg, #e8f5e9, white); padding: 12px; margin: 15px 0; border-radius: 8px; border: 1px solid var(--primary-color); }
+                            .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 12px; }
+                            .summary-item { text-align: center; padding: 8px; background: white; border-radius: 5px; }
+                            .summary-label { font-size: 9px; color: #666; text-transform: uppercase; }
+                            .summary-value { font-size: 16px; font-weight: bold; color: var(--primary-color); }
+                            .summary-value-large { font-size: 22px; color: var(--secondary-color); }
+                            .appreciation-box { padding: 10px; background: #f8f9fa; border-radius: 5px; margin-top: 10px; border-left: 3px solid var(--tertiary-color); font-size: 10px; }
+                            .signatures-section { display: flex; justify-content: space-between; margin-top: 30px; padding-top: 15px; border-top: 1px dashed var(--border-color); }
+                            .signature-box { text-align: center; width: 45%; }
+                            .signature-line { border-top: 1px solid #000; margin-top: 35px; padding-top: 5px; font-size: 9px; }
+                            .footer-bulletin { text-align: center; margin-top: 15px; font-size: 8px; color: #999; border-top: 1px solid var(--border-color); padding-top: 8px; }
+                            .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 70px; color: rgba(0,100,0,0.06); z-index: 0; pointer-events: none; white-space: nowrap; font-weight: bold; width: 100%; text-align: center; }
+                            .no-print { display: none; }
+                            @media print {
+                                body { padding: 0; margin: 0; }
+                                .bulletin-togo { margin: 0 auto; page-break-after: avoid; box-shadow: none; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="bulletin-togo ${currentSettings.showWatermark ? 'with-watermark' : ''}">
+                            ${createBulletinHTML(student)}
+                        </div>
+                        <script>
+                            window.onload = function() { 
+                                window.print(); 
+                                setTimeout(function() { window.close(); }, 1000); 
+                            };
+                        <\/script>
+                    </body>
+                    </html>
                 `);
                 printWindow.document.close();
             }
@@ -985,14 +1084,81 @@
         function printAllBulletins() {
             if(students.length === 0) { showNotification('Aucun élève', 'warning'); return; }
             let allHTML = '';
-            students.forEach(s => { 
+            students.forEach((s, idx) => { 
                 allHTML += `<div class="bulletin-togo ${currentSettings.showWatermark ? 'with-watermark' : ''}" style="margin-bottom: 20px; page-break-after: always;">${createBulletinHTML(s)}</div>`; 
             });
-            let printWindow = window.open('', '_blank');
+            let printWindow = window.open('', '_blank', 'width=800,height=600,toolbar=yes,menubar=yes,scrollbars=yes');
             printWindow.document.write(`
-                <!DOCTYPE html><html><head><title>Bulletins - ${document.getElementById('class').value}</title>
-                <meta charset="UTF-8"><style>${document.querySelector('style').innerHTML} .no-print{display:none;} body{margin:0;padding:0;background:white;}</style>
-                </head><body>${allHTML}<script>window.onload = function() { window.print(); setTimeout(function() { window.close(); }, 1000); };<\/script></body></html>
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Bulletins - Classe ${document.getElementById('class').value}</title>
+                    <meta charset="UTF-8">
+                    <style>
+                        * { margin: 0; padding: 0; box-sizing: border-box; }
+                        :root {
+                            --primary-color: #006400;
+                            --secondary-color: #FF0000;
+                            --tertiary-color: #FFD700;
+                            --border-color: #dee2e6;
+                        }
+                        body { background: white; margin: 0; padding: 0; font-family: 'Times New Roman', 'Segoe UI', serif; }
+                        .bulletin-togo {
+                            background: white;
+                            width: 21cm;
+                            min-height: 29.7cm;
+                            margin: 0 auto 20px auto;
+                            padding: 0.8cm;
+                            border: 2px solid #006400;
+                            page-break-after: always;
+                            position: relative;
+                        }
+                        .bulletin-togo.with-watermark {
+                            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="400" height="400" opacity="0.04"><path d="M50,10 C30,10 10,30 10,50 C10,70 30,90 50,90 C70,90 90,70 90,50 C90,30 70,10 50,10 Z M50,30 C63,30 70,43 70,50 C70,57 63,70 50,70 C37,70 30,57 30,50 C30,43 37,30 50,30 Z" fill="%23006400"/><circle cx="50" cy="50" r="15" fill="%23006400"/></svg>');
+                            background-repeat: no-repeat;
+                            background-position: center;
+                            background-size: 350px;
+                        }
+                        .bulletin-header { text-align: center; margin-bottom: 20px; border-bottom: 3px double #FF0000; padding-bottom: 10px; }
+                        .republic-togo { font-size: 14px; font-weight: bold; color: #006400; text-transform: uppercase; }
+                        .motto-togo { font-size: 11px; font-style: italic; margin: 3px 0; }
+                        .ministry-togo { font-size: 10px; margin: 5px 0; }
+                        .title-togo { font-size: 20px; font-weight: bold; color: #FF0000; margin: 8px 0; text-transform: uppercase; }
+                        .school-info-bulletin { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 15px 0; padding: 10px; background: #e8f5e9; border-radius: 5px; border-left: 4px solid #FF0000; font-size: 11px; }
+                        .student-info-bulletin { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 15px 0; padding: 10px; background: #f8f9fa; border-radius: 5px; border: 1px solid #dee2e6; font-size: 11px; }
+                        .category-header { font-weight: bold; padding: 6px 10px; margin: 15px 0 8px 0; border-radius: 5px; font-size: 12px; }
+                        .category-scientific { background: #bbdefb; color: #1565c0; border-left: 4px solid #1565c0; }
+                        .category-literary { background: #e1bee7; color: #6a1b9a; border-left: 4px solid #6a1b9a; }
+                        .category-other { background: #dcedc8; color: #33691e; border-left: 4px solid #33691e; }
+                        .grades-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 10px; }
+                        .grades-table th { background: #006400; color: white; padding: 6px; text-align: center; border: 1px solid #004d00; }
+                        .grades-table td { padding: 6px; border: 1px solid #dee2e6; text-align: center; }
+                        .grades-table td:first-child { text-align: left; font-weight: bold; }
+                        .summary-section { background: linear-gradient(135deg, #e8f5e9, white); padding: 12px; margin: 15px 0; border-radius: 8px; border: 1px solid #006400; }
+                        .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 12px; }
+                        .summary-item { text-align: center; padding: 8px; background: white; border-radius: 5px; }
+                        .summary-label { font-size: 9px; color: #666; text-transform: uppercase; }
+                        .summary-value { font-size: 16px; font-weight: bold; color: #006400; }
+                        .summary-value-large { font-size: 22px; color: #FF0000; }
+                        .appreciation-box { padding: 10px; background: #f8f9fa; border-radius: 5px; margin-top: 10px; border-left: 3px solid #FFD700; font-size: 10px; }
+                        .signatures-section { display: flex; justify-content: space-between; margin-top: 30px; padding-top: 15px; border-top: 1px dashed #dee2e6; }
+                        .signature-box { text-align: center; width: 45%; }
+                        .signature-line { border-top: 1px solid #000; margin-top: 35px; padding-top: 5px; font-size: 9px; }
+                        .footer-bulletin { text-align: center; margin-top: 15px; font-size: 8px; color: #999; border-top: 1px solid #dee2e6; padding-top: 8px; }
+                        .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 70px; color: rgba(0,100,0,0.06); z-index: 0; pointer-events: none; white-space: nowrap; font-weight: bold; width: 100%; text-align: center; }
+                        @media print {
+                            body { padding: 0; margin: 0; }
+                            .bulletin-togo { page-break-after: always; box-shadow: none; margin: 0 auto; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${allHTML}
+                    <script>
+                        window.onload = function() { window.print(); setTimeout(function() { window.close(); }, 1000); };
+                    <\/script>
+                </body>
+                </html>
             `);
             printWindow.document.close();
         }
@@ -1002,7 +1168,12 @@
             if(!currentStudentForBulletin) { showNotification('Générez d\'abord un bulletin', 'warning'); return; }
             try {
                 let element = document.getElementById('bulletinPreview');
-                let canvas = await html2canvas(element, { scale: 3, backgroundColor: '#ffffff', logging: false });
+                let canvas = await html2canvas(element, { 
+                    scale: 3, 
+                    backgroundColor: '#ffffff', 
+                    logging: false,
+                    useCORS: true
+                });
                 let imgData = canvas.toDataURL('image/png');
                 let { jsPDF } = window.jspdf;
                 let doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
@@ -1012,7 +1183,10 @@
                 let student = students.find(s => s.id === currentStudentForBulletin);
                 doc.save(`bulletin_${student?.lastName || 'eleve'}_${Date.now()}.pdf`);
                 showNotification('📄 PDF généré avec succès', 'success');
-            } catch(e) { showNotification('Erreur PDF: ' + e.message, 'danger'); }
+            } catch(e) { 
+                console.error(e);
+                showNotification('Erreur PDF: ' + e.message, 'danger'); 
+            }
         }
         
         function toggleWatermark() {
@@ -1045,7 +1219,9 @@
                     series: document.getElementById('series').value,
                     schoolCode: document.getElementById('schoolCode').value,
                     city: document.getElementById('city').value,
-                    inspection: document.getElementById('inspection').value
+                    inspection: document.getElementById('inspection').value,
+                    regionalDirection: document.getElementById('regionalDirection').value,
+                    schoolStatus: document.getElementById('schoolStatus').value
                 }
             };
             localStorage.setItem('schoolData', JSON.stringify(data));
@@ -1071,6 +1247,8 @@
                         document.getElementById('schoolCode').value = data.schoolInfo.schoolCode || '';
                         document.getElementById('city').value = data.schoolInfo.city || 'KARA';
                         document.getElementById('inspection').value = data.schoolInfo.inspection || 'IESG-Niamtougou';
+                        document.getElementById('regionalDirection').value = data.schoolInfo.regionalDirection || 'DRE-KARA';
+                        document.getElementById('schoolStatus').value = data.schoolInfo.schoolStatus || 'Public';
                     }
                     document.getElementById('watermarkToggle').checked = currentSettings.showWatermark;
                     document.getElementById('passingGrade').value = currentSettings.passingGrade;
@@ -1153,7 +1331,7 @@
         }
         
         function showHelp() { 
-            alert("📋 SYSTÈME DE GESTION SCOLAIRE - TOGO\n\n• Onglet Gestion Classe: Ajoutez/modifiez les élèves\n• Onglet Programmes: Définissez les matières et enseignants\n• Onglet Saisie Notes: Entrez les notes (2 par matière)\n• Onglet Bulletin: Générez et imprimez les bulletins officiels\n• Import JSON: Importez les élèves depuis bull.html\n• Le rang de l'élève est automatiquement calculé"); 
+            alert("📋 SYSTÈME DE GESTION SCOLAIRE - TOGO\n\n• Onglet Gestion Classe: Ajoutez/modifiez les élèves\n• Onglet Programmes: Définissez les matières et enseignants\n• Onglet Saisie Notes: Entrez les notes (2 par matière)\n• Onglet Bulletin: Générez et imprimez les bulletins officiels\n• Import JSON: Importez les élèves depuis bull.html\n• Le rang de l'élève est automatiquement calculé\n• L'impression est optimisée pour le format A4"); 
         }
     </script>
 </body>
