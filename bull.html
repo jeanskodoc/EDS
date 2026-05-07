@@ -210,6 +210,37 @@
         .btn-secondary { background: #6c757d; color: white; }
         .btn-sm { padding: 6px 12px; font-size: 12px; }
 
+        /* Filtres */
+        .filter-bar {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end;
+            border: 1px solid #dee2e6;
+        }
+        .filter-group {
+            flex: 1;
+            min-width: 180px;
+        }
+        .filter-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6c757d;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .filter-group select, .filter-group input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
         .table-container {
             overflow-x: auto;
             margin-top: 15px;
@@ -318,6 +349,7 @@
         }
         .badge-primary { background: #006400; color: white; }
         .badge-success { background: #28a745; color: white; }
+        .badge-warning { background: #ffc107; color: #212529; }
 
         .action-buttons {
             display: flex;
@@ -340,12 +372,35 @@
             flex-wrap: wrap;
         }
 
+        /* Indicateur de filtre actif */
+        .filter-active {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        .filter-badge {
+            background: #006400;
+            color: white;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .clear-filter {
+            cursor: pointer;
+            color: #dc3545;
+            font-size: 12px;
+        }
+
         @media (max-width: 768px) {
             .tabs { flex-direction: column; }
             .notes-container { grid-template-columns: 1fr; }
             .form-row { grid-template-columns: 1fr; }
             .section-body { padding: 15px; }
             .tab-content { padding: 15px; }
+            .filter-bar { flex-direction: column; }
+            .filter-group { width: 100%; }
         }
     </style>
 </head>
@@ -394,6 +449,36 @@
             </div>
         </div>
 
+        <!-- Barre de filtrage par classe -->
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label><i class="fas fa-filter"></i> Filtrer par classe</label>
+                <select id="filterClass" class="form-control" onchange="applyFilters()">
+                    <option value="all">Toutes les classes</option>
+                    <option value="6ème">6ème</option>
+                    <option value="5ème">5ème</option>
+                    <option value="4ème">4ème</option>
+                    <option value="3ème">3ème</option>
+                    <option value="Seconde">Seconde</option>
+                    <option value="Première">Première</option>
+                    <option value="Terminale">Terminale</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label><i class="fas fa-search"></i> Rechercher un élève</label>
+                <input type="text" id="searchStudent" class="form-control" placeholder="Nom ou prénom..." onkeyup="applyFilters()">
+            </div>
+            <div class="filter-group">
+                <label>&nbsp;</label>
+                <button class="btn btn-secondary btn-sm" onclick="clearFilters()"><i class="fas fa-times"></i> Effacer filtres</button>
+            </div>
+        </div>
+
+        <div id="filterInfo" class="alert alert-info" style="display: none; padding: 8px 15px;">
+            <i class="fas fa-info-circle"></i> <span id="filterMessage"></span>
+            <span class="clear-filter" onclick="clearFilters()" style="margin-left: 10px; cursor: pointer;">✖ Effacer</span>
+        </div>
+
         <div class="form-section">
             <div class="section-title"><i class="fas fa-user-plus"></i> Ajouter un élève</div>
             <div class="section-body">
@@ -422,8 +507,10 @@
             <div class="section-title"><i class="fas fa-list"></i> Liste des élèves (classée par ordre alphabétique)</div>
             <div class="section-body">
                 <div class="table-container">
-                    <table>
-                        <thead><tr><th>#</th><th>Nom & Prénom</th><th>Matricule</th><th>Sexe</th><th>Statut</th><th>Tuteur</th><th>Actions</th></tr></thead>
+                    <table id="studentsTable">
+                        <thead>
+                            <tr><th>#</th><th>Nom & Prénom</th><th>Matricule</th><th>Classe</th><th>Sexe</th><th>Statut</th><th>Tuteur</th><th>Actions</th></tr>
+                        </thead>
                         <tbody id="studentsList"></tbody>
                     </table>
                 </div>
@@ -467,10 +554,27 @@
         </div>
     </div>
 
-    <!-- Onglet 3: Saisie des Notes -->
+    <!-- Onglet 3: Saisie des Notes avec filtre par matière -->
     <div id="tab2" class="tab-content">
         <div class="alert alert-info"><i class="fas fa-info-circle"></i> Sélectionnez un élève et saisissez ses notes par matière</div>
         
+        <!-- Barre de filtrage par matière -->
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label><i class="fas fa-filter"></i> Filtrer par matière</label>
+                <select id="filterSubject" class="form-control" onchange="loadGradesForStudent()">
+                    <option value="all">Toutes les matières</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label><i class="fas fa-chart-line"></i> Afficher les moyennes</label>
+                <select id="showAverages" class="form-control" onchange="loadGradesForStudent()">
+                    <option value="yes">Afficher les moyennes</option>
+                    <option value="no">Masquer les moyennes</option>
+                </select>
+            </div>
+        </div>
+
         <div class="form-row" style="margin-bottom: 20px;">
             <div class="form-group"><label>Choisir un élève</label><select id="gradeStudentSelect" class="form-control" onchange="loadGradesForStudent()"><option value="">-- Sélectionner un élève --</option></select></div>
             <div class="form-group" id="studentInfoDisplay"></div>
@@ -485,8 +589,30 @@
         </div>
     </div>
 
-    <!-- Onglet 4: Statistiques -->
+    <!-- Onglet 4: Statistiques avec filtres -->
     <div id="tab3" class="tab-content">
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label><i class="fas fa-filter"></i> Filtrer par classe</label>
+                <select id="statsFilterClass" class="form-control" onchange="updateStatistics()">
+                    <option value="all">Toutes les classes</option>
+                    <option value="6ème">6ème</option>
+                    <option value="5ème">5ème</option>
+                    <option value="4ème">4ème</option>
+                    <option value="3ème">3ème</option>
+                    <option value="Seconde">Seconde</option>
+                    <option value="Première">Première</option>
+                    <option value="Terminale">Terminale</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label><i class="fas fa-filter"></i> Filtrer par matière</label>
+                <select id="statsFilterSubject" class="form-control" onchange="updateStatistics()">
+                    <option value="all">Toutes les matières</option>
+                </select>
+            </div>
+        </div>
+
         <div class="stats-grid" id="statsGrid">
             <div class="stat-card"><div class="stat-value" id="totalStudents">0</div><div class="stat-label">Total élèves</div></div>
             <div class="stat-card"><div class="stat-value" id="totalSubjects">0</div><div class="stat-label">Matières</div></div>
@@ -499,7 +625,7 @@
             <div class="section-body">
                 <div class="table-container">
                     <table>
-                        <thead><tr><th>Rang</th><th>Élève</th><th>Moyenne</th><th>Mention</th></tr></thead>
+                        <thead><tr><th>Rang</th><th>Élève</th><th>Classe</th><th>Moyenne</th><th>Mention</th></tr></thead>
                         <tbody id="rankingList"></tbody>
                     </table>
                 </div>
@@ -524,6 +650,7 @@
         loadData();
         updateAllDisplays();
         updateStudentSelect();
+        updateFilterSubjects();
     });
 
     // Sauvegarde dans localStorage
@@ -560,17 +687,181 @@
         }
     }
 
-    // ==================== EXPORT JSON COMPLET ====================
-    function exportToJSON() {
-        // Trier les élèves par classe puis par ordre alphabétique
-        const sortedStudents = [...students].sort((a, b) => {
-            if (a.class !== b.class) {
-                return (a.class || '').localeCompare(b.class || '');
-            }
-            return a.lastName.localeCompare(b.lastName);
-        });
+    // Mettre à jour les listes déroulantes de filtres pour les matières
+    function updateFilterSubjects() {
+        const filterSubject = document.getElementById('filterSubject');
+        const statsFilterSubject = document.getElementById('statsFilterSubject');
+        
+        if (filterSubject) {
+            filterSubject.innerHTML = '<option value="all">Toutes les matières</option>';
+            subjects.forEach(sub => {
+                filterSubject.innerHTML += `<option value="${sub.id}">${sub.name} (coeff ${sub.coefficient})</option>`;
+            });
+        }
+        
+        if (statsFilterSubject) {
+            statsFilterSubject.innerHTML = '<option value="all">Toutes les matières</option>';
+            subjects.forEach(sub => {
+                statsFilterSubject.innerHTML += `<option value="${sub.id}">${sub.name}</option>`;
+            });
+        }
+    }
 
-        // Construire l'objet complet d'exportation
+    // ==================== FILTRAGE PAR CLASSE ====================
+    let currentClassFilter = 'all';
+    let currentSearchFilter = '';
+
+    function applyFilters() {
+        currentClassFilter = document.getElementById('filterClass').value;
+        currentSearchFilter = document.getElementById('searchStudent').value.toLowerCase();
+        updateStudentListWithFilters();
+        
+        const filterInfo = document.getElementById('filterInfo');
+        const filterMessage = document.getElementById('filterMessage');
+        
+        if (currentClassFilter !== 'all' || currentSearchFilter !== '') {
+            let msg = '';
+            if (currentClassFilter !== 'all') msg += `Classe: ${currentClassFilter}`;
+            if (currentSearchFilter !== '') msg += `${msg ? ' | ' : ''}Recherche: "${currentSearchFilter}"`;
+            filterMessage.innerHTML = `Filtres actifs : ${msg}`;
+            filterInfo.style.display = 'block';
+        } else {
+            filterInfo.style.display = 'none';
+        }
+    }
+
+    function clearFilters() {
+        document.getElementById('filterClass').value = 'all';
+        document.getElementById('searchStudent').value = '';
+        currentClassFilter = 'all';
+        currentSearchFilter = '';
+        updateStudentListWithFilters();
+        document.getElementById('filterInfo').style.display = 'none';
+        showNotification('Filtres effacés', 'success');
+    }
+
+    function updateStudentListWithFilters() {
+        const container = document.getElementById('studentsList');
+        if (!container) return;
+        
+        let filteredStudents = [...students];
+        
+        // Filtre par classe
+        if (currentClassFilter !== 'all') {
+            filteredStudents = filteredStudents.filter(s => s.class === currentClassFilter);
+        }
+        
+        // Filtre par recherche textuelle
+        if (currentSearchFilter !== '') {
+            filteredStudents = filteredStudents.filter(s => 
+                s.lastName.toLowerCase().includes(currentSearchFilter) || 
+                s.firstName.toLowerCase().includes(currentSearchFilter) ||
+                (s.studentId && s.studentId.toLowerCase().includes(currentSearchFilter))
+            );
+        }
+        
+        // Tri alphabétique
+        filteredStudents.sort((a, b) => a.lastName.localeCompare(b.lastName));
+        
+        if (filteredStudents.length === 0) {
+            container.innerHTML = '<tr><td colspan="8" style="text-align:center">Aucun élève correspondant aux filtres</td></tr>';
+        } else {
+            container.innerHTML = '';
+            filteredStudents.forEach((s, idx) => {
+                container.innerHTML += `
+                    <tr>
+                        <td>${idx+1}</td>
+                        <td><strong>${escapeHtml(s.lastName)} ${escapeHtml(s.firstName)}</strong></td>
+                        <td>${s.studentId}</td>
+                        <td><span class="badge badge-primary">${s.class || '-'}</span></td>
+                        <td>${s.gender}</td>
+                        <td>${s.status}</td>
+                        <td>${s.guardianName || '-'}</td>
+                        <td><button class="btn btn-danger btn-sm" onclick="deleteStudent('${s.id}')"><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                `;
+            });
+        }
+        document.getElementById('studentBadge').textContent = students.length;
+    }
+
+    // ==================== STATISTIQUES AVEC FILTRES ====================
+    function getFilteredStudentsForStats() {
+        const classFilter = document.getElementById('statsFilterClass').value;
+        if (classFilter === 'all') return students;
+        return students.filter(s => s.class === classFilter);
+    }
+
+    function getFilteredSubjectsForStats() {
+        const subjectFilter = document.getElementById('statsFilterSubject').value;
+        if (subjectFilter === 'all') return subjects;
+        return subjects.filter(s => s.id === subjectFilter);
+    }
+
+    function calculateFilteredStudentAverage(studentId, filteredSubjects) {
+        let total = 0, coeffTotal = 0;
+        filteredSubjects.forEach(sub => {
+            const avg = calculateSubjectAverage(sub.id, studentId);
+            if (avg > 0) {
+                total += avg * sub.coefficient;
+                coeffTotal += sub.coefficient;
+            }
+        });
+        return coeffTotal > 0 ? total / coeffTotal : 0;
+    }
+
+    function updateStatistics() {
+        const filteredStudents = getFilteredStudentsForStats();
+        const filteredSubjects = getFilteredSubjectsForStats();
+        
+        document.getElementById('totalStudents').textContent = filteredStudents.length;
+        document.getElementById('totalSubjects').textContent = filteredSubjects.length;
+        
+        // Calcul de la moyenne de la classe filtrée
+        let total = 0, count = 0;
+        filteredStudents.forEach(s => {
+            const avg = calculateFilteredStudentAverage(s.id, filteredSubjects);
+            if (avg > 0) { total += avg; count++; }
+        });
+        const classAvg = count > 0 ? total / count : 0;
+        document.getElementById('classAverage').textContent = classAvg.toFixed(2);
+        
+        // Taux de réussite
+        let passed = 0;
+        filteredStudents.forEach(s => {
+            const avg = calculateFilteredStudentAverage(s.id, filteredSubjects);
+            if (avg > 0 && avg >= 10) passed++;
+        });
+        document.getElementById('passRate').textContent = count > 0 ? ((passed / count) * 100).toFixed(1) + '%' : '0%';
+        
+        // Classement
+        const ranking = filteredStudents.map(s => ({
+            ...s,
+            avg: calculateFilteredStudentAverage(s.id, filteredSubjects)
+        })).filter(s => s.avg > 0).sort((a, b) => b.avg - a.avg);
+        
+        const rankContainer = document.getElementById('rankingList');
+        if (rankContainer) {
+            if (ranking.length === 0) {
+                rankContainer.innerHTML = '<tr><td colspan="5" style="text-align:center">Aucune note saisie pour cette sélection</td></tr>';
+            } else {
+                rankContainer.innerHTML = '';
+                ranking.forEach((s, i) => {
+                    let mention = s.avg >= 16 ? 'Très Bien' : (s.avg >= 14 ? 'Bien' : (s.avg >= 12 ? 'Assez Bien' : (s.avg >= 10 ? 'Passable' : 'Insuffisant')));
+                    rankContainer.innerHTML += `<tr>
+                        <td><strong>${i+1}</strong>${i===0?'er':'ème'}</td>
+                        <td>${s.lastName} ${s.firstName}</td>
+                        <td><span class="badge badge-primary">${s.class || '-'}</span></td>
+                        <td>${s.avg.toFixed(2)}</td>
+                        <td>${mention}</td>
+                    </tr>`;
+                });
+            }
+        }
+    }
+
+    // ==================== EXPORT JSON ====================
+    function exportToJSON() {
         const exportData = {
             metadata: {
                 exportDate: new Date().toISOString(),
@@ -584,7 +875,7 @@
                     series: document.getElementById('series').value
                 }
             },
-            students: sortedStudents.map(s => ({
+            students: students.map(s => ({
                 id: s.id,
                 lastName: s.lastName,
                 firstName: s.firstName,
@@ -594,7 +885,7 @@
                 status: s.status,
                 guardianName: s.guardianName,
                 guardianPhone: s.guardianPhone,
-                class: s.class || document.getElementById('className').value
+                class: s.class
             })),
             subjects: subjects.map(s => ({
                 id: s.id,
@@ -613,15 +904,12 @@
         const a = document.createElement('a');
         a.href = url;
         a.download = `export_scolaire_${new Date().toISOString().slice(0, 10)}.json`;
-        document.body.appendChild(a);
         a.click();
-        document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        
-        showNotification('✅ Export JSON réussi ! Toutes les données ont été exportées', 'success');
+        showNotification('✅ Export JSON réussi !', 'success');
     }
 
-    // ==================== IMPORT JSON COMPLET ====================
+    // ==================== IMPORT JSON ====================
     function importFromJSON(input) {
         if (!input.files || !input.files[0]) return;
         const file = input.files[0];
@@ -630,28 +918,16 @@
         reader.onload = function(e) {
             try {
                 const data = JSON.parse(e.target.result);
-                let importedStudents = [];
-                let importedSubjects = [];
-                let importedGrades = {};
                 
-                // Vérifier et importer les élèves
                 if (data.students && Array.isArray(data.students)) {
-                    importedStudents = data.students;
-                } else if (Array.isArray(data)) {
-                    importedStudents = data;
+                    students = data.students;
                 }
-                
-                // Importer les matières
                 if (data.subjects && Array.isArray(data.subjects)) {
-                    importedSubjects = data.subjects;
+                    subjects = data.subjects;
                 }
-                
-                // Importer les notes
                 if (data.grades) {
-                    importedGrades = data.grades;
+                    grades = data.grades;
                 }
-                
-                // Importer les informations de l'école
                 if (data.metadata && data.metadata.schoolInfo) {
                     document.getElementById('schoolYear').value = data.metadata.schoolInfo.schoolYear || '';
                     document.getElementById('period').value = data.metadata.schoolInfo.period || '1er Trimestre';
@@ -661,35 +937,15 @@
                     document.getElementById('series').value = data.metadata.schoolInfo.series || '';
                 }
                 
-                if (importedStudents.length > 0) {
-                    students = importedStudents;
-                }
-                if (importedSubjects.length > 0) {
-                    subjects = importedSubjects;
-                }
-                if (Object.keys(importedGrades).length > 0) {
-                    grades = importedGrades;
-                }
-                
-                // Trier les élèves par ordre alphabétique
-                students.sort((a, b) => {
-                    return a.lastName.localeCompare(b.lastName);
-                });
-                
                 updateAllDisplays();
                 updateStudentSelect();
+                updateFilterSubjects();
                 saveData();
-                showNotification(`✅ Import réussi ! ${students.length} élève(s), ${subjects.length} matière(s) importée(s)`, 'success');
+                showNotification(`✅ Import réussi ! ${students.length} élève(s), ${subjects.length} matière(s)`, 'success');
             } catch(e) {
-                console.error('Erreur JSON:', e);
                 showNotification('❌ Erreur lors de la lecture du fichier JSON', 'danger');
             }
         };
-        
-        reader.onerror = function() {
-            showNotification('❌ Erreur de lecture du fichier', 'danger');
-        };
-        
         reader.readAsText(file);
         input.value = '';
     }
@@ -730,9 +986,6 @@
 
         students.push(newStudent);
         grades[newStudent.id] = {};
-
-        // Trier les élèves par ordre alphabétique
-        students.sort((a, b) => a.lastName.localeCompare(b.lastName));
 
         clearStudentForm();
         updateAllDisplays();
@@ -787,6 +1040,7 @@
         
         updateSubjectsList();
         updateStudentSelect();
+        updateFilterSubjects();
         saveData();
         showNotification(`✅ Matière ${name} ajoutée`, 'success');
     }
@@ -802,6 +1056,7 @@
             { id: 's7', name: 'EPS', coefficient: 1, teacher: 'GBEASSOR Komi', category: 'Autre', hours: 2 }
         ];
         updateSubjectsList();
+        updateFilterSubjects();
         saveData();
         showNotification('📚 Programme standard chargé', 'success');
     }
@@ -841,6 +1096,7 @@
             }
             updateSubjectsList();
             updateStudentSelect();
+            updateFilterSubjects();
             saveData();
             showNotification('Matière supprimée', 'success');
         }
@@ -853,12 +1109,14 @@
         
         select.innerHTML = '<option value="">-- Sélectionner un élève --</option>';
         students.forEach(s => {
-            select.innerHTML += `<option value="${s.id}">${s.lastName} ${s.firstName} (${s.studentId})</option>`;
+            select.innerHTML += `<option value="${s.id}">${s.lastName} ${s.firstName} (${s.studentId}) - ${s.class || '-'}</option>`;
         });
     }
 
     function loadGradesForStudent() {
         const studentId = document.getElementById('gradeStudentSelect').value;
+        const subjectFilter = document.getElementById('filterSubject').value;
+        const showAverages = document.getElementById('showAverages').value;
         const container = document.getElementById('gradesContainer');
         const infoDiv = document.getElementById('studentInfoDisplay');
         
@@ -869,12 +1127,17 @@
         }
 
         const student = students.find(s => s.id === studentId);
-        infoDiv.innerHTML = `<div class="alert alert-info"><strong>${student.lastName} ${student.firstName}</strong> - ${student.studentId}</div>`;
+        infoDiv.innerHTML = `<div class="alert alert-info"><strong>${student.lastName} ${student.firstName}</strong> - ${student.studentId} - Classe: ${student.class || '-'}</div>`;
 
         if (!grades[studentId]) grades[studentId] = {};
 
+        let filteredSubjects = subjects;
+        if (subjectFilter !== 'all') {
+            filteredSubjects = subjects.filter(s => s.id === subjectFilter);
+        }
+
         let html = '';
-        subjects.forEach(sub => {
+        filteredSubjects.forEach(sub => {
             const studentGrade = grades[studentId][sub.id] || { note1: '', note2: '' };
             const avg = calculateSubjectAverage(sub.id, studentId);
             html += `
@@ -885,10 +1148,14 @@
                         <div><label>Note 1 (sur 20)</label><input type="number" min="0" max="20" step="0.5" id="note1_${sub.id}" value="${studentGrade.note1 || ''}" placeholder="Note 1" onchange="saveGrade('${studentId}','${sub.id}','note1',this.value)"></div>
                         <div><label>Note 2 (sur 20)</label><input type="number" min="0" max="20" step="0.5" id="note2_${sub.id}" value="${studentGrade.note2 || ''}" placeholder="Note 2" onchange="saveGrade('${studentId}','${sub.id}','note2',this.value)"></div>
                     </div>
-                    <div style="margin-top: 8px;"><strong>Moyenne matière:</strong> ${avg > 0 ? avg.toFixed(2) : '-'}/20</div>
+                    ${showAverages === 'yes' ? `<div style="margin-top: 8px;"><strong>Moyenne matière:</strong> ${avg > 0 ? avg.toFixed(2) : '-'}/20</div>` : ''}
                 </div>
             `;
         });
+        
+        if (filteredSubjects.length === 0) {
+            html = '<div class="alert alert-warning text-center">Aucune matière correspondant au filtre</div>';
+        }
         container.innerHTML = html;
     }
 
@@ -900,12 +1167,14 @@
         grades[studentId][subjectId][type] = (isNaN(v) || v < 0 || v > 20) ? null : v;
         saveData();
         
-        const avg = calculateSubjectAverage(subjectId, studentId);
-        const noteCard = document.querySelector(`#note1_${subjectId}`)?.closest('.note-card');
-        if (noteCard) {
-            let avgDiv = noteCard.querySelector('div:last-child');
-            if (avgDiv && avgDiv.innerHTML.includes('Moyenne matière')) {
-                avgDiv.innerHTML = `<strong>Moyenne matière:</strong> ${avg > 0 ? avg.toFixed(2) : '-'}/20`;
+        if (document.getElementById('showAverages').value === 'yes') {
+            const avg = calculateSubjectAverage(subjectId, studentId);
+            const noteCard = document.querySelector(`#note1_${subjectId}`)?.closest('.note-card');
+            if (noteCard) {
+                let avgDiv = noteCard.querySelector('div:last-child');
+                if (avgDiv && avgDiv.innerHTML.includes('Moyenne matière')) {
+                    avgDiv.innerHTML = `<strong>Moyenne matière:</strong> ${avg > 0 ? avg.toFixed(2) : '-'}/20`;
+                }
             }
         }
     }
@@ -938,79 +1207,9 @@
         return coeffTotal > 0 ? total / coeffTotal : 0;
     }
 
-    function calculateClassAverage() {
-        let total = 0, count = 0;
-        students.forEach(s => {
-            const avg = calculateStudentAverage(s.id);
-            if (avg > 0) { total += avg; count++; }
-        });
-        return count > 0 ? total / count : 0;
-    }
-
-    // ==================== STATISTIQUES ====================
-    function updateStatistics() {
-        document.getElementById('totalStudents').textContent = students.length;
-        document.getElementById('totalSubjects').textContent = subjects.length;
-        
-        const classAvg = calculateClassAverage();
-        document.getElementById('classAverage').textContent = classAvg.toFixed(2);
-        
-        let passed = 0, withGrades = 0;
-        students.forEach(s => {
-            const avg = calculateStudentAverage(s.id);
-            if (avg > 0) {
-                withGrades++;
-                if (avg >= 10) passed++;
-            }
-        });
-        document.getElementById('passRate').textContent = withGrades > 0 ? ((passed / withGrades) * 100).toFixed(1) + '%' : '0%';
-        
-        const ranking = students.map(s => ({
-            ...s,
-            avg: calculateStudentAverage(s.id)
-        })).filter(s => s.avg > 0).sort((a, b) => b.avg - a.avg);
-        
-        const rankContainer = document.getElementById('rankingList');
-        if (rankContainer) {
-            if (ranking.length === 0) {
-                rankContainer.innerHTML = '<tr><td colspan="4" style="text-align:center">Aucune note saisie</td><tr>';
-            } else {
-                rankContainer.innerHTML = '';
-                ranking.forEach((s, i) => {
-                    let mention = s.avg >= 16 ? 'Très Bien' : (s.avg >= 14 ? 'Bien' : (s.avg >= 12 ? 'Assez Bien' : (s.avg >= 10 ? 'Passable' : 'Insuffisant')));
-                    rankContainer.innerHTML += `<tr><td><strong>${i+1}</strong>${i===0?'er':'ème'}</td><td>${s.lastName} ${s.firstName}</td><td>${s.avg.toFixed(2)}</td><td>${mention}</td></tr>`;
-                });
-            }
-        }
-    }
-
     // ==================== MISES À JOUR ====================
     function updateAllDisplays() {
-        const studentsList = document.getElementById('studentsList');
-        if (studentsList) {
-            // Trier les élèves par ordre alphabétique
-            const sortedStudents = [...students].sort((a, b) => a.lastName.localeCompare(b.lastName));
-            
-            if (sortedStudents.length === 0) {
-                studentsList.innerHTML = '<tr><td colspan="7" style="text-align:center">Aucun élève enregistré</td><tr>';
-            } else {
-                studentsList.innerHTML = '';
-                sortedStudents.forEach((s, idx) => {
-                    studentsList.innerHTML += `
-                        <tr>
-                            <td>${idx+1}</td>
-                            <td><strong>${escapeHtml(s.lastName)} ${escapeHtml(s.firstName)}</strong></td>
-                            <td>${s.studentId}</td>
-                            <td>${s.gender}</td>
-                            <td>${s.status}</td>
-                            <td>${s.guardianName || '-'}</td>
-                            <td><button class="btn btn-danger btn-sm" onclick="deleteStudent('${s.id}')"><i class="fas fa-trash"></i></button></td>
-                        </tr>
-                    `;
-                });
-            }
-            document.getElementById('studentBadge').textContent = students.length;
-        }
+        updateStudentListWithFilters();
         updateSubjectsList();
         updateStatistics();
     }
