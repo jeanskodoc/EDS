@@ -43,7 +43,7 @@
         .stripe-green { background-color: var(--primary-color); }
 
         .tabs-container { background: white; border-bottom: 2px solid var(--border-color); overflow-x: auto; }
-        .tabs { display: flex; }
+        .tabs { display: flex; flex-wrap: wrap; }
         .tab { padding: 1rem 1.5rem; border: none; background: none; cursor: pointer; font-weight: 600; border-bottom: 3px solid transparent; transition: all 0.3s ease; white-space: nowrap; }
         .tab:hover { color: var(--primary-color); background: var(--primary-light); }
         .tab.active { color: var(--primary-color); border-bottom-color: var(--secondary-color); background: var(--primary-light); }
@@ -96,9 +96,12 @@
         .data-table td { padding: 1rem; border-bottom: 1px solid var(--border-color); }
         .data-table tr:hover { background: var(--primary-light); }
 
-        /* Styles du Bulletin Scolaire - OPTIMISÉ POUR IMPRESSION */
+        .alert { padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid; }
+        .alert-info { background: #d1ecf1; color: #0c5460; border-color: var(--info-color); }
+        .alert-warning { background: #fff3cd; color: #856404; border-color: var(--warning-color); }
+
         .bulletin-preview-container { background: #e9ecef; border-radius: 8px; padding: 2rem; position: relative; }
-        .bulletin-actions { position: absolute; top: 1rem; right: 1rem; display: flex; gap: 0.5rem; z-index: 10; }
+        .bulletin-actions { position: absolute; top: 1rem; right: 1rem; display: flex; gap: 0.5rem; z-index: 10; flex-wrap: wrap; }
         
         .bulletin-togo {
             background: white;
@@ -111,8 +114,6 @@
             font-family: 'Times New Roman', 'Segoe UI', serif;
             position: relative;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            page-break-after: avoid;
-            page-break-inside: avoid;
         }
         
         .bulletin-togo.with-watermark {
@@ -148,9 +149,6 @@
         .summary-value { font-size: 16px; font-weight: bold; color: var(--primary-color); }
         .summary-value-large { font-size: 22px; color: var(--secondary-color); }
         
-        .rank-box { background: var(--tertiary-color); padding: 8px; border-radius: 8px; text-align: center; margin: 10px 0; }
-        .rank-value { font-size: 24px; font-weight: bold; color: var(--primary-color); }
-        
         .appreciation-box { padding: 10px; background: #f8f9fa; border-radius: 5px; margin-top: 10px; border-left: 3px solid var(--tertiary-color); font-size: 10px; line-height: 1.4; }
         
         .signatures-section { display: flex; justify-content: space-between; margin-top: 30px; padding-top: 15px; border-top: 1px dashed var(--border-color); }
@@ -163,29 +161,16 @@
         .badge { display: inline-block; padding: 0.25rem 0.5rem; font-size: 0.7rem; font-weight: 600; border-radius: 20px; color: white; }
         .badge-primary { background: var(--primary-color); }
         .badge-success { background: var(--success-color); }
-        .badge-warning { background: var(--warning-color); color: #333; }
-        .badge-danger { background: var(--danger-color); }
         
-        .file-import-area { border: 2px dashed var(--primary-color); border-radius: 8px; padding: 2rem; text-align: center; cursor: pointer; background: var(--primary-light); margin-bottom: 1.5rem; }
-        .file-import-area:hover { background: #d4edda; }
+        .file-import-area { border: 2px dashed var(--primary-color); border-radius: 8px; padding: 2rem; text-align: center; cursor: pointer; background: var(--primary-light); margin-bottom: 1.5rem; transition: all 0.3s ease; }
+        .file-import-area:hover { background: #d4edda; transform: scale(1.01); }
         
-        /* Styles d'impression optimisés */
         @media print {
             .no-print { display: none !important; }
             body { background: white !important; padding: 0 !important; margin: 0 !important; }
             .container { box-shadow: none !important; margin: 0 !important; padding: 0 !important; }
-            .bulletin-togo { 
-                margin: 0 !important; 
-                box-shadow: none !important; 
-                page-break-after: always !important;
-                page-break-inside: avoid !important;
-                border: 1px solid #000 !important;
-                width: 100% !important;
-                min-height: auto !important;
-            }
-            .bulletin-actions, .bulletin-options, .header-main, .tabs-container, footer { display: none !important; }
+            .bulletin-togo { margin: 0 !important; box-shadow: none !important; page-break-after: always !important; border: 1px solid #000 !important; }
             .watermark { opacity: 0.08 !important; }
-            .grades-table th, .grades-table td { border: 1px solid #000 !important; }
         }
         
         .d-flex { display: flex; }
@@ -193,8 +178,15 @@
         .flex-wrap { flex-wrap: wrap; }
         .mt-2 { margin-top: 1rem; }
         .mt-3 { margin-top: 1.5rem; }
-        .mb-2 { margin-bottom: 1rem; }
         .text-center { text-align: center; }
+        
+        @media (max-width: 768px) {
+            .main-content { padding: 1rem; }
+            .summary-grid { grid-template-columns: repeat(2, 1fr); }
+            .student-info-bulletin { grid-template-columns: repeat(2, 1fr); }
+            .school-info-bulletin { grid-template-columns: repeat(2, 1fr); }
+            .bulletin-actions { position: static; margin-bottom: 1rem; justify-content: center; }
+        }
     </style>
 </head>
 <body>
@@ -278,7 +270,8 @@
                     <h2><i class="fas fa-user-plus"></i> Gestion des Élèves</h2>
                     <div class="file-import-area" onclick="document.getElementById('jsonFileInput').click()">
                         <i class="fas fa-file-import fa-3x" style="color: var(--primary-color);"></i>
-                        <p><strong>Importer JSON depuis bull.html</strong></p>
+                        <p><strong>📂 Importer JSON depuis bull.html</strong></p>
+                        <p style="font-size: 12px; color: #666;">Cliquez ou glissez-déposez un fichier JSON</p>
                         <input type="file" id="jsonFileInput" accept=".json" style="display: none;" onchange="importFromJSONFile(this)">
                     </div>
                     <div class="form-row">
@@ -311,7 +304,7 @@
                     <h2><i class="fas fa-book-open"></i> Programme Scolaire</h2>
                     <div class="alert alert-info"><i class="fas fa-info-circle"></i> Définissez les matières, coefficients et enseignants</div>
                     <div class="table-container"><table class="data-table"><thead><tr><th>Matière</th><th>Coeff</th><th>Enseignant (Nom & Prénom)</th><th>Heures</th><th>Catégorie</th><th>Actions</th></tr></thead><tbody id="subjectsList"></tbody></table></div>
-                    <div><button class="btn btn-success" onclick="addSubject()"><i class="fas fa-plus"></i> Ajouter matière</button><button class="btn btn-primary" onclick="loadDefaultSubjects()"><i class="fas fa-sync"></i> Programme standard</button></div>
+                    <div class="d-flex gap-2 flex-wrap"><button class="btn btn-success" onclick="addSubject()"><i class="fas fa-plus"></i> Ajouter matière</button><button class="btn btn-primary" onclick="loadDefaultSubjects()"><i class="fas fa-sync"></i> Programme standard</button></div>
                 </div>
             </div>
 
@@ -367,7 +360,7 @@
             <div class="tab-content" id="tab5">
                 <div class="form-section">
                     <h2><i class="fas fa-archive"></i> Archives</h2>
-                    <div class="table-container"><table class="data-table"><thead><tr><th>Date</th><th>Élève</th><th>Classe</th><th>Période</th><th>Moyenne</th><tr></thead><tbody id="archivesList"></tbody><td></div>
+                    <div class="table-container"><table class="data-table"><thead><tr><th>Date</th><th>Élève</th><th>Classe</th><th>Période</th><th>Moyenne</th></tr></thead><tbody id="archivesList"></tbody></table></div>
                 </div>
             </div>
 
@@ -376,11 +369,12 @@
                 <div class="form-section">
                     <h2><i class="fas fa-cogs"></i> Configuration</h2>
                     <div class="form-row">
-                        <div class="form-group"><label>Seuil réussite (10/20)</label><input type="number" id="passingGrade" class="form-control" min="0" max="20" step="0.5" value="10"></div>
+                        <div class="form-group"><label>Seuil réussite (10/20)</label><input type="number" id="passingGrade" class="form-control" min="0" max="20" step="0.5" value="10" onchange="updatePassingGrade()"></div>
                     </div>
                     <div class="d-flex gap-2 flex-wrap">
                         <button class="btn btn-primary" onclick="saveAllData()"><i class="fas fa-save"></i> Sauvegarder</button>
                         <button class="btn btn-danger" onclick="clearData()"><i class="fas fa-trash"></i> Réinitialiser</button>
+                        <button class="btn btn-info" onclick="exportSchoolData()"><i class="fas fa-download"></i> Exporter données</button>
                     </div>
                 </div>
             </div>
@@ -392,7 +386,7 @@
     <div id="bulletinMultipleContainer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 10000; overflow-y: auto; padding: 20px;"></div>
 
     <script>
-        // ==================== VARIABLES ====================
+        // ==================== VARIABLES GLOBALES ====================
         let students = [];
         let subjects = [];
         let grades = {};
@@ -409,50 +403,129 @@
             updateCounters();
             updateStudentSelect();
             updateBulletinStudentSelect();
-            showNotification('Système chargé', 'success');
+            showNotification('✅ Système chargé avec succès', 'success');
         });
 
-        // ==================== IMPORT JSON ====================
+        // ==================== IMPORT JSON DEPUIS BULL.HTML ====================
         function importFromJSONFile(input) {
-            if(!input.files[0]) return;
+            if(!input.files || !input.files[0]) return;
+            const file = input.files[0];
             const reader = new FileReader();
+            
             reader.onload = function(e) {
                 try {
                     const data = JSON.parse(e.target.result);
-                    let count = 0;
-                    if(data.students) {
-                        data.students.forEach(s => {
-                            if(s.lastName && s.firstName) {
-                                students.push({
-                                    id: Date.now().toString() + Math.random(),
-                                    lastName: s.lastName, firstName: s.firstName,
-                                    studentId: s.studentId || `MAT-${Date.now().toString().slice(-6)}`,
-                                    gender: s.gender === 'M' ? 'M' : 'F', birthDate: s.birthDate || '',
-                                    birthPlace: s.birthPlace || '', status: s.status || 'Nouveau',
-                                    guardianName: s.guardianName || '', guardianPhone: s.guardianPhone || '',
-                                    class: s.className || s.class || '6ème'
-                                });
-                                grades[students[students.length-1].id] = {};
-                                count++;
-                            }
-                        });
+                    let importedStudents = [];
+                    
+                    // Format 1: Tableau simple d'élèves
+                    if(Array.isArray(data) && data.length > 0 && (data[0].lastName || data[0].nom)) {
+                        importedStudents = data;
                     }
-                    if(count > 0) { updateStudentList(); updateCounters(); updateStudentSelect(); updateBulletinStudentSelect(); saveAllData(); showNotification(`${count} élève(s) importé(s)`, 'success'); }
-                    else showNotification('Aucun élève trouvé', 'warning');
-                } catch(e) { showNotification('Erreur fichier JSON', 'danger'); }
+                    // Format 2: Objet avec propriété students
+                    else if(data.students && Array.isArray(data.students)) {
+                        importedStudents = data.students;
+                    }
+                    // Format 3: Objet avec propriété data.students
+                    else if(data.data && data.data.students) {
+                        importedStudents = data.data.students;
+                    }
+                    
+                    if(importedStudents.length === 0) {
+                        showNotification('❌ Aucun élève trouvé dans le fichier JSON', 'warning');
+                        return;
+                    }
+                    
+                    let count = 0;
+                    importedStudents.forEach(s => {
+                        const lastName = s.lastName || s.nom || '';
+                        const firstName = s.firstName || s.prenom || '';
+                        if(lastName && firstName) {
+                            students.push({
+                                id: Date.now().toString() + Math.random().toString(36).substr(2, 6),
+                                lastName: lastName,
+                                firstName: firstName,
+                                studentId: s.studentId || s.matricule || `MAT-${Date.now().toString().slice(-6)}`,
+                                gender: (s.gender === 'M' || s.gender === 'F') ? s.gender : (s.sexe === 'Masculin' ? 'M' : 'F'),
+                                birthDate: s.birthDate || s.dateNaissance || '',
+                                birthPlace: s.birthPlace || s.lieuNaissance || '',
+                                status: s.status || s.statut || 'Nouveau',
+                                guardianName: s.guardianName || s.tuteur || '',
+                                guardianPhone: s.guardianPhone || s.telephoneTuteur || '',
+                                class: s.className || s.class || s.classe || '6ème'
+                            });
+                            grades[students[students.length-1].id] = {};
+                            count++;
+                        }
+                    });
+                    
+                    if(count > 0) {
+                        updateStudentList();
+                        updateCounters();
+                        updateStudentSelect();
+                        updateBulletinStudentSelect();
+                        saveAllData();
+                        showNotification(`✅ ${count} élève(s) importé(s) avec succès depuis ${file.name}`, 'success');
+                    } else {
+                        showNotification('⚠️ Aucun élève valide trouvé dans le fichier', 'warning');
+                    }
+                } catch(e) {
+                    console.error('Erreur JSON:', e);
+                    showNotification('❌ Erreur lors de la lecture du fichier JSON', 'danger');
+                }
             };
-            reader.readAsText(input.files[0]);
+            
+            reader.onerror = function() {
+                showNotification('❌ Erreur de lecture du fichier', 'danger');
+            };
+            
+            reader.readAsText(file);
             input.value = '';
         }
 
-        // ==================== GESTION ÉLÈVES ====================
+        // Drag & drop pour l'import JSON
+        function setupDragAndDrop() {
+            const dropZone = document.querySelector('.file-import-area');
+            if(!dropZone) return;
+            
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.style.background = '#d4edda';
+                dropZone.style.borderColor = '#28a745';
+            });
+            
+            dropZone.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                dropZone.style.background = 'var(--primary-light)';
+                dropZone.style.borderColor = 'var(--primary-color)';
+            });
+            
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.style.background = 'var(--primary-light)';
+                dropZone.style.borderColor = 'var(--primary-color)';
+                const file = e.dataTransfer.files[0];
+                if(file && file.name.endsWith('.json')) {
+                    const fakeInput = { files: [file] };
+                    importFromJSONFile(fakeInput);
+                } else {
+                    showNotification('Veuillez déposer un fichier JSON', 'warning');
+                }
+            });
+        }
+        
+        // Appeler setupDragAndDrop après chargement
+        setTimeout(setupDragAndDrop, 100);
+
+        // ==================== GESTION DES ÉLÈVES ====================
         function addStudent() {
             let lastName = document.getElementById('studentLastName').value.trim();
             let firstName = document.getElementById('studentFirstName').value.trim();
-            if(!lastName || !firstName) { showNotification('Nom et prénom requis', 'warning'); return; }
+            if(!lastName || !firstName) { showNotification('⚠️ Nom et prénom requis', 'warning'); return; }
+            
             students.push({
                 id: Date.now().toString(),
-                lastName, firstName,
+                lastName: lastName,
+                firstName: firstName,
                 studentId: document.getElementById('studentId').value.trim() || `MAT-${Date.now().toString().slice(-6)}`,
                 gender: document.getElementById('studentGender').value,
                 birthDate: document.getElementById('studentBirthDate').value,
@@ -463,27 +536,72 @@
                 class: document.getElementById('class').value || '6ème'
             });
             grades[students[students.length-1].id] = {};
+            
+            // Réinitialiser formulaire
             document.getElementById('studentLastName').value = '';
             document.getElementById('studentFirstName').value = '';
             document.getElementById('studentId').value = '';
-            updateStudentList(); updateCounters(); updateStudentSelect(); updateBulletinStudentSelect(); saveAllData();
-            showNotification('Élève ajouté', 'success');
+            document.getElementById('studentGender').value = '';
+            document.getElementById('studentBirthDate').value = '';
+            document.getElementById('studentBirthPlace').value = '';
+            document.getElementById('guardianName').value = '';
+            document.getElementById('guardianPhone').value = '';
+            
+            updateStudentList();
+            updateCounters();
+            updateStudentSelect();
+            updateBulletinStudentSelect();
+            saveAllData();
+            showNotification(`✅ Élève ${lastName} ${firstName} ajouté`, 'success');
         }
 
         function updateStudentList() {
             let container = document.getElementById('studentsList');
             if(!container) return;
-            if(students.length === 0) { container.innerHTML = '<div class="alert alert-info">Aucun élève</div>'; return; }
+            if(students.length === 0) { 
+                container.innerHTML = '<div class="alert alert-info text-center">📭 Aucun élève enregistré</div>'; 
+                return; 
+            }
             container.innerHTML = '';
             students.forEach(s => {
-                container.innerHTML += `<div class="student-item"><div><div class="student-name">${s.lastName} ${s.firstName}</div><div>${s.studentId}</div></div><div>${s.birthDate || '-'}</div><div>${s.guardianPhone || '-'}</div><div><button class="btn btn-sm btn-danger" onclick="deleteStudent('${s.id}')"><i class="fas fa-trash"></i></button></div></div>`;
+                container.innerHTML += `
+                    <div class="student-item">
+                        <div>
+                            <div class="student-name">${escapeHtml(s.lastName)} ${escapeHtml(s.firstName)}</div>
+                            <div style="font-size: 12px; color: #666;">${s.studentId}</div>
+                        </div>
+                        <div>${s.birthDate || '-'}</div>
+                        <div>${s.guardianPhone || '-'}</div>
+                        <div>
+                            <button class="btn btn-sm btn-danger" onclick="deleteStudent('${s.id}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
             });
             document.getElementById('classSize').value = students.length;
             document.getElementById('girlsCount').value = students.filter(s => s.gender === 'F').length;
             document.getElementById('boysCount').value = students.filter(s => s.gender === 'M').length;
         }
+        
+        function escapeHtml(text) {
+            if(!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
 
-        function deleteStudent(id) { if(confirm('Supprimer ?')) { students = students.filter(s => s.id !== id); delete grades[id]; updateStudentList(); updateCounters(); updateStudentSelect(); updateBulletinStudentSelect(); saveAllData(); showNotification('Supprimé', 'success'); } }
+        function deleteStudent(id) { 
+            if(confirm('Supprimer cet élève ?')) { 
+                students = students.filter(s => s.id !== id); 
+                delete grades[id]; 
+                updateStudentList(); 
+                updateCounters(); 
+                updateStudentSelect(); 
+                updateBulletinStudentSelect(); 
+                saveAllData(); 
+                showNotification('🗑️ Élève supprimé', 'success'); 
+            } 
+        }
 
         // ==================== MATIÈRES ====================
         function loadDefaultSubjects() {
@@ -496,7 +614,9 @@
                 { id: 6, name: 'Anglais', coefficient: 1, teacher: 'Mme. JOHNSON Sarah', hours: 3, category: 'Littéraire' },
                 { id: 7, name: 'EPS', coefficient: 1, teacher: 'M. GBEASSOR Komi', hours: 2, category: 'Autre' }
             ];
-            updateSubjectsList(); saveAllData();
+            updateSubjectsList(); 
+            saveAllData();
+            showNotification('✅ Programme standard chargé', 'success');
         }
 
         function updateSubjectsList() {
@@ -504,25 +624,33 @@
             if(!container) return;
             container.innerHTML = '';
             subjects.forEach((s, i) => {
-                container.innerHTML += `<tr><td><input type="text" class="form-control" value="${s.name}" onchange="updateSubject(${i},'name',this.value)"></td>
-                <td><input type="number" class="form-control" value="${s.coefficient}" onchange="updateSubject(${i},'coefficient',parseFloat(this.value))"></td>
-                <td><input type="text" class="form-control" value="${s.teacher}" placeholder="Nom et Prénom" onchange="updateSubject(${i},'teacher',this.value)"></td>
-                <td><input type="number" class="form-control" value="${s.hours}" onchange="updateSubject(${i},'hours',parseInt(this.value))"></td>
-                <td><select class="form-control" onchange="updateSubject(${i},'category',this.value)"><option ${s.category==='Scientifique'?'selected':''}>Scientifique</option><option ${s.category==='Littéraire'?'selected':''}>Littéraire</option><option ${s.category==='Autre'?'selected':''}>Autre</option></select></td>
-                <td><button class="btn btn-sm btn-danger" onclick="removeSubject(${i})"><i class="fas fa-trash"></i></button></td></tr>`;
+                container.innerHTML += `
+                    <tr>
+                        <td><input type="text" class="form-control" value="${s.name}" onchange="updateSubject(${i},'name',this.value)"></td>
+                        <td><input type="number" class="form-control" value="${s.coefficient}" onchange="updateSubject(${i},'coefficient',parseFloat(this.value))"></td>
+                        <td><input type="text" class="form-control" value="${s.teacher}" placeholder="Nom et Prénom" onchange="updateSubject(${i},'teacher',this.value)"></td>
+                        <td><input type="number" class="form-control" value="${s.hours}" onchange="updateSubject(${i},'hours',parseInt(this.value))"></td>
+                        <td><select class="form-control" onchange="updateSubject(${i},'category',this.value)">
+                            <option ${s.category==='Scientifique'?'selected':''}>Scientifique</option>
+                            <option ${s.category==='Littéraire'?'selected':''}>Littéraire</option>
+                            <option ${s.category==='Autre'?'selected':''}>Autre</option>
+                        </select></td>
+                        <td><button class="btn btn-sm btn-danger" onclick="removeSubject(${i})"><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                `;
             });
             document.getElementById('subjectCount').textContent = subjects.length;
         }
 
         function updateSubject(idx, field, val) { if(subjects[idx]) { subjects[idx][field] = val; saveAllData(); } }
-        function addSubject() { subjects.push({ id: Date.now(), name: 'Nouvelle matière', coefficient: 1, teacher: '', hours: 2, category: 'Autre' }); updateSubjectsList(); saveAllData(); }
-        function removeSubject(idx) { if(confirm('Supprimer ?')) { subjects.splice(idx,1); updateSubjectsList(); saveAllData(); } }
+        function addSubject() { subjects.push({ id: Date.now(), name: 'Nouvelle matière', coefficient: 1, teacher: '', hours: 2, category: 'Autre' }); updateSubjectsList(); saveAllData(); showNotification('➕ Matière ajoutée', 'success'); }
+        function removeSubject(idx) { if(confirm('Supprimer cette matière ?')) { subjects.splice(idx,1); updateSubjectsList(); saveAllData(); } }
 
         // ==================== NOTES ====================
         function updateStudentSelect() {
             let select = document.getElementById('studentSelect');
             if(!select) return;
-            select.innerHTML = '<option value="">Tous</option>';
+            select.innerHTML = '<option value="">Tous les élèves</option>';
             students.forEach(s => { select.innerHTML += `<option value="${s.id}">${s.lastName} ${s.firstName}</option>`; });
         }
 
@@ -532,7 +660,10 @@
         function updateGradesDisplay() {
             let container = document.getElementById('gradesContainer');
             if(!container) return;
-            if(students.length === 0 || subjects.length === 0) { container.innerHTML = '<div class="alert alert-warning">Ajoutez des élèves et matières</div>'; return; }
+            if(students.length === 0 || subjects.length === 0) { 
+                container.innerHTML = '<div class="alert alert-warning">⚠️ Ajoutez d\'abord des élèves et des matières</div>'; 
+                return; 
+            }
             let studentId = document.getElementById('studentSelect').value;
             let filtered = studentId ? students.filter(s => s.id === studentId) : students;
             container.innerHTML = '';
@@ -540,11 +671,17 @@
                 let html = `<div class="note-card"><div class="note-header"><h4>${s.lastName} ${s.firstName}</h4><span class="badge badge-primary">${s.studentId}</span></div>`;
                 subjects.forEach(sub => {
                     let sg = (grades[s.id] && grades[s.id][sub.id]) || {};
-                    html += `<div><label>${sub.name} (coef ${sub.coefficient}) - ${sub.teacher}</label>
-                    <div class="note-input-group"><input type="number" min="0" max="20" step="0.5" value="${sg.note1||''}" placeholder="Note 1" class="form-control" onchange="updateGrade('${s.id}','${sub.id}','note1',this.value)">
-                    <input type="number" min="0" max="20" step="0.5" value="${sg.note2||''}" placeholder="Note 2" class="form-control" onchange="updateGrade('${s.id}','${sub.id}','note2',this.value)"></div></div>`;
+                    html += `
+                        <div>
+                            <label>${sub.name} (coef ${sub.coefficient}) - ${sub.teacher || 'Enseignant non assigné'}</label>
+                            <div class="note-input-group">
+                                <input type="number" min="0" max="20" step="0.5" value="${sg.note1||''}" placeholder="Note 1" class="form-control" onchange="updateGrade('${s.id}','${sub.id}','note1',this.value)">
+                                <input type="number" min="0" max="20" step="0.5" value="${sg.note2||''}" placeholder="Note 2" class="form-control" onchange="updateGrade('${s.id}','${sub.id}','note2',this.value)">
+                            </div>
+                        </div>
+                    `;
                 });
-                html += `<div class="mt-2 text-center"><strong>Moyenne générale: ${calculateStudentAverage(s.id).toFixed(2)}/20</strong></div></div>`;
+                html += `<div class="mt-2 text-center"><strong>📊 Moyenne générale: ${calculateStudentAverage(s.id).toFixed(2)}/20</strong></div></div>`;
                 container.innerHTML += html;
             });
         }
@@ -559,70 +696,109 @@
             saveAllData();
         }
 
-        function calculateSubjectAverage(sg) { let n1 = sg.note1||0, n2 = sg.note2||0; if(n1===0 && n2===0) return 0; if(n1>0 && n2===0) return n1; if(n1===0 && n2>0) return n2; return (n1+n2)/2; }
+        function calculateSubjectAverage(sg) { 
+            let n1 = sg.note1 || 0, n2 = sg.note2 || 0; 
+            if(n1 === 0 && n2 === 0) return 0; 
+            if(n1 > 0 && n2 === 0) return n1; 
+            if(n1 === 0 && n2 > 0) return n2; 
+            return (n1 + n2) / 2; 
+        }
         
         function calculateStudentAverage(id) {
-            let sg = grades[id]; if(!sg) return 0;
-            let total=0, coef=0;
+            let sg = grades[id]; 
+            if(!sg) return 0;
+            let total = 0, coef = 0;
             subjects.forEach(sub => {
                 if(sg[sub.id]) {
                     let avg = calculateSubjectAverage(sg[sub.id]);
-                    if(avg>0) { total += avg * sub.coefficient; coef += sub.coefficient; }
+                    if(avg > 0) { 
+                        total += avg * sub.coefficient; 
+                        coef += sub.coefficient; 
+                    }
                 }
             });
-            return coef>0 ? total/coef : 0;
+            return coef > 0 ? total / coef : 0;
         }
         
         function calculateCategoryAverage(id, category) {
-            let sg = grades[id]; if(!sg) return 0;
-            let total=0, coef=0;
+            let sg = grades[id]; 
+            if(!sg) return 0;
+            let total = 0, coef = 0;
             subjects.filter(s => s.category === category).forEach(sub => {
                 if(sg[sub.id]) {
                     let avg = calculateSubjectAverage(sg[sub.id]);
-                    if(avg>0) { total += avg * sub.coefficient; coef += sub.coefficient; }
+                    if(avg > 0) { 
+                        total += avg * sub.coefficient; 
+                        coef += sub.coefficient; 
+                    }
                 }
             });
-            return coef>0 ? total/coef : 0;
+            return coef > 0 ? total / coef : 0;
         }
         
         function calculateClassAverage() {
-            let total=0, count=0;
-            students.forEach(s => { let avg = calculateStudentAverage(s.id); if(avg>0) { total+=avg; count++; } });
-            return count>0 ? total/count : 0;
+            let total = 0, count = 0;
+            students.forEach(s => { 
+                let avg = calculateStudentAverage(s.id); 
+                if(avg > 0) { total += avg; count++; } 
+            });
+            return count > 0 ? total / count : 0;
         }
         
-        // Calcul du rang de l'élève
         function getStudentRank(studentId) {
             let averages = students.map(s => ({ id: s.id, avg: calculateStudentAverage(s.id) })).filter(s => s.avg > 0).sort((a,b) => b.avg - a.avg);
             let rank = averages.findIndex(s => s.id === studentId) + 1;
             let total = averages.length;
-            if(rank === 0) return '-';
+            if(rank === 0 || total === 0) return '-';
             return `${rank}${rank === 1 ? 'er' : 'ème'} sur ${total}`;
         }
         
         function calculateStatistics() {
-            if(students.length === 0) return;
-            let total=0, highest=0, lowest=20, passed=0, count=0;
+            if(students.length === 0) {
+                document.getElementById('classAverage').textContent = '0.00';
+                document.getElementById('highestAverage').textContent = '0.00';
+                document.getElementById('lowestAverage').textContent = '0.00';
+                document.getElementById('passRate').textContent = '0%';
+                document.getElementById('rankingList').innerHTML = '<tr><td colspan="4" class="text-center">Aucune donnée</td></tr>';
+                return;
+            }
+            
+            let total = 0, highest = 0, lowest = 20, passed = 0, count = 0;
             students.forEach(s => {
                 let avg = calculateStudentAverage(s.id);
-                if(avg>0) { total+=avg; count++; if(avg>highest) highest=avg; if(avg<lowest) lowest=avg; if(avg>=10) passed++; }
+                if(avg > 0) { 
+                    total += avg; 
+                    count++; 
+                    if(avg > highest) highest = avg; 
+                    if(avg < lowest) lowest = avg; 
+                    if(avg >= currentSettings.passingGrade) passed++; 
+                }
             });
-            document.getElementById('classAverage').textContent = (count>0 ? (total/count).toFixed(2) : '0.00');
+            
+            document.getElementById('classAverage').textContent = (count > 0 ? (total/count).toFixed(2) : '0.00');
             document.getElementById('highestAverage').textContent = highest.toFixed(2);
             document.getElementById('lowestAverage').textContent = lowest.toFixed(2);
-            document.getElementById('passRate').textContent = `${count>0 ? ((passed/count)*100).toFixed(1) : 0}%`;
+            document.getElementById('passRate').textContent = `${count > 0 ? ((passed/count)*100).toFixed(1) : 0}%`;
             
-            let ranking = students.map(s => ({...s, avg: calculateStudentAverage(s.id)})).filter(s => s.avg>0).sort((a,b) => b.avg - a.avg);
+            let ranking = students.map(s => ({...s, avg: calculateStudentAverage(s.id)})).filter(s => s.avg > 0).sort((a,b) => b.avg - a.avg);
             let rankContainer = document.getElementById('rankingList');
             if(rankContainer) {
                 rankContainer.innerHTML = '';
-                ranking.forEach((s,i) => { rankContainer.innerHTML += `<tr><td><strong>${i+1}</strong>${i===0?'er':'ème'}</td><td>${s.lastName} ${s.firstName}</td><td>${s.avg.toFixed(2)}</td><td>${getMention(s.avg)}</td></tr>`; });
+                ranking.forEach((s,i) => {
+                    rankContainer.innerHTML += `<tr><td><strong>${i+1}</strong>${i===0?'er':'ème'}</td><td>${s.lastName} ${s.firstName}</td><td>${s.avg.toFixed(2)}</td><td>${getMention(s.avg)}</td></tr>`;
+                });
             }
         }
         
-        function getMention(avg) { if(avg>=16) return 'Très Bien'; if(avg>=14) return 'Bien'; if(avg>=12) return 'Assez Bien'; if(avg>=10) return 'Passable'; return 'Insuffisant'; }
+        function getMention(avg) { 
+            if(avg >= 16) return 'Très Bien'; 
+            if(avg >= 14) return 'Bien'; 
+            if(avg >= 12) return 'Assez Bien'; 
+            if(avg >= 10) return 'Passable'; 
+            return 'Insuffisant'; 
+        }
 
-        // ==================== BULLETIN COMPLET AVEC RANG ====================
+        // ==================== BULLETIN ====================
         function updateBulletinStudentSelect() {
             let select = document.getElementById('bulletinStudentSelect');
             if(!select) return;
@@ -634,13 +810,17 @@
         
         function generateBulletin(studentId = null) {
             let container = document.getElementById('bulletinPreview');
-            if(students.length === 0) { container.innerHTML = '<div class="alert alert-warning">Aucun élève</div>'; return; }
+            if(students.length === 0) { 
+                container.innerHTML = '<div class="alert alert-warning text-center">⚠️ Aucun élève enregistré</div>'; 
+                return; 
+            }
             let student = (studentId && studentId !== 'all') ? students.find(s => s.id === studentId) : students[0];
             if(!student) student = students[0];
             currentStudentForBulletin = student.id;
             container.innerHTML = createBulletinHTML(student);
             if(currentSettings.showWatermark) container.classList.add('with-watermark');
             else container.classList.remove('with-watermark');
+            showNotification(`📄 Bulletin généré pour ${student.firstName} ${student.lastName}`, 'success');
         }
         
         function createBulletinHTML(student) {
@@ -657,7 +837,6 @@
             let className = document.getElementById('class').value || '6ème';
             let city = document.getElementById('city').value || 'KARA';
             let inspection = document.getElementById('inspection').value || 'IESG-Niamtougou';
-            let regionalDirection = document.getElementById('regionalDirection').value || 'DRE-KARA';
             let schoolCode = document.getElementById('schoolCode').value || '-';
             let editionDate = document.getElementById('editionDate').value ? new Date(document.getElementById('editionDate').value).toLocaleDateString('fr-FR') : new Date().toLocaleDateString('fr-FR');
             
@@ -669,29 +848,29 @@
             
             scientificSubjects.forEach(sub => {
                 let sg = (grades[student.id] && grades[student.id][sub.id]) || {};
-                let note1 = (sg.note1 !== undefined && sg.note1 !== null && sg.note1 !== 0) ? sg.note1.toFixed(1) : '-';
-                let note2 = (sg.note2 !== undefined && sg.note2 !== null && sg.note2 !== 0) ? sg.note2.toFixed(1) : '-';
+                let note1 = (sg.note1 && sg.note1 > 0) ? sg.note1.toFixed(1) : '-';
+                let note2 = (sg.note2 && sg.note2 > 0) ? sg.note2.toFixed(1) : '-';
                 let subAvg = calculateSubjectAverage(sg);
-                scientificHtml += `<tr><td style="text-align:left">${sub.name}</td><td>${sub.teacher || '-'}</td><td style="text-align:center">${sub.coefficient}</td><td style="text-align:center">${note1}</td><td style="text-align:center">${note2}</td><td style="text-align:center"><strong>${subAvg>0 ? subAvg.toFixed(2) : '-'}</strong></td></tr>`;
+                scientificHtml += `<tr><td style="text-align:left">${sub.name}</td><td>${sub.teacher || '-'}</td><td>${sub.coefficient}</td><td>${note1}</td><td>${note2}</td><td><strong>${subAvg>0 ? subAvg.toFixed(2) : '-'}</strong></td></tr>`;
             });
             
             literarySubjects.forEach(sub => {
                 let sg = (grades[student.id] && grades[student.id][sub.id]) || {};
-                let note1 = (sg.note1 !== undefined && sg.note1 !== null && sg.note1 !== 0) ? sg.note1.toFixed(1) : '-';
-                let note2 = (sg.note2 !== undefined && sg.note2 !== null && sg.note2 !== 0) ? sg.note2.toFixed(1) : '-';
+                let note1 = (sg.note1 && sg.note1 > 0) ? sg.note1.toFixed(1) : '-';
+                let note2 = (sg.note2 && sg.note2 > 0) ? sg.note2.toFixed(1) : '-';
                 let subAvg = calculateSubjectAverage(sg);
-                literaryHtml += `<tr><td style="text-align:left">${sub.name}</td><td>${sub.teacher || '-'}</td><td style="text-align:center">${sub.coefficient}</td><td style="text-align:center">${note1}</td><td style="text-align:center">${note2}</td><td style="text-align:center"><strong>${subAvg>0 ? subAvg.toFixed(2) : '-'}</strong></td></tr>`;
+                literaryHtml += `<tr><td style="text-align:left">${sub.name}</td><td>${sub.teacher || '-'}</td><td>${sub.coefficient}</td><td>${note1}</td><td>${note2}</td><td><strong>${subAvg>0 ? subAvg.toFixed(2) : '-'}</strong></td></tr>`;
             });
             
             otherSubjects.forEach(sub => {
                 let sg = (grades[student.id] && grades[student.id][sub.id]) || {};
-                let note1 = (sg.note1 !== undefined && sg.note1 !== null && sg.note1 !== 0) ? sg.note1.toFixed(1) : '-';
-                let note2 = (sg.note2 !== undefined && sg.note2 !== null && sg.note2 !== 0) ? sg.note2.toFixed(1) : '-';
+                let note1 = (sg.note1 && sg.note1 > 0) ? sg.note1.toFixed(1) : '-';
+                let note2 = (sg.note2 && sg.note2 > 0) ? sg.note2.toFixed(1) : '-';
                 let subAvg = calculateSubjectAverage(sg);
-                otherHtml += `<tr><td style="text-align:left">${sub.name}</td><td>${sub.teacher || '-'}</td><td style="text-align:center">${sub.coefficient}</td><td style="text-align:center">${note1}</td><td style="text-align:center">${note2}</td><td style="text-align:center"><strong>${subAvg>0 ? subAvg.toFixed(2) : '-'}</strong></td></tr>`;
+                otherHtml += `<tr><td style="text-align:left">${sub.name}</td><td>${sub.teacher || '-'}</td><td>${sub.coefficient}</td><td>${note1}</td><td>${note2}</td><td><strong>${subAvg>0 ? subAvg.toFixed(2) : '-'}</strong></td></tr>`;
             });
             
-            let totalCoeff = subjects.reduce((s,sub) => s + sub.coefficient, 0);
+            let totalCoeff = subjects.reduce((sum, sub) => sum + sub.coefficient, 0);
             
             return `
                 <div class="bulletin-header">
@@ -706,12 +885,11 @@
                     <div><strong>Établissement:</strong> ${schoolName}</div>
                     <div><strong>Code:</strong> ${schoolCode}</div>
                     <div><strong>Classe:</strong> ${className}</div>
-                    <div><strong>Série:</strong> ${document.getElementById('series').value || '-'}</div>
                     <div><strong>Inspection:</strong> ${inspection}</div>
-                    <div><strong>Direction:</strong> ${regionalDirection}</div>
                     <div><strong>Ville:</strong> ${city}</div>
                     <div><strong>Effectif:</strong> ${students.length} élèves</div>
                     <div><strong>Date édition:</strong> ${editionDate}</div>
+                    <div><strong>Statut:</strong> ${document.getElementById('schoolStatus').value || 'Public'}</div>
                 </div>
                 
                 <div class="student-info-bulletin">
@@ -765,16 +943,8 @@
                 </div>
                 
                 <div class="signatures-section">
-                    <div class="signature-box">
-                        <div>Le Chef d'Établissement</div>
-                        <div class="signature-line"></div>
-                        <div style="font-size: 8px;">Nom, prénom et cachet</div>
-                    </div>
-                    <div class="signature-box">
-                        <div>Le Professeur Principal</div>
-                        <div class="signature-line"></div>
-                        <div style="font-size: 8px;">Nom, prénom et signature</div>
-                    </div>
+                    <div class="signature-box"><div>Le Chef d'Établissement</div><div class="signature-line"></div><div style="font-size: 8px;">Nom, prénom et cachet</div></div>
+                    <div class="signature-box"><div>Le Professeur Principal</div><div class="signature-line"></div><div style="font-size: 8px;">Nom, prénom et signature</div></div>
                 </div>
                 
                 <div class="footer-bulletin">
@@ -787,48 +957,26 @@
         }
         
         function getAppreciation(studentAvg, classAvg) {
-            let diff = studentAvg - classAvg;
-            if(studentAvg >= 18) return "🏆 EXCELLENT ! Félicitations pour ces résultats remarquables. L'élève fait preuve d'une grande maîtrise des connaissances et d'un travail assidu. Mention Très Honorable avec les félicitations du conseil.";
-            if(studentAvg >= 16) return "🌟 TRÈS BON TRAVAIL ! Résultats excellents. L'élève est prometteur et doit maintenir ce niveau d'excellence. Félicitations du conseil de classe.";
-            if(studentAvg >= 14) return "👍 BON TRAVAIL ! Résultats satisfaisants. L'élève peut encore progresser dans certaines matières. Encouragements du conseil.";
-            if(studentAvg >= 12) return "📚 RÉSULTATS ACCEPTABLES. L'élève doit fournir plus d'efforts pour atteindre l'excellence. Travail régulier recommandé.";
-            if(studentAvg >= 10) return "⚠️ RÉSULTATS MOYENS. Un travail plus régulier et une meilleure assiduité sont recommandés pour progresser. Des efforts sont nécessaires.";
-            if(studentAvg >= 8) return "🔻 RÉSULTATS FAIBLES. L'élève doit se ressaisir et travailler davantage. Un soutien scolaire est vivement recommandé.";
-            return "❌ RÉSULTATS TRÈS INSUFFISANTS. Un soutien scolaire intensif est nécessaire ainsi qu'une prise de conscience urgente.";
+            if(studentAvg >= 18) return "🏆 EXCELLENT ! Félicitations pour ces résultats remarquables. L'élève fait preuve d'une grande maîtrise des connaissances.";
+            if(studentAvg >= 16) return "🌟 TRÈS BON TRAVAIL ! Résultats excellents. L'élève est prometteur et doit maintenir ce niveau.";
+            if(studentAvg >= 14) return "👍 BON TRAVAIL ! Résultats satisfaisants. L'élève peut encore progresser.";
+            if(studentAvg >= 12) return "📚 RÉSULTATS ACCEPTABLES. L'élève doit fournir plus d'efforts.";
+            if(studentAvg >= 10) return "⚠️ RÉSULTATS MOYENS. Un travail plus régulier est recommandé.";
+            return "🔻 RÉSULTATS INSUFFISANTS. Un soutien scolaire est nécessaire.";
         }
         
-        // ==================== IMPRESSION OPTIMISÉE ====================
+        // ==================== IMPRESSION ET PDF ====================
         function printSingleBulletin() {
+            if(!currentStudentForBulletin && students.length > 0) generateBulletin();
             if(!currentStudentForBulletin) { showNotification('Générez d\'abord un bulletin', 'warning'); return; }
             let student = students.find(s => s.id === currentStudentForBulletin);
             if(student) {
                 let printWindow = window.open('', '_blank');
                 printWindow.document.write(`
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <title>Bulletin - ${student.lastName} ${student.firstName}</title>
-                        <meta charset="UTF-8">
-                        <style>
-                            ${document.querySelector('style').innerHTML}
-                            .no-print { display: none !important; }
-                            body { margin: 0; padding: 20px; background: white; }
-                            .bulletin-togo { margin: 0 auto; box-shadow: none; page-break-after: avoid; }
-                            @media print {
-                                body { padding: 0; margin: 0; }
-                                .bulletin-togo { margin: 0; page-break-after: avoid; }
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="bulletin-togo ${currentSettings.showWatermark ? 'with-watermark' : ''}">
-                            ${createBulletinHTML(student)}
-                        </div>
-                        <script>
-                            window.onload = function() { window.print(); setTimeout(function() { window.close(); }, 500); };
-                        <\/script>
-                    </body>
-                    </html>
+                    <!DOCTYPE html><html><head><title>Bulletin - ${student.lastName} ${student.firstName}</title>
+                    <meta charset="UTF-8"><style>${document.querySelector('style').innerHTML} .no-print{display:none;} body{margin:0;padding:20px;background:white;} .bulletin-togo{margin:0 auto;box-shadow:none;} @media print{body{padding:0;margin:0;}}</style>
+                    </head><body><div class="bulletin-togo ${currentSettings.showWatermark ? 'with-watermark' : ''}">${createBulletinHTML(student)}</div>
+                    <script>window.onload = function() { window.print(); setTimeout(function() { window.close(); }, 500); };<\/script></body></html>
                 `);
                 printWindow.document.close();
             }
@@ -842,35 +990,16 @@
             });
             let printWindow = window.open('', '_blank');
             printWindow.document.write(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Bulletins - Classe ${document.getElementById('class').value}</title>
-                    <meta charset="UTF-8">
-                    <style>
-                        ${document.querySelector('style').innerHTML}
-                        .no-print { display: none !important; }
-                        body { margin: 0; padding: 0; background: white; }
-                        .bulletin-togo { margin: 0 auto; box-shadow: none; }
-                        @media print {
-                            body { padding: 0; margin: 0; }
-                            .bulletin-togo { page-break-after: always; }
-                        }
-                    </style>
-                </head>
-                <body>
-                    ${allHTML}
-                    <script>
-                        window.onload = function() { window.print(); setTimeout(function() { window.close(); }, 1000); };
-                    <\/script>
-                </body>
-                </html>
+                <!DOCTYPE html><html><head><title>Bulletins - ${document.getElementById('class').value}</title>
+                <meta charset="UTF-8"><style>${document.querySelector('style').innerHTML} .no-print{display:none;} body{margin:0;padding:0;background:white;}</style>
+                </head><body>${allHTML}<script>window.onload = function() { window.print(); setTimeout(function() { window.close(); }, 1000); };<\/script></body></html>
             `);
             printWindow.document.close();
         }
         
         async function exportPDF() {
-            if(!currentStudentForBulletin) { showNotification('Générez d\'abord', 'warning'); return; }
+            if(!currentStudentForBulletin && students.length > 0) generateBulletin();
+            if(!currentStudentForBulletin) { showNotification('Générez d\'abord un bulletin', 'warning'); return; }
             try {
                 let element = document.getElementById('bulletinPreview');
                 let canvas = await html2canvas(element, { scale: 3, backgroundColor: '#ffffff', logging: false });
@@ -882,7 +1011,7 @@
                 doc.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
                 let student = students.find(s => s.id === currentStudentForBulletin);
                 doc.save(`bulletin_${student?.lastName || 'eleve'}_${Date.now()}.pdf`);
-                showNotification('PDF généré', 'success');
+                showNotification('📄 PDF généré avec succès', 'success');
             } catch(e) { showNotification('Erreur PDF: ' + e.message, 'danger'); }
         }
         
@@ -896,12 +1025,28 @@
             saveAllData();
         }
         
+        function updatePassingGrade() {
+            currentSettings.passingGrade = parseFloat(document.getElementById('passingGrade').value);
+            calculateStatistics();
+            saveAllData();
+        }
+        
         // ==================== SAUVEGARDE ====================
         function saveAllData() {
-            let data = { students, subjects, grades, archives, settings: currentSettings,
-                schoolInfo: { schoolYear: document.getElementById('schoolYear').value, period: document.getElementById('period').value,
-                schoolName: document.getElementById('schoolName').value, class: document.getElementById('class').value,
-                level: document.getElementById('level').value, series: document.getElementById('series').value }
+            let data = { 
+                students, subjects, grades, archives, 
+                settings: currentSettings,
+                schoolInfo: { 
+                    schoolYear: document.getElementById('schoolYear').value, 
+                    period: document.getElementById('period').value,
+                    schoolName: document.getElementById('schoolName').value, 
+                    class: document.getElementById('class').value,
+                    level: document.getElementById('level').value, 
+                    series: document.getElementById('series').value,
+                    schoolCode: document.getElementById('schoolCode').value,
+                    city: document.getElementById('city').value,
+                    inspection: document.getElementById('inspection').value
+                }
             };
             localStorage.setItem('schoolData', JSON.stringify(data));
         }
@@ -923,22 +1068,93 @@
                         document.getElementById('class').value = data.schoolInfo.class || '';
                         document.getElementById('level').value = data.schoolInfo.level || '';
                         document.getElementById('series').value = data.schoolInfo.series || '';
+                        document.getElementById('schoolCode').value = data.schoolInfo.schoolCode || '';
+                        document.getElementById('city').value = data.schoolInfo.city || 'KARA';
+                        document.getElementById('inspection').value = data.schoolInfo.inspection || 'IESG-Niamtougou';
                     }
                     document.getElementById('watermarkToggle').checked = currentSettings.showWatermark;
-                    updateStudentList(); updateSubjectsList(); updateStudentSelect(); updateBulletinStudentSelect();
+                    document.getElementById('passingGrade').value = currentSettings.passingGrade;
+                    updateStudentList(); 
+                    updateSubjectsList(); 
+                    updateStudentSelect(); 
+                    updateBulletinStudentSelect();
                     calculateStatistics();
                 } catch(e) { console.log('Erreur chargement'); }
             }
         }
         
-        function clearData() { if(confirm('Toutes les données seront perdues ?')) { students=[]; subjects=[]; grades={}; archives=[]; saveAllData(); updateStudentList(); updateSubjectsList(); updateStudentSelect(); updateBulletinStudentSelect(); showNotification('Données réinitialisées', 'success'); } }
+        function clearData() { 
+            if(confirm('⚠️ Toutes les données seront définitivement perdues. Continuer ?')) { 
+                students = []; 
+                subjects = []; 
+                grades = {}; 
+                archives = []; 
+                saveAllData(); 
+                updateStudentList(); 
+                updateSubjectsList(); 
+                updateStudentSelect(); 
+                updateBulletinStudentSelect(); 
+                calculateStatistics(); 
+                showNotification('🗑️ Données réinitialisées', 'success'); 
+            } 
+        }
+        
+        function exportSchoolData() {
+            let exportData = {
+                students: students,
+                subjects: subjects,
+                grades: grades,
+                exportDate: new Date().toISOString(),
+                schoolInfo: {
+                    schoolYear: document.getElementById('schoolYear').value,
+                    period: document.getElementById('period').value,
+                    schoolName: document.getElementById('schoolName').value,
+                    class: document.getElementById('class').value
+                }
+            };
+            let jsonStr = JSON.stringify(exportData, null, 2);
+            let blob = new Blob([jsonStr], { type: 'application/json' });
+            let url = URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = `export_scolaire_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showNotification('📁 Données exportées en JSON', 'success');
+        }
         
         // ==================== UTILITAIRES ====================
-        function updateCounters() { document.getElementById('studentCount').textContent = students.length; document.getElementById('subjectCount').textContent = subjects.length; }
-        function switchTab(idx) { document.querySelectorAll('.tab-content').forEach((t,i)=>t.classList.toggle('active',i===idx)); document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===idx)); if(idx===1) updateSubjectsList(); if(idx===2) updateGradesDisplay(); if(idx===3) calculateStatistics(); if(idx===4 && students.length>0) generateBulletin(); }
-        function showNotification(msg, type) { let n = document.createElement('div'); n.className = `alert alert-${type}`; n.style.cssText = 'position:fixed;top:20px;right:20px;z-index:10000;animation:fadeIn 0.3s;'; n.innerHTML = msg; document.body.appendChild(n); setTimeout(()=>n.remove(), 3000); }
-        function toggleDarkMode() { document.body.style.background = document.body.style.background === '#343a40' ? 'linear-gradient(135deg, #f5f7fa 0%, #e3e8f7 100%)' : '#343a40'; document.querySelector('.container').style.background = document.body.style.background === '#343a40' ? '#2c3035' : 'white'; }
-        function showHelp() { alert("📋 SYSTÈME DE GESTION SCOLAIRE - TOGO\n\n• Onglet Gestion Classe: Ajoutez/modifiez les élèves\n• Onglet Programmes: Définissez les matières et enseignants\n• Onglet Saisie Notes: Entrez les notes (2 par matière)\n• Onglet Bulletin: Générez et imprimez les bulletins officiels\n• Le rang de l'élève est automatiquement calculé\n• L'impression est optimisée pour le format A4"); }
+        function updateCounters() { 
+            document.getElementById('studentCount').textContent = students.length; 
+            document.getElementById('subjectCount').textContent = subjects.length; 
+        }
+        
+        function switchTab(idx) { 
+            document.querySelectorAll('.tab-content').forEach((t,i) => t.classList.toggle('active', i === idx)); 
+            document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i === idx)); 
+            if(idx === 1) updateSubjectsList(); 
+            if(idx === 2) updateGradesDisplay(); 
+            if(idx === 3) calculateStatistics(); 
+            if(idx === 4 && students.length > 0) generateBulletin(); 
+        }
+        
+        function showNotification(msg, type) { 
+            let n = document.createElement('div'); 
+            n.className = `alert alert-${type}`; 
+            n.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:10000;animation:fadeIn 0.3s;max-width:350px;'; 
+            n.innerHTML = msg; 
+            document.body.appendChild(n); 
+            setTimeout(() => n.remove(), 4000); 
+        }
+        
+        function toggleDarkMode() { 
+            document.body.style.background = document.body.style.background === '#343a40' ? 'linear-gradient(135deg, #f5f7fa 0%, #e3e8f7 100%)' : '#343a40'; 
+            document.querySelector('.container').style.background = document.body.style.background === '#343a40' ? '#2c3035' : 'white'; 
+        }
+        
+        function showHelp() { 
+            alert("📋 SYSTÈME DE GESTION SCOLAIRE - TOGO\n\n• Onglet Gestion Classe: Ajoutez/modifiez les élèves\n• Onglet Programmes: Définissez les matières et enseignants\n• Onglet Saisie Notes: Entrez les notes (2 par matière)\n• Onglet Bulletin: Générez et imprimez les bulletins officiels\n• Import JSON: Importez les élèves depuis bull.html\n• Le rang de l'élève est automatiquement calculé"); 
+        }
     </script>
 </body>
 </html>
