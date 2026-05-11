@@ -6,11 +6,10 @@
     <title>Fiche Administrative Enseignant</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Variables CSS pour une meilleure maintenabilité */
         :root {
             --primary-color: #3498db;
-            --secondary-color: #2980b9;
-            --success-color: #2ecc71;
+            --primary-dark: #2980b9;
+            --secondary-color: #2ecc71;
             --warning-color: #f39c12;
             --danger-color: #e74c3c;
             --info-color: #9b59b6;
@@ -18,806 +17,554 @@
             --light-color: #f5f5f5;
             --gray-color: #7f8c8d;
             --border-radius: 10px;
-            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --box-shadow-lg: 0 5px 15px rgba(0,0,0,0.1);
             --transition: all 0.3s ease;
         }
 
-        /* Reset et styles de base */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--light-color);
             padding: 20px;
             color: var(--dark-color);
-            line-height: 1.6;
         }
 
-        /* Container principal */
         .container {
             max-width: 1000px;
             margin: 0 auto;
-            background-color: white;
+            background: white;
             border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 30px;
+            box-shadow: var(--box-shadow-lg);
+            overflow: hidden;
         }
 
-        /* En-tête */
+        /* Header */
         header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 20px 25px;
             text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid var(--primary-color);
         }
 
         header h1 {
-            color: var(--dark-color);
-            margin-bottom: 10px;
-            font-size: 2rem;
+            font-size: 1.4rem;
+            margin-bottom: 5px;
         }
 
         header p {
-            color: var(--gray-color);
-            font-size: 1.1rem;
+            font-size: 0.8rem;
+            opacity: 0.9;
         }
 
-        /* Sections du formulaire */
-        .form-section {
-            margin-bottom: 30px;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: var(--border-radius);
-            border-left: 4px solid var(--primary-color);
-        }
-
-        .form-section h2 {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 12px 15px;
+        /* Boutons compacts */
+        .btn {
+            padding: 5px 10px;
+            border: none;
             border-radius: 5px;
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Groupes de formulaire */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 15px;
-        }
-
-        .form-col {
-            flex: 1;
-            min-width: 250px;
-        }
-
-        /* Labels et champs */
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--dark-color);
-        }
-
-        input[type="text"],
-        input[type="date"],
-        input[type="number"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
             transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        input:focus,
-        select:focus,
-        textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        .btn i {
+            font-size: 0.65rem;
         }
 
-        textarea {
-            min-height: 100px;
-            resize: vertical;
+        .btn-primary { background: var(--primary-color); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-secondary { background: var(--secondary-color); color: white; }
+        .btn-danger { background: var(--danger-color); color: white; }
+        .btn-info { background: var(--info-color); color: white; }
+        
+        .btn-sm { padding: 3px 7px; font-size: 0.65rem; }
+        
+        /* Onglets */
+        .tabs {
+            display: flex;
+            gap: 2px;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 0 20px;
         }
 
-        /* Éléments de diplôme */
-        .diploma-item {
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            border-left: 4px solid var(--primary-color);
+        .tab {
+            padding: 10px 16px;
+            background: none;
+            border: none;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--gray-color);
+            cursor: pointer;
+            transition: var(--transition);
             position: relative;
         }
 
-        /* Boutons */
-        .btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+        .tab:hover { color: var(--primary-color); }
+        .tab.active { color: var(--primary-color); }
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-color);
         }
 
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
+        .tab-content {
+            display: none;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
         }
 
-        .btn-primary:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-2px);
+        .tab-content.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .btn-secondary {
-            background-color: var(--success-color);
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background-color: #27ae60;
-            transform: translateY(-2px);
-        }
-
-        .btn-danger {
-            background-color: var(--danger-color);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background-color: #c0392b;
-            transform: translateY(-2px);
-        }
-
-        .btn-print {
-            background-color: var(--info-color);
-            color: white;
-        }
-
-        .btn-print:hover {
-            background-color: #8e44ad;
-            transform: translateY(-2px);
-        }
-
-        .btn-sm {
-            padding: 8px 12px;
-            font-size: 0.9rem;
-        }
-
-        /* Actions du formulaire */
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-            margin-top: 30px;
-            flex-wrap: wrap;
-        }
-
-        /* Statistiques d'enseignement */
-        .teaching-stats {
-            margin-bottom: 20px;
-        }
-
-        .teaching-stats h3 {
+        /* Sections dans les onglets */
+        .form-section {
+            background: #f9f9f9;
+            border-radius: var(--border-radius);
+            padding: 15px;
             margin-bottom: 15px;
+        }
+
+        .form-section h3 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 12px;
             color: var(--dark-color);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ddd;
         }
 
-        .teaching-stats-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 15px;
+        .form-group {
+            margin-bottom: 12px;
         }
 
-        .teaching-stats-col {
-            flex: 1;
-            min-width: 200px;
-        }
-
-        .period-selector {
-            margin-bottom: 15px;
-        }
-
-        /* Bouton retour */
-        .btn-retour {
-            padding: 10px 16px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-bottom: 20px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: var(--transition);
-        }
-
-        .btn-retour:hover {
-            background-color: #e0e0e0;
-        }
-
-        /* Styles pour l'impression */
-        @media print {
-            .btn-retour, .form-actions, button {
-                display: none !important;
-            }
-            
-            body {
-                background-color: white;
-                padding: 0;
-            }
-            
-            .container {
-                box-shadow: none;
-                border-radius: 0;
-                padding: 15px;
-            }
-            
-            .form-section {
-                break-inside: avoid;
-            }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-            
-            .container {
-                padding: 20px;
-            }
-            
-            .form-row {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .form-col {
-                width: 100%;
-            }
-            
-            .form-actions {
-                flex-direction: column;
-            }
-            
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .teaching-stats-row {
-                flex-direction: column;
-            }
-            
-            header h1 {
-                font-size: 1.6rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .form-section {
-                padding: 15px;
-            }
-            
-            .btn {
-                padding: 10px 15px;
-                font-size: 0.9rem;
-            }
-            
-            header h1 {
-                font-size: 1.4rem;
-            }
-        }
-
-        /* Améliorations visuelles */
-        .form-section {
-            transition: var(--transition);
-        }
-
-        .form-section:hover {
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-        }
-
-        input[readonly] {
-            background-color: #f5f5f5;
+        .form-group label {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.7rem;
+            font-weight: 500;
             color: var(--gray-color);
         }
 
-        .diploma-item .btn-danger {
-            position: absolute;
-            top: 10px;
-            right: 10px;
+        .form-group label i {
+            margin-right: 3px;
+            font-size: 0.65rem;
         }
 
-        /* Notification */
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-group textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        /* Diplômes */
+        .diploma-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border: 1px solid #e0e0e0;
+            position: relative;
+        }
+
+        .teaching-stats {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .teaching-stats h4 {
+            font-size: 0.75rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        /* Bouton retour compact */
+        .btn-retour {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(5px);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 15px;
+            color: white;
+            font-size: 0.7rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-retour:hover { background: rgba(255,255,255,0.3); }
+
+        /* Notification compacte */
         .notification {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            background: var(--success-color);
+            top: 15px;
+            right: 15px;
+            padding: 8px 12px;
+            background: var(--secondary-color);
             color: white;
             border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            z-index: 1000;
+            font-size: 0.7rem;
+            z-index: 2000;
             opacity: 0;
-            transform: translateY(-20px);
-            transition: opacity 0.3s, transform 0.3s;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 6px;
         }
 
         .notification.show {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateX(0);
+        }
+
+        /* Modal compacte */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 90%;
+            padding: 15px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .tabs { padding: 0 10px; }
+            .tab { padding: 8px 10px; font-size: 0.7rem; }
+            .tab-content { padding: 12px; }
+            .form-row { grid-template-columns: 1fr; }
+            .form-actions { flex-direction: column; }
+            .btn { width: 100%; justify-content: center; }
+        }
+
+        @media print {
+            body * { visibility: hidden; }
+            .container, .container * { visibility: visible; }
+            .container { position: absolute; top: 0; left: 0; width: 100%; }
+            .btn-retour, .tabs, .form-actions, button { display: none !important; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <button class="btn-retour" onclick="history.back()">
-            <i class="fas fa-arrow-left"></i> Retour
-        </button>
-        
         <header>
-            <h1><i class="fas fa-id-card"></i> FICHE ADMINISTRATIVE DE L'ENSEIGNANT</h1>
+            <button class="btn-retour" onclick="history.back()"><i class="fas fa-arrow-left"></i> Retour</button>
+            <h1><i class="fas fa-id-card"></i> Fiche Administrative Enseignant</h1>
             <p>Renseignements à destination de la hiérarchie</p>
         </header>
 
+        <!-- Onglets -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('personal')"><i class="fas fa-user"></i> Infos perso</button>
+            <button class="tab" onclick="switchTab('professional')"><i class="fas fa-briefcase"></i> Professionnel</button>
+            <button class="tab" onclick="switchTab('teaching')"><i class="fas fa-chart-bar"></i> Enseignement</button>
+            <button class="tab" onclick="switchTab('diplomas')"><i class="fas fa-graduation-cap"></i> Diplômes</button>
+            <button class="tab" onclick="switchTab('observations')"><i class="fas fa-comments"></i> Observations</button>
+        </div>
+
         <form id="teacherForm">
-            <!-- Section 1: Informations personnelles -->
-            <div class="form-section">
-                <h2><i class="fas fa-user"></i> I. INFORMATIONS PERSONNELLES</h2>
-                
-                <div class="form-row">
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label for="lastName"><i class="fas fa-signature"></i> Nom de famille</label>
-                            <input type="text" id="lastName" required>
-                        </div>
+            <!-- Onglet 1: Informations personnelles -->
+            <div id="personalTab" class="tab-content active">
+                <div class="form-section">
+                    <h3><i class="fas fa-user-circle"></i> Identité</h3>
+                    <div class="form-row">
+                        <div class="form-group"><label><i class="fas fa-signature"></i> Nom</label><input type="text" id="lastName" required></div>
+                        <div class="form-group"><label><i class="fas fa-user"></i> Prénoms</label><input type="text" id="firstName" required></div>
                     </div>
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label for="firstName"><i class="fas fa-user-circle"></i> Prénoms</label>
-                            <input type="text" id="firstName" required>
-                        </div>
+                    <div class="form-row">
+                        <div class="form-group"><label><i class="fas fa-birthday-cake"></i> Date naissance</label><input type="date" id="birthDate" required onchange="calculateRetirementDate()"></div>
+                        <div class="form-group"><label><i class="fas fa-map-marker-alt"></i> Lieu naissance</label><input type="text" id="birthPlace" required></div>
                     </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label for="birthDate"><i class="fas fa-birthday-cake"></i> Date de naissance</label>
-                            <input type="date" id="birthDate" required onchange="calculateRetirementDate()">
-                        </div>
-                    </div>
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label for="birthPlace"><i class="fas fa-map-marker-alt"></i> Lieu de naissance</label>
-                            <input type="text" id="birthPlace" required>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="matricule"><i class="fas fa-id-badge"></i> Numéro matricule</label>
-                    <input type="text" id="matricule" required>
+                    <div class="form-group"><label><i class="fas fa-id-badge"></i> Matricule</label><input type="text" id="matricule" required></div>
                 </div>
             </div>
 
-            <!-- Section 2: Informations professionnelles -->
-            <div class="form-section">
-                <h2><i class="fas fa-briefcase"></i> II. INFORMATIONS PROFESSIONNELLES</h2>
-                
-                <div class="form-group">
-                    <label for="mainSubject"><i class="fas fa-book"></i> Matière enseignée dominante</label>
-                    <input type="text" id="mainSubject" required>
+            <!-- Onglet 2: Informations professionnelles -->
+            <div id="professionalTab" class="tab-content">
+                <div class="form-section">
+                    <h3><i class="fas fa-book"></i> Matières enseignées</h3>
+                    <div class="form-group"><label><i class="fas fa-star"></i> Dominante</label><input type="text" id="mainSubject" required></div>
+                    <div class="form-group"><label><i class="fas fa-star-half-alt"></i> Secondaire</label><input type="text" id="secondarySubject"></div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="secondarySubject"><i class="fas fa-book-open"></i> Matière enseignée secondaire</label>
-                    <input type="text" id="secondarySubject">
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label for="regionServiceDate"><i class="fas fa-calendar-alt"></i> Date de prise de service dans la région</label>
-                            <input type="date" id="regionServiceDate" required onchange="calculateServiceYears('regionServiceDate', 'yearsInRegion')">
-                        </div>
+
+                <div class="form-section">
+                    <h3><i class="fas fa-calendar-alt"></i> Dates de service</h3>
+                    <div class="form-row">
+                        <div class="form-group"><label>Service région</label><input type="date" id="regionServiceDate" required onchange="calculateServiceYears('regionServiceDate', 'yearsInRegion')"></div>
+                        <div class="form-group"><label>Service inspection</label><input type="date" id="inspectionServiceDate" required onchange="calculateServiceYears('inspectionServiceDate', 'yearsInspection')"></div>
                     </div>
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label for="inspectionServiceDate"><i class="fas fa-calendar-check"></i> Date de prise de service dans l'inspection</label>
-                            <input type="date" id="inspectionServiceDate" required onchange="calculateServiceYears('inspectionServiceDate', 'yearsInInspection')">
-                        </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Années dans région</label><input type="number" id="yearsInRegion" readonly></div>
+                        <div class="form-group"><label>Années inspection</label><input type="number" id="yearsInspection" readonly></div>
                     </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label for="yearsInRegion"><i class="fas fa-history"></i> Nombre d'années dans la région</label>
-                            <input type="number" id="yearsInRegion" min="0" readonly>
-                        </div>
-                    </div>
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label for="yearsInInspection"><i class="fas fa-clock"></i> Nombre d'années dans l'inspection</label>
-                            <input type="number" id="yearsInInspection" min="0" readonly>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="retirementDate"><i class="fas fa-umbrella-beach"></i> Date présumée de départ à la retraite</label>
-                    <input type="date" id="retirementDate" readonly>
-                </div>
-                
-                <div class="form-group">
-                    <label for="engagementDate"><i class="fas fa-handshake"></i> Date d'engagement</label>
-                    <input type="date" id="engagementDate" required>
+                    <div class="form-group"><label><i class="fas fa-umbrella-beach"></i> Retraite prévue</label><input type="date" id="retirementDate" readonly></div>
+                    <div class="form-group"><label><i class="fas fa-handshake"></i> Date engagement</label><input type="date" id="engagementDate" required></div>
                 </div>
             </div>
 
-            <!-- Section 3: Statistiques d'enseignement -->
-            <div class="form-section">
-                <h2><i class="fas fa-chart-bar"></i> III. STATISTIQUES D'ENSEIGNEMENT</h2>
-                
-                <div class="period-selector">
-                    <label><i class="fas fa-calendar-week"></i> Période :</label>
-                    <select id="teachingPeriod">
-                        <option value="trimestre">Trimestre</option>
-                        <option value="semestre">Semestre</option>
-                        <option value="annee">Année scolaire</option>
-                    </select>
+            <!-- Onglet 3: Statistiques d'enseignement -->
+            <div id="teachingTab" class="tab-content">
+                <div class="form-section">
+                    <h3><i class="fas fa-calendar-week"></i> Période</h3>
+                    <div class="form-group">
+                        <select id="teachingPeriod">
+                            <option value="trimestre">Trimestre</option>
+                            <option value="semestre">Semestre</option>
+                            <option value="annee">Année scolaire</option>
+                        </select>
+                    </div>
                 </div>
-                
-                <div class="teaching-stats">
+
+                <div class="form-section">
                     <h3><i class="fas fa-star"></i> Matière dominante</h3>
-                    <div class="teaching-stats-row">
-                        <div class="teaching-stats-col">
-                            <div class="form-group">
-                                <label for="mainSubjectThemes"><i class="fas fa-tasks"></i> Nombre de thèmes enseignés</label>
-                                <input type="number" id="mainSubjectThemes" min="0">
-                            </div>
-                        </div>
-                        <div class="teaching-stats-col">
-                            <div class="form-group">
-                                <label for="mainSubjectLessons"><i class="fas fa-book-reader"></i> Nombre de leçons enseignées</label>
-                                <input type="number" id="mainSubjectLessons" min="0">
-                            </div>
-                        </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Thèmes</label><input type="number" id="mainSubjectThemes" min="0"></div>
+                        <div class="form-group"><label>Leçons</label><input type="number" id="mainSubjectLessons" min="0"></div>
                     </div>
                 </div>
-                
-                <div class="teaching-stats">
+
+                <div class="form-section">
                     <h3><i class="fas fa-star-half-alt"></i> Matière secondaire</h3>
-                    <div class="teaching-stats-row">
-                        <div class="teaching-stats-col">
-                            <div class="form-group">
-                                <label for="secondarySubjectThemes"><i class="fas fa-tasks"></i> Nombre de thèmes enseignés</label>
-                                <input type="number" id="secondarySubjectThemes" min="0">
-                            </div>
-                        </div>
-                        <div class="teaching-stats-col">
-                            <div class="form-group">
-                                <label for="secondarySubjectLessons"><i class="fas fa-book-reader"></i> Nombre de leçons enseignées</label>
-                                <input type="number" id="secondarySubjectLessons" min="0">
+                    <div class="form-row">
+                        <div class="form-group"><label>Thèmes</label><input type="number" id="secondarySubjectThemes" min="0"></div>
+                        <div class="form-group"><label>Leçons</label><input type="number" id="secondarySubjectLessons" min="0"></div>
+                    </div>
+                </div>
+
+                <div id="additionalSubjectsContainer"></div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="addTeachingSubject()"><i class="fas fa-plus"></i> Ajouter matière</button>
+                </div>
+            </div>
+
+            <!-- Onglet 4: Diplômes -->
+            <div id="diplomasTab" class="tab-content">
+                <div class="form-section">
+                    <h3><i class="fas fa-graduation-cap"></i> Diplômes académiques</h3>
+                    <div id="academicDiplomas">
+                        <div class="diploma-item">
+                            <div class="form-row">
+                                <div class="form-group"><label>Diplôme</label><input type="text" id="academicDiploma1" required></div>
+                                <div class="form-group"><label>Date</label><input type="date" id="academicDiplomaDate1" required></div>
                             </div>
                         </div>
                     </div>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="addAcademicDiploma()"><i class="fas fa-plus"></i> Ajouter</button>
                 </div>
-                
-                <button type="button" class="btn btn-secondary" onclick="addTeachingSubject()">
-                    <i class="fas fa-plus-circle"></i> Ajouter une matière supplémentaire
-                </button>
-            </div>
 
-            <!-- Section 4: Diplômes académiques -->
-            <div class="form-section">
-                <h2><i class="fas fa-graduation-cap"></i> IV. DIPLÔMES ACADÉMIQUES</h2>
-                <div id="academicDiplomas">
-                    <div class="diploma-item">
-                        <div class="form-row">
-                            <div class="form-col">
-                                <div class="form-group">
-                                    <label for="academicDiploma1"><i class="fas fa-certificate"></i> Diplôme</label>
-                                    <input type="text" id="academicDiploma1" required>
-                                </div>
-                            </div>
-                            <div class="form-col">
-                                <div class="form-group">
-                                    <label for="academicDiplomaDate1"><i class="fas fa-calendar-alt"></i> Date d'obtention</label>
-                                    <input type="date" id="academicDiplomaDate1" required>
-                                </div>
+                <div class="form-section">
+                    <h3><i class="fas fa-award"></i> Diplômes professionnels</h3>
+                    <div id="professionalDiplomas">
+                        <div class="diploma-item">
+                            <div class="form-row">
+                                <div class="form-group"><label>Diplôme</label><input type="text" id="professionalDiploma1"></div>
+                                <div class="form-group"><label>Date</label><input type="date" id="professionalDiplomaDate1"></div>
                             </div>
                         </div>
                     </div>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="addProfessionalDiploma()"><i class="fas fa-plus"></i> Ajouter</button>
                 </div>
-                
-                <button type="button" class="btn btn-secondary" onclick="addAcademicDiploma()">
-                    <i class="fas fa-plus-circle"></i> Ajouter un diplôme académique
-                </button>
             </div>
 
-            <!-- Section 5: Diplômes professionnels -->
-            <div class="form-section">
-                <h2><i class="fas fa-award"></i> V. DIPLÔMES PROFESSIONNELS</h2>
-                <div id="professionalDiplomas">
-                    <div class="diploma-item">
-                        <div class="form-row">
-                            <div class="form-col">
-                                <div class="form-group">
-                                    <label for="professionalDiploma1"><i class="fas fa-certificate"></i> Diplôme</label>
-                                    <input type="text" id="professionalDiploma1">
-                                </div>
-                            </div>
-                            <div class="form-col">
-                                <div class="form-group">
-                                    <label for="professionalDiplomaDate1"><i class="fas fa-calendar-alt"></i> Date d'obtention</label>
-                                    <input type="date" id="professionalDiplomaDate1">
-                                </div>
-                            </div>
-                        </div>
+            <!-- Onglet 5: Observations -->
+            <div id="observationsTab" class="tab-content">
+                <div class="form-section">
+                    <h3><i class="fas fa-sticky-note"></i> Informations complémentaires</h3>
+                    <div class="form-group">
+                        <textarea id="observations" rows="4" placeholder="Saisissez ici toute information complémentaire pertinente..."></textarea>
                     </div>
                 </div>
-                
-                <button type="button" class="btn btn-secondary" onclick="addProfessionalDiploma()">
-                    <i class="fas fa-plus-circle"></i> Ajouter un diplôme professionnel
-                </button>
             </div>
 
-            <!-- Section 6: Observations -->
-            <div class="form-section">
-                <h2><i class="fas fa-comments"></i> VI. OBSERVATIONS</h2>
-                <div class="form-group">
-                    <label for="observations"><i class="fas fa-sticky-note"></i> Informations complémentaires</label>
-                    <textarea id="observations" placeholder="Saisissez ici toute information complémentaire pertinente..."></textarea>
+            <!-- Actions -->
+            <div style="padding: 0 20px 20px 20px;">
+                <div class="form-actions">
+                    <button type="button" class="btn btn-info" onclick="printForm()"><i class="fas fa-print"></i> Imprimer</button>
+                    <button type="reset" class="btn btn-danger"><i class="fas fa-trash"></i> Annuler</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Enregistrer</button>
                 </div>
-            </div>
-
-            <div class="form-actions">
-                <button type="button" class="btn btn-print" onclick="printForm()">
-                    <i class="fas fa-print"></i> Imprimer/PDF
-                </button>
-                <button type="reset" class="btn btn-danger">
-                    <i class="fas fa-trash"></i> Annuler
-                </button>
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Enregistrer
-                </button>
             </div>
         </form>
     </div>
 
-    <div id="notification" class="notification">
-        <i class="fas fa-check-circle"></i>
-        <span id="notificationMessage"></span>
-    </div>
+    <div id="notification" class="notification"><i class="fas fa-check-circle"></i><span id="notificationMessage"></span></div>
 
     <script>
-        // Compteurs pour les diplômes
-        let academicDiplomaCount = 1;
-        let professionalDiplomaCount = 1;
-        let teachingSubjectCount = 2; // Déjà 2 matières (dominante et secondaire)
+        let academicCount = 1, professionalCount = 1, subjectCount = 2;
 
-        // Afficher une notification
-        function showNotification(message, isSuccess = true) {
-            const notification = document.getElementById('notification');
-            const messageElement = document.getElementById('notificationMessage');
-            
-            messageElement.textContent = message;
-            notification.style.background = isSuccess ? 'var(--success-color)' : 'var(--danger-color)';
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(`${tabName}Tab`).classList.add('active');
+            event.target.classList.add('active');
         }
 
-        // Ajouter un diplôme académique
-        function addAcademicDiploma() {
-            academicDiplomaCount++;
-            const container = document.getElementById('academicDiplomas');
-            const newDiploma = document.createElement('div');
-            newDiploma.className = 'diploma-item';
-            newDiploma.innerHTML = `
-                <div class="form-row">
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label for="academicDiploma${academicDiplomaCount}"><i class="fas fa-certificate"></i> Diplôme</label>
-                            <input type="text" id="academicDiploma${academicDiplomaCount}" required>
-                        </div>
-                    </div>
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label for="academicDiplomaDate${academicDiplomaCount}"><i class="fas fa-calendar-alt"></i> Date d'obtention</label>
-                            <input type="date" id="academicDiplomaDate${academicDiplomaCount}" required>
-                        </div>
-                    </div>
-                </div>
-                <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()">
-                    <i class="fas fa-trash"></i> Supprimer
-                </button>
-            `;
-            container.appendChild(newDiploma);
-            showNotification('Diplôme académique ajouté avec succès');
+        function showNotification(msg, success = true) {
+            const n = document.getElementById('notification');
+            document.getElementById('notificationMessage').textContent = msg;
+            n.style.background = success ? 'var(--secondary-color)' : 'var(--danger-color)';
+            n.classList.add('show');
+            setTimeout(() => n.classList.remove('show'), 2000);
         }
 
-        // Ajouter un diplôme professionnel
-        function addProfessionalDiploma() {
-            professionalDiplomaCount++;
-            const container = document.getElementById('professionalDiplomas');
-            const newDiploma = document.createElement('div');
-            newDiploma.className = 'diploma-item';
-            newDiploma.innerHTML = `
-                <div class="form-row">
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label for="professionalDiploma${professionalDiplomaCount}"><i class="fas fa-certificate"></i> Diplôme</label>
-                            <input type="text" id="professionalDiploma${professionalDiplomaCount}">
-                        </div>
-                    </div>
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label for="professionalDiplomaDate${professionalDiplomaCount}"><i class="fas fa-calendar-alt"></i> Date d'obtention</label>
-                            <input type="date" id="professionalDiplomaDate${professionalDiplomaCount}">
-                        </div>
-                    </div>
-                </div>
-                <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()">
-                    <i class="fas fa-trash"></i> Supprimer
-                </button>
-            `;
-            container.appendChild(newDiploma);
-            showNotification('Diplôme professionnel ajouté avec succès');
-        }
-
-        // Ajouter une matière supplémentaire
-        function addTeachingSubject() {
-            teachingSubjectCount++;
-            const container = document.querySelector('.form-section:nth-of-type(3)');
-            const newSubject = document.createElement('div');
-            newSubject.className = 'teaching-stats';
-            newSubject.innerHTML = `
-                <h3><i class="fas fa-plus-square"></i> Matière supplémentaire ${teachingSubjectCount - 1}</h3>
-                <div class="form-row">
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label for="subjectName${teachingSubjectCount}"><i class="fas fa-book"></i> Nom de la matière</label>
-                            <input type="text" id="subjectName${teachingSubjectCount}">
-                        </div>
-                    </div>
-                </div>
-                <div class="teaching-stats-row">
-                    <div class="teaching-stats-col">
-                        <div class="form-group">
-                            <label for="subjectThemes${teachingSubjectCount}"><i class="fas fa-tasks"></i> Nombre de thèmes enseignés</label>
-                            <input type="number" id="subjectThemes${teachingSubjectCount}" min="0">
-                        </div>
-                    </div>
-                    <div class="teaching-stats-col">
-                        <div class="form-group">
-                            <label for="subjectLessons${teachingSubjectCount}"><i class="fas fa-book-reader"></i> Nombre de leçons enseignées</label>
-                            <input type="number" id="subjectLessons${teachingSubjectCount}" min="0">
-                        </div>
-                    </div>
-                </div>
-                <button type="button" class="btn btn-danger" onclick="this.parentElement.remove()">
-                    <i class="fas fa-trash"></i> Supprimer cette matière
-                </button>
-            `;
-            container.insertBefore(newSubject, container.lastElementChild);
-            showNotification('Matière supplémentaire ajoutée avec succès');
-        }
-
-        // Fonction pour calculer les années de service
-        function calculateServiceYears(dateFieldId, yearsFieldId) {
-            const dateField = document.getElementById(dateFieldId);
-            const yearsField = document.getElementById(yearsFieldId);
-            
+        function calculateServiceYears(dateId, yearsId) {
+            const dateField = document.getElementById(dateId);
+            const yearsField = document.getElementById(yearsId);
             if (dateField.value) {
-                const serviceDate = new Date(dateField.value);
+                const start = new Date(dateField.value);
                 const today = new Date();
-                
-                // Calcul de la différence en années
-                let years = today.getFullYear() - serviceDate.getFullYear();
-                const monthDiff = today.getMonth() - serviceDate.getMonth();
-                
-                // Ajustement si l'anniversaire de service n'est pas encore passé cette année
-                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < serviceDate.getDate())) {
-                    years--;
-                }
-                
+                let years = today.getFullYear() - start.getFullYear();
+                if (today.getMonth() < start.getMonth() || (today.getMonth() === start.getMonth() && today.getDate() < start.getDate())) years--;
                 yearsField.value = years;
             }
         }
 
-        // Fonction pour calculer la date de retraite (60 ans après la naissance)
         function calculateRetirementDate() {
-            const birthDateField = document.getElementById('birthDate');
-            const retirementDateField = document.getElementById('retirementDate');
-            
-            if (birthDateField.value) {
-                const birthDate = new Date(birthDateField.value);
-                const retirementDate = new Date(birthDate);
-                
-                // Ajouter 60 ans à la date de naissance
-                retirementDate.setFullYear(birthDate.getFullYear() + 60);
-                
-                // Formater la date pour l'affichage (YYYY-MM-DD)
-                const formattedDate = retirementDate.toISOString().split('T')[0];
-                retirementDateField.value = formattedDate;
+            const birth = document.getElementById('birthDate').value;
+            if (birth) {
+                const date = new Date(birth);
+                date.setFullYear(date.getFullYear() + 60);
+                document.getElementById('retirementDate').value = date.toISOString().split('T')[0];
             }
         }
 
-        // Fonction pour imprimer le formulaire
-        function printForm() {
-            window.print();
+        function addAcademicDiploma() {
+            academicCount++;
+            const container = document.getElementById('academicDiplomas');
+            const div = document.createElement('div');
+            div.className = 'diploma-item';
+            div.innerHTML = `
+                <div class="form-row">
+                    <div class="form-group"><label>Diplôme</label><input type="text" id="academicDiploma${academicCount}" required></div>
+                    <div class="form-group"><label>Date</label><input type="date" id="academicDiplomaDate${academicCount}" required></div>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i> Supprimer</button>
+            `;
+            container.appendChild(div);
+            showNotification('Diplôme académique ajouté');
         }
 
-        // Gestion de la soumission du formulaire
+        function addProfessionalDiploma() {
+            professionalCount++;
+            const container = document.getElementById('professionalDiplomas');
+            const div = document.createElement('div');
+            div.className = 'diploma-item';
+            div.innerHTML = `
+                <div class="form-row">
+                    <div class="form-group"><label>Diplôme</label><input type="text" id="professionalDiploma${professionalCount}"></div>
+                    <div class="form-group"><label>Date</label><input type="date" id="professionalDiplomaDate${professionalCount}"></div>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i> Supprimer</button>
+            `;
+            container.appendChild(div);
+            showNotification('Diplôme professionnel ajouté');
+        }
+
+        function addTeachingSubject() {
+            subjectCount++;
+            const container = document.getElementById('additionalSubjectsContainer');
+            const div = document.createElement('div');
+            div.className = 'form-section';
+            div.innerHTML = `
+                <h3><i class="fas fa-plus-square"></i> Matière supplémentaire</h3>
+                <div class="form-group"><label>Nom de la matière</label><input type="text" id="subjectName${subjectCount}"></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Thèmes</label><input type="number" id="subjectThemes${subjectCount}" min="0"></div>
+                    <div class="form-group"><label>Leçons</label><input type="number" id="subjectLessons${subjectCount}" min="0"></div>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i> Supprimer</button>
+            `;
+            container.appendChild(div);
+            showNotification('Matière ajoutée');
+        }
+
+        function printForm() { window.print(); }
+
         document.getElementById('teacherForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Validation des champs obligatoires
-            const requiredFields = [
-                'lastName', 'firstName', 'birthDate', 'birthPlace', 'matricule',
-                'mainSubject', 'regionServiceDate', 'inspectionServiceDate', 'engagementDate'
-            ];
-            
-            let isValid = true;
-            requiredFields.forEach(fieldId => {
-                const field = document.getElementById(fieldId);
-                if (!field.value.trim()) {
-                    isValid = false;
-                    field.style.borderColor = 'var(--danger-color)';
-                } else {
-                    field.style.borderColor = '';
-                }
+            const required = ['lastName', 'firstName', 'birthDate', 'birthPlace', 'matricule', 'mainSubject', 'regionServiceDate', 'inspectionServiceDate', 'engagementDate'];
+            let valid = true;
+            required.forEach(id => {
+                const f = document.getElementById(id);
+                if (!f.value.trim()) { f.style.borderColor = 'var(--danger-color)'; valid = false; }
+                else { f.style.borderColor = ''; }
             });
             
-            if (!isValid) {
-                showNotification('Veuillez remplir tous les champs obligatoires', false);
-                return;
-            }
+            if (!valid) { showNotification('Champs obligatoires manquants', false); return; }
             
-            // Récupérer toutes les données du formulaire
             const formData = {
                 personalInfo: {
                     lastName: document.getElementById('lastName').value,
@@ -832,120 +579,76 @@
                     regionServiceDate: document.getElementById('regionServiceDate').value,
                     inspectionServiceDate: document.getElementById('inspectionServiceDate').value,
                     yearsInRegion: document.getElementById('yearsInRegion').value,
-                    yearsInInspection: document.getElementById('yearsInInspection').value,
+                    yearsInInspection: document.getElementById('yearsInspection').value,
                     retirementDate: document.getElementById('retirementDate').value,
                     engagementDate: document.getElementById('engagementDate').value
                 },
                 teachingStats: {
                     period: document.getElementById('teachingPeriod').value,
-                    mainSubject: {
-                        themes: document.getElementById('mainSubjectThemes').value,
-                        lessons: document.getElementById('mainSubjectLessons').value
-                    },
-                    secondarySubject: {
-                        themes: document.getElementById('secondarySubjectThemes').value,
-                        lessons: document.getElementById('secondarySubjectLessons').value
-                    },
+                    mainSubject: { themes: document.getElementById('mainSubjectThemes').value, lessons: document.getElementById('mainSubjectLessons').value },
+                    secondarySubject: { themes: document.getElementById('secondarySubjectThemes').value, lessons: document.getElementById('secondarySubjectLessons').value },
                     additionalSubjects: []
                 },
                 academicDiplomas: [],
                 professionalDiplomas: [],
                 observations: document.getElementById('observations').value
             };
-
-            // Récupérer les matières supplémentaires
-            for (let i = 3; i <= teachingSubjectCount; i++) {
-                const subjectName = document.getElementById(`subjectName${i}`);
-                const subjectThemes = document.getElementById(`subjectThemes${i}`);
-                const subjectLessons = document.getElementById(`subjectLessons${i}`);
-                
-                if (subjectName && subjectName.value) {
+            
+            for (let i = 3; i <= subjectCount; i++) {
+                const name = document.getElementById(`subjectName${i}`);
+                if (name && name.value) {
                     formData.teachingStats.additionalSubjects.push({
-                        name: subjectName.value,
-                        themes: subjectThemes ? subjectThemes.value : 0,
-                        lessons: subjectLessons ? subjectLessons.value : 0
+                        name: name.value,
+                        themes: document.getElementById(`subjectThemes${i}`)?.value || 0,
+                        lessons: document.getElementById(`subjectLessons${i}`)?.value || 0
                     });
                 }
             }
-
-            // Récupérer les diplômes académiques
-            for (let i = 1; i <= academicDiplomaCount; i++) {
-                const diploma = document.getElementById(`academicDiploma${i}`);
-                const date = document.getElementById(`academicDiplomaDate${i}`);
-                
-                if (diploma && date && diploma.value && date.value) {
-                    formData.academicDiplomas.push({
-                        diploma: diploma.value,
-                        date: date.value
-                    });
-                }
+            
+            for (let i = 1; i <= academicCount; i++) {
+                const d = document.getElementById(`academicDiploma${i}`);
+                const dt = document.getElementById(`academicDiplomaDate${i}`);
+                if (d && dt && d.value && dt.value) formData.academicDiplomas.push({ diploma: d.value, date: dt.value });
             }
-
-            // Récupérer les diplômes professionnels
-            for (let i = 1; i <= professionalDiplomaCount; i++) {
-                const diploma = document.getElementById(`professionalDiploma${i}`);
-                const date = document.getElementById(`professionalDiplomaDate${i}`);
-                
-                if (diploma && date && diploma.value && date.value) {
-                    formData.professionalDiplomas.push({
-                        diploma: diploma.value,
-                        date: date.value
-                    });
-                }
+            
+            for (let i = 1; i <= professionalCount; i++) {
+                const d = document.getElementById(`professionalDiploma${i}`);
+                const dt = document.getElementById(`professionalDiplomaDate${i}`);
+                if (d && dt && d.value && dt.value) formData.professionalDiplomas.push({ diploma: d.value, date: dt.value });
             }
-
-            // Enregistrement dans le localStorage (base interne)
+            
             localStorage.setItem('teacherFormData', JSON.stringify(formData));
-            
-            // Message de confirmation
-            showNotification('Formulaire enregistré avec succès dans votre base interne!');
-            
-            // Afficher les données dans la console pour vérification
-            console.log('Données enregistrées:', formData);
+            showNotification('Formulaire enregistré avec succès !');
+            console.log('Données:', formData);
         });
 
-        // Charger les données sauvegardées si elles existent
-        window.addEventListener('load', function() {
-            const savedData = localStorage.getItem('teacherFormData');
-            if (savedData) {
-                const data = JSON.parse(savedData);
+        // Chargement des données sauvegardées
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('teacherFormData');
+            if (saved) {
+                const d = JSON.parse(saved);
+                document.getElementById('lastName').value = d.personalInfo.lastName || '';
+                document.getElementById('firstName').value = d.personalInfo.firstName || '';
+                document.getElementById('birthDate').value = d.personalInfo.birthDate || '';
+                document.getElementById('birthPlace').value = d.personalInfo.birthPlace || '';
+                document.getElementById('matricule').value = d.personalInfo.matricule || '';
+                document.getElementById('mainSubject').value = d.professionalInfo.mainSubject || '';
+                document.getElementById('secondarySubject').value = d.professionalInfo.secondarySubject || '';
+                document.getElementById('regionServiceDate').value = d.professionalInfo.regionServiceDate || '';
+                document.getElementById('inspectionServiceDate').value = d.professionalInfo.inspectionServiceDate || '';
+                document.getElementById('engagementDate').value = d.professionalInfo.engagementDate || '';
+                document.getElementById('teachingPeriod').value = d.teachingStats.period || 'trimestre';
+                document.getElementById('mainSubjectThemes').value = d.teachingStats.mainSubject.themes || '';
+                document.getElementById('mainSubjectLessons').value = d.teachingStats.mainSubject.lessons || '';
+                document.getElementById('secondarySubjectThemes').value = d.teachingStats.secondarySubject.themes || '';
+                document.getElementById('secondarySubjectLessons').value = d.teachingStats.secondarySubject.lessons || '';
+                document.getElementById('observations').value = d.observations || '';
                 
-                // Charger les informations personnelles
-                document.getElementById('lastName').value = data.personalInfo.lastName || '';
-                document.getElementById('firstName').value = data.personalInfo.firstName || '';
-                document.getElementById('birthDate').value = data.personalInfo.birthDate || '';
-                document.getElementById('birthPlace').value = data.personalInfo.birthPlace || '';
-                document.getElementById('matricule').value = data.personalInfo.matricule || '';
+                if (d.personalInfo.birthDate) calculateRetirementDate();
+                if (d.professionalInfo.regionServiceDate) calculateServiceYears('regionServiceDate', 'yearsInRegion');
+                if (d.professionalInfo.inspectionServiceDate) calculateServiceYears('inspectionServiceDate', 'yearsInspection');
                 
-                // Charger les informations professionnelles
-                document.getElementById('mainSubject').value = data.professionalInfo.mainSubject || '';
-                document.getElementById('secondarySubject').value = data.professionalInfo.secondarySubject || '';
-                document.getElementById('regionServiceDate').value = data.professionalInfo.regionServiceDate || '';
-                document.getElementById('inspectionServiceDate').value = data.professionalInfo.inspectionServiceDate || '';
-                document.getElementById('engagementDate').value = data.professionalInfo.engagementDate || '';
-                
-                // Recalculer les années de service et la retraite
-                if (data.personalInfo.birthDate) {
-                    calculateRetirementDate();
-                }
-                if (data.professionalInfo.regionServiceDate) {
-                    calculateServiceYears('regionServiceDate', 'yearsInRegion');
-                }
-                if (data.professionalInfo.inspectionServiceDate) {
-                    calculateServiceYears('inspectionServiceDate', 'yearsInInspection');
-                }
-                
-                // Charger les statistiques d'enseignement
-                document.getElementById('teachingPeriod').value = data.teachingStats.period || 'trimestre';
-                document.getElementById('mainSubjectThemes').value = data.teachingStats.mainSubject.themes || '';
-                document.getElementById('mainSubjectLessons').value = data.teachingStats.mainSubject.lessons || '';
-                document.getElementById('secondarySubjectThemes').value = data.teachingStats.secondarySubject.themes || '';
-                document.getElementById('secondarySubjectLessons').value = data.teachingStats.secondarySubject.lessons || '';
-                
-                // Charger les observations
-                document.getElementById('observations').value = data.observations || '';
-                
-                console.log('Données sauvegardées chargées:', data);
+                showNotification('Données chargées');
             }
         });
     </script>
