@@ -1,2339 +1,718 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fiche de Préparation de Cours - Éditeur Enrichi</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <!-- Bibliothèque pour l'export PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <!-- Bibliothèque pour l'export Word -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/7.8.2/docx.js"></script>
-    <style>
-        :root {
-            --primary-color: #3498db;
-            --secondary-color: #2c3e50;
-            --accent-color: #e74c3c;
-            --light-color: #ecf0f1;
-            --dark-color: #34495e;
-            --success-color: #27ae60;
-        }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        h1, h2, h3 {
-            color: var(--secondary-color);
-            margin-bottom: 20px;
-        }
-        
-        h1 {
-            text-align: center;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--primary-color);
-            margin-bottom: 30px;
-        }
-        
-        .section {
-            margin-bottom: 30px;
-            padding: 20px;
-            background: var(--light-color);
-            border-radius: 8px;
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: var(--dark-color);
-        }
-        
-        input[type="text"], 
-        input[type="number"], 
-        input[type="date"],
-        textarea, 
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-        
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-        
-        th {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        
-        .btn {
-            display: inline-block;
-            background: var(--primary-color);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-right: 10px;
-            margin-bottom: 10px;
-        }
-        
-        .btn:hover {
-            background: #2980b9;
-        }
-        
-        .btn-danger {
-            background: var(--accent-color);
-        }
-        
-        .btn-danger:hover {
-            background: #c0392b;
-        }
-        
-        .btn-success {
-            background: var(--success-color);
-        }
-        
-        .btn-success:hover {
-            background: #219653;
-        }
-        
-        .btn-warning {
-            background: #f39c12;
-        }
-        
-        .btn-warning:hover {
-            background: #e67e22;
-        }
-        
-        .btn-info {
-            background: #17a2b8;
-        }
-        
-        .btn-info:hover {
-            background: #138496;
-        }
-        
-        .rich-text-editor {
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-bottom: 15px;
-        }
-        
-        .toolbar {
-            background-color: #f5f5f5;
-            padding: 5px;
-            border-bottom: 1px solid #ddd;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-        }
-        
-        .toolbar button {
-            background-color: white;
-            color: #333;
-            border: 1px solid #ddd;
-            padding: 5px 10px;
-            border-radius: 3px;
-            font-size: 14px;
-            margin: 0;
-            cursor: pointer;
-        }
-        
-        .toolbar button:hover {
-            background-color: #f0f0f0;
-        }
-        
-        .editor-content {
-            min-height: 100px;
-            padding: 10px;
-            outline: none;
-        }
-        
-        .editor-content:focus {
-            border-color: #3498db;
-        }
-        
-        .color-picker {
-            position: relative;
-            display: inline-block;
-        }
-        
-        .color-button {
-            background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: 1px solid #ccc;
-            cursor: pointer;
-        }
-        
-        .color-palette {
-            display: none;
-            position: absolute;
-            top: 35px;
-            left: 0;
-            background: white;
-            border: 1px solid #ddd;
-            padding: 5px;
-            z-index: 1000;
-            border-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            width: 150px;
-        }
-        
-        .color-option {
-            width: 20px;
-            height: 20px;
-            display: inline-block;
-            margin: 2px;
-            cursor: pointer;
-            border: 1px solid #ddd;
-        }
-        
-        .toolbar .divider {
-            width: 1px;
-            background-color: #ddd;
-            height: 25px;
-            margin: 0 5px;
-            display: inline-block;
-        }
-        
-        .math-preview {
-            padding: 10px;
-            background: #f8f9fa;
-            margin: 10px 0;
-            border-radius: 4px;
-            border-left: 3px solid #3498db;
-            min-height: 50px;
-        }
-        
-        .media-preview {
-            margin: 10px 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .media-preview img, .media-preview video, .media-preview audio {
-            max-width: 300px;
-            max-height: 200px;
-            margin-right: 10px;
-            margin-bottom: 10px;
-        }
-        
-        .media-preview audio {
-            width: 100%;
-            max-width: 400px;
-        }
-        
-        .small-textarea {
-            min-height: 60px;
-            font-size: 14px;
-        }
-        
-        .editor-toggle {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 5px;
-        }
-        
-        .editor-toggle-btn {
-            font-size: 12px;
-            padding: 3px 8px;
-            background-color: #f0f0f0;
-            color: #555;
-            border: 1px solid #ddd;
-            cursor: pointer;
-        }
-        
-        .editor-toggle-btn.active {
-            background-color: #3498db;
-            color: white;
-            border-color: #3498db;
-        }
-        
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 5px;
-            background-color: #2ecc71;
-            color: white;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: 2000;
-        }
-        
-        .notification.error {
-            background-color: #e74c3c;
-        }
-        
-        .notification.show {
-            opacity: 1;
-        }
-        
-        .latex-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.7);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .latex-modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 500px;
-            max-width: 90%;
-        }
-        
-        .latex-modal h3 {
-            margin-top: 0;
-            color: var(--secondary-color);
-        }
-        
-        .latex-input {
-            width: 100%;
-            min-height: 100px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-family: monospace;
-            margin-bottom: 15px;
-        }
-        
-        .latex-preview {
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-radius: 4px;
-            min-height: 50px;
-            margin-bottom: 15px;
-        }
-        
-        .latex-modal-buttons {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-        
-        .cursor-position {
-            font-size: 12px;
-            color: #777;
-            margin-top: 5px;
-        }
-        
-        .saved-lessons {
-            margin-top: 40px;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-        }
-        
-        .search-filter {
-            margin-bottom: 20px;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-            align-items: end;
-        }
-        
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .filter-group label {
-            margin-bottom: 5px;
-            font-size: 0.9em;
-        }
-        
-        .lesson-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        
-        .lesson-item {
-            background-color: white;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border-left: 4px solid #3498db;
-            transition: all 0.3s ease;
-        }
-        
-        .lesson-item:hover {
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .lesson-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        
-        .lesson-date {
-            font-size: 0.8em;
-            color: #7f8c8d;
-        }
-        
-        .lesson-meta {
-            display: flex;
-            gap: 15px;
-            font-size: 0.85em;
-            color: #555;
-            margin-bottom: 10px;
-        }
-        
-        .lesson-meta span {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .lesson-summary {
-            color: #333;
-            line-height: 1.5;
-        }
-        
-        .lesson-actions {
-            margin-top: 15px;
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        
-        .no-lessons {
-            text-align: center;
-            padding: 30px;
-            color: #7f8c8d;
-        }
-        
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            font-size: 0.9em;
-            color: #3498db;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .stats span {
-            background-color: #e8f4fc;
-            padding: 5px 10px;
-            border-radius: 4px;
-        }
-        
-        .file-input {
-            display: none;
-        }
-        
-        .situation-probleme {
-            background-color: #e8f4fc;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        
-        .tableau-activites {
-            margin: 20px 0;
-        }
-        
-        .tableau-activites h3 {
-            margin-bottom: 10px;
-        }
-        
-        .exercice-maison {
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        
-        .recapitulation {
-            background-color: #e8f6ef;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        
-        .export-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        @media print {
-            .no-print {
-                display: none !important;
-            }
-            
-            body, .container {
-                padding: 0;
-                margin: 0;
-                background: white;
-                box-shadow: none;
-            }
-            
-            .section {
-                page-break-inside: avoid;
-                break-inside: avoid;
-            }
-            
-            h1, h2, h3 {
-                page-break-after: avoid;
-                break-after: avoid;
-            }
-            
-            table {
-                page-break-inside: auto;
-                break-inside: auto;
-            }
-            
-            tr {
-                page-break-inside: avoid;
-                break-inside: avoid;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Générateur de Fiche Pédagogique — Complète</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,500&family=JetBrains+Mono:wght@400;500&display=swap');
+  :root {
+    --primary: #0a2463; --primary-light: #1e3a8a; --primary-mid: #3b82f6; --primary-surface: #eef2ff;
+    --accent: #f59e0b; --accent-light: #fef3c7; --success: #10b981; --success-light: #d1fae5;
+    --danger: #ef4444; --danger-light: #fee2e2; --orange: #f97316; --orange-light: #ffedd5;
+    --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0; --gray-300: #cbd5e1;
+    --gray-400: #94a3b8; --gray-500: #64748b; --gray-600: #475569; --gray-700: #334155; --gray-800: #1e293b;
+    --radius: 12px; --radius-sm: 8px; --radius-xs: 6px;
+    --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,.07), 0 2px 4px -2px rgba(0,0,0,.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0,0,0,.1), 0 8px 10px -6px rgba(0,0,0,.04);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: var(--gray-100); color: var(--gray-800); line-height: 1.5; }
+  ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
+  .app-layout { display: flex; min-height: 100vh; }
+  .sidebar { width: 500px; min-width: 500px; background: white; border-right: 1px solid var(--gray-200); overflow-y: auto; height: 100vh; position: sticky; top: 0; z-index: 50; }
+  .sidebar-inner { padding: 14px 12px; }
+  .sidebar-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid var(--gray-100); }
+  .sidebar-header .logo { width: 30px; height: 30px; background: var(--primary); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: white; font-size: .9rem; font-weight: 700; }
+  .sidebar-header h2 { font-size: .85rem; font-weight: 700; color: var(--gray-800); }
+  .sidebar-header .badge { font-size: .58rem; background: var(--accent-light); color: #92400e; padding: 1px 6px; border-radius: 20px; font-weight: 600; margin-left: auto; }
+  .form-cat { font-size: .64rem; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--gray-400); margin: 10px 0 3px 0; display: flex; align-items: center; gap: 4px; }
+  .form-cat .act { font-size: .65rem; text-transform: none; color: var(--primary-mid); cursor: pointer; font-weight: 600; margin-left: auto; }
+  .form-row { display: flex; gap: 5px; } .form-row > * { flex: 1; }
+  .form-g { margin-bottom: 3px; }
+  .form-g label { display: block; font-size: .65rem; font-weight: 600; color: var(--gray-600); margin-bottom: 1px; }
+  .form-g input, .form-g textarea, .form-g select { width: 100%; padding: 4px 7px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-xs); font-size: .73rem; font-family: inherit; transition: all .2s; background: var(--gray-50); color: var(--gray-800); }
+  .form-g input:focus, .form-g textarea:focus { border-color: var(--primary-mid); outline: none; box-shadow: 0 0 0 3px rgba(59,130,246,.12); background: white; }
+  .form-g textarea { min-height: 26px; resize: vertical; }
+  .sidebar-actions { margin-top: 8px; display: flex; flex-direction: column; gap: 4px; }
+  .btn { padding: 6px 10px; border: none; border-radius: var(--radius-sm); font-weight: 600; font-size: .75rem; cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 4px; font-family: inherit; }
+  .btn:active { transform: scale(.97); }
+  .btn-primary { background: var(--primary); color: white; } .btn-primary:hover { background: var(--primary-light); box-shadow: var(--shadow-md); }
+  .btn-success { background: var(--success); color: white; } .btn-success:hover { background: #059669; }
+  .btn-orange { background: var(--orange); color: white; } .btn-orange:hover { background: #ea580c; }
+  .btn-outline { background: transparent; color: var(--gray-600); border: 1.5px solid var(--gray-200); } .btn-outline:hover { background: var(--gray-50); }
+  .btn-sm { padding: 3px 7px; font-size: .7rem; }
+  .coll { margin-bottom: 1px; }
+  .coll .h { display: flex; align-items: center; gap: 3px; cursor: pointer; font-size: .67rem; font-weight: 600; color: var(--gray-500); padding: 2px 5px; border-radius: 3px; background: var(--gray-50); user-select: none; }
+  .coll .h:hover { background: var(--gray-100); }
+  .coll .b { padding: 3px 5px 0 5px; display: none; }
+  .coll.open .b { display: block; }
+  .coll .h .arr { transition: transform .2s; font-size: .55rem; }
+  .coll.open .h .arr { transform: rotate(90deg); }
+  #seancesContainer { margin-bottom: 3px; }
+  .sc { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius-xs); padding: 5px 7px; margin-bottom: 3px; position: relative; }
+  .sc .num { font-size: .62rem; font-weight: 700; color: var(--primary-mid); margin-bottom: 1px; }
+  .sc .r { display: flex; gap: 3px; margin-bottom: 1px; } .sc .r input { flex: 1; }
+  .sc .del { position: absolute; top: 1px; right: 1px; background: none; border: none; color: var(--gray-400); cursor: pointer; font-size: .8rem; line-height: 1; padding: 0 3px; border-radius: 2px; }
+  .sc .del:hover { background: var(--danger-light); color: var(--danger); }
+  .img-prev { max-width: 100%; max-height: 60px; border-radius: var(--radius-xs); margin-top: 2px; object-fit: cover; display: none; border: 1px solid var(--gray-200); }
+  .img-prev.show { display: block; }
+  .img-te { border-radius: var(--radius-xs); padding: 3px 5px; margin-top: 3px; background: var(--gray-50); border: 1px dashed var(--gray-300); display: flex; gap: 3px; }
+  .img-te input { flex: 1; font-size: .68rem; padding: 2px 5px; border: 1px solid var(--gray-200); border-radius: 3px; background: white; }
+  .img-te label { font-size: .6rem; color: var(--gray-400); white-space: nowrap; display: flex; align-items: center; }
+  .img-te input[type="file"] { flex: 1.3; font-size: .62rem; padding: 1px 2px; }
+  .main-content { flex: 1; padding: 16px 24px; display: flex; justify-content: center; }
+  .page-container { max-width: 1140px; width: 100%; }
+  .page { background: white; border-radius: var(--radius); box-shadow: var(--shadow-xl); overflow: hidden; }
+  .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 30px; text-align: center; }
+  .empty-state .icon { font-size: 2.8rem; margin-bottom: 10px; opacity: .4; }
+  .empty-state h3 { font-size: 1rem; color: var(--gray-400); font-weight: 600; }
+  .page-header { background: linear-gradient(135deg, var(--primary), #1e3a8a); padding: 8px 18px; display: flex; justify-content: space-between; align-items: center; font-size: .7rem; color: rgba(255,255,255,.9); }
+  .page-footer { background: var(--gray-50); border-top: 1px solid var(--gray-200); padding: 5px 18px; display: flex; justify-content: space-between; font-size: .64rem; color: var(--gray-500); }
+  .title-page { padding: 26px 22px 20px; text-align: center; background: linear-gradient(180deg, var(--primary-surface), white 60%); position: relative; }
+  .title-page::after { content: ''; position: absolute; bottom: 0; left: 10%; right: 10%; height: 2px; background: linear-gradient(90deg, transparent, var(--primary-mid), transparent); }
+  .title-page h1 { font-size: 1.6rem; font-weight: 800; color: var(--primary); margin-bottom: 3px; letter-spacing: -1px; }
+  .title-page .subtitle { font-size: 1.1rem; font-weight: 600; color: var(--primary-mid); }
+  .title-page .theme { font-size: .95rem; color: var(--gray-600); font-weight: 500; margin-bottom: 10px; }
+  .title-page .info-line { font-size: .75rem; color: var(--gray-500); margin: 1px 0; }
+  .title-page .divider { margin: 10px auto; width: 70%; border: none; height: 2px; background: linear-gradient(90deg,transparent,var(--primary-mid),transparent); border-radius: 2px; }
+  .context-box { background: linear-gradient(135deg, var(--primary-surface), white); border: 1.5px solid var(--primary-mid); border-radius: var(--radius-sm); padding: 8px 14px; max-width: 620px; margin: 10px auto; font-size: .8rem; color: var(--gray-700); box-shadow: var(--shadow); position: relative; }
+  .context-box::before { content: '📌'; position: absolute; top: -7px; left: -7px; font-size: .8rem; background: white; padding: 1px 3px; border-radius: 4px; box-shadow: var(--shadow); }
+  .seance-table { margin: 10px auto; border-collapse: collapse; font-size: .74rem; border-radius: var(--radius-sm); overflow: hidden; box-shadow: var(--shadow); }
+  .seance-table th { background: var(--primary); color: white; padding: 5px 9px; font-weight: 600; font-size: .7rem; text-transform: uppercase; letter-spacing: .2px; }
+  .seance-table td { padding: 4px 9px; border-bottom: 1px solid var(--gray-100); background: white; }
+  .section { padding: 14px 22px; border-bottom: 1px solid var(--gray-100); }
+  .section-title { font-size: .95rem; font-weight: 700; color: var(--primary); margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+  .section-title::before { content: ''; display: inline-block; width: 3px; height: 14px; background: var(--primary-mid); border-radius: 2px; }
+  .sub-title { font-size: .8rem; font-weight: 700; color: var(--gray-700); margin: 6px 0 3px 0; display: flex; align-items: center; gap: 4px; }
+  .tbox { border-radius: var(--radius-sm); padding: 8px 12px; margin: 5px 0; box-shadow: var(--shadow); }
+  .tbox-title { font-weight: 700; font-size: .75rem; margin-bottom: 3px; display: flex; align-items: center; gap: 4px; }
+  .tbox-info { background: linear-gradient(135deg, var(--primary-surface), white); border-left: 4px solid var(--primary-mid); } .tbox-info .tbox-title { color: var(--primary); }
+  .tbox-act { background: linear-gradient(135deg, var(--orange-light), white); border-left: 4px solid var(--orange); } .tbox-act .tbox-title { color: #9a3412; }
+  .tbox-eval { background: linear-gradient(135deg, var(--success-light), white); border-left: 4px solid var(--success); } .tbox-eval .tbox-title { color: #065f46; }
+  .tbox-trace { background: linear-gradient(135deg, var(--accent-light), white); border-left: 4px solid var(--accent); } .tbox-trace .tbox-title { color: #92400e; }
+  .tbox-imp { background: linear-gradient(135deg, var(--danger-light), white); border-left: 4px solid var(--danger); } .tbox-imp .tbox-title { color: #991b1b; }
+  .tbox-def { background: linear-gradient(135deg, #f0fdf4, white); border-left: 4px solid #22c55e; } .tbox-def .tbox-title { color: #166534; }
+  .tbox-prop { background: linear-gradient(135deg, #fef2f2, white); border-left: 4px solid var(--danger); } .tbox-prop .tbox-title { color: #991b1b; }
+  .tbox-ex { background: linear-gradient(135deg, #f5f3ff, white); border-left: 4px solid #8b5cf6; } .tbox-ex .tbox-title { color: #5b21b6; }
+  .bc { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; font-size: .6rem; flex-shrink: 0; }
+  .bc-info { background: var(--primary-surface); color: var(--primary-mid); }
+  .bc-act { background: var(--orange-light); color: #9a3412; }
+  .bc-eval { background: var(--success-light); color: #065f46; }
+  .bc-trace { background: var(--accent-light); color: #92400e; }
+  .bc-imp { background: var(--danger-light); color: #991b1b; }
+  .bc-def { background: #f0fdf4; color: #166534; }
+  .bc-prop { background: #fef2f2; color: #991b1b; }
+  .bc-ex { background: #f5f3ff; color: #5b21b6; }
+  .img-wrap { text-align: center; margin: 6px 0; padding: 4px; background: var(--gray-50); border-radius: var(--radius-xs); border: 1px dashed var(--gray-300); }
+  .img-wrap img { max-width: 100%; max-height: 160px; border-radius: var(--radius-xs); object-fit: contain; }
+  .img-wrap .cap { font-size: .68rem; color: var(--gray-400); margin-top: 2px; font-style: italic; }
+  .tbl { border-collapse: collapse; width: 100%; margin: 3px 0; font-size: .74rem; border-radius: var(--radius-xs); overflow: hidden; }
+  .tbl th { background: var(--gray-50); color: var(--gray-700); padding: 4px 7px; border: 1px solid var(--gray-200); text-align: left; font-weight: 600; font-size: .7rem; }
+  .tbl td { padding: 4px 7px; border: 1px solid var(--gray-200); vertical-align: top; }
+  .sig-tbl { margin: 5px auto; border-collapse: collapse; width: 55%; }
+  .sig-tbl th, .sig-tbl td { border: 1px solid var(--gray-300); padding: 3px 10px; }
+  .sig-tbl th { background: var(--gray-50); font-weight: 600; font-size: .72rem; }
+  .math { font-family: 'JetBrains Mono', monospace; font-style: italic; color: var(--primary); font-weight: 500; background: var(--primary-surface); padding: 1px 4px; border-radius: 3px; white-space: nowrap; font-size: .86em; }
+  .math-d { text-align: center; font-size: .86rem; margin: 3px 0; color: var(--primary); font-family: 'JetBrains Mono', monospace; padding: 3px; background: var(--gray-50); border-radius: var(--radius-xs); }
+  ul { padding-left: 14px; font-size: .8rem; }
+  ul.bsq { list-style: none; padding-left: 0; }
+  ul.bsq li { padding-left: 13px; position: relative; }
+  ul.bsq li::before { content: '▣'; position: absolute; left: 0; color: var(--primary-mid); font-size: .55rem; top: 2px; }
+  ul.btri { list-style: none; padding-left: 0; }
+  ul.btri li { padding-left: 13px; position: relative; }
+  ul.btri li::before { content: '▸'; position: absolute; left: 0; color: var(--primary); font-weight: 700; }
+  ol { padding-left: 16px; font-size: .8rem; } ol li { margin-bottom: 1px; }
+  .qbox { text-align: center; font-family: 'Playfair Display', serif; font-style: italic; color: var(--gray-500); padding: 5px; border-top: 1px solid var(--gray-200); margin-top: 5px; font-size: .8rem; }
+  .fe { text-align: center; padding: 10px; }
+  .fe hr { margin: 4px auto; border: none; height: 2px; background: linear-gradient(90deg,transparent,var(--primary-mid),transparent); width: 100%; border-radius: 2px; }
+  .fe .t { font-size: .78rem; font-weight: 700; color: var(--primary); letter-spacing: 2px; text-transform: uppercase; }
+  .fe .s { font-size: .7rem; color: var(--gray-400); margin-top: 2px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 1100px) { .grid-3 { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 800px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+  @media (max-width: 1000px) { .app-layout { flex-direction: column; } .sidebar { width: 100%; min-width: 100%; height: auto; position: static; } .main-content { padding: 10px; } }
+  .toast { position: fixed; bottom: 16px; right: 16px; background: var(--gray-900); color: white; padding: 7px 16px; border-radius: var(--radius-sm); font-size: .75rem; font-weight: 500; box-shadow: var(--shadow-lg); z-index: 999; opacity: 0; transform: translateY(20px); transition: all .3s; pointer-events: none; }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  @media print { .sidebar { display: none !important; } .main-content { padding: 0 !important; } .page { box-shadow: none; border-radius: 0; } .section, .tbox, .grid-2, .grid-3 { page-break-inside: avoid; } body { background: white; } .toast { display: none !important; } }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>Fiche de Préparation de Séance Pédagogique</h1>
-        
-        <!-- Boutons d'action principaux -->
-        <div class="form-group no-print">
-            <button class="btn btn-success" onclick="saveForm()"><i class="fas fa-save"></i> Sauvegarder</button>
-            <button class="btn" onclick="exportJSON()"><i class="fas fa-file-export"></i> Exporter JSON</button>
-            <button class="btn btn-warning" onclick="importJSON()"><i class="fas fa-file-import"></i> Importer JSON</button>
-            <button class="btn btn-danger" onclick="clearForm()"><i class="fas fa-trash"></i> Effacer tout</button>
-            <input type="file" id="jsonFileInput" class="file-input" accept=".json">
-        </div>
-        
-        <!-- Boutons d'exportation -->
-        <div class="export-buttons no-print">
-            <button class="btn btn-info" onclick="exportToPDF()"><i class="fas fa-file-pdf"></i> Exporter PDF</button>
-            <button class="btn btn-info" onclick="exportToWord()"><i class="fas fa-file-word"></i> Exporter Word</button>
-            <button class="btn" onclick="window.print()"><i class="fas fa-print"></i> Imprimer</button>
-        </div>
-        
-        <!-- FICHE 1 - Informations générales -->
-        <div class="section">
-            <h2>Fiche 1 - Informations Générales</h2>
-            
-            <div class="form-group">
-                <label for="date_cours">Date du cours:</label>
-                <input type="date" id="date_cours" name="date_cours">
-            </div>
-            
-            <div class="form-group">
-                <label for="annee_scolaire">Année scolaire:</label>
-                <input type="text" id="annee_scolaire" name="annee_scolaire" placeholder="Ex: 2023-2024">
-            </div>
-            
-            <div class="form-group">
-                <label for="enseignant">Nom de l'enseignant:</label>
-                <input type="text" id="enseignant" name="enseignant" value="BADIANG JEAN JULES">
-            </div>
-            
-            <div class="form-group">
-                <label for="etablissement">Établissement:</label>
-                <input type="text" id="etablissement" name="etablissement" value="LYCEE TECHNIQUE CHARLES ATANGANA">
-            </div>
-            
-            <div class="form-group">
-                <label for="module">Module/Discipline:</label>
-                <input type="text" id="module" name="module" value="DEVIS">
-            </div>
-            
-            <div class="form-group">
-                <label for="classe">Classe:</label>
-                <input type="text" id="classe" name="classe" value="3° DEBA">
-            </div>
-            
-            <div class="form-group">
-                <label for="effectif">Effectif:</label>
-                <input type="number" id="effectif" name="effectif" value="28">
-            </div>
-            
-            <div class="form-group">
-                <label for="titre">Titre de la leçon:</label>
-                <input type="text" id="titre" name="titre" value="ETUDE DES FIGURES GÉOMÉTRIQUES">
-            </div>
-            
-            <div class="form-group">
-                <label for="competence">Énoncé de la compétence/Objectif général:</label>
-                <div class="editor-toggle">
-                    <button class="editor-toggle-btn" data-target="competence">Basculer Éditeur</button>
-                </div>
-                <div class="rich-text-editor" id="competence-editor">
-                    <div class="toolbar">
-                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
-                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
-                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
-                        <span class="divider"></span>
-                        <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
-                        <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
-                        <span class="divider"></span>
-                        <div class="color-picker">
-                            <button type="button" class="color-button" data-command="foreColor"></button>
-                            <div class="color-palette" id="competence-color-palette"></div>
-                        </div>
-                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
-                        <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
-                        <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
-                        <button type="button" onclick="openLatexModal('competence-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
-                    </div>
-                    <div class="editor-content" id="competence-content" contenteditable="true" onkeyup="updateCursorPosition('competence-content')" onclick="updateCursorPosition('competence-content')">Calculer les surfaces et volumes des ouvrages</div>
-                    <div class="cursor-position" id="competence-cursor-position">Position du curseur: 0</div>
-                </div>
-                <textarea id="competence" name="competence" style="display:none;">Calculer les surfaces et volumes des ouvrages</textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="objectifs">Objectifs spécifiques de la séance/Objectifs opérationnels:</label>
-                <div class="editor-toggle">
-                    <button class="editor-toggle-btn" data-target="objectifs">Basculer Éditeur</button>
-                </div>
-                <div class="rich-text-editor" id="objectifs-editor">
-                    <div class="toolbar">
-                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
-                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
-                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
-                        <span class="divider"></span>
-                        <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
-                        <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
-                        <span class="divider"></span>
-                        <div class="color-picker">
-                            <button type="button" class="color-button" data-command="foreColor"></button>
-                            <div class="color-palette" id="objectifs-color-palette"></div>
-                        </div>
-                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
-                        <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
-                        <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
-                        <button type="button" onclick="openLatexModal('objectifs-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
-                    </div>
-                    <div class="editor-content" id="objectifs-content" contenteditable="true" onkeyup="updateCursorPosition('objectifs-content')" onclick="updateCursorPosition('objectifs-content')">- Énoncer les formules des surfaces et volumes des figures usuelles<br>- Calculer les surfaces et volumes des figures simples</div>
-                    <div class="cursor-position" id="objectifs-cursor-position">Position du curseur: 0</div>
-                </div>
-                <textarea id="objectifs" name="objectifs" style="display:none;">- Énoncer les formules des surfaces et volumes des figures usuelles
-- Calculer les surfaces et volumes des figures simples</textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="duree_competence">Durée de la compétence:</label>
-                <input type="text" id="duree_competence" name="duree_competence" value="4H">
-            </div>
-            
-            <div class="form-group">
-                <label for="duree_seance">Durée de la séance:</label>
-                <input type="text" id="duree_seance" name="duree_seance" value="2 heures">
-            </div>
-            
-            <div class="form-group">
-                <label for="prerequis">Connaissances préalables (prérequis):</label>
-                <div class="editor-toggle">
-                    <button class="editor-toggle-btn" data-target="prerequis">Basculer Éditeur</button>
-                </div>
-                <div class="rich-text-editor" id="prerequis-editor">
-                    <div class="toolbar">
-                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
-                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
-                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
-                        <span class="divider"></span>
-                        <div class="color-picker">
-                            <button type="button" class="color-button" data-command="foreColor"></button>
-                            <div class="color-palette" id="prerequis-color-palette"></div>
-                        </div>
-                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
-                        <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
-                        <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
-                        <button type="button" onclick="openLatexModal('prerequis-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
-                    </div>
-                    <div class="editor-content" id="prerequis-content" contenteditable="true" onkeyup="updateCursorPosition('prerequis-content')" onclick="updateCursorPosition('prerequis-content')">- Connaissances en mathématiques : multiplication, division, racines carrées.</div>
-                    <div class="cursor-position" id="prerequis-cursor-position">Position du curseur: 0</div>
-                </div>
-                <textarea id="prerequis" name="prerequis" style="display:none;">- Connaissances en mathématiques : multiplication, division, racines carrées.</textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="lexique">Vocabulaire nouveau (lexique):</label>
-                <div class="editor-toggle">
-                    <button class="editor-toggle-btn" data-target="lexique">Basculer Éditeur</button>
-                </div>
-                <div class="rich-text-editor" id="lexique-editor">
-                    <div class="toolbar">
-                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
-                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
-                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
-                        <span class="divider"></span>
-                        <div class="color-picker">
-                            <button type="button" class="color-button" data-command="foreColor"></button>
-                            <div class="color-palette" id="lexique-color-palette"></div>
-                        </div>
-                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
-                        <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
-                        <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
-                        <button type="button" onclick="openLatexModal('lexique-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
-                    </div>
-                    <div class="editor-content" id="lexique-content" contenteditable="true" onkeyup="updateCursorPosition('lexique-content')" onclick="updateCursorPosition('lexique-content')">Pyramide, prisme, polygone, cône.</div>
-                    <div class="cursor-position" id="lexique-cursor-position">Position du curseur: 0</div>
-                </div>
-                <textarea id="lexique" name="lexique" style="display:none;">Pyramide, prisme, polygone, cône.</textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="references">Références bibliographiques:</label>
-                <div class="editor-toggle">
-                    <button class="editor-toggle-btn" data-target="references">Basculer Éditeur</button>
-                </div>
-                <div class="rich-text-editor" id="references-editor">
-                    <div class="toolbar">
-                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
-                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
-                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
-                        <span class="divider"></span>
-                        <div class="color-picker">
-                            <button type="button" class="color-button" data-command="foreColor"></button>
-                            <div class="color-palette" id="references-color-palette"></div>
-                        </div>
-                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
-                        <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
-                        <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
-                        <button type="button" onclick="openLatexModal('references-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
-                    </div>
-                    <div class="editor-content" id="references-content" contenteditable="true" onkeyup="updateCursorPosition('references-content')" onclick="updateCursorPosition('references-content')">Guide de calcul professionnel (Thomas Mba) ; Établissement des devis quantitatifs et estimatifs des lots gros et second œuvre (Belkhattaf Abdelouahid)</div>
-                    <div class="cursor-position" id="references-cursor-position">Position du curseur: 0</div>
-                </div>
-                <textarea id="references" name="references" style="display:none;">Guide de calcul professionnel (Thomas Mba) ; Établissement des devis quantitatifs et estimatifs des lots gros et second œuvre (Belkhattaf Abdelouahid)</textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="media1">Importer image, audio ou vidéo:</label>
-                <input type="file" id="media1" name="media1" accept="image/*,video/*,audio/*" onchange="previewMedia(this, 'mediaPreview1')">
-                <div class="media-preview" id="mediaPreview1"></div>
-            </div>
-        </div>
-        
-        <!-- Situation problème -->
-        <div class="section situation-probleme">
-            <h2>Situation Problème</h2>
-            
-            <div class="form-group">
-                <label for="situation_enonce">Énoncé de la situation problème:</label>
-                <div class="editor-toggle">
-                    <button class="editor-toggle-btn" data-target="situation_enonce">Basculer Éditeur</button>
-                </div>
-                <div class="rich-text-editor" id="situation_enonce-editor">
-                    <div class="toolbar">
-                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
-                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
-                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
-                        <span class="divider"></span>
-                        <div class="color-picker">
-                            <button type="button" class="color-button" data-command="foreColor"></button>
-                            <div class="color-palette" id="situation_enonce-color-palette"></div>
-                        </div>
-                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
-                        <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
-                        <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
-                        <button type="button" onclick="openLatexModal('situation_enonce-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
-                    </div>
-                    <div class="editor-content" id="situation_enonce-content" contenteditable="true" onkeyup="updateCursorPosition('situation_enonce-content')" onclick="updateCursorPosition('situation_enonce-content')">Un client souhaite construire une piscine de forme rectangulaire de 8m de longueur, 4m de largeur et 1,5m de profondeur. Comment calculer le volume de béton nécessaire pour réaliser cette piscine?</div>
-                    <div class="cursor-position" id="situation_enonce-cursor-position">Position du curseur: 0</div>
-                </div>
-                <textarea id="situation_enonce" name="situation_enonce" style="display:none;">Un client souhaite construire une piscine de forme rectangulaire de 8m de longueur, 4m de largeur et 1,5m de profondeur. Comment calculer le volume de béton nécessaire pour réaliser cette piscine?</textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="situation_solutions">Proposition de solutions:</label>
-                <div class="editor-toggle">
-                    <button class="editor-toggle-btn" data-target="situation_solutions">Basculer Éditeur</button>
-                </div>
-                <div class="rich-text-editor" id="situation_solutions-editor">
-                    <div class="toolbar">
-                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
-                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
-                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
-                        <span class="divider"></span>
-                        <div class="color-picker">
-                            <button type="button" class="color-button" data-command="foreColor"></button>
-                            <div class="color-palette" id="situation_solutions-color-palette"></div>
-                        </div>
-                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
-                        <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
-                        <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
-                        <button type="button" onclick="openLatexModal('situation_solutions-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
-                    </div>
-                    <div class="editor-content" id="situation_solutions-content" contenteditable="true" onkeyup="updateCursorPosition('situation_solutions-content')" onclick="updateCursorPosition('situation_solutions-content')">- Calculer le volume de la piscine: V = Longueur × Largeur × Profondeur<br>- Appliquer la formule: V = 8m × 4m × 1,5m = 48 m³</div>
-                    <div class="cursor-position" id="situation_solutions-cursor-position">Position du curseur: 0</div>
-                </div>
-                <textarea id="situation_solutions" name="situation_solutions" style="display:none;">- Calculer le volume de la piscine: V = Longueur × Largeur × Profondeur
-- Appliquer la formule: V = 8m × 4m × 1,5m = 48 m³</textarea>
-            </div>
-        </div>
-        
-        <!-- Tableau des activités -->
-        <div class="section tableau-activites">
-            <h2>Tableau des Activités</h2>
-            
-            <h3>Activités de l'Enseignant</h3>
-            <div class="form-group">
-                <div class="editor-toggle">
-                    <button class="editor-toggle-btn" data-target="activites_enseignant">Basculer Éditeur</button>
-                </div>
-                <div class="rich-text-editor" id="activites_enseignant-editor">
-                    <div class="toolbar">
-                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
-                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
-                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
-                        <span class="divider"></span>
-                        <div class="color-picker">
-                            <button type="button" class="color-button" data-command="foreColor"></button>
-                            <div class="color-palette" id="activites_enseignant-color-palette"></div>
-                        </div>
-                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
-                        <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
-                        <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
-                        <button type="button" onclick="openLatexModal('activites_enseignant-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
-                    </div>
-                    <div class="editor-content" id="activites_enseignant-content" contenteditable="true" onkeyup="updateCursorPosition('activites_enseignant-content')" onclick="updateCursorPosition('activites_enseignant-content')">- Présenter les différentes figures géométriques<br>- Expliquer les formules de calcul de surface et volume<br>- Guider les élèves dans la résolution d'exercices</div>
-                    <div class="cursor-position" id="activites_enseignant-cursor-position">Position du curseur: 0</div>
-                </div>
-                <textarea id="activites_enseignant" name="activites_enseignant" style="display:none;">- Présenter les différentes figures géométriques
-- Expliquer les formules de calcul de surface et volume
-- Guider les élèves dans la résolution d'exercices</textarea>
-            </div>
-            
-            <h3>Activités des Élèves</h3>
-            <div class="form-group">
-                <div class="editor-toggle">
-                    <button class="editor-toggle-btn" data-target="activites_eleves">Basculer Éditeur</button>
-                </div>
-                <div class="rich-text-editor" id="activites_eleves-editor">
-                    <div class="toolbar">
-                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
-                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
-                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
-                        <span class="divider"></span>
-                        <div class="color-picker">
-                            <button type="button" class="color-button" data-command="foreColor"></button>
-                            <div class="color-palette" id="activites_eleves-color-palette"></div>
-                        </div>
-                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
-                        <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
-                        <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
-                        <button type="button" onclick="openLatexModal('activites_eleves-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
-                    </div>
-                    <div class="editor-content" id="activites_eleves-content" contenteditable="true" onkeyup="updateCursorPosition('activites_eleves-content')" onclick="updateCursorPosition('activites_eleves-content')">- Identifier les différentes figures géométriques présentées<br>- Appliquer les formules pour résoudre les exercices proposés<br>- Participer activement aux discussions de groupe</div>
-                    <div class="cursor-position" id="activites_eleves-cursor-position">Position du curseur: 0</div>
-                </div>
-                <textarea id="activites_eleves" name="activites_eleves" style="display:none;">- Identifier les différentes figures géométriques présentées
-- Appliquer les formules pour résoudre les exercices proposés
-- Participer activement aux discussions de groupe</textarea>
-            </div>
-        </div>
-        
-        <!-- FICHE 2 - Déroulement de la séance -->
-        <div class="section">
-            <h2>Fiche 2 - Déroulement de la Séance</h2>
-            
-            <table id="deroulement-table">
-                <thead>
-                    <tr>
-                        <th>Etapes</th>
-                        <th>Phases</th>
-                        <th>Éléments de Contenu</th>
-                        <th>Méthodes pédagogiques</th>
-                        <th>Activités pédagogiques</th>
-                        <th>Indicateurs d'évaluation</th>
-                        <th>Durée</th>
-                        <th>Matériel didactique</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><input type="text" value="Introduction"></td>
-                        <td><input type="text" value="Exploration"></td>
-                        <td><input type="text" value="Généralités"></td>
-                        <td><input type="text" value="-Méthode interrogative"></td>
-                        <td>
-                            <div class="editor-toggle">
-                                <button class="editor-toggle-btn" data-target="activite1">Basculer Éditeur</button>
-                            </div>
-                            <div class="rich-text-editor" id="activite1-editor">
-                                <div class="toolbar">
-                                    <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
-                                    <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
-                                    <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
-                                    <button type="button" onclick="openLatexModal('activite1-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
-                                </div>
-                                <div class="editor-content" id="activite1-content" contenteditable="true" onkeyup="updateCursorPosition('activite1-content')" onclick="updateCursorPosition('activite1-content')">-Poser les questions permettant de découvrir le titre de la leçon -Présenter la compétence attendue</div>
-                                <div class="cursor-position" id="activite1-cursor-position">Position du curseur: 0</div>
-                            </div>
-                            <textarea id="activite1" name="activite1" style="display:none;">-Poser les questions permettant de découvrir le titre de la leçon -Présenter la compétence attendue</textarea>
-                        </td>
-                        <td><input type="text" value="Réponse correcte aux questions."></td>
-                        <td><input type="text" value="10min"></td>
-                        <td><input type="text" value=""></td>
-                        <td><button class="btn-danger" onclick="removeRow(this)">X</button></td>
-                    </tr>
-                    <tr>
-                        <td><input type="text" value="Conduite de la leçon"></td>
-                        <td><input type="text" value="Apprentissage de base"></td>
-                        <td>
-                            <div class="editor-toggle">
-                                <button class="editor-toggle-btn" data-target="contenu1">Basculer Éditeur</button>
-                            </div>
-                            <div class="rich-text-editor" id="contenu1-editor">
-                                <div class="toolbar">
-                                    <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
-                                    <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
-                                    <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
-                                    <button type="button" onclick="openLatexModal('contenu1-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
-                                </div>
-                                <div class="editor-content" id="contenu1-content" contenteditable="true" onkeyup="updateCursorPosition('contenu1-content')" onclick="updateCursorPosition('contenu1-content')">I-Mesure des distances II- Mesures des surfaces III- Mesure des volumes</div>
-                                <div class="cursor-position" id="contenu1-cursor-position">Position du curseur: 0</div>
-                            </div>
-                            <textarea id="contenu1" name="contenu1" style="display:none;">I-Mesure des distances II- Mesures des surfaces III- Mesure des volumes</textarea>
-                        </td>
-                        <td><input type="text" value="-Méthode active -Méthode interactive"></td>
-                        <td>
-                            <div class="editor-toggle">
-                                <button class="editor-toggle-btn" data-target="activite2">Basculer Éditeur</button>
-                            </div>
-                            <div class="rich-text-editor" id="activite2-editor">
-                                <div class="toolbar">
-                                    <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
-                                    <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
-                                    <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
-                                    <button type="button" onclick="openLatexModal('activite2-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
-                                </div>
-                                <div class="editor-content" id="activite2-content" contenteditable="true" onkeyup="updateCursorPosition('activite2-content')" onclick="updateCursorPosition('activite2-content')">-Exposé magistral</div>
-                                <div class="cursor-position" id="activite2-cursor-position">Position du curseur: 0</div>
-                            </div>
-                            <textarea id="activite2" name="activite2" style="display:none;">-Exposé magistral</textarea>
-                        </td>
-                        <td><input type="text" value=""></td>
-                        <td><input type="text" value="1h20min"></td>
-                        <td><input type="text" value="-tableau ; -coule -règle et équerre"></td>
-                        <td><button class="btn-danger" onclick="removeRow(this)">X</button></td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <button class="btn" onclick="addRow()">Ajouter une ligne</button>
-            
-            <div class="form-group">
-                <label for="methode_conseillee">Méthode conseillée:</label>
-                <div class="editor-toggle">
-                    <button class="editor-toggle-btn" data-target="methode_conseillee">Basculer Éditeur</button>
-                </div>
-                <div class="rich-text-editor" id="methode_conseillee-editor">
-                    <div class="toolbar">
-                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
-                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
-                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
-                        <span class="divider"></span>
-                        <div class="color-picker">
-                            <button type="button" class="color-button" data-command="foreColor"></button>
-                            <div class="color-palette" id="methode_conseillee-color-palette"></div>
-                        </div>
-                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
-                        <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
-                        <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
-                        <button type="button" onclick="openLatexModal('methode_conseillee-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
-                    </div>
-                    <div class="editor-content" id="methode_conseillee-content" contenteditable="true" onkeyup="updateCursorPosition('methode_conseillee-content')" onclick="updateCursorPosition('methode_conseillee-content')">Méthode active et participative, avec démonstrations pratiques et exercices d'application.</div>
-                    <div class="cursor-position" id="methode_conseillee-cursor-position">Position du curseur: 0</div>
-                </div>
-                <textarea id="methode_conseillee" name="methode_conseillee" style="display:none;">Méthode active et participative, avec démonstrations pratiques et exercices d'application.</textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="media2">Importer image, audio ou vidéo:</label>
-                <input type="file" id="media2" name="media2" accept="image/*,video/*,audio/*" onchange="previewMedia(this, 'mediaPreview2')">
-                <div class="media-preview" id="mediaPreview2"></div>
-            </div>
-        </div>
-        
-        <!-- FICHE 3 - Suite du déroulement -->
-        <div class="section">
-            <h2>Fiche 3 - Suite du Déroulement</h2>
-            
-            <table id="suite-table">
-                <thead>
-                    <tr>
-                        <th>Étapes</th>
-                        <th>Phases</th>
-                        <th>Éléments de Contenu</th>
-                        <th>Méthodes pédagogiques</th>
-                        <th>Activités pédagogiques</th>
-                        <th>Indicateurs d'évaluation</th>
-                        <th>Durée</th>
-                        <th>Matériel didactique</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><input type="text" value="Transient"></td>
-                        <td><input type="text" value="Exercice d'application"></td>
-                        <td><input type="text" value=""></td>
-                        <td><input type="text" value="-Méthode active"></td>
-                        <td>
-                            <div class="editor-toggle">
-                                <button class="editor-toggle-btn" data-target="activite3">Basculer Éditeur</button>
-                            </div>
-                            <div class="rich-text-editor" id="activite3-editor">
-                                <div class="toolbar">
-                                    <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
-                                    <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
-                                    <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
-                                    <button type="button" onclick="openLatexModal('activite3-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
-                                </div>
-                                <div class="editor-content" id="activite3-content" contenteditable="true" onkeyup="updateCursorPosition('activite3-content')" onclick="updateCursorPosition('activite3-content')">Corrige l'exercice</div>
-                                <div class="cursor-position" id="activite3-cursor-position">Position du curseur: 0</div>
-                            </div>
-                            <textarea id="activite3" name="activite3" style="display:none;">Corrige l'exercice</textarea>
-                        </td>
-                        <td><input type="text" value=""></td>
-                        <td><input type="text" value="15min"></td>
-                        <td><input type="text" value="-tableau ; -crole -règle et équerre"></td>
-                        <td><button class="btn-danger" onclick="removeRow(this)">X</button></td>
-                    </tr>
-                    <tr>
-                        <td><input type="text" value="Clôture"></td>
-                        <td><input type="text" value="Enrichissement"></td>
-                        <td><input type="text" value="Exercice de consolidation"></td>
-                        <td><input type="text" value="-Méthode interrogative -Méthode active."></td>
-                        <td>
-                            <div class="editor-toggle">
-                                <button class="editor-toggle-btn" data-target="activite4">Basculer Éditeur</button>
-                            </div>
-                            <div class="rich-text-editor" id="activite4-editor">
-                                <div class="toolbar">
-                                    <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
-                                    <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
-                                    <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
-                                    <button type="button" onclick="openLatexModal('activite4-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
-                                </div>
-                                <div class="editor-content" id="activite4-content" contenteditable="true" onkeyup="updateCursorPosition('activite4-content')" onclick="updateCursorPosition('activite4-content')">Récapituler les points clés de la leçon, établir le lien avec la prochaine compétence</div>
-                                <div class="cursor-position" id="activite4-cursor-position">Position du curseur: 0</div>
-                            </div>
-                            <textarea id="activite4" name="activite4" style="display:none;">Récapituler les points clés de la leçon, établir le lien avec la prochaine compétence</textarea>
-                        </td>
-                        <td><input type="text" value=""></td>
-                        <td><input type="text" value="5min"></td>
-                        <td><input type="text" value=""></td>
-                        <td><button class="btn-danger" onclick="removeRow(this)">X</button></td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <button class="btn" onclick="addRow2()">Ajouter une ligne</button>
-            
-            <!-- Exercices de maison -->
-            <div class="exercice-maison">
-                <h2>Exercices de Maison</h2>
-                
-                <div class="form-group">
-                    <label for="exercice_enonce">Énoncé des exercices:</label>
-                    <div class="editor-toggle">
-                        <button class="editor-toggle-btn" data-target="exercice_enonce">Basculer Éditeur</button>
-                    </div>
-                    <div class="rich-text-editor" id="exercice_enonce-editor">
-                        <div class="toolbar">
-                            <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
-                            <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
-                            <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
-                            <span class="divider"></span>
-                            <div class="color-picker">
-                                <button type="button" class="color-button" data-command="foreColor"></button>
-                                <div class="color-palette" id="exercice_enonce-color-palette"></div>
-                            </div>
-                            <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
-                            <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
-                            <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
-                            <button type="button" onclick="openLatexModal('exercice_enonce-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
-                        </div>
-                        <div class="editor-content" id="exercice_enonce-content" contenteditable="true" onkeyup="updateCursorPosition('exercice_enonce-content')" onclick="updateCursorPosition('exercice_enonce-content')">1. Calculer la surface d'un rectangle de 12m de longueur et 8m de largeur.<br>2. Calculer le volume d'un cube dont l'arête mesure 5m.<br>3. Un cylindre a un rayon de 3m et une hauteur de 7m. Calculer son volume.</div>
-                        <div class="cursor-position" id="exercice_enonce-cursor-position">Position du curseur: 0</div>
-                    </div>
-                    <textarea id="exercice_enonce" name="exercice_enonce" style="display:none;">1. Calculer la surface d'un rectangle de 12m de longueur et 8m de largeur.
-2. Calculer le volume d'un cube dont l'arête mesure 5m.
-3. Un cylindre a un rayon de 3m et une hauteur de 7m. Calculer son volume.</textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="exercice_date_correction">Date de correction:</label>
-                    <input type="date" id="exercice_date_correction" name="exercice_date_correction">
-                </div>
-            </div>
-            
-            <!-- Récapitulation de la leçon -->
-            <div class="recapitulation">
-                <h2>Récapitulation de la Leçon</h2>
-                
-                <div class="form-group">
-                    <label for="recapitulation">Éléments à retenir:</label>
-                    <div class="editor-toggle">
-                        <button class="editor-toggle-btn" data-target="recapitulation">Basculer Éditeur</button>
-                    </div>
-                    <div class="rich-text-editor" id="recapitulation-editor">
-                        <div class="toolbar">
-                            <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
-                            <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
-                            <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
-                            <span class="divider"></span>
-                            <div class="color-picker">
-                                <button type="button" class="color-button" data-command="foreColor"></button>
-                                <div class="color-palette" id="recapitulation-color-palette"></div>
-                            </div>
-                            <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
-                            <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
-                            <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
-                            <button type="button" onclick="openLatexModal('recapitulation-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
-                        </div>
-                        <div class="editor-content" id="recapitulation-content" contenteditable="true" onkeyup="updateCursorPosition('recapitulation-content')" onclick="updateCursorPosition('recapitulation-content')">- Surface d'un rectangle: S = L × l<br>- Volume d'un cube: V = a³<br>- Volume d'un cylindre: V = π × r² × h<br>- Il est important de bien identifier la forme géométrique avant d'appliquer la formule appropriée.</div>
-                        <div class="cursor-position" id="recapitulation-cursor-position">Position du curseur: 0</div>
-                    </div>
-                    <textarea id="recapitulation" name="recapitulation" style="display:none;">- Surface d'un rectangle: S = L × l
-- Volume d'un cube: V = a³
-- Volume d'un cylindre: V = π × r² × h
-- Il est important de bien identifier la forme géométrique avant d'appliquer la formule appropriée.</textarea>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label for="evaluation">Notes d'évaluation:</label>
-                <div class="editor-toggle">
-                    <button class="editor-toggle-btn" data-target="evaluation">Basculer Éditeur</button>
-                </div>
-                <div class="rich-text-editor" id="evaluation-editor">
-                    <div class="toolbar">
-                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
-                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
-                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
-                        <span class="divider"></span>
-                        <div class="color-picker">
-                            <button type="button" class="color-button" data-command="foreColor"></button>
-                            <div class="color-palette" id="evaluation-color-palette"></div>
-                        </div>
-                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
-                        <button type="button" data-command="insertAudio"><i class="fas fa-volume-up"></i></button>
-                        <button type="button" data-command="insertVideo"><i class="fas fa-video"></i></button>
-                        <button type="button" onclick="openLatexModal('evaluation-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
-                    </div>
-                    <div class="editor-content" id="evaluation-content" contenteditable="true" onkeyup="updateCursorPosition('evaluation-content')" onclick="updateCursorPosition('evaluation-content')"></div>
-                    <div class="cursor-position" id="evaluation-cursor-position">Position du curseur: 0</div>
-                </div>
-                <textarea id="evaluation" name="evaluation" style="display:none;"></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="media3">Importer image, audio ou vidéo:</label>
-                <input type="file" id="media3" name="media3" accept="image/*,video/*,audio/*" onchange="previewMedia(this, 'mediaPreview3')">
-                <div class="media-preview" id="mediaPreview3"></div>
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <button class="btn btn-success" onclick="saveForm()"><i class="fas fa-save"></i> Sauvegarder</button>
-            <button class="btn" onclick="exportJSON()"><i class="fas fa-file-export"></i> Exporter JSON</button>
-            <button class="btn btn-warning" onclick="importJSON()"><i class="fas fa-file-import"></i> Importer JSON</button>
-            <button class="btn btn-danger" onclick="clearForm()"><i class="fas fa-trash"></i> Effacer tout</button>
-        </div>
 
-        <!-- Section des fiches sauvegardées -->
-        <div class="saved-lessons">
-            <h2>Fiches sauvegardées</h2>
-            
-            <div class="search-filter">
-                <div class="filter-group">
-                    <label for="search">Rechercher</label>
-                    <input type="text" id="search" placeholder="Rechercher..." oninput="filterLessons()">
-                </div>
-                <div class="filter-group">
-                    <label for="filterModule">Filtrer par matière</label>
-                    <select id="filterModule" onchange="filterLessons()">
-                        <option value="">Toutes les matières</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="filterDate">Filtrer par date</label>
-                    <input type="date" id="filterDate" onchange="filterLessons()">
-                </div>
-            </div>
-            
-            <div class="stats">
-                <span id="totalLessons">Total: 0 fiches</span>
-                <span id="filteredLessons">Filtrées: 0</span>
-            </div>
-            
-            <div class="lesson-list" id="lessonList">
-                <div class="no-lessons">
-                    <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 15px;"></i>
-                    <p>Aucune fiche sauvegardée</p>
-                </div>
-            </div>
+<div class="toast" id="toast"></div>
+
+<div class="app-layout">
+  <div class="sidebar">
+    <div class="sidebar-inner">
+      <div class="sidebar-header">
+        <div class="logo">📋</div>
+        <div><h2>Générateur de Fiche Pédagogique</h2></div>
+        <span class="badge">v4.0</span>
+      </div>
+
+      <!-- 1 INFOS GÉNÉRALES -->
+      <div class="form-cat">① Informations générales</div>
+      <div class="form-row">
+        <div class="form-g"><label>École / CEG</label><input type="text" id="f_ecole" value="CEG MASSEDENA"></div>
+        <div class="form-g"><label>Classe</label><input type="text" id="f_classe" value="Classe de 6ème"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-g"><label>Effectif</label><input type="text" id="f_effectif" value="38 élèves"></div>
+        <div class="form-g"><label>Matière</label><input type="text" id="f_matiere" value="Mathématiques"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-g"><label>Enseignant</label><input type="text" id="f_enseignant" value="KOLA Maniwah Essohouna"></div>
+        <div class="form-g"><label>Date</label><input type="text" id="f_date" value="02/02/2026"></div>
+      </div>
+      <div class="form-g"><label>Durée totale</label><input type="text" id="f_duree" value="3 séances de 60 min"></div>
+      <div class="form-g"><label>Compétence visée</label><textarea id="f_competence" rows="1">Résoudre des problèmes faisant appel au calcul numérique dans des situations concrètes de la vie quotidienne africaine, en mobilisant la notion de fraction comme outil de modélisation et de résolution.</textarea></div>
+      <div class="form-row">
+        <div class="form-g"><label>Références</label><input type="text" id="f_references" value="Programme officiel de mathématiques 6ème, Socle commun"></div>
+        <div class="form-g"><label>Séquence</label><input type="text" id="f_sequence" value="Séquence 3 — Deuxième trimestre"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-g"><label>Domaine</label><input type="text" id="f_domaine" value="Nombres et calculs"></div>
+        <div class="form-g"><label>Thème</label><input type="text" id="f_theme" value="Nombres et Calculs"></div>
+      </div>
+      <div class="form-g"><label>Titre de la leçon</label><input type="text" id="f_titre" value="Les Fractions : Notion, Comparaison et Opérations de Base"></div>
+      <div class="form-g"><label>Contexte pédagogique</label><textarea id="f_contexte" rows="1">Cette séquence vise à construire progressivement la notion de fraction chez les élèves de 6ème à travers des situations concrètes du quotidien africain.</textarea></div>
+
+      <!-- 2 OBJECTIFS & PRÉREQUIS -->
+      <div class="form-cat">② Objectifs &amp; Prérequis</div>
+      <div class="form-g"><label>Objectifs (un par ligne)</label><textarea id="f_objectifs" rows="2">Reconnaître et identifier des fractions dans des contextes variés
+Représenter graphiquement des fractions à l'aide de supports variés
+Comparer et ranger des fractions en utilisant des stratégies adaptées
+Effectuer des opérations élémentaires sur les fractions
+Utiliser les fractions pour résoudre des problèmes de partage</textarea></div>
+      <div class="form-g"><label>Prérequis (un par ligne)</label><textarea id="f_prerequis" rows="2">Connaissance des nombres entiers naturels jusqu'à 1000
+Maîtrise des opérations de base (+, −, ×, ÷)
+Notion intuitive de partage équitable
+Lecture et écriture correcte des nombres</textarea></div>
+
+      <!-- 3 MATÉRIEL & STRATÉGIES -->
+      <div class="form-cat">③ Matériel &amp; Stratégies</div>
+      <div class="grid-2">
+        <div class="form-g"><label>Matériel concret</label><textarea id="f_matConcret" rows="1">Fruits (oranges, bananes, mangues)
+Bandes de papier de différentes longueurs
+Disques en carton fractionnés
+Billes, cailloux, graines</textarea></div>
+        <div class="form-g"><label>Supports pédagogiques</label><textarea id="f_matSupports" rows="1">Fiches d'exercices différenciées (3 niveaux)
+Planches illustrées sur le partage
+Tableau magnétique avec fractions aimantées
+Calculatrices simples</textarea></div>
+      </div>
+      <div class="form-g"><label>Stratégies pédagogiques</label><textarea id="f_strategies" rows="1">Approche inductive : partir de situations concrètes pour dégager les concepts
+Différenciation : adapter les activités selon les profils d'apprentissage
+Manipulation : utiliser systématiquement du matériel concret avant l'abstraction
+Travail collaboratif : alterner phases individuelles, en binômes et en groupes
+Métacognition : faire verbaliser les démarches et les stratégies
+Contextualisation : ancrer les apprentissages dans la réalité africaine</textarea></div>
+      <div class="form-g"><label>Adaptations pédagogiques</label><textarea id="f_adaptations" rows="1">Pour les élèves en difficulté : réduire la quantité d'exercices, accentuer la manipulation
+Pour les élèves avancés : problèmes complexes, recherche documentaire
+Pour les élèves à besoins éducatifs particuliers : supports adaptés, temps supplémentaire</textarea></div>
+
+      <!-- 4 SÉANCES -->
+      <div class="form-cat">④ Séances <span class="act" onclick="ajouterSeance()">+ Ajouter</span></div>
+      <div id="seancesContainer"></div>
+
+      <!-- 5 IMAGE -->
+      <div class="form-cat">⑤ Image</div>
+      <div class="form-row">
+        <div class="form-g" style="flex:2"><label>Fichier image</label><input type="file" id="f_image" accept="image/jpeg,image/png,image/webp" onchange="loadImg('f_image');apercuImage();"></div>
+        <div class="form-g" style="flex:1"><label>Position</label><select id="f_imagePos"><option value="after-title">Après titre</option><option value="after-context">Après contexte</option><option value="custom">Bloc libre</option></select></div>
+      </div>
+      <div class="form-g"><label>Légende</label><input type="text" id="f_imageLegende" placeholder="Légende"></div>
+      <div><img class="img-prev" id="imgPreview" alt=""></div>
+
+      <!-- 5b DÉROULEMENT -->
+      <div class="form-cat">⓹ Déroulement des activités</div>
+      <div class="form-g"><textarea id="f_deroulement" rows="2" placeholder="Une étape par ligne">Phase 1 : Rappel des prérequis et mise en situation (10 min)
+Phase 2 : Activité de découverte par manipulation guidée (15 min)
+Phase 3 : Mise en commun et institutionnalisation (10 min)
+Phase 4 : Exercices d'application et entraînement (15 min)
+Phase 5 : Synthèse, évaluation et remédiation (10 min)</textarea></div>
+
+      <!-- 6 TRACE ÉCRITE -->
+      <div class="form-cat">⑥ Trace écrite complète</div>
+      <div class="coll open"><div class="h" onclick="this.parentElement.classList.toggle('open')"><span class="arr">▶</span> Définition</div><div class="b"><div class="form-g"><textarea id="f_def" rows="1">Une fraction est un nombre qui représente une ou plusieurs parties d'une unité divisée en parts égales.</textarea></div><div class="img-te"><label>🖼</label><input type="file" id="f_defImg" accept="image/jpeg,image/png,image/webp" onchange="loadImg('f_defImg');generer();"><input type="text" id="f_defImgLeg" placeholder="Légende"></div></div></div>
+      <div class="coll open"><div class="h" onclick="this.parentElement.classList.toggle('open')"><span class="arr">▶</span> Théorème / Propriété</div><div class="b"><div class="form-g"><textarea id="f_prop" rows="1">Propriété 1 : Un même nombre fractionnaire peut s'écrire de différentes façons (fractions équivalentes).
+Propriété 2 : Si on multiplie ou divise le numérateur et le dénominateur par un même nombre non nul, on obtient une fraction égale.</textarea></div><div class="img-te"><label>🖼</label><input type="file" id="f_propImg" accept="image/jpeg,image/png,image/webp" onchange="loadImg('f_propImg');generer();"><input type="text" id="f_propImgLeg" placeholder="Légende"></div></div></div>
+      <div class="coll open"><div class="h" onclick="this.parentElement.classList.toggle('open')"><span class="arr">▶</span> Remarque</div><div class="b"><div class="form-g"><textarea id="f_remarque" rows="1">Remarque : Une fraction peut représenter un nombre entier lorsque le numérateur est un multiple du dénominateur. Une fraction dont le numérateur est inférieur au dénominateur est appelée fraction propre.</textarea></div><div class="img-te"><label>🖼</label><input type="file" id="f_remarqueImg" accept="image/jpeg,image/png,image/webp" onchange="loadImg('f_remarqueImg');generer();"><input type="text" id="f_remarqueImgLeg" placeholder="Légende"></div></div></div>
+      <div class="coll open"><div class="h" onclick="this.parentElement.classList.toggle('open')"><span class="arr">▶</span> Exemple</div><div class="b"><div class="form-g"><textarea id="f_exemple" rows="1">Exemple 1 : Dans un gâteau partagé en 8 parts égales, si on prend 3 parts, on a 3/8 du gâteau.
+Exemple 2 : 2/3 de 15 = (2 × 15) ÷ 3 = 30 ÷ 3 = 10.</textarea></div><div class="img-te"><label>🖼</label><input type="file" id="f_exempleImg" accept="image/jpeg,image/png,image/webp" onchange="loadImg('f_exempleImg');generer();"><input type="text" id="f_exempleImgLeg" placeholder="Légende"></div></div></div>
+      <div class="coll open"><div class="h" onclick="this.parentElement.classList.toggle('open')"><span class="arr">▶</span> Activité</div><div class="b"><div class="form-g"><textarea id="f_activite" rows="1">Activité : À l'aide de bandes de papier, représenter les fractions 1/2, 1/4, 3/4 et 2/3. Comparer les longueurs obtenues et classer ces fractions par ordre croissant.</textarea></div><div class="img-te"><label>🖼</label><input type="file" id="f_activiteImg" accept="image/jpeg,image/png,image/webp" onchange="loadImg('f_activiteImg');generer();"><input type="text" id="f_activiteImgLeg" placeholder="Légende"></div></div></div>
+      <div class="coll open"><div class="h" onclick="this.parentElement.classList.toggle('open')"><span class="arr">▶</span> Solution activité</div><div class="b"><div class="form-g"><textarea id="f_solActivite" rows="1">Solution : 1/4 = 0,25 ; 1/2 = 0,5 ; 2/3 ≈ 0,67 ; 3/4 = 0,75. Ordre croissant : 1/4 < 1/2 < 2/3 < 3/4.</textarea></div><div class="img-te"><label>🖼</label><input type="file" id="f_solActiviteImg" accept="image/jpeg,image/png,image/webp" onchange="loadImg('f_solActiviteImg');generer();"><input type="text" id="f_solActiviteImgLeg" placeholder="Légende"></div></div></div>
+      <div class="coll open"><div class="h" onclick="this.parentElement.classList.toggle('open')"><span class="arr">▶</span> Exercice d'application</div><div class="b"><div class="form-g"><textarea id="f_exoApp" rows="1">1. Simplifier : 12/18, 20/25, 36/48.
+2. Calculer : 4/11 + 5/11 - 2/11.
+3. Un fermier vend 2/5 de sa récolte le matin et 1/4 l'après-midi. Fraction totale vendue ?</textarea></div><div class="img-te"><label>🖼</label><input type="file" id="f_exoAppImg" accept="image/jpeg,image/png,image/webp" onchange="loadImg('f_exoAppImg');generer();"><input type="text" id="f_exoAppImgLeg" placeholder="Légende"></div></div></div>
+      <div class="coll open"><div class="h" onclick="this.parentElement.classList.toggle('open')"><span class="arr">▶</span> Solution exercices</div><div class="b"><div class="form-g"><textarea id="f_solExo" rows="1">1. 12/18 = 2/3 ; 20/25 = 4/5 ; 36/48 = 3/4.
+2. 4/11 + 5/11 - 2/11 = 7/11.
+3. 2/5 + 1/4 = 8/20 + 5/20 = 13/20.</textarea></div><div class="img-te"><label>🖼</label><input type="file" id="f_solExoImg" accept="image/jpeg,image/png,image/webp" onchange="loadImg('f_solExoImg');generer();"><input type="text" id="f_solExoImgLeg" placeholder="Légende"></div></div></div>
+      <div class="coll open"><div class="h" onclick="this.parentElement.classList.toggle('open')"><span class="arr">▶</span> Exercice de maison</div><div class="b"><div class="form-g"><textarea id="f_exoMaison" rows="1">Devoir : Famille Traoré.
+- 30 poulets à partager entre 5 familles
+- 48 L de boisson (verres de 1/3 L)
+- 60 sachets sucre : 2/5 pour le thé, 1/4 pour les gâteaux. Reste ?</textarea></div><div class="img-te"><label>🖼</label><input type="file" id="f_exoMaisonImg" accept="image/jpeg,image/png,image/webp" onchange="loadImg('f_exoMaisonImg');generer();"><input type="text" id="f_exoMaisonImgLeg" placeholder="Légende"></div></div></div>
+      <div class="coll open"><div class="h" onclick="this.parentElement.classList.toggle('open')"><span class="arr">▶</span> Solution devoir</div><div class="b"><div class="form-g"><textarea id="f_solMaison" rows="1">1. 1/5 → 6 poulets/famille.
+2. 48 ÷ 1/3 = 144 verres.
+3. Thé : 60×2/5=24 ; Gâteaux : 60×1/4=15.
+4. Reste : 7/20 → 21 sachets.</textarea></div><div class="img-te"><label>🖼</label><input type="file" id="f_solMaisonImg" accept="image/jpeg,image/png,image/webp" onchange="loadImg('f_solMaisonImg');generer();"><input type="text" id="f_solMaisonImgLeg" placeholder="Légende"></div></div></div>
+
+      <!-- 7 CAPACITÉS VISÉES -->
+      <div class="form-cat">⑦ Capacités visées</div>
+      <div class="grid-2">
+        <div class="form-g"><label>Capacités col.1 (un par ligne)</label><textarea id="f_cap1" rows="2">Représenter : Traduire une fraction sous forme graphique, numérique et concrète
+Comparer : Utiliser des stratégies adaptées pour comparer et ordonner
+Calculer : Maîtriser les opérations élémentaires avec précision
+Résoudre : Appliquer les fractions à des problèmes du quotidien</textarea></div>
+        <div class="form-g"><label>Capacités col.2 (un par ligne)</label><textarea id="f_cap2" rows="2">Communiquer : Exprimer clairement sa démarche avec un vocabulaire adapté
+Modéliser : Traduire une situation réelle en langage mathématique
+Raisonner : Justifier ses choix et vérifier la cohérence des résultats
+Autonomiser : Développer des méthodes de travail personnelles</textarea></div>
+      </div>
+
+      <!-- 8 ÉVALUATION -->
+      <div class="form-cat">⑧ Modalités d'évaluation</div>
+      <div class="form-g"><textarea id="f_evalForm" rows="1" placeholder="Évaluation formative">Observation directe de la participation et de la manipulation
+Questionnement : questions orales ciblées, explications des démarches
+Exercices au tableau : correction immédiate avec rétroaction
+Auto-évaluation : fiche de positionnement après chaque séance</textarea></div>
+      <div class="form-g"><textarea id="f_evalSom" rows="1" placeholder="Évaluation sommative">Fiche d'exercices notés (coefficient 1) — 30 minutes
+Résolution de problème contextualisé (coefficient 2) — 45 minutes
+Présentation orale d'une démarche de résolution (coefficient 1)
+Questionnaire de synthèse (coefficient 3) — 60 minutes</textarea></div>
+      <div class="form-g"><textarea id="f_evalCrit" rows="1" placeholder="Critères">Exactitude des calculs et des représentations (40 %)
+Pertinence des méthodes utilisées (25 %)
+Clarté des explications et du vocabulaire (20 %)
+Capacité à appliquer dans des situations nouvelles (10 %)
+Autonomie et prise d'initiative (5 %)</textarea></div>
+
+      <!-- 9 CONTEXTE AFRICAIN -->
+      <div class="form-cat">⑨ Contexte africain &amp; Liens</div>
+      <div class="grid-2">
+        <div class="form-g"><label>Domaines d'application</label><textarea id="f_domaines" rows="1">Alimentation : Partage de nourriture, recettes traditionnelles
+Commerce : Mesures au marché, calcul des prix
+Agriculture : Répartition des récoltes, surfaces cultivables
+Artisanat : Proportions dans la fabrication, mesures</textarea></div>
+        <div class="form-g"><label>Liens transdisciplinaires</label><textarea id="f_liens" rows="1">SVT : Proportion dans l'alimentation, croissance
+Géographie : Répartition des ressources, démographie
+Histoire : Mesures anciennes, systèmes de comptage
+Éducation civique : Partage équitable, solidarité</textarea></div>
+      </div>
+      <div class="form-g"><textarea id="f_exemples" rows="1" placeholder="Exemples concrets">Partager 24 ignames entre 8 familles de façon équitable
+Mesurer 3/4 kg de riz avec une balance traditionnelle
+Calculer la part de chacun dans une tontine de 12 personnes avec 60 000 FCFA</textarea></div>
+
+      <!-- 10 ANNEXES -->
+      <div class="form-cat">⑩ Annexes pédagogiques</div>
+      <div class="form-g"><textarea id="f_diffDif" rows="1" placeholder="Élèves en difficulté">Utilisation systématique de matériel concret
+Fractions simples (1/2, 1/3, 1/4)
+Énoncés courts et illustrés
+Tutorat par des élèves avancés</textarea></div>
+      <div class="form-g"><textarea id="f_diffAv" rows="1" placeholder="Élèves avancés">Problèmes complexes en plusieurs étapes
+Introduction aux fractions décimales
+Création d'exercices pour les camarades
+Projets interdisciplinaires</textarea></div>
+      <div class="form-g"><textarea id="f_ressources" rows="1" placeholder="Ressources complémentaires">Manuel de mathématiques 6ème
+Fiches de travail photocopiables
+Matériel de manipulation à fabriquer
+Vidéos éducatives sur les fractions</textarea></div>
+      <div class="form-g"><textarea id="f_remarquesFin" rows="1" placeholder="Remarques finales">Insister sur le sens avant la technique
+Valoriser toutes les démarches de résolution
+Faire verbaliser les difficultés rencontrées
+Maintenir un lien constant avec le concret</textarea></div>
+
+      <!-- ACTIONS -->
+      <div class="sidebar-actions">
+        <button class="btn btn-primary" onclick="generer()">⚡ GÉNÉRER LA FICHE COMPLÈTE</button>
+        <div style="display:flex;gap:4px">
+          <button class="btn btn-success" onclick="window.print()" style="flex:1">🖨 Imprimer</button>
+          <button class="btn btn-orange" onclick="exporterLatex()" style="flex:1">📄 LaTeX</button>
         </div>
+        <div style="display:flex;gap:4px">
+          <button class="btn btn-outline btn-sm" onclick="exporterHTML()" style="flex:1">💾 HTML</button>
+          <button class="btn btn-outline btn-sm" onclick="if(confirm('Réinitialiser tous les champs ?')){resetTout()}" style="flex:1">↺ Reset</button>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Modal pour la saisie LaTeX -->
-    <div class="latex-modal" id="latexModal">
-        <div class="latex-modal-content">
-            <h3>Insérer une formule mathématique</h3>
-            <p>Saisissez votre formule LaTeX ci-dessous :</p>
-            <textarea class="latex-input" id="latexInput" placeholder="Ex: E = mc^2 ou \frac{a}{b}"></textarea>
-            <div class="latex-preview" id="latexPreview">Aperçu de la formule</div>
-            <div class="latex-modal-buttons">
-                <button class="btn" onclick="insertLatex()">Insérer à la position du curseur</button>
-                <button class="btn btn-danger" onclick="closeLatexModal()">Annuler</button>
-            </div>
+  <!-- ===== PREVIEW ===== -->
+  <div class="main-content">
+    <div class="page-container" id="pageContainer">
+      <div class="page" id="emptyState">
+        <div class="empty-state"><div class="icon">📄</div><h3>Prêt à générer votre fiche</h3><p style="color:var(--gray-400);font-size:.78rem">Remplissez les 10 sections du panneau, puis cliquez sur <strong>"Générer la fiche complète"</strong>.</p></div>
+      </div>
+
+      <div class="page" id="fichePage" style="display:none">
+        <div class="page-header"><span id="g_hdrL">École – Classe</span><span id="g_hdrR">Fiche Pédagogique</span></div>
+
+        <!-- ===== PAGE DE GARDE ===== -->
+        <div class="title-page">
+          <h1>FICHE PÉDAGOGIQUE DE LEÇON</h1>
+          <div class="subtitle" id="g_theme">Thème</div>
+          <div class="theme" id="g_titre">Titre</div><br>
+          <div class="info-line" id="g_ens">Enseignant</div>
+          <div class="info-line" id="g_etab">Établissement</div>
+          <div class="info-line" id="g_dates">Date</div>
+          <div class="info-line" id="g_duree">Durée</div>
+          <hr class="divider">
+          <div id="g_img1"></div>
+          <div class="context-box" id="g_ctx">Contexte</div>
+          <div id="g_img2"></div>
+          <div id="g_seanceTbl"></div>
+          <div id="g_img3"></div>
         </div>
+
+        <!-- ===== INFORMATIONS GÉNÉRALES ===== -->
+        <div class="section">
+          <div class="section-title">Informations générales</div>
+          <div class="tbox tbox-info">
+            <table class="tbl">
+              <tr><th style="width:130px">COMPÉTENCE</th><td id="g_comp">—</td></tr>
+              <tr><th>RÉFÉRENCES</th><td id="g_ref">—</td></tr>
+              <tr><th>DOMAINE</th><td id="g_dom">—</td></tr>
+              <tr><th>SÉQUENCE</th><td id="g_seq">—</td></tr>
+            </table>
+          </div>
+          <div class="grid-2">
+            <div><div class="sub-title"><span class="bc bc-info">🎯</span> Objectifs spécifiques</div><ul class="bsq" id="g_obj"></ul></div>
+            <div><div class="sub-title"><span class="bc bc-info">📋</span> Prérequis</div><ul class="bsq" id="g_pre"></ul></div>
+          </div>
+          <div class="grid-2">
+            <div><div class="sub-title">📦 Matériel concret</div><ul id="g_matC"></ul></div>
+            <div><div class="sub-title">📦 Supports pédagogiques</div><ul id="g_matP"></ul></div>
+          </div>
+          <div class="sub-title"><span class="bc bc-info">🔧</span> Stratégies pédagogiques</div>
+          <ul class="btri" id="g_strat"></ul>
+          <div class="tbox tbox-imp"><div class="tbox-title"><span class="bc bc-imp">⚠️</span> Adaptations pédagogiques</div><ul id="g_adapt"></ul></div>
+        </div>
+
+        <!-- ===== DÉROULEMENT ===== -->
+        <div class="section">
+          <div class="section-title">Déroulement des activités</div>
+          <div id="g_seancesDet"></div>
+          <div id="g_deroulement"></div>
+        </div>
+
+        <!-- ===== TRACE ÉCRITE ===== -->
+        <div class="section">
+          <div class="section-title">Trace écrite complète</div>
+          <div class="tbox tbox-trace">
+            <div class="tbox-title"><span class="bc bc-trace">📖</span> Leçon : <span id="g_leconTitre">Les Fractions</span></div>
+            <div class="tbox tbox-def" id="b_def"><div class="tbox-title"><span class="bc bc-def">📌</span> Définition</div><div id="g_def"></div><div id="g_defImg"></div></div>
+            <div class="tbox tbox-prop" id="b_prop"><div class="tbox-title"><span class="bc bc-prop">⚡</span> Théorème &amp; Propriété</div><div id="g_prop"></div><div id="g_propImg"></div></div>
+            <div class="tbox tbox-imp" id="b_rem"><div class="tbox-title"><span class="bc bc-imp">💡</span> Remarque</div><div id="g_rem"></div><div id="g_remarqueImg"></div></div>
+            <div class="tbox tbox-ex" id="b_ex"><div class="tbox-title"><span class="bc bc-ex">✏️</span> Exemple</div><div id="g_ex"></div><div id="g_exempleImg"></div></div>
+            <div class="tbox tbox-act" id="b_act"><div class="tbox-title"><span class="bc bc-act">🔬</span> Activité</div><div id="g_act"></div><div id="g_activiteImg"></div></div>
+            <div class="tbox tbox-eval" id="b_solAct"><div class="tbox-title"><span class="bc bc-eval">✅</span> Solution de l'activité</div><div id="g_solAct"></div><div id="g_solActiviteImg"></div></div>
+            <div class="tbox tbox-act" id="b_exoApp"><div class="tbox-title"><span class="bc bc-act">📝</span> Exercice d'application</div><div id="g_exoApp"></div><div id="g_exoAppImg"></div></div>
+            <div class="tbox tbox-eval" id="b_solExo"><div class="tbox-title"><span class="bc bc-eval">✅</span> Solution des exercices</div><div id="g_solExo"></div><div id="g_solExoImg"></div></div>
+            <div class="tbox tbox-trace" id="b_maison"><div class="tbox-title"><span class="bc bc-trace">🏠</span> Exercice de maison</div><div id="g_maison"></div><div id="g_exoMaisonImg"></div><table class="sig-tbl"><tr><th>Signature parent</th><th>Date</th></tr><tr><td style="height:18px"></td><td></td></tr></table></div>
+            <div class="tbox tbox-eval" id="b_solMaison"><div class="tbox-title"><span class="bc bc-eval">✅</span> Solution du devoir</div><div id="g_solMaison"></div><div id="g_solMaisonImg"></div></div>
+            <div class="qbox">« Les mathématiques nous aident à mieux partager et mesurer notre monde quotidien. »</div>
+          </div>
+        </div>
+
+        <!-- ===== CAPACITÉS ===== -->
+        <div class="section">
+          <div class="section-title">Capacités visées</div>
+          <div class="grid-2"><ul class="btri" id="g_cap1"></ul><ul class="btri" id="g_cap2"></ul></div>
+        </div>
+
+        <!-- ===== CONTEXTE AFRICAIN ===== -->
+        <div class="section">
+          <div class="section-title">Contexte africain et liens transversaux</div>
+          <div class="tbox tbox-info">
+            <div class="grid-2">
+              <div><div class="sub-title">Domaines d'application</div><ul id="g_domaines"></ul></div>
+              <div><div class="sub-title">Liens transdisciplinaires</div><ul id="g_liens"></ul></div>
+            </div>
+            <div class="sub-title">Exemples concrets</div><ul id="g_exemples"></ul>
+          </div>
+        </div>
+
+        <!-- ===== ÉVALUATION ===== -->
+        <div class="section">
+          <div class="section-title">Modalités d'évaluation</div>
+          <div class="tbox tbox-eval">
+            <table class="tbl">
+              <tr><th style="width:110px">Formative</th><td id="g_evalF">—</td></tr>
+              <tr><th>Sommative</th><td id="g_evalS">—</td></tr>
+              <tr><th>Critères</th><td id="g_evalC">—</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- ===== ANNEXES ===== -->
+        <div class="section">
+          <div class="section-title">Annexes pédagogiques</div>
+          <div class="grid-2">
+            <div><div class="sub-title">Différenciation</div><p><b>En difficulté :</b></p><ul id="g_diffD"></ul><p><b>Avancés :</b></p><ul id="g_diffA"></ul></div>
+            <div><div class="sub-title">Ressources</div><ul id="g_ress"></ul><div class="sub-title">Remarques</div><ul id="g_remF"></ul></div>
+          </div>
+        </div>
+
+        <!-- ===== FIN ===== -->
+        <div class="section" style="border-bottom:none">
+          <div class="fe"><hr><div class="t">— Fiche pédagogique terminée —</div><hr style="width:100%;margin-top:3px"><div class="s" id="g_pied">Document généré</div></div>
+        </div>
+
+        <div class="page-footer"><span id="g_ftrL">Enseignant</span><span id="g_ftrC">1 / 1</span><span id="g_ftrR">Date</span></div>
+      </div>
     </div>
+  </div>
+</div>
 
-    <div id="notification" class="notification"></div>
+<script>
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2500);}
+const $=id=>document.getElementById(id);
+const v=id=>{const e=$(id);return e?e.value:'';};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const escA=s=>String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const nl2br=s=>esc(s).replace(/\n/g,'<br>');
+const imgData={};
+function loadImg(id){const i=$(id);const f=i.files[0];if(!f){imgData[id]='';return;}imgData[id+'_name']=f.name;const r=new FileReader();r.onload=e=>{imgData[id]=e.target.result;};r.readAsDataURL(f);}
 
-    <script>
-        // Variables globales
-        let colorPickerVisible = false;
-        let editorMode = {
-            'competence': true,
-            'objectifs': true,
-            'prerequis': true,
-            'lexique': true,
-            'references': true,
-            'evaluation': true,
-            'activite1': true,
-            'activite2': true,
-            'activite3': true,
-            'activite4': true,
-            'contenu1': true,
-            'situation_enonce': true,
-            'situation_solutions': true,
-            'activites_enseignant': true,
-            'activites_eleves': true,
-            'methode_conseillee': true,
-            'exercice_enonce': true,
-            'recapitulation': true
-        };
-        let currentEditorId = null;
-        let currentCursorPosition = 0;
-        let currentLessonId = null;
+let sc=3;const PX=['s1','s2','s3','s4','s5','s6','s7','s8'];
+function gsv(p,f){const e=$('f_'+p+'_'+f);return e?e.value:'';}
+function rS(){
+  let h='';
+  for(let i=0;i<sc;i++){const p=PX[i]||'s'+(i+1);
+    h+=`<div class="sc"><button class="del" onclick="supS(${i})"${i<1?' style="display:none"':''}>✕</button>
+    <div class="num">◆ Séance ${i+1}</div>
+    <div class="r"><input type="text" id="f_${p}_titre" placeholder="Titre" value="${escA(gsv(p,'titre'))}"><input type="text" id="f_${p}_duree" placeholder="Durée" value="${escA(gsv(p,'duree'))}" style="width:60px"></div>
+    <div class="r"><input type="text" id="f_${p}_obj" placeholder="Objectif" value="${escA(gsv(p,'obj'))}"><input type="text" id="f_${p}_mat" placeholder="Matériel" value="${escA(gsv(p,'mat'))}"></div></div>`;}
+  $('seancesContainer').innerHTML=h;
+}
+function ajouterSeance(){if(sc>=8){toast('Max 8 séances');return;}sc++;rS();toast('Séance ajoutée');}
+function supS(idx){
+  if(sc<=1)return;const b=[];
+  for(let i=0;i<sc;i++){const p=PX[i]||'s'+(i+1);b.push({t:gsv(p,'titre'),d:gsv(p,'duree'),o:gsv(p,'obj'),m:gsv(p,'mat')});}
+  b.splice(idx,1);sc--;rS();
+  for(let i=0;i<sc&&i<b.length;i++){const p=PX[i]||'s'+(i+1);
+    if($('f_'+p+'_titre'))$('f_'+p+'_titre').value=b[i].t;
+    if($('f_'+p+'_duree'))$('f_'+p+'_duree').value=b[i].d;
+    if($('f_'+p+'_obj'))$('f_'+p+'_obj').value=b[i].o;
+    if($('f_'+p+'_mat'))$('f_'+p+'_mat').value=b[i].m;}
+}
+function apercuImage(){const u=imgData['f_image']||v('f_image'),img=$('imgPreview');if(u){img.src=u;img.classList.add('show');img.onerror=()=>img.classList.remove('show');}else img.classList.remove('show');}
+function imgHTML(){const u=imgData['f_image']||v('f_image');if(!u)return '';const c=v('f_imageLegende');return `<div class="img-wrap"><img src="${escA(u)}" alt="${escA(c||'')}">${c?'<div class="cap">'+esc(c)+'</div>':''}</div>`;}
+function lst(id,ulId,cls){const items=v(id).split('\n').filter(s=>s.trim());let h='';items.forEach(i=>{h+=`<li>${esc(i.trim())}</li>`;});$(ulId).innerHTML=h;if(cls)$(ulId).className=cls;}
+function txt(id,elId,boxId){const val=v(id);$(elId).innerHTML=nl2br(val||'');if(boxId){const b=$(boxId);if(b)b.style.display=(val&&val.trim())?'block':'none';}}
+function imgTE(pref,elId){const u=imgData[pref+'Img']||v(pref+'Img');if(!u){$(elId).innerHTML='';return;}const c=v(pref+'ImgLeg');$(elId).innerHTML=`<div class="img-wrap"><img src="${escA(u)}" alt="${escA(c||'')}">${c?'<div class="cap">'+esc(c)+'</div>':''}</div>`;}
 
-        // Configuration de MathJax
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']],
-                processEscapes: true,
-                processEnvironments: true
-            },
-            options: {
-                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-                renderActions: {
-                    addMenu: [0, '', '']
-                }
-            }
-        };
+function generer(){
+  $('g_hdrL').textContent=v('f_ecole')+' – '+v('f_classe');
+  $('g_hdrR').textContent='Fiche Pédagogique – '+v('f_matiere');
+  $('g_ftrL').textContent=v('f_enseignant');
+  $('g_ftrR').textContent=v('f_date');
+  $('g_theme').textContent=v('f_theme');
+  $('g_titre').textContent=v('f_titre');
+  $('g_ens').textContent='Enseignant : '+v('f_enseignant');
+  $('g_etab').textContent=v('f_ecole')+' – '+v('f_classe')+' – Effectif : '+v('f_effectif');
+  $('g_dates').textContent='Date : '+v('f_date');
+  $('g_duree').textContent='Durée : '+v('f_duree');
+  $('g_ctx').textContent=v('f_contexte');
+  $('g_pied').textContent='Document généré le '+v('f_date')+' — '+v('f_ecole');
+  $('g_comp').textContent=v('f_competence');
+  $('g_ref').textContent=v('f_references');
+  $('g_dom').textContent=v('f_domaine');
+  $('g_seq').textContent=v('f_sequence');
+  $('g_leconTitre').textContent=v('f_titre');
 
-        // Initialisation
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialiser les éditeurs de texte enrichi
-            initRichTextEditors();
-            
-            // Initialiser les boutons de basculement d'éditeur
-            initEditorToggleButtons();
-            
-            // Initialiser les sélecteurs de couleur
-            initColorPickers();
-            
-            // Écouter les changements dans la zone de texte LaTeX
-            document.getElementById('latexInput').addEventListener('input', updateLatexPreview);
-            
-            // Charger les fiches sauvegardées
-            loadSavedLessons();
-            
-            // Mettre à jour les filtres
-            updateFilterOptions();
-            
-            // Définir la date du jour par défaut
-            const today = new Date().toISOString().substr(0, 10);
-            document.getElementById('date_cours').value = today;
-            
-            // Définir l'année scolaire par défaut
-            const currentYear = new Date().getFullYear();
-            document.getElementById('annee_scolaire').value = `${currentYear}-${currentYear + 1}`;
-            
-            // Définir la date de correction par défaut (3 jours après)
-            const correctionDate = new Date();
-            correctionDate.setDate(correctionDate.getDate() + 3);
-            document.getElementById('exercice_date_correction').value = correctionDate.toISOString().substr(0, 10);
-        });
+  const ih=imgHTML(),pos=v('f_imagePos');
+  $('g_img1').innerHTML=$('g_img2').innerHTML=$('g_img3').innerHTML='';
+  if(ih){if(pos==='after-title')$('g_img1').innerHTML=ih;else if(pos==='after-context')$('g_img2').innerHTML=ih;else $('g_img3').innerHTML=ih;}
 
-        // Fonction pour mettre à jour la position du curseur
-        function updateCursorPosition(editorId) {
-            const editor = document.getElementById(editorId);
-            const selection = window.getSelection();
-            
-            if (selection.rangeCount > 0) {
-                const range = selection.getRangeAt(0);
-                const preCaretRange = range.cloneRange();
-                preCaretRange.selectNodeContents(editor);
-                preCaretRange.setEnd(range.endContainer, range.endOffset);
-                currentCursorPosition = preCaretRange.toString().length;
-                
-                // Mettre à jour l'affichage de la position
-                const positionElement = document.getElementById(`${editorId}-cursor-position`);
-                if (positionElement) {
-                    positionElement.textContent = `Position du curseur: ${currentCursorPosition}`;
-                }
-            }
-        }
+  let t='<table class="seance-table"><tr><th>Séance</th><th>Durée</th><th>Objectif</th><th>Matériel</th></tr>';
+  for(let i=0;i<sc;i++){const p=PX[i]||'s'+(i+1);t+=`<tr><td>${i+1}</td><td>${esc(gsv(p,'duree'))}</td><td>${esc(gsv(p,'obj'))}</td><td>${esc(gsv(p,'mat'))}</td></tr>`;}
+  t+='</table>';$('g_seanceTbl').innerHTML=t;
 
-        // Fonction pour initialiser les éditeurs de texte enrichi
-        function initRichTextEditors() {
-            // Ajouter les écouteurs d'événements aux boutons de la barre d'outils
-            document.querySelectorAll('.toolbar button').forEach(button => {
-                if (!button.onclick) {
-                    button.addEventListener('click', function() {
-                        const command = this.dataset.command;
-                        
-                        if (command === 'foreColor') {
-                            toggleColorPicker(this.nextElementSibling);
-                        } else if (command === 'insertImage') {
-                            insertImage(this.closest('.rich-text-editor').querySelector('.editor-content'));
-                        } else if (command === 'insertAudio') {
-                            insertAudio(this.closest('.rich-text-editor').querySelector('.editor-content'));
-                        } else if (command === 'insertVideo') {
-                            insertVideo(this.closest('.rich-text-editor').querySelector('.editor-content'));
-                        } else {
-                            document.execCommand(command, false, null);
-                        }
-                        updateTextareaFromEditor(this.closest('.rich-text-editor'));
-                    });
-                }
-            });
+  let d='';
+  for(let i=0;i<sc;i++){const p=PX[i]||'s'+(i+1);const tt=gsv(p,'titre')||'Séance '+(i+1);d+=`<div class="tbox tbox-act"><div class="tbox-title"><span class="bc bc-act">📘</span> Séance ${i+1} : ${esc(tt)}</div><table class="tbl"><tr><th style="width:85px">Étape 1</th><td>Situation déclenchante (10 min)</td></tr><tr><th>Étape 2</th><td>Manipulation / Recherche (15 min)</td></tr><tr><th>Étape 3</th><td>Mise en commun et synthèse (10 min)</td></tr></table></div>`;}
+  $('g_seancesDet').innerHTML=d;
 
-            // Ajouter les écouteurs d'événements pour la mise à jour des textarea
-            document.querySelectorAll('.editor-content').forEach(editor => {
-                editor.addEventListener('input', function() {
-                    updateTextareaFromEditor(this.closest('.rich-text-editor'));
-                    updateCursorPosition(this.id);
-                });
-                editor.addEventListener('blur', function() {
-                    updateTextareaFromEditor(this.closest('.rich-text-editor'));
-                });
-                editor.addEventListener('click', function() {
-                    updateCursorPosition(this.id);
-                });
-                editor.addEventListener('keyup', function() {
-                    updateCursorPosition(this.id);
-                });
-            });
-        }
+  const der=v('f_deroulement');let dh='';const dl=der.split('\n').filter(s=>s.trim());if(dl.length){dh='<ol style="margin-top:6px">';dl.forEach(s=>{dh+=`<li style="margin-bottom:3px">${esc(s)}</li>`;});dh+='</ol>';}$('g_deroulement').innerHTML=dh;
 
-        // Fonction pour initialiser les boutons de basculement d'éditeur
-        function initEditorToggleButtons() {
-            document.querySelectorAll('.editor-toggle-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const targetId = this.dataset.target;
-                    toggleEditorMode(targetId);
-                });
-            });
-        }
+  lst('f_objectifs','g_obj','bsq');
+  lst('f_prerequis','g_pre','bsq');
+  lst('f_matConcret','g_matC','');
+  lst('f_matSupports','g_matP','');
+  lst('f_strategies','g_strat','btri');
+  lst('f_adaptations','g_adapt','');
 
-        // Fonction pour basculer entre l'éditeur riche et le textarea simple
-        function toggleEditorMode(targetId) {
-            const editorElement = document.getElementById(`${targetId}-editor`);
-            const textareaElement = document.getElementById(targetId);
-            
-            if (editorMode[targetId]) {
-                // Passer en mode textarea simple
-                editorElement.style.display = 'none';
-                textareaElement.style.display = 'block';
-                textareaElement.value = editorElement.querySelector('.editor-content').innerHTML;
-            } else {
-                // Passer en mode éditeur riche
-                editorElement.style.display = 'block';
-                textareaElement.style.display = 'none';
-                editorElement.querySelector('.editor-content').innerHTML = textareaElement.value;
-            }
-            
-            // Mettre à jour l'état
-            editorMode[targetId] = !editorMode[targetId];
-            
-            // Mettre à jour le texte du bouton
-            const button = document.querySelector(`.editor-toggle-btn[data-target="${targetId}"]`);
-            button.textContent = editorMode[targetId] ? 'Basculer en Texte Simple' : 'Basculer en Éditeur';
-            
-            // Mettre à jour la classe active
-            if (editorMode[targetId]) {
-                button.classList.add('active');
-            } else {
-                button.classList.remove('active');
-            }
-        }
+  txt('f_def','g_def','b_def');imgTE('f_def','g_defImg');
+  txt('f_prop','g_prop','b_prop');imgTE('f_prop','g_propImg');
+  txt('f_remarque','g_rem','b_rem');imgTE('f_remarque','g_remarqueImg');
+  txt('f_exemple','g_ex','b_ex');imgTE('f_exemple','g_exempleImg');
+  txt('f_activite','g_act','b_act');imgTE('f_activite','g_activiteImg');
+  txt('f_solActivite','g_solAct','b_solAct');imgTE('f_solActivite','g_solActiviteImg');
+  txt('f_exoApp','g_exoApp','b_exoApp');imgTE('f_exoApp','g_exoAppImg');
+  txt('f_solExo','g_solExo','b_solExo');imgTE('f_solExo','g_solExoImg');
+  txt('f_exoMaison','g_maison','b_maison');imgTE('f_exoMaison','g_exoMaisonImg');
+  txt('f_solMaison','g_solMaison','b_solMaison');imgTE('f_solMaison','g_solMaisonImg');
 
-        // Fonction pour initialiser les sélecteurs de couleur
-        function initColorPickers() {
-            const colors = [
-                '#000000', '#434343', '#666666', '#999999', '#b7b7b7', '#cccccc', '#d9d9d9', '#efefef', '#f3f3f3', '#ffffff',
-                '#980000', '#ff0000', '#ff9900', '#ffff00', '#00ff00', '#00ffff', '#4a86e8', '#0000ff', '#9900ff', '#ff00ff',
-                '#e6b8af', '#f4cccc', '#fce5cd', '#fff2cc', '#d9ead3', '#d0e0e3', '#c9daf8', '#cfe2f3', '#d9d2e9', '#ead1dc',
-                '#dd7e6b', '#ea9999', '#f9cb9c', '#ffe599', '#b6d7a8', '#a2c4c9', '#a4c2f4', '#9fc5e8', '#b4a7d6', '#d5a6bd',
-                '#cc4125', '#e06666', '#f6b26b', '#ffd966', '#93c47d', '#76a5af', '#6d9eeb', '#6fa8dc', '#8e7cc3', '#c27ba0',
-                '#a61c00', '#cc0000', '#e69138', '#f1c232', '#6aa84f', '#45818e', '#3c78d8', '#3d85c6', '#674ea7', '#a64d79',
-                '#85200c', '#990000', '#b45f06', '#bf9000', '#38761d', '#134f5c', '#1155cc', '#0b5394', '#351c75', '#741b47',
-                '#5b0f00', '#660000', '#783f04', '#7f6000', '#274e13', '#0c343d', '#1c4587', '#073763', '#20124d', '#4c1130'
-            ];
-            
-            document.querySelectorAll('.color-palette').forEach(palette => {
-                colors.forEach(color => {
-                    const colorOption = document.createElement('div');
-                    colorOption.className = 'color-option';
-                    colorOption.style.backgroundColor = color;
-                    colorOption.addEventListener('click', function() {
-                        const editorContent = palette.closest('.rich-text-editor').querySelector('.editor-content');
-                        document.execCommand('foreColor', false, color);
-                        palette.style.display = 'none';
-                        colorPickerVisible = false;
-                        updateTextareaFromEditor(palette.closest('.rich-text-editor'));
-                    });
-                    palette.appendChild(colorOption);
-                });
-            });
-        }
+  lst('f_cap1','g_cap1','btri');
+  lst('f_cap2','g_cap2','btri');
 
-        // Fonction pour afficher/masquer le sélecteur de couleur
-        function toggleColorPicker(palette) {
-            if (colorPickerVisible && palette.style.display === 'block') {
-                palette.style.display = 'none';
-                colorPickerVisible = false;
-            } else {
-                // Masquer tous les autres sélecteurs de couleur
-                document.querySelectorAll('.color-palette').forEach(p => {
-                    p.style.display = 'none';
-                });
-                palette.style.display = 'block';
-                colorPickerVisible = true;
-            }
-        }
+  $('g_evalF').innerHTML=nl2br(v('f_evalForm'));
+  $('g_evalS').innerHTML=nl2br(v('f_evalSom'));
+  $('g_evalC').innerHTML=nl2br(v('f_evalCrit'));
 
-        // Fonction pour insérer une image
-        function insertImage(editor) {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.onchange = function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        document.execCommand('insertHTML', false, `<img src="${event.target.result}" alt="Image" style="max-width: 100%; height: auto;">`);
-                        updateTextareaFromEditor(editor.closest('.rich-text-editor'));
-                    };
-                    reader.readAsDataURL(file);
-                }
-            };
-            input.click();
-        }
+  lst('f_domaines','g_domaines','');
+  lst('f_liens','g_liens','');
+  lst('f_exemples','g_exemples','');
 
-        // Fonction pour insérer un audio
-        function insertAudio(editor) {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'audio/*';
-            input.onchange = function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        document.execCommand('insertHTML', false, `<audio controls src="${event.target.result}" style="width: 100%; max-width: 400px;"></audio>`);
-                        updateTextareaFromEditor(editor.closest('.rich-text-editor'));
-                    };
-                    reader.readAsDataURL(file);
-                }
-            };
-            input.click();
-        }
+  lst('f_diffDif','g_diffD','');
+  lst('f_diffAv','g_diffA','');
+  lst('f_ressources','g_ress','');
+  lst('f_remarquesFin','g_remF','');
 
-        // Fonction pour insérer une vidéo
-        function insertVideo(editor) {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'video/*';
-            input.onchange = function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        document.execCommand('insertHTML', false, `<video controls src="${event.target.result}" style="max-width: 100%; height: auto;"></video>`);
-                        updateTextareaFromEditor(editor.closest('.rich-text-editor'));
-                    };
-                    reader.readAsDataURL(file);
-                }
-            };
-            input.click();
-        }
+  $('emptyState').style.display='none';
+  $('fichePage').style.display='block';
+  toast('✅ Fiche complète générée');
+}
 
-        // Fonction pour ouvrir le modal LaTeX
-        function openLatexModal(editorId) {
-            currentEditorId = editorId;
-            document.getElementById('latexModal').style.display = 'flex';
-            document.getElementById('latexInput').value = '';
-            document.getElementById('latexPreview').innerHTML = 'Aperçu de la formule';
-            
-            // Mettre à jour la position du curseur avant d'ouvrir le modal
-            updateCursorPosition(editorId);
-        }
+function exporterHTML(){
+  if($('fichePage').style.display==='none'){toast("Générez d'abord");return;}
+  const s=document.querySelector('style').outerHTML;
+  const b=new Blob([`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Fiche Pédagogique</title>${s}</head><body style="background:white;padding:0"><div style="max-width:1140px;margin:0 auto">${$('fichePage').outerHTML}</div></body></html>`],{type:'text/html'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='fiche_pedagogique.html';a.click();URL.revokeObjectURL(a.href);
+  toast('💾 Exporté HTML');
+}
 
-        // Fonction pour fermer le modal LaTeX
-        function closeLatexModal() {
-            document.getElementById('latexModal').style.display = 'none';
-        }
+function exporterLatex(){
+  if($('fichePage').style.display==='none'){toast("Générez d'abord");return;}
+  const el=s=>String(s).replace(/&/g,'\\&').replace(/%/g,'\\%').replace(/\$/g,'\\$').replace(/#/g,'\\#').replace(/_/g,'\\_').replace(/\{/g,'\\{').replace(/\}/g,'\\}').replace(/~/g,'\\textasciitilde{}');
+  const ecl=s=>el(s).replace(/\n/g,'\n  ');
+  let sRows='';
+  for(let i=0;i<sc;i++){const p=PX[i]||'s'+(i+1);sRows+=`    ${i+1} & ${el(gsv(p,'duree'))} & ${el(gsv(p,'obj'))} & ${el(gsv(p,'mat'))} \\\\\\hline\n`;}
+  const flds=['def','prop','remarque','exemple','activite','solActivite','exoApp','solExo','exoMaison','solMaison'];
+  const tb={};flds.forEach(k=>{tb[k]=ecl(v('f_'+k));const ui=imgData['f_'+k+'Img_name']||v('f_'+k+'Img');tb[k+'ImgLatex']=ui?'\\par{\\centering\\includegraphics[width=0.5\\textwidth]{'+el(ui)+'}\\par\\small\\textit{'+el(v('f_'+k+'ImgLeg')||'')+'}\\par}':'';});
+  const ltx=`% === FICHE PÉDAGOGIQUE GÉNÉRÉE LE ${el(v('f_date'))} ===
+\\documentclass[10pt,a4paper]{article}
+\\usepackage[T1]{fontenc}\\usepackage[french]{babel}\\usepackage{amsmath,amssymb}
+\\usepackage{geometry}\\usepackage{fancyhdr}\\usepackage{array}\\usepackage{enumitem}
+\\usepackage[skins,breakable]{tcolorbox}\\usepackage{multicol}\\usepackage{tabularx}
+\\usepackage{xcolor}\\usepackage{booktabs}\\usepackage{hyperref}\\usepackage{lmodern}
+\\usepackage{graphicx}\\usepackage{lastpage}\\usepackage{float}
+\\definecolor{headerblue}{RGB}{10,36,99}\\definecolor{lightblue}{RGB}{238,242,255}
+\\definecolor{mediumblue}{RGB}{59,130,246}\\definecolor{darkblue}{RGB}{15,23,42}
+\\definecolor{accentorange}{RGB}{249,115,22}\\definecolor{accentgreen}{RGB}{16,185,129}
+\\definecolor{accentyellow}{RGB}{245,158,11}\\definecolor{accentred}{RGB}{239,68,68}
+\\geometry{top=1.5cm,bottom=1.2cm,left=1cm,right=1cm,headheight=15pt}
+\\newtcolorbox{headerbox}[1][]{enhanced,colback=lightblue,colframe=mediumblue,arc=4pt,boxsep=10pt,left=8pt,right=8pt,top=8pt,bottom=8pt,fontupper=\\normalfont,before skip=12pt,after skip=12pt,breakable,#1}
+\\newtcolorbox{activitybox}[1][]{enhanced,colback=accentorange!5!white,colframe=accentorange,arc=3pt,boxsep=8pt,left=6pt,right=6pt,top=8pt,bottom=8pt,title=Activité,fonttitle=\\bfseries\\color{darkblue},drop fuzzy shadow=accentorange!50!black,breakable,#1}
+\\newtcolorbox{evaluationbox}[1][]{enhanced,colback=accentgreen!5!white,colframe=accentgreen,arc=3pt,boxsep=8pt,left=6pt,right=6pt,top=8pt,bottom=8pt,title=Évaluation,fonttitle=\\bfseries\\color{darkblue},drop fuzzy shadow=accentgreen!50!black,breakable,#1}
+\\newtcolorbox{tracebox}[1][]{enhanced,colback=accentyellow!5!white,colframe=accentyellow,arc=3pt,boxsep=8pt,left=6pt,right=6pt,top=8pt,bottom=8pt,title=Trace Écrite,fonttitle=\\bfseries\\color{darkblue},drop fuzzy shadow=accentyellow!50!black,breakable,#1}
+\\newtcolorbox{definitionbox}[1][]{enhanced,colback=lightblue!80,colframe=mediumblue,arc=2pt,boxsep=6pt,left=6pt,right=6pt,top=6pt,bottom=6pt,fontupper=\\small,before skip=6pt,after skip=6pt,breakable,#1}
+\\newtcolorbox{importantbox}{enhanced,colback=accentred!5!white,colframe=accentred,arc=3pt,boxsep=8pt,left=6pt,right=6pt,top=8pt,bottom=8pt,title=\\textbf{Important},fonttitle=\\bfseries\\color{darkblue},drop fuzzy shadow=accentred!50!black,breakable}
+\\newcommand{\\sectiontitle}[1]{\\section*{\\textcolor{headerblue}{\\Large\\underline{\\textbf{#1}}}}\\vspace{-0.3cm}}
+\\newcommand{\\subsectiontitle}[1]{\\subsection*{\\textcolor{mediumblue}{\\textbf{#1}}}}
+\\pagestyle{fancy}\\fancyhf{}
+\\fancyhead[L]{\\textcolor{headerblue}{\\small ${el(v('f_ecole'))} -- ${el(v('f_classe'))}}}
+\\fancyhead[R]{\\textcolor{headerblue}{\\small Fiche Pédagogique -- ${el(v('f_matiere'))}}}
+\\fancyfoot[L]{\\textcolor{headerblue}{\\small ${el(v('f_enseignant'))}}}
+\\fancyfoot[C]{\\textcolor{headerblue}{\\thepage/\\pageref{LastPage}}}
+\\fancyfoot[R]{\\textcolor{headerblue}{\\small ${el(v('f_date'))}}}
+\\renewcommand{\\headrulewidth}{0.4pt}\\renewcommand{\\footrulewidth}{0.4pt}
+\\begin{document}
+\\title{\\vspace*{2cm}\\begin{minipage}{\\textwidth}\\centering\\textbf{\\Huge FICHE PÉDAGOGIQUE DE LEÇON} \\\\\\[0.4cm]\\color{headerblue}\\LARGE\\textbf{${el(v('f_theme'))}} \\\\\\[0.3cm]\\color{darkblue}\\Large\\textbf{${el(v('f_titre'))}} \\\\\\[0.5cm]\\begin{tabular}{@{}c@{}}\\normalsize\\color{gray}${el(v('f_enseignant'))} \\\\ ${el(v('f_ecole'))} -- ${el(v('f_classe'))} -- ${el(v('f_effectif'))} \\\\ Date : ${el(v('f_date'))} \\\\ Durée : ${el(v('f_duree'))}\\end{tabular}\\end{minipage}}\\author{}\\date{}\\maketitle
+\\begin{center}\\rule{\\textwidth}{2pt}\\end{center}
+\\vspace{0.5cm}
+\\begin{definitionbox}\\centering\\textbf{\\large Contexte :} ${ecl(v('f_contexte'))}\\end{definitionbox}
+\\vspace{0.3cm}
+\\begin{center}\\begin{tabular}{|c|c|c|c|}\\hline\\rowcolor{lightblue}\\textbf{Séance} & \\textbf{Durée} & \\textbf{Objectif} & \\textbf{Matériel} \\\\\\hline ${sRows}\\end{tabular}\\end{center}
+\\vspace{0.3cm}
+\\subsectiontitle{DÉROULEMENT DES ACTIVITÉS}
+\\begin{enumerate}[leftmargin=*,label=\\arabic*.,itemsep=3pt]
+${v('f_deroulement').split('\n').filter(s=>s.trim()).map(s=>'  \\item '+el(s.trim())).join('\n')}
+\\end{enumerate}
+\\newpage
+\\sectiontitle{INFORMATIONS GÉNÉRALES}
+\\begin{headerbox}\\begin{tabularx}{\\textwidth}{@{}>{\\bfseries\\color{darkblue}}lX@{}}COMPÉTENCE : & ${ecl(v('f_competence'))} \\\\ RÉFÉRENCES : & ${el(v('f_references'))} \\\\ DOMAINE : & ${el(v('f_domaine'))} \\\\ SÉQUENCE : & ${el(v('f_sequence'))} \\\\ \\end{tabularx}\\end{headerbox}
+\\vspace{0.3cm}
+\\begin{minipage}[t]{0.48\\textwidth}\\subsectiontitle{OBJECTIFS}\\begin{itemize}[leftmargin=*,label=\\textcolor{headerblue}{\\tiny$\\blacksquare$},itemsep=2pt]${v('f_objectifs').split('\n').filter(s=>s.trim()).map(s=>'\\n    \\\\item '+el(s.trim())).join('')}\\end{itemize}\\end{minipage}
+\\hfill
+\\begin{minipage}[t]{0.48\\textwidth}\\subsectiontitle{PRÉREQUIS}\\begin{itemize}[leftmargin=*,label=\\textcolor{headerblue}{\\tiny$\\blacksquare$},itemsep=2pt]${v('f_prerequis').split('\n').filter(s=>s.trim()).map(s=>'\\n    \\\\item '+el(s.trim())).join('')}\\end{itemize}\\end{minipage}
+\\vspace{0.3cm}\\subsectiontitle{STRATÉGIES}\\begin{itemize}[leftmargin=*,label=\\textcolor{headerblue}{$\\triangleright$}]${v('f_strategies').split('\n').filter(s=>s.trim()).map(s=>'\\n  \\\\item '+el(s.trim())).join('')}\\end{itemize}
+\\begin{importantbox}\\textbf{Adaptations :} ${v('f_adaptations').split('\n').filter(s=>s.trim()).map(s=>'\\\\begin{itemize}\\\\item '+el(s.trim())+'\\\\end{itemize}').join('')}\\end{importantbox}
+\\newpage
+\\sectiontitle{TRACE ÉCRITE COMPLÈTE}
+\\begin{tracebox}\\centering\\textbf{\\Large LEÇON : ${el(v('f_titre'))}}
+\\begin{definitionbox}${tb.def}${tb.defImgLatex}\\end{definitionbox}
+\\begin{importantbox}\\textbf{Propriété} \\\\ ${tb.prop}${tb.propImgLatex}\\end{importantbox}
+\\begin{importantbox}\\textbf{Remarque} \\\\ ${tb.remarque}${tb.remarqueImgLatex}\\end{importantbox}
+\\begin{activitybox}\\textbf{Exemple} \\\\ ${tb.exemple}${tb.exempleImgLatex}\\end{activitybox}
+\\begin{activitybox}\\textbf{Activité} \\\\ ${tb.activite}${tb.activiteImgLatex}\\end{activitybox}
+\\begin{evaluationbox}\\textbf{Solution} \\\\ ${tb.solActivite}${tb.solActiviteImgLatex}\\end{evaluationbox}
+\\begin{activitybox}\\textbf{Exercice d'application} \\\\ ${tb.exoApp}${tb.exoAppImgLatex}\\end{activitybox}
+\\begin{evaluationbox}\\textbf{Solution} \\\\ ${tb.solExo}${tb.solExoImgLatex}\\end{evaluationbox}
+\\begin{tracebox}\\textbf{Exercice de maison} \\\\ ${tb.exoMaison}${tb.exoMaisonImgLatex}
+\\begin{center}\\begin{tabular}{|c|c|}\\hline\\rowcolor{lightblue}\\textbf{Signature} & \\textbf{Date} \\\\\\hline & \\\\\\hline\\end{tabular}\\end{center}\\end{tracebox}
+\\begin{evaluationbox}\\textbf{Solution du devoir} \\\\ ${tb.solMaison}${tb.solMaisonImgLatex}\\end{evaluationbox}
+\\end{tracebox}
+\\vspace{0.5cm}\\begin{center}\\textbf{\\textcolor{headerblue}{FICHE PÉDAGOGIQUE TERMINÉE}} \\\\ \\rule{\\textwidth}{2pt} \\\\ \\small ${el(v('f_date'))} -- ${el(v('f_ecole'))}\\end{center}
+\\end{document}`;
+  const b=new Blob([ltx],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='fiche_pedagogique.tex';a.click();URL.revokeObjectURL(a.href);
+  toast('📄 LaTeX exporté');
+}
 
-        // Fonction pour mettre à jour l'aperçu LaTeX
-        function updateLatexPreview() {
-            const latexCode = document.getElementById('latexInput').value;
-            if (latexCode) {
-                document.getElementById('latexPreview').innerHTML = `$$${latexCode}$$`;
-                MathJax.typesetPromise([document.getElementById('latexPreview')]);
-            } else {
-                document.getElementById('latexPreview').innerHTML = 'Aperçu de la formule';
-            }
-        }
+function resetTout(){
+  const defs={
+    f_ecole:'CEG MASSEDENA',f_classe:'Classe de 6ème',f_effectif:'38 élèves',f_matiere:'Mathématiques',
+    f_enseignant:'KOLA Maniwah Essohouna',f_date:'02/02/2026',f_duree:'3 séances de 60 min',
+    f_competence:'Résoudre des problèmes faisant appel au calcul numérique dans des situations concrètes de la vie quotidienne africaine, en mobilisant la notion de fraction comme outil de modélisation et de résolution.',
+    f_references:'Programme officiel de mathématiques 6ème, Socle commun',f_sequence:'Séquence 3 — Deuxième trimestre',
+    f_domaine:'Nombres et calculs',f_theme:'Nombres et Calculs',
+    f_titre:'Les Fractions : Notion, Comparaison et Opérations de Base',
+    f_contexte:'Cette séquence vise à construire progressivement la notion de fraction chez les élèves de 6ème à travers des situations concrètes du quotidien africain.',
+    f_objectifs:'Reconnaître et identifier des fractions dans des contextes variés\nReprésenter graphiquement des fractions à l\'aide de supports variés\nComparer et ranger des fractions en utilisant des stratégies adaptées\nEffectuer des opérations élémentaires sur les fractions\nUtiliser les fractions pour résoudre des problèmes de partage',
+    f_prerequis:'Connaissance des nombres entiers naturels jusqu\'à 1000\nMaîtrise des opérations de base (+, −, ×, ÷)\nNotion intuitive de partage équitable\nLecture et écriture correcte des nombres',
+    f_matConcret:'Fruits (oranges, bananes, mangues)\nBandes de papier de différentes longueurs\nDisques en carton fractionnés\nBilles, cailloux, graines',
+    f_matSupports:'Fiches d\'exercices différenciées (3 niveaux)\nPlanches illustrées sur le partage\nTableau magnétique avec fractions aimantées\nCalculatrices simples',
+    f_strategies:'Approche inductive : partir de situations concrètes pour dégager les concepts\nDifférenciation : adapter les activités selon les profils d\'apprentissage\nManipulation : utiliser systématiquement du matériel concret avant l\'abstraction\nTravail collaboratif : alterner phases individuelles, en binômes et en groupes\nMétacognition : faire verbaliser les démarches et les stratégies\nContextualisation : ancrer les apprentissages dans la réalité africaine',
+    f_adaptations:'Pour les élèves en difficulté : réduire la quantité d\'exercices, accentuer la manipulation\nPour les élèves avancés : problèmes complexes, recherche documentaire\nPour les élèves à besoins éducatifs particuliers : supports adaptés, temps supplémentaire',
+    f_image:'',f_imagePos:'after-title',f_imageLegende:'',
+    f_def:'Une fraction est un nombre qui représente une ou plusieurs parties d\'une unité divisée en parts égales.',
+    f_prop:'Propriété 1 : Un même nombre fractionnaire peut s\'écrire de différentes façons (fractions équivalentes).\nPropriété 2 : Si on multiplie ou divise le numérateur et le dénominateur par un même nombre non nul, on obtient une fraction égale.',
+    f_remarque:'Remarque : Une fraction peut représenter un nombre entier lorsque le numérateur est un multiple du dénominateur. Une fraction dont le numérateur est inférieur au dénominateur est appelée fraction propre.',
+    f_exemple:'Exemple 1 : Dans un gâteau partagé en 8 parts égales, si on prend 3 parts, on a 3/8 du gâteau.\nExemple 2 : 2/3 de 15 = (2 × 15) ÷ 3 = 30 ÷ 3 = 10.',
+    f_activite:'Activité : À l\'aide de bandes de papier, représenter les fractions 1/2, 1/4, 3/4 et 2/3. Comparer les longueurs obtenues et classer ces fractions par ordre croissant.',
+    f_solActivite:'Solution : 1/4 = 0,25 ; 1/2 = 0,5 ; 2/3 ≈ 0,67 ; 3/4 = 0,75. Ordre croissant : 1/4 < 1/2 < 2/3 < 3/4.',
+    f_exoApp:'1. Simplifier les fractions suivantes : 12/18, 20/25, 36/48.\n2. Calculer : 4/11 + 5/11 - 2/11.\n3. Un fermier vend 2/5 de sa récolte le matin et 1/4 l\'après-midi. Fraction totale vendue ?',
+    f_solExo:'1. 12/18 = 2/3 ; 20/25 = 4/5 ; 36/48 = 3/4.\n2. 4/11 + 5/11 - 2/11 = 7/11.\n3. 2/5 + 1/4 = 8/20 + 5/20 = 13/20.',
+    f_exoMaison:'Devoir : Famille Traoré.\n- 30 poulets à partager entre 5 familles\n- 48 L de boisson (verres de 1/3 L)\n- 60 sachets sucre : 2/5 pour le thé, 1/4 pour les gâteaux. Reste ?',
+    f_solMaison:'1. 1/5 → 6 poulets/famille.\n2. 48 ÷ 1/3 = 144 verres.\n3. Thé : 60×2/5=24 ; Gâteaux : 60×1/4=15.\n4. Reste : 7/20 → 21 sachets.',
+    f_cap1:'Représenter : Traduire une fraction sous forme graphique, numérique et concrète\nComparer : Utiliser des stratégies adaptées pour comparer et ordonner\nCalculer : Maîtriser les opérations élémentaires avec précision\nRésoudre : Appliquer les fractions à des problèmes du quotidien',
+    f_cap2:'Communiquer : Exprimer clairement sa démarche avec un vocabulaire adapté\nModéliser : Traduire une situation réelle en langage mathématique\nRaisonner : Justifier ses choix et vérifier la cohérence des résultats\nAutonomiser : Développer des méthodes de travail personnelles',
+    f_evalForm:'Observation directe de la participation et de la manipulation\nQuestionnement : questions orales ciblées, explications des démarches\nExercices au tableau : correction immédiate avec rétroaction\nAuto-évaluation : fiche de positionnement après chaque séance',
+    f_evalSom:'Fiche d\'exercices notés (coefficient 1) — 30 minutes\nRésolution de problème contextualisé (coefficient 2) — 45 minutes\nPrésentation orale d\'une démarche de résolution (coefficient 1)\nQuestionnaire de synthèse (coefficient 3) — 60 minutes',
+    f_evalCrit:'Exactitude des calculs et des représentations (40 %)\nPertinence des méthodes utilisées (25 %)\nClarté des explications et du vocabulaire (20 %)\nCapacité à appliquer dans des situations nouvelles (10 %)\nAutonomie et prise d\'initiative (5 %)',
+    f_domaines:'Alimentation : Partage de nourriture, recettes traditionnelles\nCommerce : Mesures au marché, calcul des prix\nAgriculture : Répartition des récoltes, surfaces cultivables\nArtisanat : Proportions dans la fabrication, mesures',
+    f_liens:'SVT : Proportion dans l\'alimentation, croissance\nGéographie : Répartition des ressources, démographie\nHistoire : Mesures anciennes, systèmes de comptage\nÉducation civique : Partage équitable, solidarité',
+    f_exemples:'Partager 24 ignames entre 8 familles de façon équitable\nMesurer 3/4 kg de riz avec une balance traditionnelle\nCalculer la part de chacun dans une tontine de 12 personnes avec 60 000 FCFA',
+    f_diffDif:'Utilisation systématique de matériel concret\nFractions simples (1/2, 1/3, 1/4)\nÉnoncés courts et illustrés\nTutorat par des élèves avancés',
+    f_diffAv:'Problèmes complexes en plusieurs étapes\nIntroduction aux fractions décimales\nCréation d\'exercices pour les camarades\nProjets interdisciplinaires',
+    f_ressources:'Manuel de mathématiques 6ème\nFiches de travail photocopiables\nMatériel de manipulation à fabriquer\nVidéos éducatives sur les fractions',
+    f_remarquesFin:'Insister sur le sens avant la technique\nValoriser toutes les démarches de résolution\nFaire verbaliser les difficultés rencontrées\nMaintenir un lien constant avec le concret',
+    f_deroulement:'Phase 1 : Rappel des prérequis et mise en situation (10 min)\nPhase 2 : Activité de découverte par manipulation guidée (15 min)\nPhase 3 : Mise en commun et institutionnalisation (10 min)\nPhase 4 : Exercices d\'application et entraînement (15 min)\nPhase 5 : Synthèse, évaluation et remédiation (10 min)',
+    f_defImg:'',f_defImgLeg:'',f_propImg:'',f_propImgLeg:'',f_remarqueImg:'',f_remarqueImgLeg:'',
+    f_exempleImg:'',f_exempleImgLeg:'',f_activiteImg:'',f_activiteImgLeg:'',f_solActiviteImg:'',f_solActiviteImgLeg:'',
+    f_exoAppImg:'',f_exoAppImgLeg:'',f_solExoImg:'',f_solExoImgLeg:'',f_exoMaisonImg:'',f_exoMaisonImgLeg:'',f_solMaisonImg:'',f_solMaisonImgLeg:'',
+    f_s1_titre:'Découverte et Représentation',f_s1_duree:'60 min',f_s1_obj:'Construire le concept de fraction',f_s1_mat:'Bandes de papier, fruits',
+    f_s2_titre:'Comparaison et Rangement',f_s2_duree:'75 min',f_s2_obj:'Développer des stratégies de comparaison',f_s2_mat:'Disques fractionnés',
+    f_s3_titre:'Opérations et Applications',f_s3_duree:'75 min',f_s3_obj:'Maîtriser les opérations élémentaires',f_s3_mat:'Calculatrices, fiches'
+  };
+  for(const[id,val]of Object.entries(defs)){const el=$(id);if(el&&el.type!=='file')el.value=val;}
+  Object.keys(imgData).forEach(k=>delete imgData[k]);sc=3;rS();apercuImage();generer();toast('↺ Réinitialisé');
+}
 
-        // Fonction pour insérer du code LaTeX à la position du curseur
-        function insertLatex() {
-            const latexCode = document.getElementById('latexInput').value;
-            if (latexCode && currentEditorId) {
-                const editor = document.getElementById(currentEditorId);
-                const latexHtml = `$$${latexCode}$$`;
-                
-                // Sauvegarder le contenu actuel
-                const currentContent = editor.innerHTML;
-                
-                // Insérer à la position du curseur
-                if (currentCursorPosition >= 0) {
-                    const textBefore = currentContent.substring(0, currentCursorPosition);
-                    const textAfter = currentContent.substring(currentCursorPosition);
-                    editor.innerHTML = textBefore + latexHtml + textAfter;
-                    
-                    // Mettre à jour la position du curseur
-                    currentCursorPosition += latexHtml.length;
-                } else {
-                    // Insérer à la fin si la position n'est pas définie
-                    editor.innerHTML += latexHtml;
-                }
-                
-                // Forcer le rendur MathJax
-                MathJax.typesetPromise([editor]);
-                
-                // Mettre à jour le textarea correspondant
-                updateTextareaFromEditor(editor.parentElement);
-                
-                // Fermer le modal
-                closeLatexModal();
-                
-                // Afficher une notification
-                showNotification('Formule insérée avec succès!');
-            }
-        }
-
-        // Fonction pour mettre à jour le textarea à partir de l'éditeur
-        function updateTextareaFromEditor(editorElement) {
-            const editorId = editorElement.id;
-            const targetId = editorId.replace('-editor', '');
-            const textarea = document.getElementById(targetId);
-            if (textarea) {
-                textarea.value = editorElement.querySelector('.editor-content').innerHTML;
-            }
-        }
-
-        // Fonctions pour la gestion des tableaux
-        function addRow() {
-            const table = document.getElementById('deroulement-table').getElementsByTagName('tbody')[0];
-            const newRow = table.insertRow();
-            
-            newRow.innerHTML = `
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td>
-                    <div class="editor-toggle">
-                        <button class="editor-toggle-btn" data-target="activiteNew">Basculer Éditeur</button>
-                    </div>
-                    <div class="rich-text-editor" id="activiteNew-editor">
-                        <div class="toolbar">
-                            <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
-                            <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
-                            <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
-                            <button type="button" onclick="openLatexModal('activiteNew-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
-                        </div>
-                        <div class="editor-content" id="activiteNew-content" contenteditable="true" onkeyup="updateCursorPosition('activiteNew-content')" onclick="updateCursorPosition('activiteNew-content')"></div>
-                        <div class="cursor-position" id="activiteNew-cursor-position">Position du curseur: 0</div>
-                    </div>
-                    <textarea id="activiteNew" name="activiteNew" style="display:none;"></textarea>
-                </td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><button class="btn-danger" onclick="removeRow(this)">X</button></td>
-            `;
-            
-            // Initialiser le nouvel éditeur
-            initRichTextEditors();
-            initEditorToggleButtons();
-        }
-
-        function addRow2() {
-            const table = document.getElementById('suite-table').getElementsByTagName('tbody')[0];
-            const newRow = table.insertRow();
-            
-            newRow.innerHTML = `
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td>
-                    <div class="editor-toggle">
-                        <button class="editor-toggle-btn" data-target="activiteNew2">Basculer Éditeur</button>
-                    </div>
-                    <div class="rich-text-editor" id="activiteNew2-editor">
-                        <div class="toolbar">
-                            <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
-                            <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
-                            <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
-                            <button type="button" onclick="openLatexModal('activiteNew2-content')"><i class="fas fa-square-root-alt"></i> Formule</button>
-                        </div>
-                        <div class="editor-content" id="activiteNew2-content" contenteditable="true" onkeyup="updateCursorPosition('activiteNew2-content')" onclick="updateCursorPosition('activiteNew2-content')"></div>
-                        <div class="cursor-position" id="activiteNew2-cursor-position">Position du curseur: 0</div>
-                    </div>
-                    <textarea id="activiteNew2" name="activiteNew2" style="display:none;"></textarea>
-                </td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><button class="btn-danger" onclick="removeRow(this)">X</button></td>
-            `;
-            
-            // Initialiser le nouvel éditeur
-            initRichTextEditors();
-            initEditorToggleButtons();
-        }
-
-        function removeRow(button) {
-            const row = button.parentNode.parentNode;
-            row.parentNode.removeChild(row);
-        }
-
-        // Fonctions pour la gestion des médias
-        function previewMedia(input, previewId) {
-            const preview = document.getElementById(previewId);
-            preview.innerHTML = '';
-            
-            if (input.files && input.files[0]) {
-                const file = input.files[0];
-                const url = URL.createObjectURL(file);
-                
-                if (file.type.startsWith('image/')) {
-                    const img = document.createElement('img');
-                    img.src = url;
-                    preview.appendChild(img);
-                } else if (file.type.startsWith('video/')) {
-                    const video = document.createElement('video');
-                    video.src = url;
-                    video.controls = true;
-                    video.style.maxWidth = '300px';
-                    preview.appendChild(video);
-                } else if (file.type.startsWith('audio/')) {
-                    const audio = document.createElement('audio');
-                    audio.src = url;
-                    audio.controls = true;
-                    audio.style.width = '100%';
-                    preview.appendChild(audio);
-                }
-            }
-        }
-
-        // Fonction pour sauvegarder la fiche
-        function saveForm() {
-            const lesson = {
-                id: currentLessonId || Date.now().toString(),
-                date_cours: document.getElementById('date_cours').value,
-                annee_scolaire: document.getElementById('annee_scolaire').value,
-                enseignant: document.getElementById('enseignant').value,
-                etablissement: document.getElementById('etablissement').value,
-                module: document.getElementById('module').value,
-                classe: document.getElementById('classe').value,
-                effectif: document.getElementById('effectif').value,
-                titre: document.getElementById('titre').value,
-                competence: document.getElementById('competence').value,
-                objectifs: document.getElementById('objectifs').value,
-                duree_competence: document.getElementById('duree_competence').value,
-                duree_seance: document.getElementById('duree_seance').value,
-                prerequis: document.getElementById('prerequis').value,
-                lexique: document.getElementById('lexique').value,
-                references: document.getElementById('references').value,
-                situation_enonce: document.getElementById('situation_enonce').value,
-                situation_solutions: document.getElementById('situation_solutions').value,
-                activites_enseignant: document.getElementById('activites_enseignant').value,
-                activites_eleves: document.getElementById('activites_eleves').value,
-                methode_conseillee: document.getElementById('methode_conseillee').value,
-                exercice_enonce: document.getElementById('exercice_enonce').value,
-                exercice_date_correction: document.getElementById('exercice_date_correction').value,
-                recapitulation: document.getElementById('recapitulation').value,
-                evaluation: document.getElementById('evaluation').value,
-                activite1: document.getElementById('activite1').value,
-                activite2: document.getElementById('activite2').value,
-                activite3: document.getElementById('activite3').value,
-                activite4: document.getElementById('activite4').value,
-                contenu1: document.getElementById('contenu1').value,
-                createdAt: currentLessonId ? undefined : new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            };
-
-            // Récupérer les fiches existantes
-            let savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
-            
-            if (currentLessonId) {
-                // Mettre à jour la fiche existante
-                const index = savedLessons.findIndex(l => l.id === currentLessonId);
-                if (index !== -1) {
-                    savedLessons[index] = lesson;
-                }
-            } else {
-                // Ajouter une nouvelle fiche
-                savedLessons.push(lesson);
-            }
-
-            // Sauvegarder dans le localStorage
-            localStorage.setItem('savedLessons', JSON.stringify(savedLessons));
-            
-            // Afficher une notification
-            showNotification('Fiche sauvegardée avec succès!');
-            
-            // Recharger la liste des fiches
-            loadSavedLessons();
-            
-            // Mettre à jour les filtres
-            updateFilterOptions();
-            
-            // Réinitialiser le formulaire si c'est une nouvelle fiche
-            if (!currentLessonId) {
-                currentLessonId = null;
-            }
-        }
-
-        // Fonction pour exporter en JSON
-        function exportJSON() {
-            const lesson = {
-                date_cours: document.getElementById('date_cours').value,
-                annee_scolaire: document.getElementById('annee_scolaire').value,
-                enseignant: document.getElementById('enseignant').value,
-                etablissement: document.getElementById('etablissement').value,
-                module: document.getElementById('module').value,
-                classe: document.getElementById('classe').value,
-                effectif: document.getElementById('effectif').value,
-                titre: document.getElementById('titre').value,
-                competence: document.getElementById('competence').value,
-                objectifs: document.getElementById('objectifs').value,
-                duree_competence: document.getElementById('duree_competence').value,
-                duree_seance: document.getElementById('duree_seance').value,
-                prerequis: document.getElementById('prerequis').value,
-                lexique: document.getElementById('lexique').value,
-                references: document.getElementById('references').value,
-                situation_enonce: document.getElementById('situation_enonce').value,
-                situation_solutions: document.getElementById('situation_solutions').value,
-                activites_enseignant: document.getElementById('activites_enseignant').value,
-                activites_eleves: document.getElementById('activites_eleves').value,
-                methode_conseillee: document.getElementById('methode_conseillee').value,
-                exercice_enonce: document.getElementById('exercice_enonce').value,
-                exercice_date_correction: document.getElementById('exercice_date_correction').value,
-                recapitulation: document.getElementById('recapitulation').value,
-                evaluation: document.getElementById('evaluation').value,
-                activite1: document.getElementById('activite1').value,
-                activite2: document.getElementById('activite2').value,
-                activite3: document.getElementById('activite3').value,
-                activite4: document.getElementById('activite4').value,
-                contenu1: document.getElementById('contenu1').value
-            };
-
-            const dataStr = JSON.stringify(lesson, null, 2);
-            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-            
-            const exportFileDefaultName = `fiche-pedagogique-${lesson.titre.replace(/\s+/g, '-').toLowerCase()}.json`;
-            
-            const linkElement = document.createElement('a');
-            linkElement.setAttribute('href', dataUri);
-            linkElement.setAttribute('download', exportFileDefaultName);
-            linkElement.click();
-            
-            showNotification('Fiche exportée avec succès!');
-        }
-
-        // Fonction pour importer un JSON
-        function importJSON() {
-            document.getElementById('jsonFileInput').click();
-        }
-
-        // Gérer l'import de fichier JSON
-        document.getElementById('jsonFileInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    try {
-                        const lesson = JSON.parse(event.target.result);
-                        
-                        // Remplir le formulaire avec les données importées
-                        document.getElementById('date_cours').value = lesson.date_cours || '';
-                        document.getElementById('annee_scolaire').value = lesson.annee_scolaire || '';
-                        document.getElementById('enseignant').value = lesson.enseignant || '';
-                        document.getElementById('etablissement').value = lesson.etablissement || '';
-                        document.getElementById('module').value = lesson.module || '';
-                        document.getElementById('classe').value = lesson.classe || '';
-                        document.getElementById('effectif').value = lesson.effectif || '';
-                        document.getElementById('titre').value = lesson.titre || '';
-                        document.getElementById('competence').value = lesson.competence || '';
-                        document.getElementById('objectifs').value = lesson.objectifs || '';
-                        document.getElementById('duree_competence').value = lesson.duree_competence || '';
-                        document.getElementById('duree_seance').value = lesson.duree_seance || '';
-                        document.getElementById('prerequis').value = lesson.prerequis || '';
-                        document.getElementById('lexique').value = lesson.lexique || '';
-                        document.getElementById('references').value = lesson.references || '';
-                        document.getElementById('situation_enonce').value = lesson.situation_enonce || '';
-                        document.getElementById('situation_solutions').value = lesson.situation_solutions || '';
-                        document.getElementById('activites_enseignant').value = lesson.activites_enseignant || '';
-                        document.getElementById('activites_eleves').value = lesson.activites_eleves || '';
-                        document.getElementById('methode_conseillee').value = lesson.methode_conseillee || '';
-                        document.getElementById('exercice_enonce').value = lesson.exercice_enonce || '';
-                        document.getElementById('exercice_date_correction').value = lesson.exercice_date_correction || '';
-                        document.getElementById('recapitulation').value = lesson.recapitulation || '';
-                        document.getElementById('evaluation').value = lesson.evaluation || '';
-                        document.getElementById('activite1').value = lesson.activite1 || '';
-                        document.getElementById('activite2').value = lesson.activite2 || '';
-                        document.getElementById('activite3').value = lesson.activite3 || '';
-                        document.getElementById('activite4').value = lesson.activite4 || '';
-                        document.getElementById('contenu1').value = lesson.contenu1 || '';
-                        
-                        // Mettre à jour les éditeurs
-                        document.querySelectorAll('.editor-content').forEach(editor => {
-                            const targetId = editor.id.replace('-content', '');
-                            if (lesson[targetId]) {
-                                editor.innerHTML = lesson[targetId];
-                            }
-                        });
-                        
-                        showNotification('Fiche importée avec succès!');
-                    } catch (error) {
-                        showNotification('Erreur lors de l\'import du fichier JSON', 'error');
-                        console.error(error);
-                    }
-                };
-                reader.readAsText(file);
-            }
-        });
-
-        // Fonction pour effacer le formulaire
-        function clearForm() {
-            if (confirm('Êtes-vous sûr de vouloir effacer toutes les données du formulaire?')) {
-                document.querySelectorAll('input:not([type="file"]), textarea').forEach(element => {
-                    element.value = '';
-                });
-                
-                document.querySelectorAll('.editor-content').forEach(editor => {
-                    editor.innerHTML = '';
-                });
-                
-                document.querySelectorAll('.media-preview').forEach(preview => {
-                    preview.innerHTML = '';
-                });
-                
-                currentLessonId = null;
-                
-                showNotification('Formulaire effacé!');
-            }
-        }
-
-        // Fonction pour afficher une notification
-        function showNotification(message, type = 'success') {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.className = 'notification';
-            
-            if (type === 'error') {
-                notification.classList.add('error');
-            }
-            
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-
-        // Fonction pour charger les fiches sauvegardées
-        function loadSavedLessons() {
-            const savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
-            const lessonList = document.getElementById('lessonList');
-            
-            if (savedLessons.length === 0) {
-                lessonList.innerHTML = `
-                    <div class="no-lessons">
-                        <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 15px;"></i>
-                        <p>Aucune fiche sauvegardée</p>
-                    </div>
-                `;
-                document.getElementById('totalLessons').textContent = 'Total: 0 fiches';
-                document.getElementById('filteredLessons').textContent = 'Filtrées: 0';
-                return;
-            }
-            
-            let html = '';
-            savedLessons.forEach(lesson => {
-                const date = new Date(lesson.createdAt);
-                const formattedDate = date.toLocaleDateString('fr-FR', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric'
-                });
-                
-                html += `
-                    <div class="lesson-item" data-id="${lesson.id}" data-module="${lesson.module}" data-date="${lesson.createdAt}">
-                        <div class="lesson-header">
-                            <h3>${lesson.titre}</h3>
-                            <span class="lesson-date">${formattedDate}</span>
-                        </div>
-                        <div class="lesson-meta">
-                            <span><i class="fas fa-user"></i> ${lesson.enseignant}</span>
-                            <span><i class="fas fa-graduation-cap"></i> ${lesson.classe}</span>
-                            <span><i class="fas fa-book"></i> ${lesson.module}</span>
-                        </div>
-                        <div class="lesson-summary">${lesson.competence.substring(0, 100)}...</div>
-                        <div class="lesson-actions">
-                            <button class="btn" onclick="loadLesson('${lesson.id}')"><i class="fas fa-edit"></i> Modifier</button>
-                            <button class="btn btn-danger" onclick="deleteLesson('${lesson.id}')"><i class="fas fa-trash"></i> Supprimer</button>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            lessonList.innerHTML = html;
-            document.getElementById('totalLessons').textContent = `Total: ${savedLessons.length} fiches`;
-            document.getElementById('filteredLessons').textContent = `Filtrées: ${savedLessons.length}`;
-        }
-
-        // Fonction pour charger une fiche spécifique
-        function loadLesson(id) {
-            const savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
-            const lesson = savedLessons.find(l => l.id === id);
-            
-            if (lesson) {
-                document.getElementById('date_cours').value = lesson.date_cours || '';
-                document.getElementById('annee_scolaire').value = lesson.annee_scolaire || '';
-                document.getElementById('enseignant').value = lesson.enseignant || '';
-                document.getElementById('etablissement').value = lesson.etablissement || '';
-                document.getElementById('module').value = lesson.module || '';
-                document.getElementById('classe').value = lesson.classe || '';
-                document.getElementById('effectif').value = lesson.effectif || '';
-                document.getElementById('titre').value = lesson.titre || '';
-                document.getElementById('competence').value = lesson.competence || '';
-                document.getElementById('objectifs').value = lesson.objectifs || '';
-                document.getElementById('duree_competence').value = lesson.duree_competence || '';
-                document.getElementById('duree_seance').value = lesson.duree_seance || '';
-                document.getElementById('prerequis').value = lesson.prerequis || '';
-                document.getElementById('lexique').value = lesson.lexique || '';
-                document.getElementById('references').value = lesson.references || '';
-                document.getElementById('situation_enonce').value = lesson.situation_enonce || '';
-                document.getElementById('situation_solutions').value = lesson.situation_solutions || '';
-                document.getElementById('activites_enseignant').value = lesson.activites_enseignant || '';
-                document.getElementById('activites_eleves').value = lesson.activites_eleves || '';
-                document.getElementById('methode_conseillee').value = lesson.methode_conseillee || '';
-                document.getElementById('exercice_enonce').value = lesson.exercice_enonce || '';
-                document.getElementById('exercice_date_correction').value = lesson.exercice_date_correction || '';
-                document.getElementById('recapitulation').value = lesson.recapitulation || '';
-                document.getElementById('evaluation').value = lesson.evaluation || '';
-                document.getElementById('activite1').value = lesson.activite1 || '';
-                document.getElementById('activite2').value = lesson.activite2 || '';
-                document.getElementById('activite3').value = lesson.activite3 || '';
-                document.getElementById('activite4').value = lesson.activite4 || '';
-                document.getElementById('contenu1').value = lesson.contenu1 || '';
-                
-                // Mettre à jour les éditeurs
-                document.querySelectorAll('.editor-content').forEach(editor => {
-                    const targetId = editor.id.replace('-content', '');
-                    if (lesson[targetId]) {
-                        editor.innerHTML = lesson[targetId];
-                    }
-                });
-                
-                currentLessonId = lesson.id;
-                
-                showNotification('Fiche chargée avec succès!');
-                
-                // Scroll to top
-                window.scrollTo(0, 0);
-            }
-        }
-
-        // Fonction pour supprimer une fiche
-        function deleteLesson(id) {
-            if (confirm('Êtes-vous sûr de vouloir supprimer cette fiche?')) {
-                let savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
-                savedLessons = savedLessons.filter(l => l.id !== id);
-                localStorage.setItem('savedLessons', JSON.stringify(savedLessons));
-                
-                loadSavedLessons();
-                showNotification('Fiche supprimée avec succès!');
-            }
-        }
-
-        // Fonction pour filtrer les fiches
-        function filterLessons() {
-            const searchTerm = document.getElementById('search').value.toLowerCase();
-            const moduleFilter = document.getElementById('filterModule').value;
-            const dateFilter = document.getElementById('filterDate').value;
-            
-            const lessonItems = document.querySelectorAll('.lesson-item');
-            let visibleCount = 0;
-            
-            lessonItems.forEach(item => {
-                const title = item.querySelector('h3').textContent.toLowerCase();
-                const module = item.dataset.module;
-                const date = item.dataset.date.substr(0, 10); // YYYY-MM-DD
-                
-                const matchesSearch = title.includes(searchTerm) || searchTerm === '';
-                const matchesModule = moduleFilter === '' || module === moduleFilter;
-                const matchesDate = dateFilter === '' || date === dateFilter;
-                
-                if (matchesSearch && matchesModule && matchesDate) {
-                    item.style.display = 'block';
-                    visibleCount++;
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-            
-            document.getElementById('filteredLessons').textContent = `Filtrées: ${visibleCount}`;
-        }
-
-        // Fonction pour mettre à jour les options de filtre
-        function updateFilterOptions() {
-            const savedLessons = JSON.parse(localStorage.getItem('savedLessons') || '[]');
-            const moduleSelect = document.getElementById('filterModule');
-            
-            // Récupérer tous les modules uniques
-            const modules = [...new Set(savedLessons.map(lesson => lesson.module))];
-            
-            // Vider les options existantes (sauf la première)
-            while (moduleSelect.options.length > 1) {
-                moduleSelect.remove(1);
-            }
-            
-            // Ajouter les nouvelles options
-            modules.forEach(module => {
-                if (module) {
-                    const option = document.createElement('option');
-                    option.value = module;
-                    option.textContent = module;
-                    moduleSelect.appendChild(option);
-                }
-            });
-        }
-     // Fonction pour exporter en PDF
-        function exportToPDF() {
-            // Créer une copie du contenu à exporter
-            const content = document.querySelector('.container').cloneNode(true);
-            
-            // Supprimer les éléments qui ne doivent pas être imprimés
-            const noPrintElements = content.querySelectorAll('.no-print');
-            noPrintElements.forEach(el => el.remove());
-            
-            // Supprimer les boutons d'action dans les tableaux
-            const actionCells = content.querySelectorAll('td:last-child, th:last-child');
-            actionCells.forEach(cell => {
-                if (cell.textContent.trim() === 'Actions' || cell.querySelector('button')) {
-                    cell.remove();
-                }
-            });
-            
-            // Options pour html2pdf
-            const options = {
-                margin: 10,
-                filename: `fiche-pedagogique-${document.getElementById('titre').value.replace(/\s+/g, '-').toLowerCase()}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-            
-            // Générer le PDF
-            html2pdf().from(content).set(options).save();
-            
-            showNotification('PDF généré avec succès!');
-        }
-
-        // Fonction pour exporter en Word
-        function exportToWord() {
-            // Créer le contenu HTML pour le document Word
-            let content = `
-                <html xmlns:o="urn:schemas-microsoft-com:office:office" 
-                      xmlns:w="urn:schemas-microsoft-com:office:word" 
-                      xmlns="http://www.w3.org/TR/REC-html40">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>${document.getElementById('titre').value}</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; }
-                        h1, h2, h3 { color: #2c3e50; }
-                        table { width: 100%; border-collapse: collapse; }
-                        th, td { border: 1px solid #ddd; padding: 8px; }
-                        th { background-color: #3498db; color: white; }
-                        .section { margin-bottom: 20px; padding: 15px; background-color: #f5f5f5; border-radius: 5px; }
-                    </style>
-                </head>
-                <body>
-                    <h1>Fiche de Préparation de Séance Pédagogique</h1>
-            `;
-            
-            // Ajouter les informations générales
-            content += `
-                <div class="section">
-                    <h2>Fiche 1 - Informations Générales</h2>
-                    <p><strong>Date du cours:</strong> ${document.getElementById('date_cours').value}</p>
-                    <p><strong>Année scolaire:</strong> ${document.getElementById('annee_scolaire').value}</p>
-                    <p><strong>Enseignant:</strong> ${document.getElementById('enseignant').value}</p>
-                    <p><strong>Établissement:</strong> ${document.getElementById('etablissement').value}</p>
-                    <p><strong>Module/Discipline:</strong> ${document.getElementById('module').value}</p>
-                    <p><strong>Classe:</strong> ${document.getElementById('classe').value}</p>
-                    <p><strong>Effectif:</strong> ${document.getElementById('effectif').value}</p>
-                    <p><strong>Titre de la leçon:</strong> ${document.getElementById('titre').value}</p>
-                    <p><strong>Compétence/Objectif général:</strong> ${document.getElementById('competence').value}</p>
-                    <p><strong>Objectifs spécifiques:</strong> ${document.getElementById('objectifs').value}</p>
-                    <p><strong>Durée de la compétence:</strong> ${document.getElementById('duree_competence').value}</p>
-                    <p><strong>Durée de la séance:</strong> ${document.getElementById('duree_seance').value}</p>
-                    <p><strong>Prérequis:</strong> ${document.getElementById('prerequis').value}</p>
-                    <p><strong>Lexique:</strong> ${document.getElementById('lexique').value}</p>
-                    <p><strong>Références bibliographiques:</strong> ${document.getElementById('references').value}</p>
-                </div>
-            `;
-            
-            // Ajouter la situation problème
-            content += `
-                <div class="section">
-                    <h2>Situation Problème</h2>
-                    <p><strong>Énoncé:</strong> ${document.getElementById('situation_enonce').value}</p>
-                    <p><strong>Proposition de solutions:</strong> ${document.getElementById('situation_solutions').value}</p>
-                </div>
-            `;
-            
-            // Ajouter le tableau des activités
-            content += `
-                <div class="section">
-                    <h2>Tableau des Activités</h2>
-                    <h3>Activités de l'Enseignant</h3>
-                    <p>${document.getElementById('activites_enseignant').value}</p>
-                    <h3>Activités des Élèves</h3>
-                    <p>${document.getElementById('activites_eleves').value}</p>
-                </div>
-            `;
-            
-            // Ajouter le déroulement de la séance
-            content += `
-                <div class="section">
-                    <h2>Fiche 2 - Déroulement de la Séance</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Etapes</th>
-                                <th>Phases</th>
-                                <th>Éléments de Contenu</th>
-                                <th>Méthodes pédagogiques</th>
-                                <th>Activités pédagogiques</th>
-                                <th>Indicateurs d'évaluation</th>
-                                <th>Durée</th>
-                                <th>Matériel didactique</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-            
-            // Récupérer les données du tableau
-            const rows = document.querySelectorAll('#deroulement-table tbody tr');
-            rows.forEach(row => {
-                const cells = row.querySelectorAll('td');
-                content += `
-                    <tr>
-                        <td>${cells[0].querySelector('input').value}</td>
-                        <td>${cells[1].querySelector('input').value}</td>
-                        <td>${cells[2].querySelector('input').value}</td>
-                        <td>${cells[3].querySelector('input').value}</td>
-                        <td>${cells[4].querySelector('textarea').value}</td>
-                        <td>${cells[5].querySelector('input').value}</td>
-                        <td>${cells[6].querySelector('input').value}</td>
-                        <td>${cells[7].querySelector('input').value}</td>
-                    </tr>
-                `;
-            });
-            
-            content += `
-                        </tbody>
-                    </table>
-                    <p><strong>Méthode conseillée:</strong> ${document.getElementById('methode_conseillee').value}</p>
-                </div>
-            `;
-            
-            // Ajouter la suite du déroulement
-            content += `
-                <div class="section">
-                    <h2>Fiche 3 - Suite du Déroulement</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Étapes</th>
-                                <th>Phases</th>
-                                <th>Éléments de Contenu</th>
-                                <th>Méthodes pédagogiques</th>
-                                <th>Activités pédagogiques</th>
-                                <th>Indicateurs d'évaluation</th>
-                                <th>Durée</th>
-                                <th>Matériel didactique</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-            
-            // Récupérer les données du deuxième tableau
-            const rows2 = document.querySelectorAll('#suite-table tbody tr');
-            rows2.forEach(row => {
-                const cells = row.querySelectorAll('td');
-                content += `
-                    <tr>
-                        <td>${cells[0].querySelector('input').value}</td>
-                        <td>${cells[1].querySelector('input').value}</td>
-                        <td>${cells[2].querySelector('input').value}</td>
-                        <td>${cells[3].querySelector('input').value}</td>
-                        <td>${cells[4].querySelector('textarea').value}</td>
-                        <td>${cells[5].querySelector('input').value}</td>
-                        <td>${cells[6].querySelector('input').value}</td>
-                        <td>${cells[7].querySelector('input').value}</td>
-                    </tr>
-                `;
-            });
-            
-            content += `
-                        </tbody>
-                    </table>
-                </div>
-            `;
-            
-            // Ajouter les exercices de maison
-            content += `
-                <div class="section">
-                    <h2>Exercices de Maison</h2>
-                    <p><strong>Énoncé:</strong> ${document.getElementById('exercice_enonce').value}</p>
-                    <p><strong>Date de correction:</strong> ${document.getElementById('exercice_date_correction').value}</p>
-                </div>
-            `;
-            
-            // Ajouter la récapitulation
-            content += `
-                <div class="section">
-                    <h2>Récapitulation de la Leçon</h2>
-                    <p>${document.getElementById('recapitulation').value}</p>
-                </div>
-            `;
-            
-            // Ajouter les notes d'évaluation
-            content += `
-                <div class="section">
-                    <h2>Notes d'évaluation</h2>
-                    <p>${document.getElementById('evaluation').value}</p>
-                </div>
-            `;
-            
-            content += `
-                </body>
-                </html>
-            `;
-            
-            // Créer le blob et le lien de téléchargement
-            const blob = new Blob([content], {type: 'application/msword'});
-            const url = URL.createObjectURL(blob);
-            
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `fiche-pedagogique-${document.getElementById('titre').value.replace(/\s+/g, '-').toLowerCase()}.doc`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            showNotification('Document Word généré avec succès!');
-        }
-    </script>
+rS();
+window.addEventListener('DOMContentLoaded',generer);
+</script>
 </body>
 </html>
